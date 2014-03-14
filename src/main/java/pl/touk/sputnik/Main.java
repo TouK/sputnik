@@ -2,6 +2,7 @@ package pl.touk.sputnik;
 
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.checkstyle.CheckstyleProcessor;
+import pl.touk.sputnik.findbugs.FindBugsProcessor;
 import pl.touk.sputnik.gerrit.GerritFacade;
 import pl.touk.sputnik.pmd.PmdProcessor;
 
@@ -26,6 +27,9 @@ public class Main {
 
         PmdProcessor pmdProcessor = new PmdProcessor();
         pmdProcessor.process(review);
+
+        FindBugsProcessor findBugsProcessor = new FindBugsProcessor();
+        findBugsProcessor.process(review);
 
 //        gerritFacade.setReview(changeId, revisionId, review.toReviewInput());
     }

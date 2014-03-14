@@ -23,13 +23,24 @@ dependencies {
 
     // PMD dependencies
     compile files('lib/pmd-5.1.0.jar')
-    compile('jaxen:jaxen:1.1.1') {
+    compile('jaxen:jaxen:1.1.6') { //1.1.6 in FindBugs
         exclude group: 'xerces'
         exclude group: 'xalan'
         exclude group: 'com.ibm.icu'
     }
-    compile 'org.ow2.asm:asm:5.0_BETA'
-    compile 'xerces:xercesImpl:2.9.1'
+//    compile 'org.ow2.asm:asm:5.0_BETA' // conflicting with FindBugs
+    compile('xerces:xercesImpl:2.9.1') {
+        exclude group: 'xml-apis'
+    }
+
+    // FinBugs dependecies
+    compile('com.google.code.findbugs:findbugs:2.0.3') {
+//        exclude group: 'xml-apis'
+//        exclude group: 'jaxen'
+//        exclude group: 'asm'
+    }
+    compile 'xml-apis:xml-apis:1.0.b2' // this version is needed by findbugs
+//    runtime 'asm:asm-commons:3.3'
 
     // Test dependencies
     testCompile group: 'junit', name: 'junit', version: '4.11'
