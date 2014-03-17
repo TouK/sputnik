@@ -111,7 +111,7 @@ public class PmdProcessor {
     private void collectErrors(@NotNull Review review, @NotNull CollectorRenderer collectorRenderer) {
         for (RuleViolation ruleViolation : collectorRenderer.getRuleViolations()) {
             String description = ruleViolation.getRule().getMessage() + NEW_LINE + ruleViolation.getRule().getExternalInfoUrl();
-            review.addError(ruleViolation.getFilename(), SOURCE_NAME, ruleViolation.getBeginLine(), description, convert(ruleViolation.getRule().getPriority()));
+            review.addErrorOnAbsolutePath(ruleViolation.getFilename(), SOURCE_NAME, ruleViolation.getBeginLine(), description, convert(ruleViolation.getRule().getPriority()));
         }
     }
 

@@ -43,7 +43,7 @@ public class CheckstyleProcessor {
 
     private void collectErrors(Review review, CollectorListener collectorListener) {
         for (AuditEvent auditEvent : collectorListener.getErrors()) {
-            review.addError(auditEvent.getFileName(), SOURCE_NAME, auditEvent.getLine(), auditEvent.getMessage(), convert(auditEvent.getSeverityLevel()));
+            review.addErrorOnAbsolutePath(auditEvent.getFileName(), SOURCE_NAME, auditEvent.getLine(), auditEvent.getMessage(), convert(auditEvent.getSeverityLevel()));
         }
     }
 

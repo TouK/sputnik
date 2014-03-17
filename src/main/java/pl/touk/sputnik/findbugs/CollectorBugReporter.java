@@ -2,31 +2,28 @@ package pl.touk.sputnik.findbugs;
 
 import edu.umd.cs.findbugs.*;
 import edu.umd.cs.findbugs.classfile.ClassDescriptor;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.Severity;
 
 public class CollectorBugReporter extends AbstractBugReporter {
     private static final Logger LOG = LoggerFactory.getLogger(CollectorBugReporter.class);
-
+    private static final String SOURCE_NAME = "FindBugs";
+    private final Review review;
     private String lastObservedClass;
 
-    private List<BugInstance> bugs = new ArrayList<BugInstance>();
-    private Map<String, File> ioFileToJavaClassNames = new HashMap<String, File>();
+    public CollectorBugReporter(@NotNull Review review, @NotNull String source) {
+        this.review = review;
+    }
 
     @Override
     protected void doReportBug(BugInstance bugInstance) {
-        LOG.info("Error on class {}, line {}, severity {}: {}",
-                ioFileToJavaClassNames.get(lastObservedClass),
+        review.addErrorOnJavaClassName(lastObservedClass, SOURCE_NAME,
                 bugInstance.getPrimarySourceLineAnnotation().getStartLine(),
-                bugInstance.getPriority(),
-                bugInstance.getMessage());
-        bugs.add(bugInstance);
+                bugInstance.getMessage(),
+                convert(bugInstance.getPriority()));
     }
 
     @Override
@@ -37,7 +34,6 @@ public class CollectorBugReporter extends AbstractBugReporter {
     @Override
     public void reportMissingClass(String string) {
         //do nothing
-//        LOG.debug("Missing class {}", string);
     }
 
     public void finish() {
@@ -55,12 +51,19 @@ public class CollectorBugReporter extends AbstractBugReporter {
         lastObservedClass = classDescriptor.getDottedClassName();
     }
 
-    public List<BugInstance> getBugs() {
-        return bugs;
-    }
-
-
-    public void setIoFileToJavaClassNames(Map<String, File> ioFileToJavaClassNames) {
-        this.ioFileToJavaClassNames = ioFileToJavaClassNames;
+    @NotNull
+    private Severity convert(int priority) {
+        switch (priority) {
+            case Priorities.IGNORE_PRIORITY:
+                return Severity.IGNORE;
+            case Priorities.EXP_PRIORITY:
+            case Priorities.LOW_PRIORITY:
+            case Priorities.NORMAL_PRIORITY:
+                return Severity.INFO;
+            case Priorities.HIGH_PRIORITY:
+                return Severity.WARNING;
+            default:
+                throw new IllegalArgumentException("Priority " + priority + " is not supported");
+        }
     }
 }

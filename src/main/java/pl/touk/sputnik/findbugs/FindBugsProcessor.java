@@ -10,9 +10,6 @@ import pl.touk.sputnik.review.Severity;
 
 public class FindBugsProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(FindBugsProcessor.class);
-    private static final String SOURCE_NAME = "FindBugs";
-    private static final String CHECKSTYLE_CONFIGURATION_FILE = "checkstyle.configurationFile";
-    private static final String CHECKSTYLE_PROPERTIES_FILE = "checkstyle.propertiesFile";
 
     public void process(@NotNull Review review) {
         CollectorBugReporter collectorBugReporter = createBugReporter(review);
@@ -22,8 +19,7 @@ public class FindBugsProcessor {
         } catch (Throwable e) {
             LOG.error("FindBugs process error", e);
         } finally {
-            LOG.info("Process FindBugs finished with {} errors", findBugs.getErrorCount() + collectorBugReporter.getBugs().size());
-            collectErrors(review, collectorBugReporter);
+            LOG.info("Process FindBugs finished");
         }
     }
 
@@ -39,9 +35,8 @@ public class FindBugsProcessor {
 
     @NotNull
     public CollectorBugReporter createBugReporter(@NotNull Review review) {
-        CollectorBugReporter collectorBugReporter = new CollectorBugReporter();
+        CollectorBugReporter collectorBugReporter = new CollectorBugReporter(review);
         collectorBugReporter.setPriorityThreshold(Detector.NORMAL_PRIORITY);
-        collectorBugReporter.setIoFileToJavaClassNames(review.getIoFileToJavaClassNames());
         return collectorBugReporter;
     }
 
@@ -64,32 +59,5 @@ public class FindBugsProcessor {
             classScreener.addAllowedClass(javaClassName);
         }
         return classScreener;
-    }
-
-    private void collectErrors(Review review, CollectorBugReporter collectorBugReporter) {
-        for (BugInstance bugInstance : collectorBugReporter.getBugs()) {
-            review.addError(
-                bugInstance.getType(),
-                SOURCE_NAME,
-                bugInstance.getPrimarySourceLineAnnotation().getStartLine(),
-                bugInstance.getMessage(),
-                convert(bugInstance.getPriority()));
-        }
-    }
-
-    @NotNull
-    private Severity convert(int priority) {
-        switch (priority) {
-            case Priorities.IGNORE_PRIORITY:
-                return Severity.IGNORE;
-            case Priorities.EXP_PRIORITY:
-            case Priorities.LOW_PRIORITY:
-            case Priorities.NORMAL_PRIORITY:
-                return Severity.INFO;
-            case Priorities.HIGH_PRIORITY:
-                return Severity.WARNING;
-            default:
-                throw new IllegalArgumentException("Priority " + priority + " is not supported");
-        }
     }
 }

@@ -3,6 +3,7 @@ package pl.touk.sputnik.review;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.touk.sputnik.gerrit.json.ReviewFileComment;
@@ -30,14 +31,33 @@ public class Review {
      * @param source error source - e.g. Checkstyle
      * @param message message
      */
-    public void addError(@NotNull String fileName, @NotNull String source, int line, @NotNull String message, @NotNull Severity severity) {
+    public void addErrorOnAbsolutePath(@NotNull String fileName, @NotNull String source, int line, @NotNull String message, @NotNull Severity severity) {
         for (ReviewFile file : files) {
             if (file.getIoFile().getAbsolutePath().equals(fileName)) {
-                file.getComments().add(new Comment(line, String.format(COMMENT_FORMAT, source, severity, message)));
+                addError(file, source, line, message, severity);
                 return;
             }
         }
         LOG.warn("File name {} was not found in current review", fileName);
+    }
+
+    /**
+     * @param javaClassName Java class name
+     * @param source error source - e.g. Checkstyle
+     * @param message message
+     */
+    public void addErrorOnJavaClassName(@NotNull String javaClassName, @NotNull String source, int line, @NotNull String message, @NotNull Severity severity) {
+        for (ReviewFile file : files) {
+            if (file.getJavaClassName().equals(javaClassName)) {
+                addError(file, source, line, message, severity);
+                return;
+            }
+        }
+        LOG.warn("Java class {} was not found in current review", javaClassName);
+    }
+
+    private void addError(@NotNull ReviewFile reviewFile, @NotNull String source, int line, @Nullable String message, Severity severity) {
+        reviewFile.getComments().add(new Comment(line, String.format(COMMENT_FORMAT, source, severity, message)));
     }
 
     @NotNull
