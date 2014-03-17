@@ -1,25 +1,28 @@
 package pl.touk.sputnik.findbugs;
 
-import edu.umd.cs.findbugs.AbstractBugReporter;
-import edu.umd.cs.findbugs.AnalysisError;
-import edu.umd.cs.findbugs.BugCollection;
-import edu.umd.cs.findbugs.BugInstance;
+import edu.umd.cs.findbugs.*;
 import edu.umd.cs.findbugs.classfile.ClassDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CollectorBugReporter extends AbstractBugReporter {
     private static final Logger LOG = LoggerFactory.getLogger(CollectorBugReporter.class);
 
+    private String lastObservedClass;
+
     private List<BugInstance> bugs = new ArrayList<BugInstance>();
+    private Map<String, File> ioFileToJavaClassNames = new HashMap<String, File>();
 
     @Override
     protected void doReportBug(BugInstance bugInstance) {
         LOG.info("Error on class {}, line {}, severity {}: {}",
-                bugInstance.getType(),
+                ioFileToJavaClassNames.get(lastObservedClass),
                 bugInstance.getPrimarySourceLineAnnotation().getStartLine(),
                 bugInstance.getPriority(),
                 bugInstance.getMessage());
@@ -33,7 +36,8 @@ public class CollectorBugReporter extends AbstractBugReporter {
 
     @Override
     public void reportMissingClass(String string) {
-        LOG.warn("Missing class {}", string);
+        //do nothing
+//        LOG.debug("Missing class {}", string);
     }
 
     public void finish() {
@@ -47,10 +51,16 @@ public class CollectorBugReporter extends AbstractBugReporter {
     }
 
     public void observeClass(ClassDescriptor classDescriptor) {
-        LOG.info("observeClass {}", classDescriptor);
+        LOG.debug("Observe class {}", classDescriptor.getDottedClassName());
+        lastObservedClass = classDescriptor.getDottedClassName();
     }
 
     public List<BugInstance> getBugs() {
         return bugs;
+    }
+
+
+    public void setIoFileToJavaClassNames(Map<String, File> ioFileToJavaClassNames) {
+        this.ioFileToJavaClassNames = ioFileToJavaClassNames;
     }
 }

@@ -2,6 +2,7 @@ package pl.touk.sputnik;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,9 @@ import pl.touk.sputnik.gerrit.json.ReviewLineComment;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Review {
     private static final Logger LOG = LoggerFactory.getLogger(Review.class);
@@ -49,6 +52,30 @@ public class Review {
     }
 
     @NotNull
+    public List<String> getJavaClassNames() {
+        return Lists.transform(files, new Review.ReviewFileJavaFileNameFunction());
+    }
+
+    @NotNull
+    public Map<String, File> getIoFileToJavaClassNames() {
+        Map<String, File> result = new HashMap<String, File>();
+        for (ReviewFile file : files) {
+            result.put(file.getJavaClassName(), file.getIoFile());
+        }
+        return result;
+    }
+
+    @NotNull
+    public List<String> getBuildDirs() {
+        return Lists.transform(files, new ReviewFileBuildDirFunction());
+    }
+
+    @NotNull
+    public List<String> getSourceDirs() {
+        return Lists.transform(files, new ReviewFileSourceDirFunction());
+    }
+
+    @NotNull
     public ReviewInput toReviewInput() {
         ReviewInput reviewInput = new ReviewInput();
         reviewInput.setLabelToPlusOne();
@@ -78,6 +105,33 @@ public class Review {
         @Override
         public String apply(ReviewFile from) {
             return from.getGerritFilename();
+        }
+    }
+
+    private static class ReviewFileJavaFileNameFunction implements Function<ReviewFile, String> {
+        ReviewFileJavaFileNameFunction() { }
+
+        @Override
+        public String apply(ReviewFile from) {
+            return from.getJavaClassName();
+        }
+    }
+
+    private static class ReviewFileBuildDirFunction implements Function<ReviewFile, String> {
+        ReviewFileBuildDirFunction() { }
+
+        @Override
+        public String apply(ReviewFile from) {
+            return from.getBuildDir();
+        }
+    }
+
+    private static class ReviewFileSourceDirFunction implements Function<ReviewFile, String> {
+        ReviewFileSourceDirFunction() { }
+
+        @Override
+        public String apply(ReviewFile from) {
+            return from.getSourceDir();
         }
     }
 }

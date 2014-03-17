@@ -1,10 +1,8 @@
 package pl.touk.sputnik;
 
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.checkstyle.CheckstyleProcessor;
 import pl.touk.sputnik.findbugs.FindBugsProcessor;
 import pl.touk.sputnik.gerrit.GerritFacade;
-import pl.touk.sputnik.pmd.PmdProcessor;
 
 import static org.apache.commons.lang3.Validate.notBlank;
 
@@ -22,11 +20,11 @@ public class Main {
         GerritFacade gerritFacade = createGerritFacade();
         Review review = new Review(gerritFacade.listFiles(changeId, revisionId));
 
-        CheckstyleProcessor checkstyleProcessor = new CheckstyleProcessor();
-        checkstyleProcessor.process(review);
+//        CheckstyleProcessor checkstyleProcessor = new CheckstyleProcessor();
+//        checkstyleProcessor.process(review);
 
-        PmdProcessor pmdProcessor = new PmdProcessor();
-        pmdProcessor.process(review);
+//        PmdProcessor pmdProcessor = new PmdProcessor();
+//        pmdProcessor.process(review);
 
         FindBugsProcessor findBugsProcessor = new FindBugsProcessor();
         findBugsProcessor.process(review);
