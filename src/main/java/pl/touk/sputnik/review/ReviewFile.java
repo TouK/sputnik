@@ -1,4 +1,4 @@
-package pl.touk.sputnik;
+package pl.touk.sputnik.review;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;

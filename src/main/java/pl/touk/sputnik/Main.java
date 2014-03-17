@@ -3,6 +3,7 @@ package pl.touk.sputnik;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.findbugs.FindBugsProcessor;
 import pl.touk.sputnik.gerrit.GerritFacade;
+import pl.touk.sputnik.review.Review;
 
 import static org.apache.commons.lang3.Validate.notBlank;
 

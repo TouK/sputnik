@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.ReviewFile;
+import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.gerrit.json.ListFilesResponse;
 import pl.touk.sputnik.gerrit.json.ReviewInput;
 

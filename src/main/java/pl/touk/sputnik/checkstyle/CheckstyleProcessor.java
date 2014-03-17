@@ -12,9 +12,9 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.touk.sputnik.Configuration;
-import pl.touk.sputnik.Review;
-import pl.touk.sputnik.ReviewException;
-import pl.touk.sputnik.Severity;
+import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewException;
+import pl.touk.sputnik.review.Severity;
 
 import java.io.File;
 import java.util.List;

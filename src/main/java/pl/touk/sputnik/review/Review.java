@@ -1,8 +1,7 @@
-package pl.touk.sputnik;
+package pl.touk.sputnik.review;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

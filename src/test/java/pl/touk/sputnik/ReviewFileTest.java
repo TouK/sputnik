@@ -1,6 +1,7 @@
 package pl.touk.sputnik;
 
 import org.junit.Test;
+import pl.touk.sputnik.review.ReviewFile;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

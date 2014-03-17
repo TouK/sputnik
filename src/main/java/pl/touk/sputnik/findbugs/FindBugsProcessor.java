@@ -5,8 +5,8 @@ import edu.umd.cs.findbugs.config.UserPreferences;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.touk.sputnik.Review;
-import pl.touk.sputnik.Severity;
+import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.Severity;
 
 public class FindBugsProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(FindBugsProcessor.class);

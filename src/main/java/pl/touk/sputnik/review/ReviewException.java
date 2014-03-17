@@ -1,4 +1,4 @@
-package pl.touk.sputnik;
+package pl.touk.sputnik.review;
 
 public class ReviewException extends RuntimeException {
     public ReviewException(String message) {
