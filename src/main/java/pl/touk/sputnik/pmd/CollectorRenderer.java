@@ -1,21 +1,27 @@
 package pl.touk.sputnik.pmd;
 
+import lombok.Getter;
 import net.sourceforge.pmd.Report;
+import net.sourceforge.pmd.RulePriority;
 import net.sourceforge.pmd.RuleViolation;
 import net.sourceforge.pmd.renderers.AbstractRenderer;
 import net.sourceforge.pmd.util.datasource.DataSource;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.touk.sputnik.review.ReviewResult;
+import pl.touk.sputnik.review.Severity;
+import pl.touk.sputnik.review.Violation;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 public class CollectorRenderer extends AbstractRenderer {
     private static final Logger LOG = LoggerFactory.getLogger(CollectorRenderer.class);
     private static final String SPUTNIK_PMD_COLLECT_RENDERER = "Sputnik PMD Collect Renderer";
-    private final List<RuleViolation> ruleViolations = new ArrayList<RuleViolation>();
+    private static final String SOURCE_NAME = "PMD";
+    @Getter
+    private final ReviewResult reviewResult = new ReviewResult(SOURCE_NAME);
 
     public CollectorRenderer() {
         super(SPUTNIK_PMD_COLLECT_RENDERER, SPUTNIK_PMD_COLLECT_RENDERER);
@@ -28,7 +34,7 @@ public class CollectorRenderer extends AbstractRenderer {
 
     @Override
     public void startFileAnalysis(DataSource dataSource) {
-        LOG.info("PMD audit started for {}", dataSource);
+        LOG.debug("PMD audit started for {}", dataSource);
     }
 
     @Override
@@ -36,8 +42,7 @@ public class CollectorRenderer extends AbstractRenderer {
         Iterator<RuleViolation> violations = report.iterator();
         if (violations.hasNext()) {
             RuleViolation ruleViolation = violations.next();
-            LOG.debug("Error on file {}, line {}, severity {}: {}", ruleViolation.getFilename(), ruleViolation.getBeginLine(), ruleViolation.getRule().getPriority(), ruleViolation.getRule().getMessage());
-            ruleViolations.add(ruleViolation);
+            reviewResult.add(new Violation(ruleViolation.getFilename(), ruleViolation.getBeginLine(), ruleViolation.getRule().getMessage(), convert(ruleViolation.getRule().getPriority())));
         }
     }
 
@@ -51,7 +56,21 @@ public class CollectorRenderer extends AbstractRenderer {
         LOG.info("PMD audit finished");
     }
 
-    public List<RuleViolation> getRuleViolations() {
-        return ruleViolations;
+    @NotNull
+    private Severity convert(@NotNull RulePriority rulePriority) {
+        switch (rulePriority) {
+            case HIGH:
+                return Severity.ERROR;
+            case MEDIUM_HIGH:
+                return Severity.WARNING;
+            case MEDIUM:
+                return Severity.INFO;
+            case MEDIUM_LOW:
+                return Severity.INFO;
+            case LOW:
+                return Severity.IGNORE;
+            default:
+                throw new IllegalArgumentException("RulePriority " + rulePriority + " is not supported");
+        }
     }
 }

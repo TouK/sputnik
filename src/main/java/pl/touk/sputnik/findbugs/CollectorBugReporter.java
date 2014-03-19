@@ -2,28 +2,24 @@ package pl.touk.sputnik.findbugs;
 
 import edu.umd.cs.findbugs.*;
 import edu.umd.cs.findbugs.classfile.ClassDescriptor;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.Severity;
+import pl.touk.sputnik.review.Violation;
 
 public class CollectorBugReporter extends AbstractBugReporter {
     private static final Logger LOG = LoggerFactory.getLogger(CollectorBugReporter.class);
     private static final String SOURCE_NAME = "FindBugs";
-    private final Review review;
+    @Getter
+    private final ReviewResult reviewResult = new ReviewResult(SOURCE_NAME);
     private String lastObservedClass;
-
-    public CollectorBugReporter(@NotNull Review review, @NotNull String source) {
-        this.review = review;
-    }
 
     @Override
     protected void doReportBug(BugInstance bugInstance) {
-        review.addErrorOnJavaClassName(lastObservedClass, SOURCE_NAME,
-                bugInstance.getPrimarySourceLineAnnotation().getStartLine(),
-                bugInstance.getMessage(),
-                convert(bugInstance.getPriority()));
+        reviewResult.add(new Violation(lastObservedClass, bugInstance.getPrimarySourceLineAnnotation().getStartLine(), bugInstance.getMessage(), convert(bugInstance.getPriority())));
     }
 
     @Override
@@ -42,7 +38,7 @@ public class CollectorBugReporter extends AbstractBugReporter {
     }
 
     public BugCollection getBugCollection() {
-        LOG.info("getBugCollection");
+        LOG.debug("getBugCollection");
         return null;
     }
 
@@ -66,4 +62,6 @@ public class CollectorBugReporter extends AbstractBugReporter {
                 throw new IllegalArgumentException("Priority " + priority + " is not supported");
         }
     }
+
+
 }

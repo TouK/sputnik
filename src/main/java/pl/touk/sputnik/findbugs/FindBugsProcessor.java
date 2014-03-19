@@ -3,16 +3,20 @@ package pl.touk.sputnik.findbugs;
 import edu.umd.cs.findbugs.*;
 import edu.umd.cs.findbugs.config.UserPreferences;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.touk.sputnik.review.Review;
-import pl.touk.sputnik.review.Severity;
+import pl.touk.sputnik.review.ReviewProcessor;
+import pl.touk.sputnik.review.ReviewResult;
 
-public class FindBugsProcessor {
+public class FindBugsProcessor implements ReviewProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(FindBugsProcessor.class);
+    private CollectorBugReporter collectorBugReporter;
 
+    @Override
     public void process(@NotNull Review review) {
-        CollectorBugReporter collectorBugReporter = createBugReporter(review);
+        collectorBugReporter = createBugReporter();
         FindBugs2 findBugs = createFindBugs2(review, collectorBugReporter);
         try {
             findBugs.execute();
@@ -21,6 +25,12 @@ public class FindBugsProcessor {
         } finally {
             LOG.info("Process FindBugs finished");
         }
+    }
+
+    @Override
+    @Nullable
+    public ReviewResult getReviewResult() {
+        return collectorBugReporter.getReviewResult();
     }
 
     public FindBugs2 createFindBugs2(Review review, CollectorBugReporter collectorBugReporter) {
@@ -34,8 +44,8 @@ public class FindBugsProcessor {
     }
 
     @NotNull
-    public CollectorBugReporter createBugReporter(@NotNull Review review) {
-        CollectorBugReporter collectorBugReporter = new CollectorBugReporter(review);
+    public CollectorBugReporter createBugReporter() {
+        CollectorBugReporter collectorBugReporter = new CollectorBugReporter();
         collectorBugReporter.setPriorityThreshold(Detector.NORMAL_PRIORITY);
         return collectorBugReporter;
     }

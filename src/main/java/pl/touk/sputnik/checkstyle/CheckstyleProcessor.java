@@ -12,39 +12,35 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.touk.sputnik.Configuration;
-import pl.touk.sputnik.review.Review;
-import pl.touk.sputnik.review.ReviewException;
-import pl.touk.sputnik.review.Severity;
+import pl.touk.sputnik.review.*;
 
 import java.io.File;
 import java.util.List;
 import java.util.Properties;
 
-public class CheckstyleProcessor {
+public class CheckstyleProcessor implements ReviewProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(CheckstyleProcessor.class);
-    private static final String SOURCE_NAME = "Checkstyle";
     private static final String CHECKSTYLE_CONFIGURATION_FILE = "checkstyle.configurationFile";
     private static final String CHECKSTYLE_PROPERTIES_FILE = "checkstyle.propertiesFile";
+    private CollectorListener collectorListener;
 
+    @Override
     public void process(@NotNull Review review) {
-        CollectorListener collectorListener = new CollectorListener();
+        collectorListener = new CollectorListener();
         innerProcess(review, collectorListener);
-        collectErrors(review, collectorListener);
+    }
+
+    @Override
+    @Nullable
+    public ReviewResult getReviewResult() {
+        return collectorListener.getReviewResult();
     }
 
     private void innerProcess(@NotNull Review review, @NotNull AuditListener auditListener) {
-        LOG.info("Process Checktyle started");
         List<File> files = review.getIOFiles();
         Checker checker = createChecker(auditListener);
-        int numErrs = checker.process(files);
+        checker.process(files);
         checker.destroy();
-        LOG.info("Process Checktyle finished with {} errors", numErrs);
-    }
-
-    private void collectErrors(Review review, CollectorListener collectorListener) {
-        for (AuditEvent auditEvent : collectorListener.getErrors()) {
-            review.addErrorOnAbsolutePath(auditEvent.getFileName(), SOURCE_NAME, auditEvent.getLine(), auditEvent.getMessage(), convert(auditEvent.getSeverityLevel()));
-        }
     }
 
     @NotNull
@@ -70,20 +66,6 @@ public class CheckstyleProcessor {
         return configurationFile;
     }
 
-    @NotNull
-    private Severity convert(SeverityLevel severityLevel) {
-        switch (severityLevel) {
-            case IGNORE:
-                return Severity.IGNORE;
-            case INFO:
-                return Severity.INFO;
-            case WARNING:
-                return Severity.WARNING;
-            case ERROR:
-                return Severity.ERROR;
-            default:
-                throw new IllegalArgumentException("Severity " + severityLevel + " is not supported");
-        }
-    }
+
 
 }
