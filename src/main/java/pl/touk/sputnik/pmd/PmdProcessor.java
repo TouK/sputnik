@@ -17,7 +17,6 @@ import pl.touk.sputnik.Configuration;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
-import pl.touk.sputnik.review.Severity;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -30,15 +29,21 @@ public class PmdProcessor implements ReviewProcessor {
     private static final String SOURCE_NAME = "PMD";
     private static final String PMD_RULESETS = "pmd.ruleSets";
     private static final char PMD_INPUT_PATH_SEPARATOR = ',';
-    private static final char NEW_LINE = '\n';
     private Renderer renderer;
 
+    @Override
     public void process(@NotNull Review review) {
         PMDConfiguration configuration = new PMDConfiguration();
         configuration.setReportFormat("pl.touk.sputnik.pmd.CollectorRenderer");
         configuration.setRuleSets(getRulesets());
         configuration.setInputPaths(Joiner.on(PMD_INPUT_PATH_SEPARATOR).join(review.getIOFilenames()));
         doPMD(configuration);
+    }
+
+    @NotNull
+    @Override
+    public String getName() {
+        return SOURCE_NAME;
     }
 
     @Nullable
@@ -65,7 +70,7 @@ public class PmdProcessor implements ReviewProcessor {
 
         RuleSets ruleSets = RulesetsFactoryUtils.getRuleSets(configuration.getRuleSets(), ruleSetFactory, startLoadRules);
         if (ruleSets == null)
-            return new CollectorRenderer();
+            return;
 
         Set<Language> languages = getApplicableLanguages(configuration, ruleSets);
         List<DataSource> files = PMD.getApplicableFiles(configuration, languages);

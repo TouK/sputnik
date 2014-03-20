@@ -12,12 +12,13 @@ import pl.touk.sputnik.review.ReviewResult;
 
 public class FindBugsProcessor implements ReviewProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(FindBugsProcessor.class);
+    private static final String SOURCE_NAME = "FindBugs";
     private CollectorBugReporter collectorBugReporter;
 
     @Override
     public void process(@NotNull Review review) {
-        collectorBugReporter = createBugReporter();
-        FindBugs2 findBugs = createFindBugs2(review, collectorBugReporter);
+        createBugReporter();
+        FindBugs2 findBugs = createFindBugs2(review);
         try {
             findBugs.execute();
         } catch (Throwable e) {
@@ -27,13 +28,19 @@ public class FindBugsProcessor implements ReviewProcessor {
         }
     }
 
+    @NotNull
+    @Override
+    public String getName() {
+        return SOURCE_NAME;
+    }
+
     @Override
     @Nullable
     public ReviewResult getReviewResult() {
         return collectorBugReporter.getReviewResult();
     }
 
-    public FindBugs2 createFindBugs2(Review review, CollectorBugReporter collectorBugReporter) {
+    public FindBugs2 createFindBugs2(Review review) {
         FindBugs2 findBugs = new FindBugs2();
         findBugs.setProject(createProject(review));
         findBugs.setBugReporter(collectorBugReporter);
@@ -45,8 +52,8 @@ public class FindBugsProcessor implements ReviewProcessor {
 
     @NotNull
     public CollectorBugReporter createBugReporter() {
-        CollectorBugReporter collectorBugReporter = new CollectorBugReporter();
-        collectorBugReporter.setPriorityThreshold(Detector.NORMAL_PRIORITY);
+        collectorBugReporter = new CollectorBugReporter();
+        collectorBugReporter.setPriorityThreshold(Priorities.NORMAL_PRIORITY);
         return collectorBugReporter;
     }
 

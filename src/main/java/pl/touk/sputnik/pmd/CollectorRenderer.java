@@ -19,9 +19,8 @@ import java.util.Iterator;
 public class CollectorRenderer extends AbstractRenderer {
     private static final Logger LOG = LoggerFactory.getLogger(CollectorRenderer.class);
     private static final String SPUTNIK_PMD_COLLECT_RENDERER = "Sputnik PMD Collect Renderer";
-    private static final String SOURCE_NAME = "PMD";
     @Getter
-    private final ReviewResult reviewResult = new ReviewResult(SOURCE_NAME);
+    private final ReviewResult reviewResult = new ReviewResult();
 
     public CollectorRenderer() {
         super(SPUTNIK_PMD_COLLECT_RENDERER, SPUTNIK_PMD_COLLECT_RENDERER);

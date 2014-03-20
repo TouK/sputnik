@@ -7,6 +7,9 @@ public interface ReviewProcessor {
 
     void process(@NotNull Review review);
 
+    @NotNull
+    String getName();
+
     @Nullable
     ReviewResult getReviewResult();
 }

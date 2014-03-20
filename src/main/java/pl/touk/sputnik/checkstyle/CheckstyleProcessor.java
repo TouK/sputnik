@@ -20,6 +20,7 @@ import java.util.Properties;
 
 public class CheckstyleProcessor implements ReviewProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(CheckstyleProcessor.class);
+    private static final String SOURCE_NAME = "Checkstyle";
     private static final String CHECKSTYLE_CONFIGURATION_FILE = "checkstyle.configurationFile";
     private static final String CHECKSTYLE_PROPERTIES_FILE = "checkstyle.propertiesFile";
     private CollectorListener collectorListener;
@@ -28,6 +29,12 @@ public class CheckstyleProcessor implements ReviewProcessor {
     public void process(@NotNull Review review) {
         collectorListener = new CollectorListener();
         innerProcess(review, collectorListener);
+    }
+
+    @NotNull
+    @Override
+    public String getName() {
+        return SOURCE_NAME;
     }
 
     @Override

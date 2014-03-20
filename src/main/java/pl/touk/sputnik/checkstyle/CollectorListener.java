@@ -13,9 +13,8 @@ import pl.touk.sputnik.review.Violation;
 
 public class CollectorListener implements AuditListener {
     private static final Logger LOG = LoggerFactory.getLogger(CollectorListener.class);
-    private static final String SOURCE_NAME = "Checkstyle";
     @Getter
-    private final ReviewResult reviewResult = new ReviewResult(SOURCE_NAME);
+    private final ReviewResult reviewResult = new ReviewResult();
 
     @Override
     public void auditStarted(AuditEvent auditEvent) {

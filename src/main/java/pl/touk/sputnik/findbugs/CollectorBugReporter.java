@@ -1,6 +1,10 @@
 package pl.touk.sputnik.findbugs;
 
-import edu.umd.cs.findbugs.*;
+import edu.umd.cs.findbugs.AbstractBugReporter;
+import edu.umd.cs.findbugs.AnalysisError;
+import edu.umd.cs.findbugs.BugCollection;
+import edu.umd.cs.findbugs.BugInstance;
+import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.classfile.ClassDescriptor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -12,9 +16,8 @@ import pl.touk.sputnik.review.Violation;
 
 public class CollectorBugReporter extends AbstractBugReporter {
     private static final Logger LOG = LoggerFactory.getLogger(CollectorBugReporter.class);
-    private static final String SOURCE_NAME = "FindBugs";
     @Getter
-    private final ReviewResult reviewResult = new ReviewResult(SOURCE_NAME);
+    private final ReviewResult reviewResult = new ReviewResult();
     private String lastObservedClass;
 
     @Override
@@ -28,21 +31,24 @@ public class CollectorBugReporter extends AbstractBugReporter {
     }
 
     @Override
-    public void reportMissingClass(String string) {
+    public void reportMissingClass(String missingClass) {
         //do nothing
     }
 
+    @Override
     public void finish() {
         LOG.info("FindBugs audit finished");
 
     }
 
+    @Override
     public BugCollection getBugCollection() {
         LOG.debug("getBugCollection");
         return null;
     }
 
-    public void observeClass(ClassDescriptor classDescriptor) {
+    @Override
+    public void observeClass(@NotNull ClassDescriptor classDescriptor) {
         LOG.debug("Observe class {}", classDescriptor.getDottedClassName());
         lastObservedClass = classDescriptor.getDottedClassName();
     }
