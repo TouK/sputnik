@@ -21,43 +21,10 @@ public class Review {
     /* Source, severity, message, e.g. [Checkstyle] Info: This is bad */
     private static final String COMMENT_FORMAT = "[%s] %s: %s";
     private final List<ReviewFile> files;
+    private int totalViolationsCount = 0;
 
     public Review(List<ReviewFile> files) {
         this.files = files;
-    }
-
-    /**
-     * @param fileName physical file name with full path
-     * @param source error source - e.g. Checkstyle
-     * @param message message
-     */
-    public void addErrorOnAbsolutePath(@NotNull String fileName, @NotNull String source, int line, @NotNull String message, @NotNull Severity severity) {
-        for (ReviewFile file : files) {
-            if (file.getIoFile().getAbsolutePath().equals(fileName)) {
-                addError(file, source, line, message, severity);
-                return;
-            }
-        }
-        LOG.warn("File name {} was not found in current review", fileName);
-    }
-
-    /**
-     * @param javaClassName Java class name
-     * @param source error source - e.g. Checkstyle
-     * @param message message
-     */
-    public void addErrorOnJavaClassName(@NotNull String javaClassName, @NotNull String source, int line, @NotNull String message, @NotNull Severity severity) {
-        for (ReviewFile file : files) {
-            if (file.getJavaClassName().equals(javaClassName)) {
-                addError(file, source, line, message, severity);
-                return;
-            }
-        }
-        LOG.warn("Java class {} was not found in current review", javaClassName);
-    }
-
-    private void addError(@NotNull ReviewFile reviewFile, @NotNull String source, int line, @Nullable String message, Severity severity) {
-        reviewFile.getComments().add(new Comment(line, String.format(COMMENT_FORMAT, source, severity, message)));
     }
 
     @NotNull
@@ -73,15 +40,6 @@ public class Review {
     @NotNull
     public List<String> getJavaClassNames() {
         return Lists.transform(files, new Review.ReviewFileJavaFileNameFunction());
-    }
-
-    @NotNull
-    public Map<String, File> getIoFileToJavaClassNames() {
-        Map<String, File> result = new HashMap<String, File>();
-        for (ReviewFile file : files) {
-            result.put(file.getJavaClassName(), file.getIoFile());
-        }
-        return result;
     }
 
     @NotNull
@@ -107,6 +65,24 @@ public class Review {
         }
 
         return reviewInput;
+    }
+
+    public void add(@NotNull String source, @NotNull ReviewResult reviewResult) {
+        for(Violation violation : reviewResult.getViolations()) {
+            for (ReviewFile file : files) {
+                if (file.getGerritFilename().equals(violation.getFilenameOrJavaClassName()) ||
+                    file.getJavaClassName().equals(violation.getFilenameOrJavaClassName())) {
+                    addError(file, source, violation.getLine(), violation.getMessage(), violation.getSeverity());
+                    totalViolationsCount++;
+                    break;
+                }
+            }
+            LOG.warn("Filename or Java class {} was not found in current review", violation.getFilenameOrJavaClassName());
+        }
+    }
+
+    private void addError(@NotNull ReviewFile reviewFile, @NotNull String source, int line, @Nullable String message, Severity severity) {
+        reviewFile.getComments().add(new Comment(line, String.format(COMMENT_FORMAT, source, severity, message)));
     }
 
     private static class ReviewFileFileFunction implements Function<ReviewFile, File> {

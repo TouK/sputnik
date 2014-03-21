@@ -31,25 +31,21 @@ public class PmdProcessor implements ReviewProcessor {
     private static final char PMD_INPUT_PATH_SEPARATOR = ',';
     private Renderer renderer;
 
+    @Nullable
     @Override
-    public void process(@NotNull Review review) {
+    public ReviewResult process(@NotNull Review review) {
         PMDConfiguration configuration = new PMDConfiguration();
         configuration.setReportFormat("pl.touk.sputnik.pmd.CollectorRenderer");
         configuration.setRuleSets(getRulesets());
         configuration.setInputPaths(Joiner.on(PMD_INPUT_PATH_SEPARATOR).join(review.getIOFilenames()));
         doPMD(configuration);
+        return renderer != null ? ((CollectorRenderer)renderer).getReviewResult() : null;
     }
 
     @NotNull
     @Override
     public String getName() {
         return SOURCE_NAME;
-    }
-
-    @Nullable
-    @Override
-    public ReviewResult getReviewResult() {
-        return renderer != null ? ((CollectorRenderer)renderer).getReviewResult() : null;
     }
 
     @Nullable

@@ -15,29 +15,23 @@ public class FindBugsProcessor implements ReviewProcessor {
     private static final String SOURCE_NAME = "FindBugs";
     private CollectorBugReporter collectorBugReporter;
 
+    @Nullable
     @Override
-    public void process(@NotNull Review review) {
+    public ReviewResult process(@NotNull Review review) {
         createBugReporter();
         FindBugs2 findBugs = createFindBugs2(review);
         try {
             findBugs.execute();
         } catch (Throwable e) {
             LOG.error("FindBugs process error", e);
-        } finally {
-            LOG.info("Process FindBugs finished");
         }
+        return collectorBugReporter.getReviewResult();
     }
 
     @NotNull
     @Override
     public String getName() {
         return SOURCE_NAME;
-    }
-
-    @Override
-    @Nullable
-    public ReviewResult getReviewResult() {
-        return collectorBugReporter.getReviewResult();
     }
 
     public FindBugs2 createFindBugs2(Review review) {

@@ -5,11 +5,9 @@ import org.jetbrains.annotations.Nullable;
 
 public interface ReviewProcessor {
 
-    void process(@NotNull Review review);
+    @Nullable
+    ReviewResult process(@NotNull Review review);
 
     @NotNull
     String getName();
-
-    @Nullable
-    ReviewResult getReviewResult();
 }

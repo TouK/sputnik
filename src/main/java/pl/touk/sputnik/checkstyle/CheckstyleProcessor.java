@@ -23,24 +23,19 @@ public class CheckstyleProcessor implements ReviewProcessor {
     private static final String SOURCE_NAME = "Checkstyle";
     private static final String CHECKSTYLE_CONFIGURATION_FILE = "checkstyle.configurationFile";
     private static final String CHECKSTYLE_PROPERTIES_FILE = "checkstyle.propertiesFile";
-    private CollectorListener collectorListener;
+    private final CollectorListener collectorListener = new CollectorListener();
 
+    @Nullable
     @Override
-    public void process(@NotNull Review review) {
-        collectorListener = new CollectorListener();
+    public ReviewResult process(@NotNull Review review) {
         innerProcess(review, collectorListener);
+        return collectorListener.getReviewResult();
     }
 
     @NotNull
     @Override
     public String getName() {
         return SOURCE_NAME;
-    }
-
-    @Override
-    @Nullable
-    public ReviewResult getReviewResult() {
-        return collectorListener.getReviewResult();
     }
 
     private void innerProcess(@NotNull Review review, @NotNull AuditListener auditListener) {
