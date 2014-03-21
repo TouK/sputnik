@@ -35,8 +35,12 @@ public class Configuration {
     }
 
     public void init() {
+        LOG.info("Initializing configuration properties");
+        String propertiesFilename = getPropertiesFilename();
+        if (propertiesFilename == null) {
+            return;
+        }
 
-        LOG.info("Initializing configuration properties ");
         properties = new Properties();
         InputStream inputStream = null;
         try {
@@ -56,7 +60,10 @@ public class Configuration {
             LOG.warn("Didn't read any properties file - system property {} is missing.", SPUTNIK_PROPERTIES);
             LOG.warn("If you want to provide proprties file in future you can to this with specyfing -D{}=\"/home/user/review.pproperties\" option.", SPUTNIK_PROPERTIES);
             LOG.warn("You can also set up {} variable, so they will be passed to JVM.", SPUTNIK_OPTS);
+        } else {
+            LOG.info("Using properties file {}", filename);
         }
+        return filename;
     }
 
 }
