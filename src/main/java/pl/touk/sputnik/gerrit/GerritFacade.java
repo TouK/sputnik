@@ -36,9 +36,9 @@ public class GerritFacade {
      * @return sonarLongName to gerritFileName map
      */
     @NotNull
-    public List<ReviewFile> listFiles(@NotNull String changeId, @NotNull String revisionId) {
+    public List<ReviewFile> listFiles(@NotNull GerritPatchset gerritPatchset) {
         try {
-            String response = gerritConnector.listFiles(changeId, revisionId);
+            String response = gerritConnector.listFiles(gerritPatchset.getChangeId(), gerritPatchset.getRevisionId());
             String jsonString = trimResponse(response);
             ListFilesResponse listFilesResponse = objectMapper.readValue(jsonString, ListFilesResponse.class);
 
@@ -56,10 +56,10 @@ public class GerritFacade {
         }
     }
 
-    public void setReview(@NotNull String changeId, @NotNull String revisionId, @NotNull ReviewInput reviewInput) {
+    public void setReview(@NotNull GerritPatchset gerritPatchset, @NotNull ReviewInput reviewInput) {
         try {
             String json = objectMapper.writeValueAsString(reviewInput);
-            gerritConnector.setReview(changeId, revisionId, json);
+            gerritConnector.setReview(gerritPatchset.getChangeId(), gerritPatchset.getRevisionId(), json);
         } catch (JsonProcessingException e) {
             throw new GerritException("Error setting review", e);
         } catch (IOException e) {

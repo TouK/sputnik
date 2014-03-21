@@ -7,6 +7,7 @@ import pl.touk.sputnik.Configuration;
 import pl.touk.sputnik.checkstyle.CheckstyleProcessor;
 import pl.touk.sputnik.findbugs.FindBugsProcessor;
 import pl.touk.sputnik.gerrit.GerritFacade;
+import pl.touk.sputnik.gerrit.GerritPatchset;
 import pl.touk.sputnik.pmd.PmdProcessor;
 
 import java.util.ArrayList;
@@ -25,14 +26,16 @@ public class Engine {
         Configuration.instance().init();
 
         GerritFacade gerritFacade = createGerritFacade();
-        Review review = createReview(gerritFacade);
+        GerritPatchset gerritPatchset = createGerritPatchset();
+        List<ReviewFile> reviewFiles = gerritFacade.listFiles(gerritPatchset);
+        Review review = new Review(reviewFiles);
 
         List<ReviewProcessor> processors = createProcessors();
         for (ReviewProcessor processor : processors) {
             review(review, processor);
         }
 
-//        gerritFacade.setReview(changeId, revisionId, review.toReviewInput());
+        gerritFacade.setReview(gerritPatchset, review.toReviewInput());
     }
 
     private void review(@NotNull Review review, @NotNull ReviewProcessor processor) {
@@ -81,13 +84,13 @@ public class Engine {
     }
 
     @NotNull
-    private Review createReview(@NotNull GerritFacade gerritFacade) {
+    private GerritPatchset createGerritPatchset() {
         String changeId = Configuration.instance().getProperty(GerritFacade.GERRIT_CHANGEID);
         String revisionId = Configuration.instance().getProperty(GerritFacade.GERRIT_REVISIONID);
         notBlank(changeId, "You must provide non blank Gerrit change Id");
         notBlank(revisionId, "You must provide non blank Gerrit revision Id");
 
-        return new Review(gerritFacade.listFiles(changeId, revisionId));
+        return new GerritPatchset(changeId, revisionId);
 
     }
 }

@@ -12,9 +12,7 @@ import pl.touk.sputnik.gerrit.json.ReviewLineComment;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Review {
     private static final Logger LOG = LoggerFactory.getLogger(Review.class);
@@ -55,6 +53,7 @@ public class Review {
     @NotNull
     public ReviewInput toReviewInput() {
         ReviewInput reviewInput = new ReviewInput();
+        reviewInput.message = "Total " + totalViolationsCount + " violations found";
         reviewInput.setLabelToPlusOne();
         for (ReviewFile file : files) {
             List<ReviewFileComment> comments = new ArrayList<ReviewFileComment>();
