@@ -40,7 +40,7 @@ public class Engine {
         long start = System.currentTimeMillis();
 
         ReviewResult reviewResult = processor.process(review);
-        LOG.info("Review finished for processor {}. Took {} s", processor.getName(), System.currentTimeMillis() - start / THOUSAND);
+        LOG.info("Review finished for processor {}. Took {} s", processor.getName(), (System.currentTimeMillis() - start) / THOUSAND);
 
         if (reviewResult == null) {
             LOG.warn("Review for processor {} returned empty review", processor.getName());
