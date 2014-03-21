@@ -3,10 +3,8 @@ package pl.touk.sputnik.checkstyle;
 import com.puppycrawl.tools.checkstyle.Checker;
 import com.puppycrawl.tools.checkstyle.ConfigurationLoader;
 import com.puppycrawl.tools.checkstyle.PropertiesExpander;
-import com.puppycrawl.tools.checkstyle.api.AuditEvent;
 import com.puppycrawl.tools.checkstyle.api.AuditListener;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
-import com.puppycrawl.tools.checkstyle.api.SeverityLevel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -50,7 +48,7 @@ public class CheckstyleProcessor implements ReviewProcessor {
         try {
             Checker checker = new Checker();
             ClassLoader moduleClassLoader = Checker.class.getClassLoader();
-            String configurationFile = getConfigurationFile();
+            String configurationFile = getConfigurationFilename();
             Properties properties = System.getProperties();// loadProperties(new File(System.getProperty(CHECKSTYLE_PROPERTIES_FILE)));
             checker.setModuleClassLoader(moduleClassLoader);
             checker.configure(ConfigurationLoader.loadConfiguration(configurationFile, new PropertiesExpander(properties)));
@@ -62,7 +60,7 @@ public class CheckstyleProcessor implements ReviewProcessor {
     }
 
     @Nullable
-    private String getConfigurationFile() {
+    private String getConfigurationFilename() {
         String configurationFile = Configuration.instance().getProperty(CHECKSTYLE_CONFIGURATION_FILE);
         LOG.info("Using Checkstyle configuration file {}", configurationFile);
         return configurationFile;
