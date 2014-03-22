@@ -23,8 +23,6 @@ public class GerritFacade {
     public static final String GERRIT_PORT = "gerrit.port";
     public static final String GERRIT_USERNAME = "gerrit.username";
     public static final String GERRIT_PASSWORD = "gerrit.password";
-    public static final String GERRIT_CHANGEID = "gerrit.changeId";
-    public static final String GERRIT_REVISIONID = "gerrit.revisionId";
     private GerritConnector gerritConnector;
     private ObjectMapper objectMapper = new ObjectMapper();
 

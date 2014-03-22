@@ -23,8 +23,6 @@ public class Engine {
     private static final long THOUSAND = 1000L;
 
     public void run() {
-        Configuration.instance().init();
-
         GerritFacade gerritFacade = createGerritFacade();
         GerritPatchset gerritPatchset = createGerritPatchset();
         List<ReviewFile> reviewFiles = gerritFacade.listFiles(gerritPatchset);
@@ -85,8 +83,8 @@ public class Engine {
 
     @NotNull
     private GerritPatchset createGerritPatchset() {
-        String changeId = Configuration.instance().getProperty(GerritFacade.GERRIT_CHANGEID);
-        String revisionId = Configuration.instance().getProperty(GerritFacade.GERRIT_REVISIONID);
+        String changeId = Configuration.instance().getGerritChangeId();
+        String revisionId = Configuration.instance().getGerritRevisionId();
         notBlank(changeId, "You must provide non blank Gerrit change Id");
         notBlank(revisionId, "You must provide non blank Gerrit revision Id");
 

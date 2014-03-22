@@ -1,5 +1,7 @@
 package pl.touk.sputnik;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -11,12 +13,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import static org.apache.commons.lang3.Validate.notBlank;
+
 public class Configuration {
     private static final Logger LOG = LoggerFactory.getLogger(Configuration.class);
     private static final Configuration INSTANCE = new Configuration();
     private static final String SPUTNIK_PROPERTIES = "sputnik.properties";
     private static final String SPUTNIK_OPTS = "SPUTNIK_OPTS";
     private Properties properties = new Properties();
+    @Getter
+    @Setter
+    private String configurationFilename;
+    @Getter
+    @Setter
+    private String gerritChangeId;
+    @Getter
+    @Setter
+    private String gerritRevisionId;
 
     private Configuration() {}
 
@@ -36,15 +49,12 @@ public class Configuration {
 
     public void init() {
         LOG.info("Initializing configuration properties");
-        String propertiesFilename = getPropertiesFilename();
-        if (propertiesFilename == null) {
-            return;
-        }
+        notBlank(configurationFilename, "You need to provide filename with configuration properties");
 
         properties = new Properties();
         InputStream inputStream = null;
         try {
-            inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(SPUTNIK_PROPERTIES);
+            inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configurationFilename);
             properties.load(inputStream);
         } catch (IOException e) {
             LOG.error("Configuration initialization failed", e);
@@ -52,18 +62,4 @@ public class Configuration {
             IOUtils.closeQuietly(inputStream);
         }
     }
-
-    @Nullable
-    private String getPropertiesFilename() {
-        String filename = System.getProperty(SPUTNIK_PROPERTIES);
-        if (StringUtils.isBlank(filename)) {
-            LOG.warn("Didn't read any properties file - system property {} is missing.", SPUTNIK_PROPERTIES);
-            LOG.warn("If you want to provide proprties file in future you can to this with specyfing -D{}=\"/home/user/review.pproperties\" option.", SPUTNIK_PROPERTIES);
-            LOG.warn("You can also set up {} variable, so they will be passed to JVM.", SPUTNIK_OPTS);
-        } else {
-            LOG.info("Using properties file {}", filename);
-        }
-        return filename;
-    }
-
 }
