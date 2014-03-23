@@ -9,6 +9,8 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -48,18 +50,19 @@ public class Configuration {
     }
 
     public void init() {
-        LOG.info("Initializing configuration properties");
         notBlank(configurationFilename, "You need to provide filename with configuration properties");
+        LOG.info("Initializing configuration properties from file {}", configurationFilename);
 
         properties = new Properties();
-        InputStream inputStream = null;
+        FileReader fileReader = null;
         try {
-            inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configurationFilename);
-            properties.load(inputStream);
+            fileReader = new FileReader(configurationFilename);
+            properties.load(fileReader);
         } catch (IOException e) {
-            LOG.error("Configuration initialization failed", e);
+            LOG.error("Configuration initialization failed");
+            throw new RuntimeException(e);
         } finally {
-            IOUtils.closeQuietly(inputStream);
+            IOUtils.closeQuietly(fileReader);
         }
     }
 }

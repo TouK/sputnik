@@ -4,8 +4,6 @@ import lombok.Getter;
 import org.apache.commons.cli.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-
 public class CliOptions {
     public static final String CONF = "conf";
     public static final String CHANGE_ID = "changeId";
@@ -21,10 +19,9 @@ public class CliOptions {
     @SuppressWarnings("unchecked")
     private Options createOptions() {
         Options options = new Options();
-        options.addOption(CONF, true, "Configuration properties file");
-        options.addOption(CHANGE_ID, true, "Gerrit change id");
-        options.addOption(REVISION_ID, true, "Gerrit revision id");
-        options.getRequiredOptions().addAll(Arrays.asList(CONF, CHANGE_ID, REVISION_ID));
+        options.addOption(buildOption(CONF, true, true, "Configuration properties file"));
+        options.addOption(buildOption(CHANGE_ID, true, true, "Gerrit change id"));
+        options.addOption(buildOption(REVISION_ID, true, true, "Gerrit revision id"));
         return options;
     }
 
@@ -32,5 +29,16 @@ public class CliOptions {
     public CommandLine parse(@NotNull String[] args) throws ParseException {
         CommandLineParser parser = new BasicParser();
         return parser.parse(options, args);
+    }
+
+    @NotNull
+    @SuppressWarnings("all")
+    private Option buildOption(@NotNull String name, boolean hasArgs, boolean isRequired, @NotNull String description) {
+        return OptionBuilder.withArgName(name)
+            .withLongOpt(name)
+            .hasArg(hasArgs)
+            .isRequired(isRequired)
+            .withDescription(description)
+            .create();
     }
 }
