@@ -2,6 +2,7 @@ package pl.touk.sputnik.findbugs;
 
 import edu.umd.cs.findbugs.*;
 import edu.umd.cs.findbugs.config.UserPreferences;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -49,8 +50,14 @@ public class FindBugsProcessor implements ReviewProcessor {
 
     private UserPreferences createUserPreferences() {
         UserPreferences userPreferences = UserPreferences.createDefaultUserPreferences();
-        userPreferences.getIncludeFilterFiles().put(getIncludeFilterFilename(), true);
-        userPreferences.getExcludeFilterFiles().put(getExcludeFilterFilename(), true);
+        String includeFilterFilename = getIncludeFilterFilename();
+        if (StringUtils.isNotBlank(includeFilterFilename)) {
+            userPreferences.getIncludeFilterFiles().put(includeFilterFilename, true);
+        }
+        String excludeFilterFilename = getExcludeFilterFilename();
+        if (StringUtils.isNotBlank(excludeFilterFilename)) {
+            userPreferences.getExcludeFilterFiles().put(excludeFilterFilename, true);
+        }
         return userPreferences;
     }
 

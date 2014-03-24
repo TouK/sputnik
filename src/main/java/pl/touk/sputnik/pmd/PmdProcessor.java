@@ -34,11 +34,15 @@ public class PmdProcessor implements ReviewProcessor {
     @Nullable
     @Override
     public ReviewResult process(@NotNull Review review) {
-        PMDConfiguration configuration = new PMDConfiguration();
-        configuration.setReportFormat("pl.touk.sputnik.pmd.CollectorRenderer");
-        configuration.setRuleSets(getRulesets());
-        configuration.setInputPaths(Joiner.on(PMD_INPUT_PATH_SEPARATOR).join(review.getIOFilenames()));
-        doPMD(configuration);
+        try {
+            PMDConfiguration configuration = new PMDConfiguration();
+            configuration.setReportFormat("pl.touk.sputnik.pmd.CollectorRenderer");
+            configuration.setRuleSets(getRulesets());
+            configuration.setInputPaths(Joiner.on(PMD_INPUT_PATH_SEPARATOR).join(review.getIOFilenames()));
+            doPMD(configuration);
+        } catch (Throwable e) {
+            LOG.error("PMD processor error", e);
+        }
         return renderer != null ? ((CollectorRenderer)renderer).getReviewResult() : null;
     }
 
