@@ -41,7 +41,7 @@ public class CollectorRenderer extends AbstractRenderer {
         Iterator<RuleViolation> violations = report.iterator();
         if (violations.hasNext()) {
             RuleViolation ruleViolation = violations.next();
-            reviewResult.add(new Violation(ruleViolation.getFilename(), ruleViolation.getBeginLine(), ruleViolation.getRule().getMessage(), convert(ruleViolation.getRule().getPriority())));
+            reviewResult.add(new Violation(ruleViolation.getFilename(), ruleViolation.getBeginLine(), ruleViolation.getDescription(), convert(ruleViolation.getRule().getPriority())));
         }
     }
 
