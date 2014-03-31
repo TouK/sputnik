@@ -22,7 +22,7 @@ dependencies {
 
 
     // Checkstyle dependencies
-    compile 'com.puppycrawl.tools:checkstyle:5.6'
+    compile 'com.puppycrawl.tools:checkstyle:5.7'
 
     // PMD dependencies
     compile files('lib/pmd-5.1.0.jar')
