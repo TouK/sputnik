@@ -14,7 +14,6 @@ import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 public class CollectorRenderer extends AbstractRenderer {
     private static final Logger LOG = LoggerFactory.getLogger(CollectorRenderer.class);
@@ -38,9 +37,7 @@ public class CollectorRenderer extends AbstractRenderer {
 
     @Override
     public void renderFileReport(Report report) throws IOException {
-        Iterator<RuleViolation> violations = report.iterator();
-        if (violations.hasNext()) {
-            RuleViolation ruleViolation = violations.next();
+        for (RuleViolation ruleViolation : report) {
             reviewResult.add(new Violation(ruleViolation.getFilename(), ruleViolation.getBeginLine(), ruleViolation.getDescription(), convert(ruleViolation.getRule().getPriority())));
         }
     }
