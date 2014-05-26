@@ -35,7 +35,7 @@ If you want sputnik to use your SonarQube rules just download them from your Son
 
 ## Installation
 
-- clone this repository and build it: `gradle distZip`
+- clone this repository and build it: `gradle distZip` or download distribution file: https://github.com/TouK/sputnik/releases/download/v1.0/sputnik-1.0.zip
 - copy distribution file `build/distributions/sputnik-1.0.zip` to your installation dir, e.g. `/opt/sputnik` and unzip it
 - create configuration file (you can just paste and edit an example above), e.g. `/opt/sputnik/myconf.properties`
 - you can now run sputnik like this:
