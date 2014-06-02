@@ -8,6 +8,9 @@ public class CliOptions {
     public static final String CONF = "conf";
     public static final String CHANGE_ID = "changeId";
     public static final String REVISION_ID = "revisionId";
+    public static final String CONNECTOR = "connector";
+    public static final String PULL_REQUEST_ID = "prId";
+
     @Getter
     private final Options options;
 
@@ -20,8 +23,12 @@ public class CliOptions {
     private Options createOptions() {
         Options options = new Options();
         options.addOption(buildOption(CONF, true, true, "Configuration properties file"));
-        options.addOption(buildOption(CHANGE_ID, true, true, "Gerrit change id"));
-        options.addOption(buildOption(REVISION_ID, true, true, "Gerrit revision id"));
+        options.addOption(buildOption(CONNECTOR, true, true, "Stash or Gerrit connector?"));
+
+        options.addOption(buildOption(CHANGE_ID, true, false, "Gerrit change id"));
+        options.addOption(buildOption(REVISION_ID, true, false, "Gerrit revision id"));
+        options.addOption(buildOption(PULL_REQUEST_ID, true, false, "Stash Pull Request Id"));
+
         return options;
     }
 
@@ -40,5 +47,16 @@ public class CliOptions {
             .isRequired(isRequired)
             .withDescription(description)
             .create();
+    }
+
+    public Connectors contextSensitiveValidation(CommandLine cli) throws ParseException {
+        Connectors connector = Connectors.valueOf(cli.getOptionValue(CONNECTOR));
+        if (connector == Connectors.GERRIT && cli.hasOption(CHANGE_ID) && cli.hasOption(REVISION_ID)) {
+            return connector;
+        } else if (connector == Connectors.STASH && cli.hasOption(PULL_REQUEST_ID)) {
+            return connector;
+        }
+
+        throw new ParseException("CLI arguments out of context");
     }
 }

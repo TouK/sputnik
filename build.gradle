@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'idea'
 
 sourceCompatibility = 1.5
 version = '1.0'
@@ -19,6 +20,8 @@ dependencies {
     compile 'ch.qos.logback:logback-classic:1.0.13'
     compile 'org.projectlombok:lombok:1.12.6'
     compile 'commons-cli:commons-cli:1.2'
+
+    compile 'com.jayway.jsonpath:json-path:0.9.1'
 
 
     // Checkstyle dependencies
@@ -44,6 +47,9 @@ dependencies {
     }
     compile 'xml-apis:xml-apis:1.0.b2' // this version is needed by findbugs
 //    runtime 'asm:asm-commons:3.3'
+
+    // Scalastyle http://www.scalastyle.org/
+    compile 'org.scalastyle:scalastyle_2.10:0.4.0'
 
     // Test dependencies
     testCompile group: 'junit', name: 'junit', version: '4.11'

@@ -1,0 +1,68 @@
+package pl.touk.sputnik;
+
+import org.jetbrains.annotations.NotNull;
+import pl.touk.sputnik.gerrit.GerritFacade;
+import pl.touk.sputnik.stash.StashFacade;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.apache.commons.lang3.Validate.notBlank;
+
+public class ConnectorFacadeFactory {
+    private static final ConnectorFacadeFactory INSTANCE = new ConnectorFacadeFactory();
+
+    private final Map<String, ConnectorFacade> connectors = new HashMap<String, ConnectorFacade>();
+
+
+
+    @NotNull
+    public static ConnectorFacade get(String name) {
+        if (!INSTANCE.connectors.containsKey(name)) {
+           INSTANCE.tryToRegister(name);
+        }
+        return INSTANCE.connectors.get(name);
+    }
+
+    private void tryToRegister(String name) {
+        if ("gerrit".equals(name)) {
+            register(createGerritFacade());
+        } else if ("stash".equals(name)) {
+            register(createStashFacade());
+        }
+    }
+
+    private void register(ConnectorFacade facade) {
+        connectors.put(facade.name(), facade);
+    }
+
+    @NotNull
+    private GerritFacade createGerritFacade() {
+        String host = Configuration.instance().getProperty(GerritFacade.GERRIT_HOST);
+        String port = Configuration.instance().getProperty(GerritFacade.GERRIT_PORT);
+        String username = Configuration.instance().getProperty(GerritFacade.GERRIT_USERNAME);
+        String password = Configuration.instance().getProperty(GerritFacade.GERRIT_PASSWORD);
+
+        notBlank(host, "You must provide non blank Gerrit host");
+        notBlank(port, "You must provide non blank Gerrit port");
+        notBlank(username, "You must provide non blank Gerrit username");
+        notBlank(password, "You must provide non blank Gerrit password");
+
+        return new GerritFacade(host, Integer.valueOf(port), username, password);
+    }
+
+    @NotNull
+    private static StashFacade createStashFacade() {
+        String host = Configuration.instance().getProperty(StashFacade.STASH_HOST);
+        String port = Configuration.instance().getProperty(StashFacade.STASH_PORT);
+        String username = Configuration.instance().getProperty(StashFacade.STASH_USERNAME);
+        String password = Configuration.instance().getProperty(StashFacade.STASH_PASSWORD);
+
+        notBlank(host, "You must provide non blank Stash host");
+        notBlank(port, "You must provide non blank Stash port");
+        notBlank(username, "You must provide non blank Stash username");
+        notBlank(password, "You must provide non blank Stash password");
+
+        return new StashFacade(host, Integer.valueOf(port), username, password);
+    }
+}

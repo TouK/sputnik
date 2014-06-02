@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import pl.touk.sputnik.Configuration;
+import pl.touk.sputnik.ConnectorFacade;
+import pl.touk.sputnik.Patchset;
 import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.gerrit.json.ListFilesResponse;
 import pl.touk.sputnik.gerrit.json.ReviewInput;
@@ -14,7 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class GerritFacade {
+import static org.apache.commons.lang3.Validate.notBlank;
+
+public class GerritFacade implements ConnectorFacade {
+
+    private static final String CONNECTOR_NAME = "gerrit";
     private static final String RESPONSE_PREFIX = ")]}'";
     private static final String COMMIT_MSG = "/COMMIT_MSG";
     private static final String MAVEN_ENTRY_REGEX = ".*src/(main|test)/java/";
@@ -34,9 +41,10 @@ public class GerritFacade {
      * @return sonarLongName to gerritFileName map
      */
     @NotNull
-    public List<ReviewFile> listFiles(@NotNull GerritPatchset gerritPatchset) {
+    @Override
+    public List<ReviewFile> listFiles(@NotNull Patchset patchset) {
         try {
-            String response = gerritConnector.listFiles(gerritPatchset.getChangeId(), gerritPatchset.getRevisionId());
+            String response = gerritConnector.listFiles(patchset);
             String jsonString = trimResponse(response);
             ListFilesResponse listFilesResponse = objectMapper.readValue(jsonString, ListFilesResponse.class);
 
@@ -54,10 +62,11 @@ public class GerritFacade {
         }
     }
 
-    public void setReview(@NotNull GerritPatchset gerritPatchset, @NotNull ReviewInput reviewInput) {
+    @Override
+    public void setReview(@NotNull Patchset patchset, @NotNull ReviewInput reviewInput) {
         try {
             String json = objectMapper.writeValueAsString(reviewInput);
-            gerritConnector.setReview(gerritPatchset.getChangeId(), gerritPatchset.getRevisionId(), json);
+            gerritConnector.setReview(patchset, json);
         } catch (JsonProcessingException e) {
             throw new GerritException("Error setting review", e);
         } catch (IOException e) {
@@ -74,5 +83,22 @@ public class GerritFacade {
 
     void setGerritConnector(@NotNull GerritConnector gerritConnector) {
         this.gerritConnector = gerritConnector;
+    }
+
+    @Override
+    public String name() {
+        return CONNECTOR_NAME;
+    }
+
+    @NotNull
+    @Override
+    public Patchset createPatchset() {
+        String changeId = Configuration.instance().getGerritChangeId();
+        String revisionId = Configuration.instance().getGerritRevisionId();
+        notBlank(changeId, "You must provide non blank Gerrit change Id");
+        notBlank(revisionId, "You must provide non blank Gerrit revision Id");
+
+        return new GerritPatchset(changeId, revisionId);
+
     }
 }

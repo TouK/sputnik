@@ -23,15 +23,12 @@ public class Configuration {
     private static final String SPUTNIK_PROPERTIES = "sputnik.properties";
     private static final String SPUTNIK_OPTS = "SPUTNIK_OPTS";
     private Properties properties = new Properties();
-    @Getter
-    @Setter
-    private String configurationFilename;
-    @Getter
-    @Setter
-    private String gerritChangeId;
-    @Getter
-    @Setter
-    private String gerritRevisionId;
+
+    @Getter @Setter private String configurationFilename;
+    @Getter @Setter private String gerritChangeId;
+    @Getter @Setter private String gerritRevisionId;
+    @Getter @Setter private String connectorName;
+    @Getter @Setter private String stashPullRequestId;
 
     private Configuration() {}
 
