@@ -26,9 +26,7 @@ public class StashConnector extends AbstractConnector {
     @Override
     public String listFiles(Patchset patchset) throws URISyntaxException, IOException {
         StashPatchset stashPatchset = (StashPatchset) patchset;
-        URI uri = new URIBuilder().setPath(String.format(CHANGES_URL_FORMAT,
-                stashPatchset.getProjectKey(), stashPatchset.getRepositorySlug(), stashPatchset.getPullRequestId()))
-                .build();
+        URI uri = new URIBuilder().setPath(createChangesUrl(stashPatchset)).build();
         HttpGet httpGet = new HttpGet(uri);
         CloseableHttpResponse httpResponse = logAndExecute(httpGet);
         return consumeAndLogEntity(httpResponse);
@@ -50,5 +48,10 @@ public class StashConnector extends AbstractConnector {
     @Override
     public String setReview(Patchset patchset, String reviewInputAsJson) throws URISyntaxException, IOException {
         return null;
+    }
+
+    public static String createChangesUrl(StashPatchset stashPatchset) {
+        return String.format(CHANGES_URL_FORMAT,
+                stashPatchset.getProjectKey(), stashPatchset.getRepositorySlug(), stashPatchset.getPullRequestId());
     }
 }

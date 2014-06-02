@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.Configuration;
 import pl.touk.sputnik.ConnectorFacade;
 import pl.touk.sputnik.Patchset;
-import pl.touk.sputnik.gerrit.GerritException;
 import pl.touk.sputnik.gerrit.json.ListFilesResponse;
 import pl.touk.sputnik.gerrit.json.ReviewInput;
 import pl.touk.sputnik.review.ReviewFile;
