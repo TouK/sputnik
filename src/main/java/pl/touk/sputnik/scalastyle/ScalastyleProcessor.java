@@ -23,6 +23,7 @@ public class ScalastyleProcessor implements ReviewProcessor {
 
     @Nullable
     @Override
+    @SuppressWarnings("unchecked")
     public ReviewResult process(@NotNull Review review) {
         String scalastyleConfigFile = Configuration.instance().getProperty(SCALASTYLE_CONFIG);
         ScalastyleConfiguration configuration = ScalastyleConfiguration.readFromXml(scalastyleConfigFile);
@@ -38,6 +39,7 @@ public class ScalastyleProcessor implements ReviewProcessor {
         return fileSpecs;
     }
 
+    @SuppressWarnings("unchecked")
     private ReviewResult toReviewResult(List<Message> messages) {
         ReviewResult reviewResult = new ReviewResult();
         String currentFileName = null;
@@ -63,6 +65,7 @@ public class ScalastyleProcessor implements ReviewProcessor {
         return reviewResult;
     }
 
+    @SuppressWarnings("unchecked")
     private <T> T option(Option option, T elseValue) {
         if (option.isDefined()) {
             return (T) option.get();

@@ -12,28 +12,26 @@ import static org.apache.commons.lang3.Validate.notBlank;
 public class ConnectorFacadeFactory {
     private static final ConnectorFacadeFactory INSTANCE = new ConnectorFacadeFactory();
 
-    private final Map<String, ConnectorFacade> connectors = new HashMap<String, ConnectorFacade>();
-
-
+    private final Map<Connectors, ConnectorFacade> connectors = new HashMap<Connectors, ConnectorFacade>();
 
     @NotNull
-    public static ConnectorFacade get(String name) {
+    public static ConnectorFacade get(Connectors name) {
         if (!INSTANCE.connectors.containsKey(name)) {
            INSTANCE.tryToRegister(name);
         }
         return INSTANCE.connectors.get(name);
     }
 
-    private void tryToRegister(String name) {
-        if ("gerrit".equals(name)) {
-            register(createGerritFacade());
-        } else if ("stash".equals(name)) {
-            register(createStashFacade());
+    private void tryToRegister(Connectors name) {
+        if (name == Connectors.GERRIT) {
+            register(name, createGerritFacade());
+        } else if (name == Connectors.STASH) {
+            register(name, createStashFacade());
         }
     }
 
-    private void register(ConnectorFacade facade) {
-        connectors.put(facade.name(), facade);
+    private void register(Connectors name, ConnectorFacade facade) {
+        connectors.put(name, facade);
     }
 
     @NotNull

@@ -3,10 +3,7 @@ package pl.touk.sputnik.review;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.touk.sputnik.Configuration;
-import pl.touk.sputnik.ConnectorFacade;
-import pl.touk.sputnik.ConnectorFacadeFactory;
-import pl.touk.sputnik.Patchset;
+import pl.touk.sputnik.*;
 import pl.touk.sputnik.checkstyle.CheckstyleProcessor;
 import pl.touk.sputnik.findbugs.FindBugsProcessor;
 import pl.touk.sputnik.gerrit.GerritFacade;
@@ -27,20 +24,10 @@ public class Engine {
     private static final String SCALASTYLE_ENABLED = "scalastyle.enabled";
     private static final long THOUSAND = 1000L;
 
-    public void run() {
-        ConnectorFacade facade = ConnectorFacadeFactory.get(Configuration.instance().getConnectorName());
+    public void run(Connectors connector) {
+        ConnectorFacade facade = ConnectorFacadeFactory.get(connector);
         Patchset patchSet = facade.createPatchset();
         List<ReviewFile> reviewFiles = facade.listFiles(patchSet);
-        //List<ReviewFile> reviewFiles = gerritFacade.listFiles(gerritPatchset);
-        /*List<ReviewFile> reviewFiles = ImmutableList.of(
-                new ReviewFile("./src/main/scala/pl/ftang/scala/polka/web/Web.scala"),
-                new ReviewFile("./src/main/scala/pl/ftang/scala/polka/core/core.scala"),
-                new ReviewFile("./src/main/scala/pl/ftang/scala/polka/core/registration.scala"),
-                new ReviewFile("./src/main/scala/pl/ftang/scala/polka/core/User.scala"),
-                new ReviewFile("./src/main/scala/pl/ftang/scala/polka/api/ClientService.scala"),
-                new ReviewFile("./src/main/scala/pl/ftang/scala/polka/api/Api.scala"),
-                new ReviewFile("./src/main/scala/pl/ftang/scala/polka/api/StaticPagesService.scala"),
-                new ReviewFile("./src/main/scala/pl/ftang/scala/polka/api/services.scala"));*/
         Review review = new Review(reviewFiles);
 
         List<ReviewProcessor> processors = createProcessors();
@@ -49,7 +36,6 @@ public class Engine {
         }
 
         facade.setReview(patchSet, review.toReviewInput());
-        //gerritFacade.setReview(gerritPatchset, review.toReviewInput());
     }
 
     private void review(@NotNull Review review, @NotNull ReviewProcessor processor) {

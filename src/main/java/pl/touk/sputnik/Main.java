@@ -28,13 +28,13 @@ public final class Main {
 
         initializeConfiguration(connector, commandLine);
 
-        new Engine().run();
+        new Engine().run(connector);
     }
 
     private static void initializeConfiguration(Connectors connector, CommandLine commandLine) {
+        Configuration.instance().setConfigurationFilename(commandLine.getOptionValue(CliOptions.CONF));
         switch (connector) {
             case GERRIT:
-                Configuration.instance().setConfigurationFilename(commandLine.getOptionValue(CliOptions.CONF));
                 Configuration.instance().setGerritChangeId(commandLine.getOptionValue(CliOptions.CHANGE_ID));
                 Configuration.instance().setGerritRevisionId(commandLine.getOptionValue(CliOptions.REVISION_ID));
                 break;

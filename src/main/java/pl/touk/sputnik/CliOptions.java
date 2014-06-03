@@ -50,7 +50,7 @@ public class CliOptions {
     }
 
     public Connectors contextSensitiveValidation(CommandLine cli) throws ParseException {
-        Connectors connector = Connectors.valueOf(cli.getOptionValue(CONNECTOR));
+        Connectors connector = Connectors.valueOf(cli.getOptionValue(CONNECTOR).toUpperCase());
         if (connector == Connectors.GERRIT && cli.hasOption(CHANGE_ID) && cli.hasOption(REVISION_ID)) {
             return connector;
         } else if (connector == Connectors.STASH && cli.hasOption(PULL_REQUEST_ID)) {

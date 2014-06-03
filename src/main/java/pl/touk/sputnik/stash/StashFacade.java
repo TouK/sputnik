@@ -1,22 +1,31 @@
 package pl.touk.sputnik.stash;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Lists;
+import com.jayway.jsonpath.JsonPath;
+import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONObject;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.Configuration;
 import pl.touk.sputnik.ConnectorFacade;
 import pl.touk.sputnik.Patchset;
-import pl.touk.sputnik.gerrit.json.ListFilesResponse;
+import pl.touk.sputnik.gerrit.json.ReviewFileComment;
 import pl.touk.sputnik.gerrit.json.ReviewInput;
 import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.stash.json.ReviewElement;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import static org.apache.commons.lang3.Validate.notBlank;
 
+@Slf4j
 public class StashFacade implements ConnectorFacade {
 
     private static final String CONNECTOR_NAME = "stash";
@@ -54,15 +63,14 @@ public class StashFacade implements ConnectorFacade {
     @Override
     public List<ReviewFile> listFiles(Patchset patchset) {
         try {
-            stashConnector.listFiles(patchset);
-            //String jsonString = trimResponse(response);
-            String jsonString = ""; // FIXME
-            ListFilesResponse listFilesResponse = objectMapper.readValue(jsonString, ListFilesResponse.class);
+            String response = stashConnector.listFiles(patchset);
+            List<JSONObject> jsonList = JsonPath.read(response, "$.values[*].path");
+            List<ReviewElement> containers = transform(jsonList, ReviewElement.class);
 
             List<ReviewFile> files = new ArrayList<ReviewFile>();
-            Set<String> keys = listFilesResponse.keySet();
-            for (String key : keys) {
-                files.add(new ReviewFile(key));
+            for (ReviewElement container : onlyScala(containers)) { // FIXME - not only scala, just configurable
+                String filePath = String.format("%s/%s", container.parent, container.name);
+                files.add(new ReviewFile(filePath));
             }
             return files;
         } catch (URISyntaxException e) {
@@ -75,6 +83,29 @@ public class StashFacade implements ConnectorFacade {
     @Override
     public void setReview(Patchset patchset, ReviewInput reviewInput) {
         StashPatchset stashPatchset = (StashPatchset) patchset;
+        for (Map.Entry<String, List<ReviewFileComment>> review : reviewInput.comments.entrySet()) {
+            log.info("{} : {}", review.getKey(), Joiner.on(", ").join(review.getValue()));
+        }
+    }
 
+    private List<ReviewElement> onlyScala(List<ReviewElement> transform) {
+        return FluentIterable.from(transform)
+                .filter(new Predicate<ReviewElement>() {
+                    public boolean apply(ReviewElement container) {
+                        return "scala".equals(container.extension);
+                    }
+                }).toList();
+    }
+
+    private <T> List<T> transform(List<JSONObject> jsonList, Class<T> someClass) {
+        List<T> result = Lists.newArrayList();
+        try {
+            for (JSONObject jsonObject : jsonList) {
+                result.add(objectMapper.readValue(jsonObject.toJSONString(), someClass));
+            }
+        } catch (IOException e) {
+            throw new StashException("Error parsing json strings to objects", e);
+        }
+        return result;
     }
 }

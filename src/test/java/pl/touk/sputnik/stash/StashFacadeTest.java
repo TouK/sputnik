@@ -32,10 +32,8 @@ public class StashFacadeTest {
 
         List<ReviewFile> files = fixture.listFiles(patchset);
 
-        assertEquals(2, files.size());
+        assertEquals(3, files.size());
 
-        verify(postRequestedFor(urlMatching("/my/resource/[a-z0-9]+"))
-                .withRequestBody(matching(".*<message>1234</message>.*"))
-                .withHeader("Content-Type", notMatching("application/json")));
+        verify(getRequestedFor(urlMatching(url)));
     }
 }

@@ -1,6 +1,5 @@
 package pl.touk.sputnik;
 
-import com.google.common.collect.ImmutableList;
 import org.apache.commons.cli.CommandLine;
 import org.junit.Test;
 import org.junit.Assert;

@@ -4,3 +4,5 @@ build/
 *iml
 classes
 *.iws
+*.ipr
+out
