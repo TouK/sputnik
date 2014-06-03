@@ -2,6 +2,7 @@ package pl.touk.sputnik;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -14,6 +15,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.apache.xerces.impl.dv.util.Base64;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,5 +86,9 @@ public abstract class AbstractConnector {
         return content;
     }
 
+    protected void addBasicAuthHeader(HttpRequest request) {
+        String encoding = Base64.encode((username + ":" + password).getBytes());
+        request.setHeader("Authorization", "Basic " + encoding);
+    }
 
 }

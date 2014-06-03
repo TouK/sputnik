@@ -28,6 +28,7 @@ public class StashConnector extends AbstractConnector {
         StashPatchset stashPatchset = (StashPatchset) patchset;
         URI uri = new URIBuilder().setPath(createChangesUrl(stashPatchset)).build();
         HttpGet httpGet = new HttpGet(uri);
+        addBasicAuthHeader(httpGet);
         CloseableHttpResponse httpResponse = logAndExecute(httpGet);
         return consumeAndLogEntity(httpResponse);
     }
