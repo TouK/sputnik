@@ -1,5 +1,6 @@
 package pl.touk.sputnik.stash;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
@@ -12,9 +13,13 @@ import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.Configuration;
 import pl.touk.sputnik.ConnectorFacade;
 import pl.touk.sputnik.Patchset;
+import pl.touk.sputnik.gerrit.GerritException;
 import pl.touk.sputnik.gerrit.json.ReviewFileComment;
 import pl.touk.sputnik.gerrit.json.ReviewInput;
+import pl.touk.sputnik.gerrit.json.ReviewLineComment;
 import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.stash.json.Anchor;
+import pl.touk.sputnik.stash.json.FileComment;
 import pl.touk.sputnik.stash.json.ReviewElement;
 
 import java.io.IOException;
@@ -82,10 +87,31 @@ public class StashFacade implements ConnectorFacade {
 
     @Override
     public void setReview(Patchset patchset, ReviewInput reviewInput) {
-        StashPatchset stashPatchset = (StashPatchset) patchset;
-        for (Map.Entry<String, List<ReviewFileComment>> review : reviewInput.comments.entrySet()) {
-            log.info("{} : {}", review.getKey(), Joiner.on(", ").join(review.getValue()));
+        try {
+            for (Map.Entry<String, List<ReviewFileComment>> review : reviewInput.comments.entrySet()) {
+                log.info("{} : {}", review.getKey(), Joiner.on(", ").join(review.getValue()));
+                for (ReviewFileComment comment : review.getValue()) {
+                    String json = objectMapper.writeValueAsString(toFileComment(review.getKey(), (ReviewLineComment) comment));
+                    stashConnector.setReview(patchset, json);
+                }
+            }
+        } catch (JsonProcessingException e) {
+            throw new StashException("Error setting review", e);
+        } catch (IOException e) {
+            throw new StashException("Error setting review", e);
+        } catch (URISyntaxException e) {
+            throw new StashException("Error setting review", e);
         }
+    }
+
+    private FileComment toFileComment(String key, ReviewLineComment comment) {
+        FileComment fileComment = new FileComment();
+        fileComment.text = comment.message;
+        fileComment.anchor = new Anchor();
+        fileComment.anchor.path = key;
+        fileComment.anchor.srcPath = key;
+        fileComment.anchor.line = comment.line;
+        return fileComment;
     }
 
     private List<ReviewElement> onlyScala(List<ReviewElement> transform) {

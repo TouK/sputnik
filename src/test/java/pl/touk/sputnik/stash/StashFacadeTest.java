@@ -22,9 +22,8 @@ public class StashFacadeTest {
     @Test
     public void shouldGetChangeInfo() throws Exception {
         StashPatchset patchset = new StashPatchset("a", "b", "c");
-        String url = StashConnector.createChangesUrl(patchset);
-        stubFor(get(urlEqualTo(StashConnector.createChangesUrl(patchset)))
-                //.withHeader("Authorization", equalTo("Basic asdasd"))
+        String url = StashConnector.createUrl(patchset, StashConnector.CHANGES_URL_FORMAT);
+        stubFor(get(urlEqualTo(StashConnector.createUrl(patchset, StashConnector.CHANGES_URL_FORMAT)))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
