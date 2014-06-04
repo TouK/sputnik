@@ -18,15 +18,15 @@ public class StashConnector extends AbstractConnector {
     // "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/comments";
     private static final String COMMENTS_URL_FORMAT = "/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/comments";
 
-    public StashConnector(String host, int port, String username, String password) {
-        super(host, port, username, password);
+    public StashConnector(String host, int port, String username, String password, boolean useHttps) {
+        super(host, port, username, password, useHttps);
     }
 
     @NotNull
     @Override
     public String listFiles(Patchset patchset) throws URISyntaxException, IOException {
         StashPatchset stashPatchset = (StashPatchset) patchset;
-        URI uri = new URIBuilder().setPath(createChangesUrl(stashPatchset)).build();
+        URI uri = new URIBuilder().setPath(getHost() + createChangesUrl(stashPatchset)).build();
         HttpGet httpGet = new HttpGet(uri);
         addBasicAuthHeader(httpGet);
         CloseableHttpResponse httpResponse = logAndExecute(httpGet);

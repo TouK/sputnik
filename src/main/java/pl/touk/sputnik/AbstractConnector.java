@@ -30,6 +30,7 @@ public abstract class AbstractConnector {
     private int port;
     private String username;
     private String password;
+    private boolean useHttps;
     private HttpHost httpHost;
     private CredentialsProvider credentialsProvider;
     private CloseableHttpClient httpClient;
@@ -37,11 +38,12 @@ public abstract class AbstractConnector {
     private DigestScheme digestScheme;
     private BasicAuthCache basicAuthCache;
 
-    public AbstractConnector(String host, int port, String username, String password) {
+    public AbstractConnector(String host, int port, String username, String password, boolean useHttps) {
         this.host = host;
         this.port = port;
         this.username = username;
         this.password = password;
+        this.useHttps = useHttps;
         createHttpContext();
     }
 
@@ -70,7 +72,7 @@ public abstract class AbstractConnector {
     @NotNull
     protected CloseableHttpResponse logAndExecute(@NotNull HttpRequestBase request) throws IOException {
         LOG.info("Request  {}: {} to {}", ++REQUEST_COUNTER, request.getMethod(), request.getURI().toString());
-        CloseableHttpResponse httpResponse = httpClient.execute(httpHost, request, httpClientContext);
+        CloseableHttpResponse httpResponse = httpClient.execute(request, httpClientContext);
         LOG.info("Response {}: {}", REQUEST_COUNTER, httpResponse.getStatusLine().toString());
         return httpResponse;
     }
@@ -91,4 +93,11 @@ public abstract class AbstractConnector {
         request.setHeader("Authorization", "Basic " + encoding);
     }
 
+    protected String getHost() {
+        if (useHttps) {
+            return String.format("https://%s:%s", host, port);
+        } else {
+            return String.format("http://%s:%s", host, port);
+        }
+    }
 }

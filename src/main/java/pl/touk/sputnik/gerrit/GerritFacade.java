@@ -33,8 +33,8 @@ public class GerritFacade implements ConnectorFacade {
     private GerritConnector gerritConnector;
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public GerritFacade(@NotNull String host, int port, @NotNull String username, @NotNull String password) {
-        gerritConnector = new GerritConnector(host, port, username, password);
+    public GerritFacade(@NotNull String host, int port, @NotNull String username, @NotNull String password, boolean useHttps) {
+        gerritConnector = new GerritConnector(host, port, username, password, useHttps);
     }
 
     /**

@@ -17,7 +17,7 @@ public class StashFacadeTest {
     public WireMockRule wireMockRule = new WireMockRule(PORT);
 
     private static int PORT = 8089;
-    private StashFacade fixture = new StashFacade("localhost", PORT, "user", "pass");
+    private StashFacade fixture = new StashFacade("localhost", PORT, "user", "pass", false);
 
     @Test
     public void shouldGetChangeInfo() throws Exception {

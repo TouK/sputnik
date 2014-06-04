@@ -39,8 +39,8 @@ public class StashFacade implements ConnectorFacade {
     private StashConnector stashConnector;
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public StashFacade(@NotNull String host, int port, @NotNull String username, @NotNull String password) {
-        stashConnector = new StashConnector(host, port, username, password);
+    public StashFacade(@NotNull String host, int port, @NotNull String username, @NotNull String password, boolean useHttps) {
+        stashConnector = new StashConnector(host, port, username, password, useHttps);
     }
 
     @Override

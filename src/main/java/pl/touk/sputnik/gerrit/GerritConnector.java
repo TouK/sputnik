@@ -21,15 +21,15 @@ public class GerritConnector extends AbstractConnector {
     private static final String GET_LIST_FILES_URL_FORMAT = "/a/changes/%s/revisions/%s/files/";
     private static final String POST_SET_REVIEW_URL_FORMAT = "/a/changes/%s/revisions/%s/review";
 
-    public GerritConnector(String host, int port, String username, String password) {
-        super(host, port, username, password);
+    public GerritConnector(String host, int port, String username, String password, boolean useHttps) {
+        super(host, port, username, password, useHttps);
     }
 
     @NotNull
     public String listFiles(Patchset patchset) throws URISyntaxException, IOException {
         GerritPatchset gerritPatchset = (GerritPatchset) patchset;
 
-        URI uri = new URIBuilder().setPath(String.format(GET_LIST_FILES_URL_FORMAT,
+        URI uri = new URIBuilder().setPath(getHost() + String.format(GET_LIST_FILES_URL_FORMAT,
                 gerritPatchset.getChangeId(), gerritPatchset.getRevisionId()))
                 .build();
         HttpGet httpGet = new HttpGet(uri);
@@ -42,7 +42,7 @@ public class GerritConnector extends AbstractConnector {
         GerritPatchset gerritPatchset = (GerritPatchset) patchset;
 
         LOG.info("Setting review {}", reviewInputAsJson);
-        URI uri = new URIBuilder().setPath(String.format(POST_SET_REVIEW_URL_FORMAT,
+        URI uri = new URIBuilder().setPath(getHost() + String.format(POST_SET_REVIEW_URL_FORMAT,
                 gerritPatchset.getChangeId(), gerritPatchset.getRevisionId()))
                 .build();
         HttpPost httpPost = new HttpPost(uri);

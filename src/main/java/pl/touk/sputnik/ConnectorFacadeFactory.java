@@ -46,7 +46,7 @@ public class ConnectorFacadeFactory {
         notBlank(username, "You must provide non blank Gerrit username");
         notBlank(password, "You must provide non blank Gerrit password");
 
-        return new GerritFacade(host, Integer.valueOf(port), username, password);
+        return new GerritFacade(host, Integer.valueOf(port), username, password, false);
     }
 
     @NotNull
@@ -61,6 +61,6 @@ public class ConnectorFacadeFactory {
         notBlank(username, "You must provide non blank Stash username");
         notBlank(password, "You must provide non blank Stash password");
 
-        return new StashFacade(host, Integer.valueOf(port), username, password);
+        return new StashFacade(host, Integer.valueOf(port), username, password, true);
     }
 }
