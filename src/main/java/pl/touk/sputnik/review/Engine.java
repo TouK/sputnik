@@ -8,6 +8,7 @@ import pl.touk.sputnik.checkstyle.CheckstyleProcessor;
 import pl.touk.sputnik.findbugs.FindBugsProcessor;
 import pl.touk.sputnik.gerrit.GerritFacade;
 import pl.touk.sputnik.gerrit.GerritPatchset;
+import pl.touk.sputnik.lint.LintProcessor;
 import pl.touk.sputnik.pmd.PmdProcessor;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class Engine {
     private static final String CHECKSTYLE_ENABLED = "checkstyle.enabled";
     private static final String PMD_ENABLED = "pmd.enabled";
     private static final String FINDBUGS_ENABLED = "findbugs.enabled";
+    private static final String LINT_ENABLED = "lint.enabled";
     private static final long THOUSAND = 1000L;
 
     public void run() {
@@ -62,6 +64,9 @@ public class Engine {
         }
         if (Boolean.valueOf(Configuration.instance().getProperty(FINDBUGS_ENABLED))) {
             processors.add(new FindBugsProcessor());
+        }
+        if (Boolean.valueOf(Configuration.instance().getProperty(LINT_ENABLED))) {
+            processors.add(new LintProcessor());
         }
         return processors;
     }
