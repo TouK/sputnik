@@ -33,7 +33,7 @@ public class CliOptionsTest {
     @Test
     public void shouldExecuteStashReview() throws Exception {
         // given
-        String[] args = toArgs("-connector stash -conf %s -prId %s", SAMPLE_CONFIG, SAMPLE_PULL_REQUEST_ID);
+        String[] args = toArgs("-connector stash -conf %s -pullRequestId %s", SAMPLE_CONFIG, SAMPLE_PULL_REQUEST_ID);
 
         // when
         CommandLine commandLine = fixture.parse(args);

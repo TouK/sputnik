@@ -2,6 +2,7 @@ package pl.touk.sputnik.stash;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
@@ -9,7 +10,9 @@ import com.google.common.collect.Lists;
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
+import org.apache.commons.cli.CommandLine;
 import org.jetbrains.annotations.NotNull;
+import pl.touk.sputnik.CliOptions;
 import pl.touk.sputnik.Configuration;
 import pl.touk.sputnik.ConnectorFacade;
 import pl.touk.sputnik.Patchset;
@@ -36,6 +39,7 @@ public class StashFacade implements ConnectorFacade {
     private static final String CONNECTOR_NAME = "stash";
     public static final String STASH_HOST = "stash.host";
     public static final String STASH_PORT = "stash.port";
+    public static final String STASH_USE_HTTPS = "stash.useHttps";
     public static final String STASH_USERNAME = "stash.username";
     public static final String STASH_PASSWORD = "stash.password";
     public static final String STASH_PROJECT_KEY = "stash.projectKey";
@@ -44,7 +48,26 @@ public class StashFacade implements ConnectorFacade {
     private StashConnector stashConnector;
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public StashFacade(@NotNull String host, int port, @NotNull String username, @NotNull String password, boolean useHttps) {
+    public static StashFacade build(CommandLine commandLine) {
+
+        Configuration.instance().setStashPullRequestId(commandLine.getOptionValue(CliOptions.PULL_REQUEST_ID));
+
+        String host = Configuration.instance().getProperty(StashFacade.STASH_HOST);
+        String port = Configuration.instance().getProperty(StashFacade.STASH_PORT);
+        String username = Configuration.instance().getProperty(StashFacade.STASH_USERNAME);
+        String password = Configuration.instance().getProperty(StashFacade.STASH_PASSWORD);
+        String useHttps = Configuration.instance().getProperty(StashFacade.STASH_USE_HTTPS);
+
+        notBlank(host, "You must provide non blank Stash host");
+        notBlank(port, "You must provide non blank Stash port");
+        notBlank(username, "You must provide non blank Stash username");
+        notBlank(password, "You must provide non blank Stash password");
+
+        return new StashFacade(host, Integer.valueOf(port), username, password, Boolean.parseBoolean(useHttps));
+    }
+
+    @VisibleForTesting
+    StashFacade(@NotNull String host, int port, @NotNull String username, @NotNull String password, boolean useHttps) {
         stashConnector = new StashConnector(host, port, username, password, useHttps);
     }
 

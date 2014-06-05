@@ -2,8 +2,10 @@ package pl.touk.sputnik.gerrit;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.cli.CommandLine;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import pl.touk.sputnik.CliOptions;
 import pl.touk.sputnik.Configuration;
 import pl.touk.sputnik.ConnectorFacade;
 import pl.touk.sputnik.Patchset;
@@ -28,10 +30,30 @@ public class GerritFacade implements ConnectorFacade {
     private static final String DOT = ".";
     public static final String GERRIT_HOST = "gerrit.host";
     public static final String GERRIT_PORT = "gerrit.port";
+    public static final String GERRIT_USE_HTTPS = "gerrit.useHttps";
     public static final String GERRIT_USERNAME = "gerrit.username";
     public static final String GERRIT_PASSWORD = "gerrit.password";
     private GerritConnector gerritConnector;
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    public static GerritFacade build(CommandLine commandLine) {
+
+        Configuration.instance().setGerritChangeId(commandLine.getOptionValue(CliOptions.CHANGE_ID));
+        Configuration.instance().setGerritRevisionId(commandLine.getOptionValue(CliOptions.REVISION_ID));
+
+        String host = Configuration.instance().getProperty(GerritFacade.GERRIT_HOST);
+        String port = Configuration.instance().getProperty(GerritFacade.GERRIT_PORT);
+        String username = Configuration.instance().getProperty(GerritFacade.GERRIT_USERNAME);
+        String password = Configuration.instance().getProperty(GerritFacade.GERRIT_PASSWORD);
+        String useHttps = Configuration.instance().getProperty(GerritFacade.GERRIT_USE_HTTPS);
+
+        notBlank(host, "You must provide non blank Gerrit host");
+        notBlank(port, "You must provide non blank Gerrit port");
+        notBlank(username, "You must provide non blank Gerrit username");
+        notBlank(password, "You must provide non blank Gerrit password");
+
+        return new GerritFacade(host, Integer.valueOf(port), username, password, Boolean.parseBoolean(useHttps));
+    }
 
     public GerritFacade(@NotNull String host, int port, @NotNull String username, @NotNull String password, boolean useHttps) {
         gerritConnector = new GerritConnector(host, port, username, password, useHttps);

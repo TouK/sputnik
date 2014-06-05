@@ -9,7 +9,7 @@ public class CliOptions {
     public static final String CHANGE_ID = "changeId";
     public static final String REVISION_ID = "revisionId";
     public static final String CONNECTOR = "connector";
-    public static final String PULL_REQUEST_ID = "prId";
+    public static final String PULL_REQUEST_ID = "pullRequestId";
 
     @Getter
     private final Options options;
@@ -58,5 +58,9 @@ public class CliOptions {
         }
 
         throw new ParseException("CLI arguments out of context");
+    }
+
+    public Connectors connector(CommandLine commandLine) {
+        return Connectors.valueOf(commandLine.getOptionValue(CONNECTOR).toUpperCase());
     }
 }

@@ -16,8 +16,8 @@ import java.util.List;
 
 public class ScalastyleProcessor implements ReviewProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(ScalastyleProcessor.class);
-    private static final String SOURCE_NAME = "SCALASTYLE";
-    private static final String SCALASTYLE_CONFIG = "scalastyle.scala_config";
+    private static final String SOURCE_NAME = "Scalastyle";
+    private static final String SCALASTYLE_CONFIG = "scalastyle.config";
 
     private final MessageHelper messageHelper = new MessageHelper(ClassLoader.getSystemClassLoader());
 
@@ -81,10 +81,10 @@ public class ScalastyleProcessor implements ReviewProcessor {
             return Severity.INFO;
         } else if (level.name().equals(Level.Warning())) {
             return Severity.WARNING;
-        } else {
-            LOG.warn("Got unrecognized severity level: {}", level);
-            return Severity.IGNORE;
         }
+
+        LOG.warn("Got unrecognized severity level: {}", level);
+        return Severity.IGNORE;
     }
 
     @NotNull

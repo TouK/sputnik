@@ -19,31 +19,17 @@ public final class Main {
         Connectors connector = null;
         try {
             commandLine = cliOptions.parse(args);
-            connector = cliOptions.contextSensitiveValidation(commandLine);
+            connector = cliOptions.connector(commandLine);
         } catch (ParseException e) {
             printUsage(cliOptions);
             System.out.println(e.getMessage());
             System.exit(1);
         }
 
-        initializeConfiguration(connector, commandLine);
-
-        new Engine().run(connector);
-    }
-
-    private static void initializeConfiguration(Connectors connector, CommandLine commandLine) {
         Configuration.instance().setConfigurationFilename(commandLine.getOptionValue(CliOptions.CONF));
-        switch (connector) {
-            case GERRIT:
-                Configuration.instance().setGerritChangeId(commandLine.getOptionValue(CliOptions.CHANGE_ID));
-                Configuration.instance().setGerritRevisionId(commandLine.getOptionValue(CliOptions.REVISION_ID));
-                break;
-            case STASH:
-                Configuration.instance().setStashPullRequestId(commandLine.getOptionValue(CliOptions.PULL_REQUEST_ID));
-                break;
-        }
-
         Configuration.instance().init();
+
+        new Engine().run(ConnectorFacadeFactory.INSTANCE.get(connector, commandLine));
     }
 
     private static void printUsage(@NotNull CliOptions cliOptions) {

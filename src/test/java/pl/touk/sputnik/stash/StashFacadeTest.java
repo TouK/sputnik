@@ -4,12 +4,12 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.apache.commons.io.IOUtils;
 import org.junit.Rule;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import pl.touk.sputnik.review.ReviewFile;
 
 import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class StashFacadeTest {
 
@@ -31,7 +31,7 @@ public class StashFacadeTest {
 
         List<ReviewFile> files = fixture.listFiles(patchset);
 
-        assertEquals(3, files.size());
+        assertThat(files).hasSize(3);
 
         verify(getRequestedFor(urlMatching(url)));
     }

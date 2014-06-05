@@ -3,18 +3,16 @@ package pl.touk.sputnik.review;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.touk.sputnik.*;
+import pl.touk.sputnik.Configuration;
+import pl.touk.sputnik.ConnectorFacade;
+import pl.touk.sputnik.Patchset;
 import pl.touk.sputnik.checkstyle.CheckstyleProcessor;
 import pl.touk.sputnik.findbugs.FindBugsProcessor;
-import pl.touk.sputnik.gerrit.GerritFacade;
-import pl.touk.sputnik.gerrit.GerritPatchset;
 import pl.touk.sputnik.pmd.PmdProcessor;
 import pl.touk.sputnik.scalastyle.ScalastyleProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.apache.commons.lang3.Validate.notBlank;
 
 public class Engine {
     private static final Logger LOG = LoggerFactory.getLogger(Engine.class);
@@ -24,8 +22,7 @@ public class Engine {
     private static final String SCALASTYLE_ENABLED = "scalastyle.enabled";
     private static final long THOUSAND = 1000L;
 
-    public void run(Connectors connector) {
-        ConnectorFacade facade = ConnectorFacadeFactory.get(connector);
+    public void run(ConnectorFacade facade) {
         Patchset patchSet = facade.createPatchset();
         List<ReviewFile> reviewFiles = facade.listFiles(patchSet);
         Review review = new Review(reviewFiles);
