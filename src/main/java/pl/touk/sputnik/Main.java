@@ -16,8 +16,10 @@ public final class Main {
     public static void main(String[] args) {
         CliOptions cliOptions = new CliOptions();
         CommandLine commandLine = null;
+        Connectors connector = null;
         try {
             commandLine = cliOptions.parse(args);
+            connector = cliOptions.connector(commandLine);
         } catch (ParseException e) {
             printUsage(cliOptions);
             System.out.println(e.getMessage());
@@ -25,10 +27,9 @@ public final class Main {
         }
 
         Configuration.instance().setConfigurationFilename(commandLine.getOptionValue(CliOptions.CONF));
-        Configuration.instance().setGerritChangeId(commandLine.getOptionValue(CliOptions.CHANGE_ID));
-        Configuration.instance().setGerritRevisionId(commandLine.getOptionValue(CliOptions.REVISION_ID));
         Configuration.instance().init();
-        new Engine().run();
+
+        new Engine().run(ConnectorFacadeFactory.INSTANCE.get(connector, commandLine));
     }
 
     private static void printUsage(@NotNull CliOptions cliOptions) {

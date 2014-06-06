@@ -4,28 +4,27 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.touk.sputnik.Configuration;
+import pl.touk.sputnik.ConnectorFacade;
+import pl.touk.sputnik.Patchset;
 import pl.touk.sputnik.checkstyle.CheckstyleProcessor;
 import pl.touk.sputnik.findbugs.FindBugsProcessor;
-import pl.touk.sputnik.gerrit.GerritFacade;
-import pl.touk.sputnik.gerrit.GerritPatchset;
 import pl.touk.sputnik.pmd.PmdProcessor;
+import pl.touk.sputnik.scalastyle.ScalastyleProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.apache.commons.lang3.Validate.notBlank;
 
 public class Engine {
     private static final Logger LOG = LoggerFactory.getLogger(Engine.class);
     private static final String CHECKSTYLE_ENABLED = "checkstyle.enabled";
     private static final String PMD_ENABLED = "pmd.enabled";
     private static final String FINDBUGS_ENABLED = "findbugs.enabled";
+    private static final String SCALASTYLE_ENABLED = "scalastyle.enabled";
     private static final long THOUSAND = 1000L;
 
-    public void run() {
-        GerritFacade gerritFacade = createGerritFacade();
-        GerritPatchset gerritPatchset = createGerritPatchset();
-        List<ReviewFile> reviewFiles = gerritFacade.listFiles(gerritPatchset);
+    public void run(ConnectorFacade facade) {
+        Patchset patchSet = facade.createPatchset();
+        List<ReviewFile> reviewFiles = facade.listFiles(patchSet);
         Review review = new Review(reviewFiles);
 
         List<ReviewProcessor> processors = createProcessors();
@@ -33,7 +32,7 @@ public class Engine {
             review(review, processor);
         }
 
-        gerritFacade.setReview(gerritPatchset, review.toReviewInput());
+        facade.setReview(patchSet, review.toReviewInput());
     }
 
     private void review(@NotNull Review review, @NotNull ReviewProcessor processor) {
@@ -63,32 +62,9 @@ public class Engine {
         if (Boolean.valueOf(Configuration.instance().getProperty(FINDBUGS_ENABLED))) {
             processors.add(new FindBugsProcessor());
         }
+        if (Boolean.valueOf(Configuration.instance().getProperty(SCALASTYLE_ENABLED))) {
+            processors.add(new ScalastyleProcessor());
+        }
         return processors;
-    }
-
-    @NotNull
-    private GerritFacade createGerritFacade() {
-        String host = Configuration.instance().getProperty(GerritFacade.GERRIT_HOST);
-        String port = Configuration.instance().getProperty(GerritFacade.GERRIT_PORT);
-        String username = Configuration.instance().getProperty(GerritFacade.GERRIT_USERNAME);
-        String password = Configuration.instance().getProperty(GerritFacade.GERRIT_PASSWORD);
-
-        notBlank(host, "You must provide non blank Gerrit host");
-        notBlank(port, "You must provide non blank Gerrit port");
-        notBlank(username, "You must provide non blank Gerrit username");
-        notBlank(password, "You must provide non blank Gerrit password");
-
-        return new GerritFacade(host, Integer.valueOf(port), username, password);
-    }
-
-    @NotNull
-    private GerritPatchset createGerritPatchset() {
-        String changeId = Configuration.instance().getGerritChangeId();
-        String revisionId = Configuration.instance().getGerritRevisionId();
-        notBlank(changeId, "You must provide non blank Gerrit change Id");
-        notBlank(revisionId, "You must provide non blank Gerrit revision Id");
-
-        return new GerritPatchset(changeId, revisionId);
-
     }
 }

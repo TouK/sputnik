@@ -2,3 +2,7 @@
 .idea/
 build/
 *iml
+classes
+*.iws
+*.ipr
+out
