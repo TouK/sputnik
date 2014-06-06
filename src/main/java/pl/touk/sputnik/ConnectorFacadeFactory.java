@@ -10,12 +10,13 @@ public class ConnectorFacadeFactory {
 
     @NotNull
     public ConnectorFacade get(Connectors name, CommandLine commandLine) {
-        if (name == Connectors.GERRIT) {
-            return GerritFacade.build(commandLine);
-        } else if (name == Connectors.STASH) {
-            return StashFacade.build(commandLine);
+        switch (name) {
+            case STASH:
+                return StashFacade.build(commandLine);
+            case GERRIT:
+                return GerritFacade.build(commandLine);
+            default:
+                throw new RuntimeException("No connector found for " + name);
         }
-        throw new RuntimeException("No connector found for " + name);
     }
-
 }

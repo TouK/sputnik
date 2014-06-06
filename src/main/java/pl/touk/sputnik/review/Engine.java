@@ -1,8 +1,7 @@
 package pl.touk.sputnik.review;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pl.touk.sputnik.Configuration;
 import pl.touk.sputnik.ConnectorFacade;
 import pl.touk.sputnik.Patchset;
@@ -14,8 +13,8 @@ import pl.touk.sputnik.processor.scalastyle.ScalastyleProcessor;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class Engine {
-    private static final Logger LOG = LoggerFactory.getLogger(Engine.class);
     private static final String CHECKSTYLE_ENABLED = "checkstyle.enabled";
     private static final String PMD_ENABLED = "pmd.enabled";
     private static final String FINDBUGS_ENABLED = "findbugs.enabled";
@@ -36,16 +35,16 @@ public class Engine {
     }
 
     private void review(@NotNull Review review, @NotNull ReviewProcessor processor) {
-        LOG.info("Review started for processor {}", processor.getName());
+        log.info("Review started for processor {}", processor.getName());
         long start = System.currentTimeMillis();
 
         ReviewResult reviewResult = processor.process(review);
-        LOG.info("Review finished for processor {}. Took {} s", processor.getName(), (System.currentTimeMillis() - start) / THOUSAND);
+        log.info("Review finished for processor {}. Took {} s", processor.getName(), (System.currentTimeMillis() - start) / THOUSAND);
 
         if (reviewResult == null) {
-            LOG.warn("Review for processor {} returned empty review", processor.getName());
+            log.warn("Review for processor {} returned empty review", processor.getName());
         } else {
-            LOG.info("Review for processor {} returned {} violations", processor.getName(), reviewResult.getViolations().size());
+            log.info("Review for processor {} returned {} violations", processor.getName(), reviewResult.getViolations().size());
             review.add(processor.getName(), reviewResult);
         }
     }

@@ -1,11 +1,10 @@
 package pl.touk.sputnik.processor.scalastyle;
 
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.scalastyle.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pl.touk.sputnik.Configuration;
 import pl.touk.sputnik.review.*;
 import scala.Option;
@@ -14,8 +13,8 @@ import scala.Some;
 import java.io.File;
 import java.util.List;
 
+@Slf4j
 public class ScalastyleProcessor implements ReviewProcessor {
-    private static final Logger LOG = LoggerFactory.getLogger(ScalastyleProcessor.class);
     private static final String SOURCE_NAME = "Scalastyle";
     private static final String SCALASTYLE_CONFIG = "scalastyle.config";
 
@@ -44,7 +43,7 @@ public class ScalastyleProcessor implements ReviewProcessor {
         ReviewResult reviewResult = new ReviewResult();
         String currentFileName = null;
         for (Message msg : messages) {
-            LOG.info("Got msg: {}", msg);
+            log.info("Got msg: {}", msg);
 
             if (msg instanceof StartFile) {
                 StartFile startFile = (StartFile) msg;
@@ -77,13 +76,15 @@ public class ScalastyleProcessor implements ReviewProcessor {
     private Severity errorLevel(Level level) {
         if (level.name().equals(Level.Error())) {
             return Severity.ERROR;
-        } else if (level.name().equals(Level.Info())) {
+        }
+        if (level.name().equals(Level.Info())) {
             return Severity.INFO;
-        } else if (level.name().equals(Level.Warning())) {
+        }
+        if (level.name().equals(Level.Warning())) {
             return Severity.WARNING;
         }
 
-        LOG.warn("Got unrecognized severity level: {}", level);
+        log.warn("Got unrecognized severity level: {}", level);
         return Severity.IGNORE;
     }
 

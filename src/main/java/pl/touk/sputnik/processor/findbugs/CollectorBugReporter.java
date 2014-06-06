@@ -1,21 +1,17 @@
 package pl.touk.sputnik.processor.findbugs;
 
-import edu.umd.cs.findbugs.AbstractBugReporter;
-import edu.umd.cs.findbugs.AnalysisError;
-import edu.umd.cs.findbugs.BugCollection;
-import edu.umd.cs.findbugs.BugInstance;
-import edu.umd.cs.findbugs.Priorities;
+import edu.umd.cs.findbugs.*;
 import edu.umd.cs.findbugs.classfile.ClassDescriptor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;
 
+@Slf4j
 public class CollectorBugReporter extends AbstractBugReporter {
-    private static final Logger LOG = LoggerFactory.getLogger(CollectorBugReporter.class);
+
     @Getter
     private final ReviewResult reviewResult = new ReviewResult();
     private String lastObservedClass;
@@ -27,7 +23,7 @@ public class CollectorBugReporter extends AbstractBugReporter {
 
     @Override
     public void reportAnalysisError(AnalysisError error) {
-        LOG.warn("Analysis error {}", error);
+        log.warn("Analysis error {}", error);
     }
 
     @Override
@@ -37,19 +33,19 @@ public class CollectorBugReporter extends AbstractBugReporter {
 
     @Override
     public void finish() {
-        LOG.info("FindBugs audit finished");
+        log.info("FindBugs audit finished");
 
     }
 
     @Override
     public BugCollection getBugCollection() {
-        LOG.debug("getBugCollection");
+        log.debug("getBugCollection");
         return null;
     }
 
     @Override
     public void observeClass(@NotNull ClassDescriptor classDescriptor) {
-        LOG.debug("Observe class {}", classDescriptor.getDottedClassName());
+        log.debug("Observe class {}", classDescriptor.getDottedClassName());
         lastObservedClass = classDescriptor.getDottedClassName();
     }
 

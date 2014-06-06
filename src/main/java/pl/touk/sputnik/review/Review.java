@@ -2,10 +2,9 @@ package pl.touk.sputnik.review;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pl.touk.sputnik.connector.gerrit.json.ReviewFileComment;
 import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
 import pl.touk.sputnik.connector.gerrit.json.ReviewLineComment;
@@ -14,8 +13,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class Review {
-    private static final Logger LOG = LoggerFactory.getLogger(Review.class);
     /* Source, severity, message, e.g. [Checkstyle] Info: This is bad */
     private static final String COMMENT_FORMAT = "[%s] %s: %s";
     private final List<ReviewFile> files;
@@ -82,7 +81,7 @@ public class Review {
                 return;
             }
         }
-        LOG.warn("Filename or Java class {} was not found in current review", violation.getFilenameOrJavaClassName());
+        log.warn("Filename or Java class {} was not found in current review", violation.getFilenameOrJavaClassName());
     }
 
     private void addError(@NotNull ReviewFile reviewFile, @NotNull String source, int line, @Nullable String message, Severity severity) {

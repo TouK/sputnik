@@ -1,5 +1,6 @@
 package pl.touk.sputnik.connector.gerrit;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -7,8 +8,6 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pl.touk.sputnik.AbstractConnector;
 import pl.touk.sputnik.Patchset;
 
@@ -16,8 +15,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+@Slf4j
 public class GerritConnector extends AbstractConnector {
-    private static final Logger LOG = LoggerFactory.getLogger(GerritConnector.class);
     private static final String GET_LIST_FILES_URL_FORMAT = "/a/changes/%s/revisions/%s/files/";
     private static final String POST_SET_REVIEW_URL_FORMAT = "/a/changes/%s/revisions/%s/review";
 
@@ -41,7 +40,7 @@ public class GerritConnector extends AbstractConnector {
     public String setReview(Patchset patchset, String reviewInputAsJson) throws URISyntaxException, IOException {
         GerritPatchset gerritPatchset = (GerritPatchset) patchset;
 
-        LOG.info("Setting review {}", reviewInputAsJson);
+        log.info("Setting review {}", reviewInputAsJson);
         URI uri = new URIBuilder().setPath(getHost() + String.format(POST_SET_REVIEW_URL_FORMAT,
                 gerritPatchset.getChangeId(), gerritPatchset.getRevisionId()))
                 .build();

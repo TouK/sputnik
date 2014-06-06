@@ -1,5 +1,6 @@
 package pl.touk.sputnik;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
@@ -17,14 +18,12 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.xerces.impl.dv.util.Base64;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+@Slf4j
 public abstract class AbstractConnector {
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractConnector.class);
     private static int REQUEST_COUNTER = 0;
     private String host;
     private int port;
@@ -71,20 +70,20 @@ public abstract class AbstractConnector {
 
     @NotNull
     protected CloseableHttpResponse logAndExecute(@NotNull HttpRequestBase request) throws IOException {
-        LOG.info("Request  {}: {} to {}", ++REQUEST_COUNTER, request.getMethod(), request.getURI().toString());
+        log.info("Request  {}: {} to {}", ++REQUEST_COUNTER, request.getMethod(), request.getURI().toString());
         CloseableHttpResponse httpResponse = httpClient.execute(request, httpClientContext);
-        LOG.info("Response {}: {}", REQUEST_COUNTER, httpResponse.getStatusLine().toString());
+        log.info("Response {}: {}", REQUEST_COUNTER, httpResponse.getStatusLine().toString());
         return httpResponse;
     }
 
     @NotNull
     protected String consumeAndLogEntity(@NotNull CloseableHttpResponse response) throws IOException {
         if (response.getEntity() == null) {
-            LOG.debug("Entity {}: no entity", REQUEST_COUNTER);
+            log.debug("Entity {}: no entity", REQUEST_COUNTER);
             return StringUtils.EMPTY;
         }
         String content = EntityUtils.toString(response.getEntity());
-        LOG.info("Entity {}: {}", REQUEST_COUNTER, content);
+        log.info("Entity {}: {}", REQUEST_COUNTER, content);
         return content;
     }
 
