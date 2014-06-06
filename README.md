@@ -1,6 +1,8 @@
 # sputnik
 
-Static code review for your Gerrit patchsets. Runs Checkstyle, PMD and FindBugs for you!
+> Static code review for your Gerrit patchsets. Runs Checkstyle, PMD and FindBugs for you!
+
+[![Build Status](https://api.travis-ci.org/TouK/sputnik.png)](https://travis-ci.org/TouK/sputnik)
 
 ## Usage
 
