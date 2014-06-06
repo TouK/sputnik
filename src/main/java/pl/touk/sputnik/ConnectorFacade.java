@@ -1,6 +1,6 @@
 package pl.touk.sputnik;
 
-import pl.touk.sputnik.gerrit.json.ReviewInput;
+import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
 import pl.touk.sputnik.review.ReviewFile;
 
 import java.util.List;

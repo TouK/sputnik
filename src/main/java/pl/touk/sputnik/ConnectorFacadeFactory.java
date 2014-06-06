@@ -2,8 +2,8 @@ package pl.touk.sputnik;
 
 import org.apache.commons.cli.CommandLine;
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.gerrit.GerritFacade;
-import pl.touk.sputnik.stash.StashFacade;
+import pl.touk.sputnik.connector.gerrit.GerritFacade;
+import pl.touk.sputnik.connector.stash.StashFacade;
 
 public class ConnectorFacadeFactory {
     public static final ConnectorFacadeFactory INSTANCE = new ConnectorFacadeFactory();

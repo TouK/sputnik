@@ -6,10 +6,10 @@ import org.slf4j.LoggerFactory;
 import pl.touk.sputnik.Configuration;
 import pl.touk.sputnik.ConnectorFacade;
 import pl.touk.sputnik.Patchset;
-import pl.touk.sputnik.checkstyle.CheckstyleProcessor;
-import pl.touk.sputnik.findbugs.FindBugsProcessor;
-import pl.touk.sputnik.pmd.PmdProcessor;
-import pl.touk.sputnik.scalastyle.ScalastyleProcessor;
+import pl.touk.sputnik.processor.checkstyle.CheckstyleProcessor;
+import pl.touk.sputnik.processor.findbugs.FindBugsProcessor;
+import pl.touk.sputnik.processor.pmd.PmdProcessor;
+import pl.touk.sputnik.processor.scalastyle.ScalastyleProcessor;
 
 import java.util.ArrayList;
 import java.util.List;

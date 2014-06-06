@@ -6,9 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.touk.sputnik.gerrit.json.ReviewFileComment;
-import pl.touk.sputnik.gerrit.json.ReviewInput;
-import pl.touk.sputnik.gerrit.json.ReviewLineComment;
+import pl.touk.sputnik.connector.gerrit.json.ReviewFileComment;
+import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
+import pl.touk.sputnik.connector.gerrit.json.ReviewLineComment;
 
 import java.io.File;
 import java.util.ArrayList;
