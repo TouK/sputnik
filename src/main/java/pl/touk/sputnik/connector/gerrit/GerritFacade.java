@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.CliOptions;
+import pl.touk.sputnik.cli.CliWrapper;
 import pl.touk.sputnik.Configuration;
 import pl.touk.sputnik.ConnectorFacade;
 import pl.touk.sputnik.Patchset;
@@ -38,8 +38,8 @@ public class GerritFacade implements ConnectorFacade {
 
     public static GerritFacade build(CommandLine commandLine) {
 
-        Configuration.instance().setGerritChangeId(commandLine.getOptionValue(CliOptions.CHANGE_ID));
-        Configuration.instance().setGerritRevisionId(commandLine.getOptionValue(CliOptions.REVISION_ID));
+        Configuration.instance().setGerritChangeId(commandLine.getOptionValue(CliWrapper.CHANGE_ID));
+        Configuration.instance().setGerritRevisionId(commandLine.getOptionValue(CliWrapper.REVISION_ID));
 
         String host = Configuration.instance().getProperty(GerritFacade.GERRIT_HOST);
         String port = Configuration.instance().getProperty(GerritFacade.GERRIT_PORT);

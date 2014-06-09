@@ -1,10 +1,11 @@
-package pl.touk.sputnik;
+package pl.touk.sputnik.cli;
 
 import lombok.Getter;
 import org.apache.commons.cli.*;
 import org.jetbrains.annotations.NotNull;
+import pl.touk.sputnik.Connectors;
 
-public class CliOptions {
+public class CliWrapper {
     public static final String CONF = "conf";
     public static final String CHANGE_ID = "changeId";
     public static final String REVISION_ID = "revisionId";
@@ -14,7 +15,7 @@ public class CliOptions {
     @Getter
     private final Options options;
 
-    public CliOptions() {
+    public CliWrapper() {
         options = createOptions();
     }
 
@@ -23,11 +24,12 @@ public class CliOptions {
     private Options createOptions() {
         Options options = new Options();
         options.addOption(buildOption(CONF, true, true, "Configuration properties file"));
-        options.addOption(buildOption(CONNECTOR, true, true, "Stash or Gerrit connector?"));
+        options.addOption(buildOption(CONNECTOR, true, true, "Connector: <stash|gerrit>"));
 
         options.addOption(buildOption(CHANGE_ID, true, false, "Gerrit change id"));
         options.addOption(buildOption(REVISION_ID, true, false, "Gerrit revision id"));
-        options.addOption(buildOption(PULL_REQUEST_ID, true, false, "Stash Pull Request Id"));
+
+        options.addOption(buildOption(PULL_REQUEST_ID, true, false, "Stash pull request Id"));
 
         return options;
     }

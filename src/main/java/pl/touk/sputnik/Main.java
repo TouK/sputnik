@@ -4,6 +4,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.ParseException;
 import org.jetbrains.annotations.NotNull;
+import pl.touk.sputnik.cli.CliWrapper;
 import pl.touk.sputnik.review.Engine;
 
 public final class Main {
@@ -14,25 +15,26 @@ public final class Main {
     private Main() {}
 
     public static void main(String[] args) {
-        CliOptions cliOptions = new CliOptions();
+        CliWrapper cliWrapper = new CliWrapper();
         CommandLine commandLine = null;
         Connectors connector = null;
         try {
-            commandLine = cliOptions.parse(args);
-            connector = cliOptions.connector(commandLine);
+            commandLine = cliWrapper.parse(args);
+            connector = cliWrapper.connector(commandLine);
         } catch (ParseException e) {
-            printUsage(cliOptions);
+            printUsage(cliWrapper);
             System.out.println(e.getMessage());
             System.exit(1);
         }
 
-        Configuration.instance().setConfigurationFilename(commandLine.getOptionValue(CliOptions.CONF));
+        Configuration.instance().setConfigurationFilename(commandLine.getOptionValue(CliWrapper.CONF));
         Configuration.instance().init();
+        Configuration.instance().updateWithCliOptions(commandLine);
 
         new Engine().run(ConnectorFacadeFactory.INSTANCE.get(connector, commandLine));
     }
 
-    private static void printUsage(@NotNull CliOptions cliOptions) {
+    private static void printUsage(@NotNull CliWrapper cliOptions) {
         System.out.println(HEADER);
         HelpFormatter helpFormatter = new HelpFormatter();
         helpFormatter.setWidth(WIDTH);

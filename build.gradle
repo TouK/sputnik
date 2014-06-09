@@ -52,8 +52,9 @@ dependencies {
     compile 'org.scalastyle:scalastyle_2.10:0.4.0'
 
     // Test dependencies
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile 'junit:junit:4.11'
     testCompile 'org.mockito:mockito-all:1.9.5'
     testCompile 'org.assertj:assertj-core:1.5.0'
+    testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
     testCompile 'com.github.tomakehurst:wiremock:1.46'
 }

@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import org.apache.commons.cli.CommandLine;
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.CliOptions;
+import pl.touk.sputnik.cli.CliWrapper;
 import pl.touk.sputnik.Configuration;
 import pl.touk.sputnik.ConnectorFacade;
 import pl.touk.sputnik.Patchset;
@@ -49,7 +49,7 @@ public class StashFacade implements ConnectorFacade {
 
     public static StashFacade build(CommandLine commandLine) {
 
-        Configuration.instance().setStashPullRequestId(commandLine.getOptionValue(CliOptions.PULL_REQUEST_ID));
+        Configuration.instance().setStashPullRequestId(commandLine.getOptionValue(CliWrapper.PULL_REQUEST_ID));
 
         String host = Configuration.instance().getProperty(StashFacade.STASH_HOST);
         String port = Configuration.instance().getProperty(StashFacade.STASH_PORT);
