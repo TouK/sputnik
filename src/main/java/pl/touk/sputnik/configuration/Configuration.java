@@ -1,27 +1,34 @@
 package pl.touk.sputnik.configuration;
 
-import java.io.FileReader;
+import com.google.common.io.Resources;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
-
-import static org.apache.commons.lang3.Validate.notBlank;
 
 @Slf4j
 public class Configuration {
+    private static final Logger LOG = LoggerFactory.getLogger(Configuration.class);
+
     private static Configuration INSTANCE = new Configuration();
     private static final String CLI_OPTION_PREFIX = "cli.";
     private Properties properties = new Properties();
 
     @Getter @Setter private String configurationFilename;
+    @Getter @Setter private String configurationResource;
 
     Configuration() {}
 
@@ -45,15 +52,24 @@ public class Configuration {
     }
 
     public void init() {
-        notBlank(configurationFilename, "You need to provide filename with configuration properties");
-        log.info("Initializing configuration properties from file {}", configurationFilename);
+        if (StringUtils.isEmpty(configurationFilename) && StringUtils.isEmpty(configurationResource)) {
+            throw new IllegalArgumentException("You need to provide filename or resource with configuration properties");
+        }
 
+        InputStream propertiesStream = null;
         properties = new Properties();
-        try (FileReader reader = new FileReader(configurationFilename)){
-            properties.load(reader);
+        try {
+            if (StringUtils.isNotEmpty(configurationFilename)) {
+                propertiesStream = initFileStream(configurationFilename);
+            } else if (StringUtils.isNotEmpty(configurationResource)) {
+                propertiesStream = initResourceStream(configurationResource);
+            }
+            properties.load(propertiesStream);
         } catch (IOException e) {
-            log.error("Configuration initialization failed", e);
-            throw new RuntimeException("Configuration file " + configurationFilename + " cannot be loaded");
+            LOG.error("Configuration initialization failed");
+            throw new RuntimeException(e);
+        } finally {
+            IOUtils.closeQuietly(propertiesStream);
         }
     }
 
@@ -69,5 +85,15 @@ public class Configuration {
 
     void setProperties(Properties properties) {
         this.properties = properties;
+    }
+
+    private InputStream initResourceStream(String resource) throws IOException {
+        LOG.info("Initializing configuration properties from resource {}", resource);
+        return Resources.newInputStreamSupplier(Resources.getResource(resource)).getInput();
+    }
+
+    private InputStream initFileStream(String filename) throws FileNotFoundException {
+        LOG.info("Initializing configuration properties from file {}", filename);
+        return new FileInputStream(filename);
     }
 }
