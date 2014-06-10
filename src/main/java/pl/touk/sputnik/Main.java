@@ -31,7 +31,7 @@ public final class Main {
         Configuration.instance().init();
         Configuration.instance().updateWithCliOptions(commandLine);
 
-        new Engine().run(ConnectorFacadeFactory.INSTANCE.get(connector, commandLine));
+        new Engine().run();
     }
 
     private static void printUsage(@NotNull CliWrapper cliOptions) {

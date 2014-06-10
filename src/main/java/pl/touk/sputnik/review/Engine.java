@@ -3,8 +3,9 @@ package pl.touk.sputnik.review;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.Configuration;
-import pl.touk.sputnik.ConnectorFacade;
+import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.Patchset;
+import pl.touk.sputnik.connector.ConnectorFacadeFactory;
 import pl.touk.sputnik.processor.checkstyle.CheckstyleProcessor;
 import pl.touk.sputnik.processor.findbugs.FindBugsProcessor;
 import pl.touk.sputnik.processor.pmd.PmdProcessor;
@@ -21,7 +22,8 @@ public class Engine {
     private static final String SCALASTYLE_ENABLED = "scalastyle.enabled";
     private static final long THOUSAND = 1000L;
 
-    public void run(ConnectorFacade facade) {
+    public void run() {
+        ConnectorFacade facade = ConnectorFacadeFactory.INSTANCE.build(Configuration.instance().getProperty("cli.connector"));
         Patchset patchSet = facade.createPatchset();
         List<ReviewFile> reviewFiles = facade.listFiles(patchSet);
         Review review = new Review(reviewFiles);

@@ -1,5 +1,6 @@
-package pl.touk.sputnik;
+package pl.touk.sputnik.connector;
 
+import pl.touk.sputnik.Patchset;
 import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
 import pl.touk.sputnik.review.ReviewFile;
 

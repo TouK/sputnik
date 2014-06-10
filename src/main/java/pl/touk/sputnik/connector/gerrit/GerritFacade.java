@@ -1,17 +1,15 @@
 package pl.touk.sputnik.connector.gerrit;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.cli.CommandLine;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.cli.CliWrapper;
 import pl.touk.sputnik.Configuration;
-import pl.touk.sputnik.ConnectorFacade;
 import pl.touk.sputnik.Patchset;
-import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.cli.CliOption;
+import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.gerrit.json.ListFilesResponse;
 import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
+import pl.touk.sputnik.review.ReviewFile;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -35,25 +33,6 @@ public class GerritFacade implements ConnectorFacade {
     public static final String GERRIT_PASSWORD = "gerrit.password";
     private GerritConnector gerritConnector;
     private ObjectMapper objectMapper = new ObjectMapper();
-
-    public static GerritFacade build(CommandLine commandLine) {
-
-        Configuration.instance().setGerritChangeId(commandLine.getOptionValue(CliWrapper.CHANGE_ID));
-        Configuration.instance().setGerritRevisionId(commandLine.getOptionValue(CliWrapper.REVISION_ID));
-
-        String host = Configuration.instance().getProperty(GerritFacade.GERRIT_HOST);
-        String port = Configuration.instance().getProperty(GerritFacade.GERRIT_PORT);
-        String username = Configuration.instance().getProperty(GerritFacade.GERRIT_USERNAME);
-        String password = Configuration.instance().getProperty(GerritFacade.GERRIT_PASSWORD);
-        String useHttps = Configuration.instance().getProperty(GerritFacade.GERRIT_USE_HTTPS);
-
-        notBlank(host, "You must provide non blank Gerrit host");
-        notBlank(port, "You must provide non blank Gerrit port");
-        notBlank(username, "You must provide non blank Gerrit username");
-        notBlank(password, "You must provide non blank Gerrit password");
-
-        return new GerritFacade(host, Integer.valueOf(port), username, password, Boolean.parseBoolean(useHttps));
-    }
 
     public GerritFacade(@NotNull String host, int port, @NotNull String username, @NotNull String password, boolean useHttps) {
         gerritConnector = new GerritConnector(host, port, username, password, useHttps);
@@ -89,11 +68,7 @@ public class GerritFacade implements ConnectorFacade {
         try {
             String json = objectMapper.writeValueAsString(reviewInput);
             gerritConnector.setReview(patchset, json);
-        } catch (JsonProcessingException e) {
-            throw new GerritException("Error setting review", e);
-        } catch (IOException e) {
-            throw new GerritException("Error setting review", e);
-        } catch (URISyntaxException e) {
+        } catch (IOException | URISyntaxException e) {
             throw new GerritException("Error setting review", e);
         }
     }
@@ -115,8 +90,8 @@ public class GerritFacade implements ConnectorFacade {
     @NotNull
     @Override
     public Patchset createPatchset() {
-        String changeId = Configuration.instance().getGerritChangeId();
-        String revisionId = Configuration.instance().getGerritRevisionId();
+        String changeId = Configuration.instance().getProperty(CliOption.CHANGE_ID);
+        String revisionId = Configuration.instance().getProperty(CliOption.REVISION_ID);
         notBlank(changeId, "You must provide non blank Gerrit change Id");
         notBlank(revisionId, "You must provide non blank Gerrit revision Id");
 

@@ -9,6 +9,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pl.touk.sputnik.cli.CliOption;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,10 +26,6 @@ public class Configuration {
     private Properties properties = new Properties();
 
     @Getter @Setter private String configurationFilename;
-    @Getter @Setter private String gerritChangeId;
-    @Getter @Setter private String gerritRevisionId;
-    @Getter @Setter private String connectorName;
-    @Getter @Setter private String stashPullRequestId;
 
     Configuration() {}
 
@@ -44,6 +41,11 @@ public class Configuration {
             value = System.getProperty(key);
         }
         return value;
+    }
+
+    @Nullable
+    public String getProperty(CliOption cliOption) {
+        return getProperty(cliOption.name());
     }
 
     public void init() {

@@ -10,19 +10,18 @@ import com.google.common.collect.Lists;
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
-import org.apache.commons.cli.CommandLine;
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.cli.CliWrapper;
 import pl.touk.sputnik.Configuration;
-import pl.touk.sputnik.ConnectorFacade;
 import pl.touk.sputnik.Patchset;
+import pl.touk.sputnik.cli.CliOption;
+import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.gerrit.json.ReviewFileComment;
 import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
 import pl.touk.sputnik.connector.gerrit.json.ReviewLineComment;
-import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.connector.stash.json.Anchor;
 import pl.touk.sputnik.connector.stash.json.FileComment;
 import pl.touk.sputnik.connector.stash.json.ReviewElement;
+import pl.touk.sputnik.review.ReviewFile;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -47,24 +46,6 @@ public class StashFacade implements ConnectorFacade {
     private StashConnector stashConnector;
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public static StashFacade build(CommandLine commandLine) {
-
-        Configuration.instance().setStashPullRequestId(commandLine.getOptionValue(CliWrapper.PULL_REQUEST_ID));
-
-        String host = Configuration.instance().getProperty(StashFacade.STASH_HOST);
-        String port = Configuration.instance().getProperty(StashFacade.STASH_PORT);
-        String username = Configuration.instance().getProperty(StashFacade.STASH_USERNAME);
-        String password = Configuration.instance().getProperty(StashFacade.STASH_PASSWORD);
-        String useHttps = Configuration.instance().getProperty(StashFacade.STASH_USE_HTTPS);
-
-        notBlank(host, "You must provide non blank Stash host");
-        notBlank(port, "You must provide non blank Stash port");
-        notBlank(username, "You must provide non blank Stash username");
-        notBlank(password, "You must provide non blank Stash password");
-
-        return new StashFacade(host, Integer.valueOf(port), username, password, Boolean.parseBoolean(useHttps));
-    }
-
     @VisibleForTesting
     StashFacade(@NotNull String host, int port, @NotNull String username, @NotNull String password, boolean useHttps) {
         stashConnector = new StashConnector(host, port, username, password, useHttps);
@@ -77,7 +58,7 @@ public class StashFacade implements ConnectorFacade {
 
     @Override
     public Patchset createPatchset() {
-        String pullRequestId = Configuration.instance().getStashPullRequestId();
+        String pullRequestId = Configuration.instance().getProperty(CliOption.PULL_REQUEST_ID);
         String repositorySlug = Configuration.instance().getProperty(STASH_REPOSITORY_SLUG);
         String projectKey = Configuration.instance().getProperty(STASH_PROJECT_KEY);
 
