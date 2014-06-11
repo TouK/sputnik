@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.scalastyle.*;
-import pl.touk.sputnik.Configuration;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.review.*;
 import scala.Option;
 import scala.Some;

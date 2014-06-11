@@ -1,4 +1,4 @@
-package pl.touk.sputnik;
+package pl.touk.sputnik.configuration;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pl.touk.sputnik.cli.CliOption;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,9 +18,7 @@ import static org.apache.commons.lang3.Validate.notBlank;
 
 @Slf4j
 public class Configuration {
-    private static final Configuration INSTANCE = new Configuration();
-    private static final String SPUTNIK_PROPERTIES = "sputnik.properties";
-    private static final String SPUTNIK_OPTS = "SPUTNIK_OPTS";
+    private static Configuration INSTANCE = new Configuration();
     private static final String CLI_OPTION_PREFIX = "cli.";
     private Properties properties = new Properties();
 
@@ -45,7 +42,7 @@ public class Configuration {
 
     @Nullable
     public String getProperty(CliOption cliOption) {
-        return getProperty(cliOption.name());
+        return getProperty(cliOption.getKey());
     }
 
     public void init() {
@@ -72,5 +69,13 @@ public class Configuration {
         for (Option option : commandLine.getOptions()) {
             properties.setProperty(CLI_OPTION_PREFIX + option.getArgName(), option.getValue());
         }
+    }
+
+    static void setInstance(Configuration instance) {
+        INSTANCE = instance;
+    }
+
+    void setProperties(Properties properties) {
+        this.properties = properties;
     }
 }

@@ -2,9 +2,8 @@ package pl.touk.sputnik.review;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.Configuration;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.connector.ConnectorFacade;
-import pl.touk.sputnik.Patchset;
 import pl.touk.sputnik.connector.ConnectorFacadeFactory;
 import pl.touk.sputnik.processor.checkstyle.CheckstyleProcessor;
 import pl.touk.sputnik.processor.findbugs.FindBugsProcessor;
@@ -24,8 +23,7 @@ public class Engine {
 
     public void run() {
         ConnectorFacade facade = ConnectorFacadeFactory.INSTANCE.build(Configuration.instance().getProperty("cli.connector"));
-        Patchset patchSet = facade.createPatchset();
-        List<ReviewFile> reviewFiles = facade.listFiles(patchSet);
+        List<ReviewFile> reviewFiles = facade.listFiles();
         Review review = new Review(reviewFiles);
 
         List<ReviewProcessor> processors = createProcessors();
@@ -33,7 +31,7 @@ public class Engine {
             review(review, processor);
         }
 
-        facade.setReview(patchSet, review.toReviewInput());
+        facade.setReview(review.toReviewInput());
     }
 
     private void review(@NotNull Review review, @NotNull ReviewProcessor processor) {

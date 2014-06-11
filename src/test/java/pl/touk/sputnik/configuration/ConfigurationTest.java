@@ -1,4 +1,4 @@
-package pl.touk.sputnik;
+package pl.touk.sputnik.configuration;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;

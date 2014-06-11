@@ -1,10 +1,17 @@
 package pl.touk.sputnik.connector.stash;
 
-import pl.touk.sputnik.Configuration;
+import org.apache.http.HttpHost;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.client.CloseableHttpClient;
+import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.CliOption;
+import pl.touk.sputnik.connector.http.HttpHelper;
 
 import static org.apache.commons.lang3.Validate.notBlank;
 
 public class StashFacadeBuilder {
+
+    private HttpHelper httpHelper = new HttpHelper();
 
     public StashFacade build() {
         String host = Configuration.instance().getProperty(StashFacade.STASH_HOST);
@@ -18,6 +25,23 @@ public class StashFacadeBuilder {
         notBlank(username, "You must provide non blank Stash username");
         notBlank(password, "You must provide non blank Stash password");
 
-        return new StashFacade(host, Integer.valueOf(port), username, password, Boolean.parseBoolean(useHttps));
+        StashPatchset stashPatchset = buildStashPatchset();
+
+        HttpHost httpHost = httpHelper.buildHttpHost(host, Integer.valueOf(port), Boolean.parseBoolean(useHttps));
+        HttpClientContext httpClientContext = httpHelper.buildClientContext(httpHost);
+        CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, username, password);
+
+        return new StashFacade(closeableHttpClient, httpClientContext, stashPatchset);
+    }
+
+    public StashPatchset buildStashPatchset() {
+        String pullRequestId = Configuration.instance().getProperty(CliOption.PULL_REQUEST_ID);
+        String repositorySlug = Configuration.instance().getProperty(StashFacade.STASH_REPOSITORY_SLUG);
+        String projectKey = Configuration.instance().getProperty(StashFacade.STASH_PROJECT_KEY);
+
+        notBlank(pullRequestId, "You must provide non blank Stash pull request id");
+        notBlank(repositorySlug, "You must provide non blank Stash repository slug");
+        notBlank(projectKey, "You must provide non blank Stash project key");
+        return new StashPatchset(pullRequestId, repositorySlug, projectKey);
     }
 }

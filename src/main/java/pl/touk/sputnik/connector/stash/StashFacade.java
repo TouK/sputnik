@@ -1,8 +1,6 @@
 package pl.touk.sputnik.connector.stash;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
@@ -10,14 +8,14 @@ import com.google.common.collect.Lists;
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.Configuration;
-import pl.touk.sputnik.Patchset;
-import pl.touk.sputnik.cli.CliOption;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.gerrit.json.ReviewFileComment;
 import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
 import pl.touk.sputnik.connector.gerrit.json.ReviewLineComment;
+import pl.touk.sputnik.connector.http.HttpConnector;
 import pl.touk.sputnik.connector.stash.json.Anchor;
 import pl.touk.sputnik.connector.stash.json.FileComment;
 import pl.touk.sputnik.connector.stash.json.ReviewElement;
@@ -28,8 +26,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import static org.apache.commons.lang3.Validate.notBlank;
 
 @Slf4j
 public class StashFacade implements ConnectorFacade {
@@ -46,9 +42,8 @@ public class StashFacade implements ConnectorFacade {
     private StashConnector stashConnector;
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    @VisibleForTesting
-    StashFacade(@NotNull String host, int port, @NotNull String username, @NotNull String password, boolean useHttps) {
-        stashConnector = new StashConnector(host, port, username, password, useHttps);
+    public StashFacade(@NotNull CloseableHttpClient httpClient, @NotNull HttpClientContext httpClientContext, @NotNull StashPatchset stashPatchset) {
+        stashConnector = new StashConnector(new HttpConnector(httpClient, httpClientContext), stashPatchset);
     }
 
     @Override
@@ -57,21 +52,9 @@ public class StashFacade implements ConnectorFacade {
     }
 
     @Override
-    public Patchset createPatchset() {
-        String pullRequestId = Configuration.instance().getProperty(CliOption.PULL_REQUEST_ID);
-        String repositorySlug = Configuration.instance().getProperty(STASH_REPOSITORY_SLUG);
-        String projectKey = Configuration.instance().getProperty(STASH_PROJECT_KEY);
-
-        notBlank(pullRequestId, "You must provide non blank Stash pull request id");
-        notBlank(repositorySlug, "You must provide non blank Stash repository slug");
-        notBlank(projectKey, "You must provide non blank Stash project key");
-        return new StashPatchset(pullRequestId, repositorySlug, projectKey);
-    }
-
-    @Override
-    public List<ReviewFile> listFiles(Patchset patchset) {
+    public List<ReviewFile> listFiles() {
         try {
-            String response = stashConnector.listFiles(patchset);
+            String response = stashConnector.listFiles();
             List<JSONObject> jsonList = JsonPath.read(response, "$.values[*].path");
             List<ReviewElement> containers = transform(jsonList, ReviewElement.class);
 
@@ -81,28 +64,22 @@ public class StashFacade implements ConnectorFacade {
                 files.add(new ReviewFile(filePath));
             }
             return files;
-        } catch (URISyntaxException e) {
-            throw new StashException("Error listing files", e);
-        } catch (IOException e) {
+        } catch (URISyntaxException | IOException e) {
             throw new StashException("Error listing files", e);
         }
     }
 
     @Override
-    public void setReview(Patchset patchset, ReviewInput reviewInput) {
+    public void setReview(ReviewInput reviewInput) {
         try {
             for (Map.Entry<String, List<ReviewFileComment>> review : reviewInput.comments.entrySet()) {
                 log.info("{} : {}", review.getKey(), Joiner.on(", ").join(review.getValue()));
                 for (ReviewFileComment comment : review.getValue()) {
                     String json = objectMapper.writeValueAsString(toFileComment(review.getKey(), (ReviewLineComment) comment));
-                    stashConnector.setReview(patchset, json);
+                    stashConnector.sendReview(json);
                 }
             }
-        } catch (JsonProcessingException e) {
-            throw new StashException("Error setting review", e);
-        } catch (IOException e) {
-            throw new StashException("Error setting review", e);
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | IOException e) {
             throw new StashException("Error setting review", e);
         }
     }

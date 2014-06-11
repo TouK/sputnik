@@ -1,4 +1,4 @@
-package pl.touk.sputnik.cli;
+package pl.touk.sputnik.configuration;
 
 import lombok.Getter;
 import org.apache.commons.cli.*;

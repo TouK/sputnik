@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.touk.sputnik.Configuration;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;

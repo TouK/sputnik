@@ -2,13 +2,13 @@ package pl.touk.sputnik.connector.gerrit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.Configuration;
-import pl.touk.sputnik.Patchset;
-import pl.touk.sputnik.cli.CliOption;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.gerrit.json.ListFilesResponse;
 import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
+import pl.touk.sputnik.connector.http.HttpConnector;
 import pl.touk.sputnik.review.ReviewFile;
 
 import java.io.IOException;
@@ -17,15 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static org.apache.commons.lang3.Validate.notBlank;
-
 public class GerritFacade implements ConnectorFacade {
-
     private static final String CONNECTOR_NAME = "gerrit";
     private static final String RESPONSE_PREFIX = ")]}'";
     private static final String COMMIT_MSG = "/COMMIT_MSG";
-    private static final String MAVEN_ENTRY_REGEX = ".*src/(main|test)/java/";
-    private static final String DOT = ".";
     public static final String GERRIT_HOST = "gerrit.host";
     public static final String GERRIT_PORT = "gerrit.port";
     public static final String GERRIT_USE_HTTPS = "gerrit.useHttps";
@@ -34,18 +29,15 @@ public class GerritFacade implements ConnectorFacade {
     private GerritConnector gerritConnector;
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public GerritFacade(@NotNull String host, int port, @NotNull String username, @NotNull String password, boolean useHttps) {
-        gerritConnector = new GerritConnector(host, port, username, password, useHttps);
+    public GerritFacade(@NotNull CloseableHttpClient httpClient, @NotNull HttpClientContext httpClientContext, @NotNull GerritPatchset gerritPatchset) {
+        gerritConnector = new GerritConnector(new HttpConnector(httpClient, httpClientContext), gerritPatchset);
     }
 
-    /**
-     * @return sonarLongName to gerritFileName map
-     */
     @NotNull
     @Override
-    public List<ReviewFile> listFiles(@NotNull Patchset patchset) {
+    public List<ReviewFile> listFiles() {
         try {
-            String response = gerritConnector.listFiles(patchset);
+            String response = gerritConnector.listFiles();
             String jsonString = trimResponse(response);
             ListFilesResponse listFilesResponse = objectMapper.readValue(jsonString, ListFilesResponse.class);
 
@@ -56,18 +48,16 @@ public class GerritFacade implements ConnectorFacade {
                 files.add(new ReviewFile(key));
             }
             return files;
-        } catch (IOException e) {
-            throw new GerritException("Error listing files", e);
-        } catch (URISyntaxException e) {
+        } catch (IOException | URISyntaxException e) {
             throw new GerritException("Error listing files", e);
         }
     }
 
     @Override
-    public void setReview(@NotNull Patchset patchset, @NotNull ReviewInput reviewInput) {
+    public void setReview(@NotNull ReviewInput reviewInput) {
         try {
             String json = objectMapper.writeValueAsString(reviewInput);
-            gerritConnector.setReview(patchset, json);
+            gerritConnector.sendReview(json);
         } catch (IOException | URISyntaxException e) {
             throw new GerritException("Error setting review", e);
         }
@@ -78,24 +68,8 @@ public class GerritFacade implements ConnectorFacade {
         return StringUtils.replaceOnce(response, RESPONSE_PREFIX, "");
     }
 
-    void setGerritConnector(@NotNull GerritConnector gerritConnector) {
-        this.gerritConnector = gerritConnector;
-    }
-
     @Override
     public String name() {
         return CONNECTOR_NAME;
-    }
-
-    @NotNull
-    @Override
-    public Patchset createPatchset() {
-        String changeId = Configuration.instance().getProperty(CliOption.CHANGE_ID);
-        String revisionId = Configuration.instance().getProperty(CliOption.REVISION_ID);
-        notBlank(changeId, "You must provide non blank Gerrit change Id");
-        notBlank(revisionId, "You must provide non blank Gerrit revision Id");
-
-        return new GerritPatchset(changeId, revisionId);
-
     }
 }

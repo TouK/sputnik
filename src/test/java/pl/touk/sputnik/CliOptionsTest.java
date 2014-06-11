@@ -3,7 +3,7 @@ package pl.touk.sputnik;
 import org.apache.commons.cli.CommandLine;
 import org.junit.Test;
 import org.junit.Assert;
-import pl.touk.sputnik.cli.CliWrapper;
+import pl.touk.sputnik.configuration.CliWrapper;
 
 public class CliOptionsTest {
 
