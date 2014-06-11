@@ -73,6 +73,12 @@ public class Configuration {
         }
     }
 
+    public void reset() {
+        properties = null;
+        configurationFilename = null;
+        configurationResource = null;
+    }
+
     public void updateWithCliOptions(CommandLine commandLine) {
         for (Option option : commandLine.getOptions()) {
             properties.setProperty(CLI_OPTION_PREFIX + option.getArgName(), option.getValue());

@@ -39,7 +39,7 @@ public class ReviewInput {
         labels.put(CODE_REVIEW, 1);
     }
 
-    public void setLabelToMinusOne() {
-        labels.put(CODE_REVIEW, -1);
-    }
+//    public void setLabelToMinusOne() {
+//        labels.put(CODE_REVIEW, -1);
+//    }
 }
