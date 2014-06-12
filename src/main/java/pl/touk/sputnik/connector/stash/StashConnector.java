@@ -21,6 +21,9 @@ public class StashConnector extends AbstractConnector {
     // "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/comments";
     public static final String COMMENTS_URL_FORMAT = "/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/comments";
 
+    // "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/diff"
+    public static final String DIFF_URL_FORMAT = "/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/diff";
+
     public StashConnector(String host, int port, String username, String password, boolean useHttps) {
         super(host, port, username, password, useHttps);
     }
@@ -44,6 +47,19 @@ public class StashConnector extends AbstractConnector {
         HttpPost httpPost = new HttpPost(uri);
         httpPost.setEntity(new StringEntity(reviewInputAsJson, ContentType.APPLICATION_JSON));
         CloseableHttpResponse httpResponse = logAndExecute(httpPost);
+        return consumeAndLogEntity(httpResponse);
+    }
+
+    /**
+     * get diff -> return as Map[filename, Map[line, modification_type {ADD, REMOVE}]]
+     *
+     */
+    public void getDiffByLine(Patchset patchset) throws URISyntaxException, IOException {
+        StashPatchset stashPatchset = (StashPatchset) patchset;
+        URI uri = new URIBuilder().setPath(getHost() + createUrl(stashPatchset, DIFF_URL_FORMAT)).build();
+        HttpGet httpGet = new HttpGet(uri);
+        addBasicAuthHeader(httpGet);
+        CloseableHttpResponse httpResponse = logAndExecute(httpGet);
         return consumeAndLogEntity(httpResponse);
     }
 
