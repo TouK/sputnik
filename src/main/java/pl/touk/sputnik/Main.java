@@ -4,7 +4,8 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.ParseException;
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.cli.CliWrapper;
+import pl.touk.sputnik.configuration.CliWrapper;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.review.Engine;
 
 public final class Main {

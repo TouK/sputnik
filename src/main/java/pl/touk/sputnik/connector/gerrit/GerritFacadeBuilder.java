@@ -1,10 +1,17 @@
 package pl.touk.sputnik.connector.gerrit;
 
-import pl.touk.sputnik.Configuration;
+import org.apache.http.HttpHost;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.client.CloseableHttpClient;
+import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.CliOption;
+import pl.touk.sputnik.connector.http.HttpHelper;
 
 import static org.apache.commons.lang3.Validate.notBlank;
 
 public class GerritFacadeBuilder {
+
+    private HttpHelper httpHelper = new HttpHelper();
 
     public GerritFacade build() {
         String host = Configuration.instance().getProperty(GerritFacade.GERRIT_HOST);
@@ -18,6 +25,22 @@ public class GerritFacadeBuilder {
         notBlank(username, "You must provide non blank Gerrit username");
         notBlank(password, "You must provide non blank Gerrit password");
 
-        return new GerritFacade(host, Integer.valueOf(port), username, password, Boolean.parseBoolean(useHttps));
+        GerritPatchset gerritPatchset = buildGerritPatchset();
+
+        HttpHost httpHost = httpHelper.buildHttpHost(host, Integer.valueOf(port), Boolean.parseBoolean(useHttps));
+        HttpClientContext httpClientContext = httpHelper.buildClientContext(httpHost);
+        CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, username, password);
+
+        return new GerritFacade(closeableHttpClient, httpClientContext, gerritPatchset);
+    }
+
+    private GerritPatchset buildGerritPatchset() {
+        String changeId = Configuration.instance().getProperty(CliOption.CHANGE_ID);
+        String revisionId = Configuration.instance().getProperty(CliOption.REVISION_ID);
+
+        notBlank(changeId, "You must provide non blank Gerrit change Id");
+        notBlank(revisionId, "You must provide non blank Gerrit revision Id");
+
+        return new GerritPatchset(changeId, revisionId);
     }
 }

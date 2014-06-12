@@ -7,17 +7,16 @@ import com.puppycrawl.tools.checkstyle.api.AuditListener;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import pl.touk.sputnik.Configuration;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.review.*;
 
 import java.io.File;
 import java.util.List;
 import java.util.Properties;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class CheckstyleProcessor implements ReviewProcessor {
-    private static final Logger LOG = LoggerFactory.getLogger(CheckstyleProcessor.class);
     private static final String SOURCE_NAME = "Checkstyle";
     private static final String CHECKSTYLE_CONFIGURATION_FILE = "checkstyle.configurationFile";
     private static final String CHECKSTYLE_PROPERTIES_FILE = "checkstyle.propertiesFile";
@@ -62,7 +61,7 @@ public class CheckstyleProcessor implements ReviewProcessor {
     @Nullable
     private String getConfigurationFilename() {
         String configurationFile = Configuration.instance().getProperty(CHECKSTYLE_CONFIGURATION_FILE);
-        LOG.info("Using Checkstyle configuration file {}", configurationFile);
+        log.info("Using Checkstyle configuration file {}", configurationFile);
         return configurationFile;
     }
 

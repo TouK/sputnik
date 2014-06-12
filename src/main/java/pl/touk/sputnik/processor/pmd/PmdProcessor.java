@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.touk.sputnik.Configuration;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
@@ -36,7 +36,7 @@ public class PmdProcessor implements ReviewProcessor {
     public ReviewResult process(@NotNull Review review) {
         try {
             PMDConfiguration configuration = new PMDConfiguration();
-            configuration.setReportFormat("pl.touk.sputnik.pmd.CollectorRenderer");
+            configuration.setReportFormat(CollectorRenderer.class.getCanonicalName());
             configuration.setRuleSets(getRulesets());
             configuration.setInputPaths(Joiner.on(PMD_INPUT_PATH_SEPARATOR).join(review.getIOFilenames()));
             doPMD(configuration);
@@ -78,7 +78,7 @@ public class PmdProcessor implements ReviewProcessor {
         long reportStart = System.nanoTime();
         try {
             renderer = configuration.createRenderer();
-            List<Renderer> renderers = new LinkedList<Renderer>();
+            List<Renderer> renderers = new LinkedList<>();
             renderers.add(renderer);
             renderer.start();
 
@@ -101,7 +101,7 @@ public class PmdProcessor implements ReviewProcessor {
      * Paste from PMD
      */
     private static Set<Language> getApplicableLanguages(PMDConfiguration configuration, RuleSets ruleSets) {
-        Set<Language> languages = new HashSet<Language>();
+        Set<Language> languages = new HashSet<>();
         LanguageVersionDiscoverer discoverer = configuration.getLanguageVersionDiscoverer();
 
         for (Rule rule : ruleSets.getAllRules()) {

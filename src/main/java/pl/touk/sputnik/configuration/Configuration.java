@@ -1,27 +1,23 @@
-package pl.touk.sputnik;
+package pl.touk.sputnik.configuration;
 
+import java.io.FileReader;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pl.touk.sputnik.cli.CliOption;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 import static org.apache.commons.lang3.Validate.notBlank;
 
 @Slf4j
 public class Configuration {
-    private static final Configuration INSTANCE = new Configuration();
-    private static final String SPUTNIK_PROPERTIES = "sputnik.properties";
-    private static final String SPUTNIK_OPTS = "SPUTNIK_OPTS";
+    private static Configuration INSTANCE = new Configuration();
     private static final String CLI_OPTION_PREFIX = "cli.";
     private Properties properties = new Properties();
 
@@ -45,7 +41,7 @@ public class Configuration {
 
     @Nullable
     public String getProperty(CliOption cliOption) {
-        return getProperty(cliOption.name());
+        return getProperty(cliOption.getKey());
     }
 
     public void init() {
@@ -53,18 +49,11 @@ public class Configuration {
         log.info("Initializing configuration properties from file {}", configurationFilename);
 
         properties = new Properties();
-        InputStream inputStream = null;
-        try {
-            inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(configurationFilename);
-            if (inputStream == null) {
-                throw new RuntimeException("Configuration file " + configurationFilename + " cannot be loaded");
-            }
-            properties.load(inputStream);
+        try (FileReader reader = new FileReader(configurationFilename)){
+            properties.load(reader);
         } catch (IOException e) {
             log.error("Configuration initialization failed", e);
-            throw new RuntimeException(e);
-        } finally {
-            IOUtils.closeQuietly(inputStream);
+            throw new RuntimeException("Configuration file " + configurationFilename + " cannot be loaded");
         }
     }
 
@@ -72,5 +61,13 @@ public class Configuration {
         for (Option option : commandLine.getOptions()) {
             properties.setProperty(CLI_OPTION_PREFIX + option.getArgName(), option.getValue());
         }
+    }
+
+    static void setInstance(Configuration instance) {
+        INSTANCE = instance;
+    }
+
+    void setProperties(Properties properties) {
+        this.properties = properties;
     }
 }

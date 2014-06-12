@@ -3,7 +3,7 @@ package pl.touk.sputnik;
 import org.apache.commons.cli.CommandLine;
 import org.junit.Test;
 import org.junit.Assert;
-import pl.touk.sputnik.cli.CliWrapper;
+import pl.touk.sputnik.configuration.CliWrapper;
 
 public class CliOptionsTest {
 
@@ -46,7 +46,7 @@ public class CliOptionsTest {
     }
 
     private String[] toArgs(String argsFormat, String... substitutions) {
-        return String.format(argsFormat, substitutions).split(" ");
+        return String.format(argsFormat, (Object[]) substitutions).split(" ");
     }
 
     private CliAssert _(CommandLine cli) {

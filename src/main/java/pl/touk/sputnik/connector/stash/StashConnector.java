@@ -1,20 +1,28 @@
 package pl.touk.sputnik.connector.stash;
 
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpRequest;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.xerces.impl.dv.util.Base64;
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.AbstractConnector;
-import pl.touk.sputnik.Patchset;
+import pl.touk.sputnik.connector.Connector;
+import pl.touk.sputnik.connector.http.HttpConnector;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class StashConnector extends AbstractConnector {
+@Slf4j
+@AllArgsConstructor
+public class StashConnector implements Connector {
+
+    private HttpConnector httpConnector;
+    private StashPatchset stashPatchset;
 
     // "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/changes";
     public static final String CHANGES_URL_FORMAT = "/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/changes";
@@ -24,26 +32,21 @@ public class StashConnector extends AbstractConnector {
     // "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/diff"
     public static final String DIFF_URL_FORMAT = "/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/diff";
 
-    public StashConnector(String host, int port, String username, String password, boolean useHttps) {
-        super(host, port, username, password, useHttps);
-    }
-
     @NotNull
     @Override
-    public String listFiles(Patchset patchset) throws URISyntaxException, IOException {
-        StashPatchset stashPatchset = (StashPatchset) patchset;
-        URI uri = new URIBuilder().setPath(getHost() + createUrl(stashPatchset, CHANGES_URL_FORMAT)).build();
+    public String listFiles() throws URISyntaxException, IOException {
+        URI uri = httpConnector.buildUri(createUrl(stashPatchset, CHANGES_URL_FORMAT));
         HttpGet httpGet = new HttpGet(uri);
+        // Is this needed?
         addBasicAuthHeader(httpGet);
-        CloseableHttpResponse httpResponse = logAndExecute(httpGet);
-        return consumeAndLogEntity(httpResponse);
+        CloseableHttpResponse httpResponse = httpConnector.logAndExecute(httpGet);
+        return httpConnector.consumeAndLogEntity(httpResponse);
     }
 
     @NotNull
     @Override
-    public String setReview(Patchset patchset, String reviewInputAsJson) throws URISyntaxException, IOException {
-        StashPatchset stashPatchset = (StashPatchset) patchset;
-        URI uri = new URIBuilder().setPath(getHost() + createUrl(stashPatchset, COMMENTS_URL_FORMAT)).build();
+    public String sendReview(String reviewInputAsJson) throws URISyntaxException, IOException {
+        URI uri = httpConnector.buildUri(createUrl(stashPatchset, COMMENTS_URL_FORMAT));
         HttpPost httpPost = new HttpPost(uri);
         httpPost.setEntity(new StringEntity(reviewInputAsJson, ContentType.APPLICATION_JSON));
         CloseableHttpResponse httpResponse = logAndExecute(httpPost);
@@ -62,9 +65,14 @@ public class StashConnector extends AbstractConnector {
         CloseableHttpResponse httpResponse = logAndExecute(httpGet);
         return consumeAndLogEntity(httpResponse);
     }
-
-    public static String createUrl(StashPatchset stashPatchset, String formatUrl) {
+    
+    public String createUrl(StashPatchset stashPatchset, String formatUrl) {
         return String.format(formatUrl,
                 stashPatchset.getProjectKey(), stashPatchset.getRepositorySlug(), stashPatchset.getPullRequestId());
+    }
+
+    protected void addBasicAuthHeader(HttpRequest request) {
+        String encoding = Base64.encode("username:password".getBytes());
+        request.setHeader("Authorization", "Basic " + encoding);
     }
 }

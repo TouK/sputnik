@@ -1,4 +1,4 @@
-package pl.touk.sputnik;
+package pl.touk.sputnik.configuration;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
@@ -42,7 +42,7 @@ public class ConfigurationTest {
 
     @Test
     public void shouldReadPropertiesFromFile() {
-        configuration.setConfigurationFilename("sample-test.properties");
+        configuration.setConfigurationFilename("src/test/resources/sample-test.properties");
 
         configuration.init();
 
@@ -52,7 +52,7 @@ public class ConfigurationTest {
     @Test
     public void shouldOverrideSystemProperties() {
         System.setProperty(GERRIT_PORT, "1234");
-        configuration.setConfigurationFilename("sample-test.properties");
+        configuration.setConfigurationFilename("src/test/resources/sample-test.properties");
 
         configuration.init();
 
@@ -62,7 +62,7 @@ public class ConfigurationTest {
     @Test
     public void shouldReturnNotOverridedSystemProperties() {
         System.setProperty("some.system.property", "1234");
-        configuration.setConfigurationFilename("sample-test.properties");
+        configuration.setConfigurationFilename("src/test/resources/sample-test.properties");
 
         configuration.init();
 
@@ -71,7 +71,7 @@ public class ConfigurationTest {
 
     @Test
     public void shouldUpdateWithCliOptions() {
-        configuration.setConfigurationFilename("sample-test.properties");
+        configuration.setConfigurationFilename("src/test/resources/sample-test.properties");
         CommandLine commandLineMock = buildCommandLine();
 
         configuration.init();
