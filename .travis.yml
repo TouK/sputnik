@@ -6,7 +6,7 @@ jdk:
 
 env:
   global:
-    - secure: "Lqi30fOkp2QgSTxLDWlPW1ArSva/mWHW5yjTalw1Pk/v7LTEHA4LfcOEMKJ/RfH3gKvpq0UP90Nb8t4cAooM1AkHKLb/5lOv8eys4Qj3XyeJcmDLJz8Znre0r6SWA8/DFMzugjPu++4ul+CQOFB8/DkCeA3hDVRuI4yHYKVwArM="
+    - secure: "NboTQT1jou+I+9axk6qnMqdJBUhLeucpos42GmHblFhNQEGl3jZGOpAZ0ycS75fa5u5ad+/1S7i8QBpMhYwmfzpuXtI69tUmIVi/KkJsrQQwaWqcOOUzLUDUlxfqzvM7DTr5gCW/SBh8vb3I3Y0uVNRhNlHgXa84/rqcjWXocpI="
 
 after_success:
   - gradle jacocoTestReport coveralls
