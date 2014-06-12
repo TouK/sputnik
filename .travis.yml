@@ -4,9 +4,5 @@ jdk:
   - openjdk7
   - oraclejdk7
 
-env:
-  global:
-    - secure: "NboTQT1jou+I+9axk6qnMqdJBUhLeucpos42GmHblFhNQEGl3jZGOpAZ0ycS75fa5u5ad+/1S7i8QBpMhYwmfzpuXtI69tUmIVi/KkJsrQQwaWqcOOUzLUDUlxfqzvM7DTr5gCW/SBh8vb3I3Y0uVNRhNlHgXa84/rqcjWXocpI="
-
 after_success:
   - gradle jacocoTestReport coveralls
