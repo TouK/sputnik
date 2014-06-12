@@ -3,7 +3,7 @@
 > Static code review for your Gerrit patchsets. Runs Checkstyle, PMD and FindBugs for you!
 
 [![Build Status](https://api.travis-ci.org/TouK/sputnik.png)](https://travis-ci.org/TouK/sputnik)
-[![Coverage Status](https://coveralls.io/repos/ingwarsw/sputnik/badge.png?branch=master)](https://coveralls.io/r/ingwarsw/sputnik?branch=master)
+[![Coverage Status](https://coveralls.io/repos/TouK/sputnik/badge.png?branch=master)](https://coveralls.io/r/TouK/sputnik?branch=master)
 
 ## Usage
 
