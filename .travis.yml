@@ -4,3 +4,10 @@ jdk:
   - openjdk7
   - oraclejdk7
   - oraclejdk8
+
+env:
+  - secure: "Lqi30fOkp2QgSTxLDWlPW1ArSva/mWHW5yjTalw1Pk/v7LTEHA4LfcOEMKJ/RfH3gKvpq0UP90Nb8t4cAooM1AkHKLb/5lOv8eys4Qj3XyeJcmDLJz8Znre0r6SWA8/DFMzugjPu++4ul+CQOFB8/DkCeA3hDVRuI4yHYKVwArM="
+  - TERM=dumb
+
+after_success:
+  - gradle jacocoTestReport coveralls

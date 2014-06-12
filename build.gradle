@@ -1,6 +1,8 @@
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'idea'
+apply plugin: 'jacoco'
+apply plugin: 'coveralls'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -9,6 +11,16 @@ mainClassName = 'pl.touk.sputnik.Main'
 
 repositories {
     mavenCentral()
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.3.0'
+    }
 }
 
 //noinspection GroovyAssignabilityCheck
@@ -62,3 +74,4 @@ dependencies {
         exclude group: 'log4j'
     }
 }
+
