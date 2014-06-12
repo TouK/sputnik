@@ -55,7 +55,6 @@ public class StashFacadeTest {
                         .withBody(IOUtils.toString(getClass().getResourceAsStream("/stash-changes.json")))));
 
         List<ReviewFile> files = stashFacade.listFiles();
-
-        assertThat(files).hasSize(3);
+        assertThat(files).hasSize(4);
     }
 }

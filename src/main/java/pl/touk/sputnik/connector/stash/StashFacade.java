@@ -2,8 +2,6 @@ package pl.touk.sputnik.connector.stash;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
@@ -58,8 +56,8 @@ public class StashFacade implements ConnectorFacade {
             List<JSONObject> jsonList = JsonPath.read(response, "$.values[*].path");
             List<ReviewElement> containers = transform(jsonList, ReviewElement.class);
 
-            List<ReviewFile> files = new ArrayList<ReviewFile>();
-            for (ReviewElement container : onlyScala(containers)) { // FIXME - not only scala, just configurable
+            List<ReviewFile> files = new ArrayList<>();
+            for (ReviewElement container : containers) {
                 String filePath = String.format("%s/%s", container.parent, container.name);
                 files.add(new ReviewFile(filePath));
             }
@@ -92,15 +90,6 @@ public class StashFacade implements ConnectorFacade {
         fileComment.anchor.srcPath = key;
         fileComment.anchor.line = comment.line;
         return fileComment;
-    }
-
-    private List<ReviewElement> onlyScala(List<ReviewElement> transform) {
-        return FluentIterable.from(transform)
-                .filter(new Predicate<ReviewElement>() {
-                    public boolean apply(ReviewElement container) {
-                        return "scala".equals(container.extension);
-                    }
-                }).toList();
     }
 
     private <T> List<T> transform(List<JSONObject> jsonList, Class<T> someClass) {
