@@ -4,6 +4,8 @@
 
 [![Build Status](https://api.travis-ci.org/TouK/sputnik.png)](https://travis-ci.org/TouK/sputnik)
 
+[![Coverage Status](https://coveralls.io/repos/ingwarsw/sputnik/badge.png)](https://coveralls.io/r/ingwarsw/sputnik)
+
 ## Usage
 
 Sputnik is intended to run just after your Jenkins/CI server build. It should be executed in that workspace directory to find files to analyse.
