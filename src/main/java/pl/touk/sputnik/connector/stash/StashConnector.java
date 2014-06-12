@@ -50,7 +50,7 @@ public class StashConnector implements Connector {
         return httpConnector.consumeAndLogEntity(httpResponse);
     }
 
-    public String createUrl(StashPatchset stashPatchset, String formatUrl) {
+    private String createUrl(StashPatchset stashPatchset, String formatUrl) {
         return String.format(formatUrl,
                 stashPatchset.getProjectKey(), stashPatchset.getRepositorySlug(), stashPatchset.getPullRequestId());
     }

@@ -1,6 +1,5 @@
 package pl.touk.sputnik.connector.gerrit;
 
-import com.google.common.annotations.VisibleForTesting;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -45,8 +44,7 @@ public class GerritConnector implements Connector {
         return httpConnector.consumeAndLogEntity(httpResponse);
     }
 
-    @VisibleForTesting
-    static String createUrl(GerritPatchset gerritPatchset, String urlFormat) {
+    private String createUrl(GerritPatchset gerritPatchset, String urlFormat) {
         return String.format(urlFormat,
                 gerritPatchset.getChangeId(), gerritPatchset.getRevisionId());
     }
