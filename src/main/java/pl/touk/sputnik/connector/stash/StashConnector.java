@@ -3,11 +3,13 @@ package pl.touk.sputnik.connector.stash;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpRequest;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.xerces.impl.dv.util.Base64;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.connector.Connector;
@@ -49,24 +51,22 @@ public class StashConnector implements Connector {
         URI uri = httpConnector.buildUri(createUrl(stashPatchset, COMMENTS_URL_FORMAT));
         HttpPost httpPost = new HttpPost(uri);
         httpPost.setEntity(new StringEntity(reviewInputAsJson, ContentType.APPLICATION_JSON));
-        CloseableHttpResponse httpResponse = logAndExecute(httpPost);
-        return consumeAndLogEntity(httpResponse);
+        CloseableHttpResponse httpResponse = httpConnector.logAndExecute(httpPost);
+        return httpConnector.consumeAndLogEntity(httpResponse);
     }
 
-    /**
-     * get diff -> return as Map[filename, Map[line, modification_type {ADD, REMOVE}]]
-     *
-     */
-    public void getDiffByLine(Patchset patchset) throws URISyntaxException, IOException {
-        StashPatchset stashPatchset = (StashPatchset) patchset;
-        URI uri = new URIBuilder().setPath(getHost() + createUrl(stashPatchset, DIFF_URL_FORMAT)).build();
+    public String getDiffByLine(String filename) throws URISyntaxException, IOException {
+        URI uri = httpConnector.buildUri(createUrl(stashPatchset, DIFF_URL_FORMAT),
+                new BasicNameValuePair("contextLines", "-1"),
+                new BasicNameValuePair("srcPath", filename),
+                new BasicNameValuePair("withComments", "false"));
         HttpGet httpGet = new HttpGet(uri);
         addBasicAuthHeader(httpGet);
-        CloseableHttpResponse httpResponse = logAndExecute(httpGet);
-        return consumeAndLogEntity(httpResponse);
+        CloseableHttpResponse httpResponse = httpConnector.logAndExecute(httpGet);
+        return httpConnector.consumeAndLogEntity(httpResponse);
     }
     
-    public String createUrl(StashPatchset stashPatchset, String formatUrl) {
+    private String createUrl(StashPatchset stashPatchset, String formatUrl) {
         return String.format(formatUrl,
                 stashPatchset.getProjectKey(), stashPatchset.getRepositorySlug(), stashPatchset.getPullRequestId());
     }

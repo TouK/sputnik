@@ -14,9 +14,7 @@ import pl.touk.sputnik.connector.gerrit.json.ReviewFileComment;
 import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
 import pl.touk.sputnik.connector.gerrit.json.ReviewLineComment;
 import pl.touk.sputnik.connector.http.HttpConnector;
-import pl.touk.sputnik.connector.stash.json.Anchor;
-import pl.touk.sputnik.connector.stash.json.FileComment;
-import pl.touk.sputnik.connector.stash.json.ReviewElement;
+import pl.touk.sputnik.connector.stash.json.*;
 import pl.touk.sputnik.review.ReviewFile;
 
 import java.io.IOException;
@@ -72,8 +70,11 @@ public class StashFacade implements ConnectorFacade {
         try {
             for (Map.Entry<String, List<ReviewFileComment>> review : reviewInput.comments.entrySet()) {
                 log.info("{} : {}", review.getKey(), Joiner.on(", ").join(review.getValue()));
+                SingleFileChanges changes = changesForSingleFile(review.getKey());
                 for (ReviewFileComment comment : review.getValue()) {
-                    String json = objectMapper.writeValueAsString(toFileComment(review.getKey(), (ReviewLineComment) comment));
+                    ReviewLineComment lineComment = (ReviewLineComment) comment;
+                    String json = objectMapper.writeValueAsString(
+                            toFileComment(review.getKey(), lineComment, getChangeType(changes, lineComment.line)));
                     stashConnector.sendReview(json);
                 }
             }
@@ -82,13 +83,21 @@ public class StashFacade implements ConnectorFacade {
         }
     }
 
-    private FileComment toFileComment(String key, ReviewLineComment comment) {
+    private ChangeType getChangeType(SingleFileChanges changes, Integer line) {
+        if (changes.getChangesMap().containsKey(line)) {
+            return changes.getChangesMap().get(line);
+        }
+        return ChangeType.CONTEXT;
+    }
+
+    private FileComment toFileComment(String key, ReviewLineComment comment, ChangeType changeType) {
         FileComment fileComment = new FileComment();
         fileComment.text = comment.message;
         fileComment.anchor = new Anchor();
         fileComment.anchor.path = key;
         fileComment.anchor.srcPath = key;
         fileComment.anchor.line = comment.line;
+        fileComment.anchor.lineType = changeType.name();
         return fileComment;
     }
 
@@ -102,5 +111,22 @@ public class StashFacade implements ConnectorFacade {
             throw new StashException("Error parsing json strings to objects", e);
         }
         return result;
+    }
+
+    SingleFileChanges changesForSingleFile(String filename) {
+        try {
+            String response = stashConnector.getDiffByLine(filename);
+            List<JSONObject> jsonList = JsonPath.read(response, "$.diffs[*].hunks[*].segments[*]");
+            List<DiffSegment> segments = transform(jsonList, DiffSegment.class);
+            SingleFileChanges changes = SingleFileChanges.builder().filename(filename).build();
+            for (DiffSegment segment : segments) {
+                for (LineSegment line : segment.lines) {
+                    changes.addChange(line.destination, ChangeType.valueOf(segment.type));
+                }
+            }
+            return changes;
+        } catch (URISyntaxException | IOException e) {
+            throw new StashException("Error parsing json strings to objects", e);
+        }
     }
 }

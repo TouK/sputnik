@@ -1,0 +1,96 @@
+{
+    "diffs": [
+        {
+            "source": {
+                "components": [
+                    "path",
+                    "to",
+                    "file.txt"
+                ],
+                "parent": "path/to",
+                "name": "file.txt",
+                "extension": "txt",
+                "toString": "path/to/file.txt"
+            },
+            "destination": {
+                "components": [
+                    "path",
+                    "to",
+                    "file.txt"
+                ],
+                "parent": "path/to",
+                "name": "file.txt",
+                "extension": "txt",
+                "toString": "path/to/file.txt"
+            },
+            "hunks": [
+                {
+                    "sourceLine": 1,
+                    "sourceSpan": 1,
+                    "destinationLine": 1,
+                    "destinationSpan": 2,
+                    "segments": [
+                        {
+                            "type": "REMOVED",
+                            "lines": [
+                                {
+                                    "destination": 1,
+                                    "source": 1,
+                                    "line": "import sys",
+                                    "truncated": false
+                                }
+                            ],
+                            "truncated": false
+                        },
+                        {
+                            "type": "ADDED",
+                            "lines": [
+                                {
+                                    "destination": 1,
+                                    "source": 2,
+                                    "line": "import re",
+                                    "truncated": false,
+                                    "conflictMarker": "OURS",
+                                    "commentIds": [
+                                        1
+                                    ]
+                                },
+                                {
+                                    "destination": 2,
+                                    "source": 3,
+                                    "line": "import os",
+                                    "truncated": false
+                                }
+                            ],
+                            "truncated": false
+                        }
+                    ],
+                    "truncated": false
+                }
+            ],
+            "lineComments": [
+                {
+                    "id": 1,
+                    "version": 1,
+                    "text": "An insightful comment.",
+                    "author": {
+                        "name": "jcitizen",
+                        "emailAddress": "jane@example.com",
+                        "id": 101,
+                        "displayName": "Jane Citizen",
+                        "active": true,
+                        "slug": "jcitizen"
+                    },
+                    "createdDate": 1393297149981,
+                    "updatedDate": 1393297149981,
+                    "comments": [],
+                    "permittedOperations": {
+                        "editable": true,
+                        "deletable": true
+                    }
+                }
+            ],
+            "truncated": false
+        }
+    ]
+}
