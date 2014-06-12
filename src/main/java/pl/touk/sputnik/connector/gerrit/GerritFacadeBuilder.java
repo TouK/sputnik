@@ -5,6 +5,7 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.CliOption;
+import pl.touk.sputnik.connector.http.HttpConnector;
 import pl.touk.sputnik.connector.http.HttpHelper;
 
 import static org.apache.commons.lang3.Validate.notBlank;
@@ -31,7 +32,7 @@ public class GerritFacadeBuilder {
         HttpClientContext httpClientContext = httpHelper.buildClientContext(httpHost);
         CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, username, password);
 
-        return new GerritFacade(closeableHttpClient, httpClientContext, gerritPatchset);
+        return new GerritFacade(new GerritConnector(new HttpConnector(closeableHttpClient, httpClientContext), gerritPatchset));
     }
 
     private GerritPatchset buildGerritPatchset() {

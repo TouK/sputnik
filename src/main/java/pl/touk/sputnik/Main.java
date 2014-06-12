@@ -6,6 +6,8 @@ import org.apache.commons.cli.ParseException;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.CliWrapper;
 import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.connector.ConnectorFacade;
+import pl.touk.sputnik.connector.ConnectorFacadeFactory;
 import pl.touk.sputnik.review.Engine;
 
 public final class Main {
@@ -18,10 +20,8 @@ public final class Main {
     public static void main(String[] args) {
         CliWrapper cliWrapper = new CliWrapper();
         CommandLine commandLine = null;
-        Connectors connector = null;
         try {
             commandLine = cliWrapper.parse(args);
-            connector = cliWrapper.connector(commandLine);
         } catch (ParseException e) {
             printUsage(cliWrapper);
             System.out.println(e.getMessage());
@@ -31,8 +31,9 @@ public final class Main {
         Configuration.instance().setConfigurationFilename(commandLine.getOptionValue(CliWrapper.CONF));
         Configuration.instance().init();
         Configuration.instance().updateWithCliOptions(commandLine);
+        ConnectorFacade facade = ConnectorFacadeFactory.INSTANCE.build(Configuration.instance().getProperty("cli.connector"));
 
-        new Engine().run();
+        new Engine(facade).run();
     }
 
     private static void printUsage(@NotNull CliWrapper cliOptions) {

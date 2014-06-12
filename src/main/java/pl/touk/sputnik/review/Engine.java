@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.connector.ConnectorFacade;
-import pl.touk.sputnik.connector.ConnectorFacadeFactory;
 import pl.touk.sputnik.processor.checkstyle.CheckstyleProcessor;
 import pl.touk.sputnik.processor.findbugs.FindBugsProcessor;
 import pl.touk.sputnik.processor.pmd.PmdProcessor;
@@ -20,12 +19,14 @@ public class Engine {
     private static final String FINDBUGS_ENABLED = "findbugs.enabled";
     private static final String SCALASTYLE_ENABLED = "scalastyle.enabled";
     private static final long THOUSAND = 1000L;
+    private final ConnectorFacade connector;
+
+    public Engine(ConnectorFacade connector) {
+        this.connector = connector;
+    }
 
     public void run() {
-        ConnectorFacade facade = ConnectorFacadeFactory.INSTANCE.build(Configuration.instance().getProperty("cli.connector"));
-        List<ReviewFile> reviewFiles = facade.listFiles();
-        log.debug("Files to check: {}", reviewFiles);
-
+        List<ReviewFile> reviewFiles = connector.listFiles();
         Review review = new Review(reviewFiles);
 
         List<ReviewProcessor> processors = createProcessors();
@@ -33,7 +34,7 @@ public class Engine {
             review(review, processor);
         }
 
-        facade.setReview(review.toReviewInput());
+        connector.setReview(review.toReviewInput());
     }
 
     private void review(@NotNull Review review, @NotNull ReviewProcessor processor) {

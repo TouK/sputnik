@@ -5,6 +5,8 @@ import org.apache.commons.cli.Option;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.FileNotFoundException;
+
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,8 +28,8 @@ public class ConfigurationTest {
     public void shouldFailWhenConfigFilenameIsEmpty() {
         catchException(configuration).init();
 
-        assertThat(caughtException()).isInstanceOf(NullPointerException.class)
-                .hasMessage("You need to provide filename with configuration properties");
+        assertThat(caughtException()).isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("You need to provide filename or resource with configuration properties");
     }
 
     @Test
@@ -37,12 +39,12 @@ public class ConfigurationTest {
         catchException(configuration).init();
 
         assertThat(caughtException()).isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Configuration file wrong.properties cannot be loaded");
+                .hasCauseExactlyInstanceOf(FileNotFoundException.class);
     }
 
     @Test
     public void shouldReadPropertiesFromFile() {
-        configuration.setConfigurationFilename("src/test/resources/sample-test.properties");
+        configuration.setConfigurationResource("sample-test.properties");
 
         configuration.init();
 
@@ -52,7 +54,7 @@ public class ConfigurationTest {
     @Test
     public void shouldOverrideSystemProperties() {
         System.setProperty(GERRIT_PORT, "1234");
-        configuration.setConfigurationFilename("src/test/resources/sample-test.properties");
+        configuration.setConfigurationResource("sample-test.properties");
 
         configuration.init();
 
@@ -62,7 +64,7 @@ public class ConfigurationTest {
     @Test
     public void shouldReturnNotOverridedSystemProperties() {
         System.setProperty("some.system.property", "1234");
-        configuration.setConfigurationFilename("src/test/resources/sample-test.properties");
+        configuration.setConfigurationResource("sample-test.properties");
 
         configuration.init();
 
@@ -71,7 +73,7 @@ public class ConfigurationTest {
 
     @Test
     public void shouldUpdateWithCliOptions() {
-        configuration.setConfigurationFilename("src/test/resources/sample-test.properties");
+        configuration.setConfigurationResource("sample-test.properties");
         CommandLine commandLineMock = buildCommandLine();
 
         configuration.init();
