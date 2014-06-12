@@ -1,6 +1,8 @@
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'idea'
+apply plugin: 'jacoco'
+apply plugin: 'coveralls'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -60,5 +62,23 @@ dependencies {
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
     testCompile('com.github.tomakehurst:wiremock:1.46') {
         exclude group: 'log4j'
+    }
+}
+
+// Jacoco + coveralls
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.3.0'
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
     }
 }

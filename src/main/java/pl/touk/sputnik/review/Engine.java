@@ -24,6 +24,8 @@ public class Engine {
     public void run() {
         ConnectorFacade facade = ConnectorFacadeFactory.INSTANCE.build(Configuration.instance().getProperty("cli.connector"));
         List<ReviewFile> reviewFiles = facade.listFiles();
+        log.debug("Files to check: {}", reviewFiles);
+
         Review review = new Review(reviewFiles);
 
         List<ReviewProcessor> processors = createProcessors();
