@@ -10,7 +10,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.gerrit.GerritPatchset;
@@ -59,7 +59,7 @@ public class EngineTest {
 
     @After
     public void tearDown() throws Exception {
-        Configuration.instance().reset();
+        ConfigurationHolder.reset();
     }
 
     @Test

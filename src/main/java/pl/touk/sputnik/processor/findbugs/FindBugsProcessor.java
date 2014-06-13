@@ -1,13 +1,18 @@
 package pl.touk.sputnik.processor.findbugs;
 
-import edu.umd.cs.findbugs.*;
+import edu.umd.cs.findbugs.ClassScreener;
+import edu.umd.cs.findbugs.DetectorFactoryCollection;
+import edu.umd.cs.findbugs.FindBugs2;
+import edu.umd.cs.findbugs.IClassScreener;
+import edu.umd.cs.findbugs.Priorities;
+import edu.umd.cs.findbugs.Project;
 import edu.umd.cs.findbugs.config.UserPreferences;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
@@ -91,14 +96,14 @@ public class FindBugsProcessor implements ReviewProcessor {
 
     @Nullable
     private String getIncludeFilterFilename() {
-        String includeFilterFilename = Configuration.instance().getProperty(FINDBUGS_INCLUDE_FILTER);
+        String includeFilterFilename = ConfigurationHolder.instance().getProperty(FINDBUGS_INCLUDE_FILTER);
         LOG.info("Using FindBugs include filter file {}", includeFilterFilename);
         return includeFilterFilename;
     }
 
     @Nullable
     private String getExcludeFilterFilename() {
-        String excludeFilterFilename = Configuration.instance().getProperty(FINDBUGS_EXCLUDE_FILTER);
+        String excludeFilterFilename = ConfigurationHolder.instance().getProperty(FINDBUGS_EXCLUDE_FILTER);
         LOG.info("Using FindBugs exclude filter file {}", excludeFilterFilename);
         return excludeFilterFilename;
     }

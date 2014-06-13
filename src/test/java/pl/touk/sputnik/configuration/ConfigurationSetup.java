@@ -14,10 +14,7 @@ public class ConfigurationSetup {
             }
         }
 
-        Configuration configuration = new Configuration();
-        configuration.setProperties(properties);
-        Configuration.setInstance(configuration);
+        ConfigurationHolder.initFromProperties(properties);
     }
-
 
 }

@@ -3,7 +3,7 @@ package pl.touk.sputnik.connector.gerrit;
 import org.apache.http.HttpHost;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
-import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.CliOption;
 import pl.touk.sputnik.connector.http.HttpConnector;
 import pl.touk.sputnik.connector.http.HttpHelper;
@@ -15,11 +15,11 @@ public class GerritFacadeBuilder {
     private HttpHelper httpHelper = new HttpHelper();
 
     public GerritFacade build() {
-        String host = Configuration.instance().getProperty(GerritFacade.GERRIT_HOST);
-        String port = Configuration.instance().getProperty(GerritFacade.GERRIT_PORT);
-        String username = Configuration.instance().getProperty(GerritFacade.GERRIT_USERNAME);
-        String password = Configuration.instance().getProperty(GerritFacade.GERRIT_PASSWORD);
-        String useHttps = Configuration.instance().getProperty(GerritFacade.GERRIT_USE_HTTPS);
+        String host = ConfigurationHolder.instance().getProperty(GerritFacade.GERRIT_HOST);
+        String port = ConfigurationHolder.instance().getProperty(GerritFacade.GERRIT_PORT);
+        String username = ConfigurationHolder.instance().getProperty(GerritFacade.GERRIT_USERNAME);
+        String password = ConfigurationHolder.instance().getProperty(GerritFacade.GERRIT_PASSWORD);
+        String useHttps = ConfigurationHolder.instance().getProperty(GerritFacade.GERRIT_USE_HTTPS);
 
         notBlank(host, "You must provide non blank Gerrit host");
         notBlank(port, "You must provide non blank Gerrit port");
@@ -36,8 +36,8 @@ public class GerritFacadeBuilder {
     }
 
     private GerritPatchset buildGerritPatchset() {
-        String changeId = Configuration.instance().getProperty(CliOption.CHANGE_ID);
-        String revisionId = Configuration.instance().getProperty(CliOption.REVISION_ID);
+        String changeId = ConfigurationHolder.instance().getProperty(CliOption.CHANGE_ID);
+        String revisionId = ConfigurationHolder.instance().getProperty(CliOption.REVISION_ID);
 
         notBlank(changeId, "You must provide non blank Gerrit change Id");
         notBlank(revisionId, "You must provide non blank Gerrit revision Id");

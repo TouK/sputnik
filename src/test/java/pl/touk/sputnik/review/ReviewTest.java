@@ -20,9 +20,9 @@ public class ReviewTest {
         ReviewInput reviewInput = review.toReviewInput();
 
         //then
-        assertThat(reviewInput.comments).hasSize(1);
-        assertThat(reviewInput.comments).containsKey("test");
-        assertThat(reviewInput.comments).containsValue(Collections.<ReviewFileComment>emptyList());
+        assertThat(reviewInput.comments)
+                .hasSize(1)
+                .containsEntry("test", Collections.<ReviewFileComment>emptyList());
     }
 
 }

@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewResult;
@@ -28,13 +28,12 @@ public class CheckstyleProcessorTest {
 
     @Before
     public void setUp() throws Exception {
-        Configuration.instance().setConfigurationResource("test.properties");
-        Configuration.instance().init();
+        ConfigurationHolder.initFromResource("test.properties");
     }
 
     @After
     public void tearDown() throws Exception {
-        Configuration.instance().reset();
+        ConfigurationHolder.reset();
     }
 
     @Test
@@ -47,9 +46,8 @@ public class CheckstyleProcessorTest {
 
         //then
         assertThat(reviewResult).isNotNull();
-        assert reviewResult != null;
-        assertThat(reviewResult.getViolations()).isNotEmpty();
         assertThat(reviewResult.getViolations())
+                .isNotEmpty()
                 .extracting("message")
                 .containsOnly("File not found!");
     }
@@ -64,10 +62,9 @@ public class CheckstyleProcessorTest {
 
         //then
         assertThat(reviewResult).isNotNull();
-        assert reviewResult != null;
-        assertThat(reviewResult.getViolations()).isNotEmpty();
         assertThat(reviewResult.getViolations().size()).isEqualTo(3);
         assertThat(reviewResult.getViolations())
+                .isNotEmpty()
                 .extracting("message")
                 .containsOnly(
                         "Missing package-info.java file.",

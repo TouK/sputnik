@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewResult;
@@ -26,13 +26,12 @@ public class FindBugsProcessorTest {
 
     @Before
     public void setUp() throws Exception {
-        Configuration.instance().setConfigurationResource("test.properties");
-        Configuration.instance().init();
+        ConfigurationHolder.initFromResource("test.properties");
     }
 
     @After
     public void tearDown() throws Exception {
-        Configuration.instance().reset();
+        ConfigurationHolder.reset();
     }
 
 

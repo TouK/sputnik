@@ -4,9 +4,22 @@ import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.scalastyle.*;
-import pl.touk.sputnik.configuration.Configuration;
-import pl.touk.sputnik.review.*;
+import org.scalastyle.EndFile;
+import org.scalastyle.FileSpec;
+import org.scalastyle.Level;
+import org.scalastyle.Message;
+import org.scalastyle.MessageHelper;
+import org.scalastyle.RealFileSpec;
+import org.scalastyle.ScalastyleChecker;
+import org.scalastyle.ScalastyleConfiguration;
+import org.scalastyle.StartFile;
+import org.scalastyle.StyleError;
+import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewProcessor;
+import pl.touk.sputnik.review.ReviewResult;
+import pl.touk.sputnik.review.Severity;
+import pl.touk.sputnik.review.Violation;
 import scala.Option;
 import scala.Some;
 
@@ -24,7 +37,7 @@ public class ScalastyleProcessor implements ReviewProcessor {
     @Override
     @SuppressWarnings("unchecked")
     public ReviewResult process(@NotNull Review review) {
-        String scalastyleConfigFile = Configuration.instance().getProperty(SCALASTYLE_CONFIG);
+        String scalastyleConfigFile = ConfigurationHolder.instance().getProperty(SCALASTYLE_CONFIG);
         ScalastyleConfiguration configuration = ScalastyleConfiguration.readFromXml(scalastyleConfigFile);
         List<Message> messages = new ScalastyleChecker().checkFilesAsJava(configuration, toFileSpec(review.getIOFiles()));
         return toReviewResult(messages);

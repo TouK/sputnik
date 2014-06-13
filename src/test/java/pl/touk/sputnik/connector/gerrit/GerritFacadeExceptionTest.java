@@ -31,8 +31,9 @@ public class GerritFacadeExceptionTest {
         catchException(fixture).listFiles();
 
         //then
-        assertThat(caughtException()).isInstanceOf(GerritException.class);
-        assertThat(caughtException()).hasMessageContaining("Error listing files");
+        assertThat(caughtException())
+                .isInstanceOf(GerritException.class)
+                .hasMessageContaining("Error listing files");
     }
 
 }

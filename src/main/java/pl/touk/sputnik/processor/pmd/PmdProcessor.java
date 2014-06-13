@@ -1,7 +1,14 @@
 package pl.touk.sputnik.processor.pmd;
 
 import com.google.common.base.Joiner;
-import net.sourceforge.pmd.*;
+import net.sourceforge.pmd.PMD;
+import net.sourceforge.pmd.PMDConfiguration;
+import net.sourceforge.pmd.Rule;
+import net.sourceforge.pmd.RuleContext;
+import net.sourceforge.pmd.RuleSet;
+import net.sourceforge.pmd.RuleSetFactory;
+import net.sourceforge.pmd.RuleSets;
+import net.sourceforge.pmd.RulesetsFactoryUtils;
 import net.sourceforge.pmd.benchmark.Benchmark;
 import net.sourceforge.pmd.benchmark.Benchmarker;
 import net.sourceforge.pmd.lang.Language;
@@ -13,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
@@ -54,7 +61,7 @@ public class PmdProcessor implements ReviewProcessor {
 
     @Nullable
     private String getRulesets() {
-        String ruleSets = Configuration.instance().getProperty(PMD_RULESETS);
+        String ruleSets = ConfigurationHolder.instance().getProperty(PMD_RULESETS);
         LOG.info("Using PMD rulesets {}", ruleSets);
         return ruleSets;
     }
