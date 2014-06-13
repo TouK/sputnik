@@ -32,7 +32,7 @@ dependencies {
     compile 'com.puppycrawl.tools:checkstyle:5.7'
 
     // PMD dependencies
-    compile files('lib/pmd-5.1.0.jar')
+    compile 'net.sourceforge.pmd:pmd:5.1.1'
     compile('jaxen:jaxen:1.1.6') { //1.1.6 in FindBugs
         exclude group: 'xerces'
         exclude group: 'xalan'
