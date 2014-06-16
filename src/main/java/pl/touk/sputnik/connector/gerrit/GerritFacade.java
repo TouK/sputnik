@@ -2,13 +2,10 @@ package pl.touk.sputnik.connector.gerrit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.gerrit.json.ListFilesResponse;
 import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
-import pl.touk.sputnik.connector.http.HttpConnector;
 import pl.touk.sputnik.review.ReviewFile;
 
 import java.io.IOException;
@@ -29,8 +26,8 @@ public class GerritFacade implements ConnectorFacade {
     private GerritConnector gerritConnector;
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public GerritFacade(@NotNull CloseableHttpClient httpClient, @NotNull HttpClientContext httpClientContext, @NotNull GerritPatchset gerritPatchset) {
-        gerritConnector = new GerritConnector(new HttpConnector(httpClient, httpClientContext), gerritPatchset);
+    public GerritFacade(GerritConnector gerritConnector) {
+        this.gerritConnector = gerritConnector;
     }
 
     @NotNull

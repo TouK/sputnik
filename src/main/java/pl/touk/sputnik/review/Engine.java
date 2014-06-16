@@ -2,9 +2,8 @@ package pl.touk.sputnik.review;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.connector.ConnectorFacade;
-import pl.touk.sputnik.connector.ConnectorFacadeFactory;
 import pl.touk.sputnik.processor.checkstyle.CheckstyleProcessor;
 import pl.touk.sputnik.processor.findbugs.FindBugsProcessor;
 import pl.touk.sputnik.processor.pmd.PmdProcessor;
@@ -20,12 +19,14 @@ public class Engine {
     private static final String FINDBUGS_ENABLED = "findbugs.enabled";
     private static final String SCALASTYLE_ENABLED = "scalastyle.enabled";
     private static final long THOUSAND = 1000L;
+    private final ConnectorFacade facade;
+
+    public Engine(ConnectorFacade facade) {
+        this.facade = facade;
+    }
 
     public void run() {
-        ConnectorFacade facade = ConnectorFacadeFactory.INSTANCE.build(Configuration.instance().getProperty("cli.connector"));
         List<ReviewFile> reviewFiles = facade.listFiles();
-        log.debug("Files to check: {}", reviewFiles);
-
         Review review = new Review(reviewFiles);
 
         List<ReviewProcessor> processors = createProcessors();
@@ -54,16 +55,16 @@ public class Engine {
     @NotNull
     private List<ReviewProcessor> createProcessors() {
         List<ReviewProcessor> processors = new ArrayList<ReviewProcessor>();
-        if (Boolean.valueOf(Configuration.instance().getProperty(CHECKSTYLE_ENABLED))) {
+        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(CHECKSTYLE_ENABLED))) {
             processors.add(new CheckstyleProcessor());
         }
-        if (Boolean.valueOf(Configuration.instance().getProperty(PMD_ENABLED))) {
+        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(PMD_ENABLED))) {
             processors.add(new PmdProcessor());
         }
-        if (Boolean.valueOf(Configuration.instance().getProperty(FINDBUGS_ENABLED))) {
+        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(FINDBUGS_ENABLED))) {
             processors.add(new FindBugsProcessor());
         }
-        if (Boolean.valueOf(Configuration.instance().getProperty(SCALASTYLE_ENABLED))) {
+        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(SCALASTYLE_ENABLED))) {
             processors.add(new ScalastyleProcessor());
         }
         return processors;

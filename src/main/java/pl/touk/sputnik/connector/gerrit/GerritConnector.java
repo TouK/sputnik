@@ -18,15 +18,16 @@ import java.net.URISyntaxException;
 @Slf4j
 @AllArgsConstructor
 public class GerritConnector implements Connector {
-    private static final String GET_LIST_FILES_URL_FORMAT = "/a/changes/%s/revisions/%s/files/";
-    private static final String POST_SET_REVIEW_URL_FORMAT = "/a/changes/%s/revisions/%s/review";
+
+    protected static final String GET_LIST_FILES_URL_FORMAT = "/a/changes/%s/revisions/%s/files/";
+    protected static final String POST_SET_REVIEW_URL_FORMAT = "/a/changes/%s/revisions/%s/review";
 
     private HttpConnector httpConnector;
     private GerritPatchset gerritPatchset;
 
     @NotNull
     public String listFiles() throws URISyntaxException, IOException {
-        URI uri = httpConnector.buildUri(String.format(GET_LIST_FILES_URL_FORMAT, gerritPatchset.getChangeId(), gerritPatchset.getRevisionId()));
+        URI uri = httpConnector.buildUri(createUrl(gerritPatchset, GET_LIST_FILES_URL_FORMAT));
         HttpGet httpGet = new HttpGet(uri);
         CloseableHttpResponse httpResponse = httpConnector.logAndExecute(httpGet);
         return httpConnector.consumeAndLogEntity(httpResponse);
@@ -36,11 +37,16 @@ public class GerritConnector implements Connector {
     @NotNull
     public String sendReview(String reviewInputAsJson) throws URISyntaxException, IOException {
         log.info("Setting review {}", reviewInputAsJson);
-        URI uri = httpConnector.buildUri(String.format(POST_SET_REVIEW_URL_FORMAT, gerritPatchset.getChangeId(), gerritPatchset.getRevisionId()));
+        URI uri = httpConnector.buildUri(createUrl(gerritPatchset, POST_SET_REVIEW_URL_FORMAT));
         HttpPost httpPost = new HttpPost(uri);
         httpPost.setEntity(new StringEntity(reviewInputAsJson, ContentType.APPLICATION_JSON));
         CloseableHttpResponse httpResponse = httpConnector.logAndExecute(httpPost);
         return httpConnector.consumeAndLogEntity(httpResponse);
+    }
+
+    private String createUrl(GerritPatchset gerritPatchset, String urlFormat) {
+        return String.format(urlFormat,
+                gerritPatchset.getChangeId(), gerritPatchset.getRevisionId());
     }
 
 }

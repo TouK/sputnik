@@ -5,15 +5,18 @@ import com.puppycrawl.tools.checkstyle.ConfigurationLoader;
 import com.puppycrawl.tools.checkstyle.PropertiesExpander;
 import com.puppycrawl.tools.checkstyle.api.AuditListener;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pl.touk.sputnik.configuration.Configuration;
-import pl.touk.sputnik.review.*;
+import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewException;
+import pl.touk.sputnik.review.ReviewProcessor;
+import pl.touk.sputnik.review.ReviewResult;
 
 import java.io.File;
 import java.util.List;
 import java.util.Properties;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CheckstyleProcessor implements ReviewProcessor {
@@ -60,7 +63,7 @@ public class CheckstyleProcessor implements ReviewProcessor {
 
     @Nullable
     private String getConfigurationFilename() {
-        String configurationFile = Configuration.instance().getProperty(CHECKSTYLE_CONFIGURATION_FILE);
+        String configurationFile = ConfigurationHolder.instance().getProperty(CHECKSTYLE_CONFIGURATION_FILE);
         log.info("Using Checkstyle configuration file {}", configurationFile);
         return configurationFile;
     }

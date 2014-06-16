@@ -5,7 +5,9 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.ParseException;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.CliWrapper;
-import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.connector.ConnectorFacade;
+import pl.touk.sputnik.connector.ConnectorFacadeFactory;
 import pl.touk.sputnik.review.Engine;
 
 public final class Main {
@@ -18,21 +20,19 @@ public final class Main {
     public static void main(String[] args) {
         CliWrapper cliWrapper = new CliWrapper();
         CommandLine commandLine = null;
-        Connectors connector = null;
         try {
             commandLine = cliWrapper.parse(args);
-            connector = cliWrapper.connector(commandLine);
         } catch (ParseException e) {
             printUsage(cliWrapper);
             System.out.println(e.getMessage());
             System.exit(1);
         }
 
-        Configuration.instance().setConfigurationFilename(commandLine.getOptionValue(CliWrapper.CONF));
-        Configuration.instance().init();
-        Configuration.instance().updateWithCliOptions(commandLine);
+        ConfigurationHolder.initFromFile(commandLine.getOptionValue(CliWrapper.CONF));
+        ConfigurationHolder.instance().updateWithCliOptions(commandLine);
+        ConnectorFacade facade = ConnectorFacadeFactory.INSTANCE.build(ConfigurationHolder.instance().getProperty("cli.connector"));
 
-        new Engine().run();
+        new Engine(facade).run();
     }
 
     private static void printUsage(@NotNull CliWrapper cliOptions) {
