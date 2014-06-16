@@ -3,11 +3,13 @@ package pl.touk.sputnik.connector.stash;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpRequest;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.xerces.impl.dv.util.Base64;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.connector.Connector;
@@ -28,6 +30,9 @@ public class StashConnector implements Connector {
     public static final String CHANGES_URL_FORMAT = "/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/changes";
     // "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/comments";
     public static final String COMMENTS_URL_FORMAT = "/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/comments";
+
+    // "/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/diff"
+    public static final String DIFF_URL_FORMAT = "/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/diff";
 
     @NotNull
     @Override
@@ -50,6 +55,17 @@ public class StashConnector implements Connector {
         return httpConnector.consumeAndLogEntity(httpResponse);
     }
 
+    public String getDiffByLine(String filename) throws URISyntaxException, IOException {
+        URI uri = httpConnector.buildUri(createUrl(stashPatchset, DIFF_URL_FORMAT),
+                new BasicNameValuePair("contextLines", "-1"),
+                new BasicNameValuePair("srcPath", filename),
+                new BasicNameValuePair("withComments", "false"));
+        HttpGet httpGet = new HttpGet(uri);
+        addBasicAuthHeader(httpGet);
+        CloseableHttpResponse httpResponse = httpConnector.logAndExecute(httpGet);
+        return httpConnector.consumeAndLogEntity(httpResponse);
+    }
+    
     private String createUrl(StashPatchset stashPatchset, String formatUrl) {
         return String.format(formatUrl,
                 stashPatchset.getProjectKey(), stashPatchset.getRepositorySlug(), stashPatchset.getPullRequestId());

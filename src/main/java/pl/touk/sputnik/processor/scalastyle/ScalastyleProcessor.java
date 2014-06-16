@@ -1,5 +1,7 @@
 package pl.touk.sputnik.processor.scalastyle;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +41,8 @@ public class ScalastyleProcessor implements ReviewProcessor {
     public ReviewResult process(@NotNull Review review) {
         String scalastyleConfigFile = ConfigurationHolder.instance().getProperty(SCALASTYLE_CONFIG);
         ScalastyleConfiguration configuration = ScalastyleConfiguration.readFromXml(scalastyleConfigFile);
-        List<Message> messages = new ScalastyleChecker().checkFilesAsJava(configuration, toFileSpec(review.getIOFiles()));
+        List<Message> messages = new ScalastyleChecker().checkFilesAsJava(configuration,
+                toFileSpec(onlyScala(review.getIOFiles())));
         return toReviewResult(messages);
     }
 
@@ -49,6 +52,15 @@ public class ScalastyleProcessor implements ReviewProcessor {
             fileSpecs.add(new RealFileSpec(file.getAbsolutePath(), new Some<String>("UTF-8")));
         }
         return fileSpecs;
+    }
+
+    private List<File> onlyScala(List<File> transform) {
+        return FluentIterable.from(transform)
+                .filter(new Predicate<File>() {
+                    public boolean apply(File file) {
+                        return file.getAbsolutePath().endsWith("scala");
+                    }
+                }).toList();
     }
 
     @SuppressWarnings("unchecked")
