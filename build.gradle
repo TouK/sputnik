@@ -32,7 +32,7 @@ dependencies {
     compile 'com.puppycrawl.tools:checkstyle:5.7'
 
     // PMD dependencies
-    compile 'net.sourceforge.pmd:pmd:5.1.1'
+    compile files('lib/pmd-5.1.0.jar')
     compile('jaxen:jaxen:1.1.6') { //1.1.6 in FindBugs
         exclude group: 'xerces'
         exclude group: 'xalan'
@@ -43,7 +43,7 @@ dependencies {
         exclude group: 'xml-apis'
     }
 
-    // FinBugs dependecies
+    // FinBugs dependencies
     compile('com.google.code.findbugs:findbugs:2.0.3') {
 //        exclude group: 'xml-apis'
 //        exclude group: 'jaxen'

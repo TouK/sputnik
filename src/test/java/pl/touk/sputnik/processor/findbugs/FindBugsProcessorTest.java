@@ -15,6 +15,7 @@ import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FindBugsProcessorTest {
@@ -41,7 +42,7 @@ public class FindBugsProcessorTest {
         Review review = new Review(ImmutableList.of(new ReviewFile("test")));
 
         //when
-        ReviewResult reviewResult = fixture.process(review);
+        ReviewResult reviewResult = fixture.process(mock(Review.class));
 
         //then
         assertThat(reviewResult).isNotNull();
