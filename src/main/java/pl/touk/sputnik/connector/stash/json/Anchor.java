@@ -12,7 +12,7 @@ package pl.touk.sputnik.connector.stash.json;
 public class Anchor {
     public int line;
     public String lineType = "CONTEXT";
-    public String fileType = "FROM";
+    public String fileType = "TO";
     public String path;
     public String srcPath;
 }

@@ -52,9 +52,24 @@ public class StashFacadeTest {
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
-                        .withBody(IOUtils.toString(getClass().getResourceAsStream("/stash-changes.json")))));
+                        .withBody(IOUtils.toString(getClass().getResourceAsStream("/json/stash-changes.json")))));
 
         List<ReviewFile> files = stashFacade.listFiles();
         assertThat(files).hasSize(4);
+    }
+
+    @Test
+    public void shouldReturnDiffAsMapOfLines() throws Exception {
+        stubFor(get(urlMatching("/rest/api/1.0/projects/mykey/repos/myproject/pull-requests/12/diff.*"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(IOUtils.toString(getClass().getResourceAsStream("/json/stash-diff.json")))));
+
+        SingleFileChanges singleFileChanges = stashFacade.changesForSingleFile("src/main/java/Main.java");
+        assertThat(singleFileChanges.getFilename()).isEqualTo("src/main/java/Main.java");
+        assertThat(singleFileChanges.getChangesMap())
+                .containsEntry(1, ChangeType.ADDED)
+                .containsEntry(2, ChangeType.ADDED);
     }
 }

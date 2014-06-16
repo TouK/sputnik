@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
@@ -27,7 +28,7 @@ public class HttpConnector {
     private HttpClientContext httpClientContext;
 
     @NotNull
-    public URI buildUri(String path) throws URISyntaxException {
+    public URI buildUri(String path, NameValuePair... parameters) throws URISyntaxException {
         HttpHost targetHost = httpClientContext.getTargetHost();
 
         return new URIBuilder()
@@ -35,6 +36,7 @@ public class HttpConnector {
                 .setPort(targetHost.getPort())
                 .setScheme(targetHost.getSchemeName())
                 .setPath(path)
+                .setParameters(parameters)
                 .build();
     }
 
