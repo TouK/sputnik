@@ -16,17 +16,12 @@ public class GerritFacadeBuilder {
     private HttpHelper httpHelper = new HttpHelper();
 
     public GerritFacade build() {
-        String host = Configuration.instance().getProperty(GerritFacade.GERRIT_HOST);
-        String port = Configuration.instance().getProperty(GerritFacade.GERRIT_PORT);
-        String username = Configuration.instance().getProperty(GerritFacade.GERRIT_USERNAME);
-        String password = Configuration.instance().getProperty(GerritFacade.GERRIT_PASSWORD);
-        String useHttps = Configuration.instance().getProperty(GerritFacade.GERRIT_USE_HTTPS);
-        boolean isHttps = Boolean.parseBoolean(useHttps);
         String host = ConfigurationHolder.instance().getProperty(GerritFacade.GERRIT_HOST);
         String port = ConfigurationHolder.instance().getProperty(GerritFacade.GERRIT_PORT);
         String username = ConfigurationHolder.instance().getProperty(GerritFacade.GERRIT_USERNAME);
         String password = ConfigurationHolder.instance().getProperty(GerritFacade.GERRIT_PASSWORD);
         String useHttps = ConfigurationHolder.instance().getProperty(GerritFacade.GERRIT_USE_HTTPS);
+        boolean isHttps = Boolean.parseBoolean(useHttps);
 
         notBlank(host, "You must provide non blank Gerrit host");
         notBlank(port, "You must provide non blank Gerrit port");
@@ -36,8 +31,8 @@ public class GerritFacadeBuilder {
         GerritPatchset gerritPatchset = buildGerritPatchset();
 
         HttpHost httpHost = httpHelper.buildHttpHost(host, Integer.valueOf(port), Boolean.parseBoolean(useHttps));
-        HttpClientContext httpClientContext = httpHelper.buildClientContext(httpHost);
-        CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, username, password);
+        HttpClientContext httpClientContext = httpHelper.buildClientContext(httpHost, new DigestScheme());
+        CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, username, password, isHttps);
 
         return new GerritFacade(new GerritConnector(new HttpConnector(closeableHttpClient, httpClientContext), gerritPatchset));
     }

@@ -48,6 +48,7 @@ public class CheckstyleProcessorTest {
         assertThat(reviewResult).isNotNull();
         assertThat(reviewResult.getViolations())
                 .isNotEmpty()
+                .hasSize(1)
                 .extracting("message")
                 .containsOnly("File not found!");
     }
@@ -62,9 +63,9 @@ public class CheckstyleProcessorTest {
 
         //then
         assertThat(reviewResult).isNotNull();
-        assertThat(reviewResult.getViolations().size()).isEqualTo(3);
         assertThat(reviewResult.getViolations())
                 .isNotEmpty()
+                .hasSize(3)
                 .extracting("message")
                 .containsOnly(
                         "Missing package-info.java file.",
@@ -73,7 +74,8 @@ public class CheckstyleProcessorTest {
     }
 
     private File getResourceAsFile(String resourceName) {
-        return new File(Resources.getResource(resourceName).getFile());
+        String file = Resources.getResource(resourceName).getFile();
+        return new File(file);
     }
 
 }

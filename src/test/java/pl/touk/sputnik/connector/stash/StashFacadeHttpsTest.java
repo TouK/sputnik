@@ -82,11 +82,7 @@ public class StashFacadeHttpsTest {
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
-                        .withBody(IOUtils.toString(getClass().getResourceAsStream("/stash-changes.json")))));
-
-        String url = url("/https-test");
-        System.out.println(url);
-        assertThat(contentFor(url)).isNotEqualTo("HTTPS content");
+                        .withBody(IOUtils.toString(getClass().getResourceAsStream("/json/stash-changes.json")))));
 
         List<ReviewFile> files = stashFacade.listFiles();
         assertThat(files).hasSize(4);
