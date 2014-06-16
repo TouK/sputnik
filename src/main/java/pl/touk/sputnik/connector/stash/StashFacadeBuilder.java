@@ -2,6 +2,7 @@ package pl.touk.sputnik.connector.stash;
 
 import org.apache.http.HttpHost;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.CloseableHttpClient;
 import pl.touk.sputnik.configuration.CliOption;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
@@ -19,6 +20,7 @@ public class StashFacadeBuilder {
         String username = ConfigurationHolder.instance().getProperty(StashFacade.STASH_USERNAME);
         String password = ConfigurationHolder.instance().getProperty(StashFacade.STASH_PASSWORD);
         String useHttps = ConfigurationHolder.instance().getProperty(StashFacade.STASH_USE_HTTPS);
+        boolean isHttps = Boolean.parseBoolean(useHttps);
 
         notBlank(host, "You must provide non blank Stash host");
         notBlank(port, "You must provide non blank Stash port");
@@ -27,9 +29,9 @@ public class StashFacadeBuilder {
 
         StashPatchset stashPatchset = buildStashPatchset();
 
-        HttpHost httpHost = httpHelper.buildHttpHost(host, Integer.valueOf(port), Boolean.parseBoolean(useHttps));
-        HttpClientContext httpClientContext = httpHelper.buildClientContext(httpHost);
-        CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, username, password);
+        HttpHost httpHost = httpHelper.buildHttpHost(host, Integer.valueOf(port), isHttps);
+        HttpClientContext httpClientContext = httpHelper.buildClientContext(httpHost, new BasicScheme());
+        CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, username, password, isHttps);
 
         return new StashFacade(closeableHttpClient, httpClientContext, stashPatchset);
     }

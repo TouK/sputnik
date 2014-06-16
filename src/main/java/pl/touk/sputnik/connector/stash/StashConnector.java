@@ -40,7 +40,7 @@ public class StashConnector implements Connector {
         URI uri = httpConnector.buildUri(createUrl(stashPatchset, CHANGES_URL_FORMAT));
         HttpGet httpGet = new HttpGet(uri);
         // Is this needed?
-        addBasicAuthHeader(httpGet);
+//        addBasicAuthHeader(httpGet);
         CloseableHttpResponse httpResponse = httpConnector.logAndExecute(httpGet);
         return httpConnector.consumeAndLogEntity(httpResponse);
     }

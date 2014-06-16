@@ -2,6 +2,7 @@ package pl.touk.sputnik.connector.gerrit;
 
 import org.apache.http.HttpHost;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.auth.DigestScheme;
 import org.apache.http.impl.client.CloseableHttpClient;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.CliOption;
@@ -15,6 +16,12 @@ public class GerritFacadeBuilder {
     private HttpHelper httpHelper = new HttpHelper();
 
     public GerritFacade build() {
+        String host = Configuration.instance().getProperty(GerritFacade.GERRIT_HOST);
+        String port = Configuration.instance().getProperty(GerritFacade.GERRIT_PORT);
+        String username = Configuration.instance().getProperty(GerritFacade.GERRIT_USERNAME);
+        String password = Configuration.instance().getProperty(GerritFacade.GERRIT_PASSWORD);
+        String useHttps = Configuration.instance().getProperty(GerritFacade.GERRIT_USE_HTTPS);
+        boolean isHttps = Boolean.parseBoolean(useHttps);
         String host = ConfigurationHolder.instance().getProperty(GerritFacade.GERRIT_HOST);
         String port = ConfigurationHolder.instance().getProperty(GerritFacade.GERRIT_PORT);
         String username = ConfigurationHolder.instance().getProperty(GerritFacade.GERRIT_USERNAME);

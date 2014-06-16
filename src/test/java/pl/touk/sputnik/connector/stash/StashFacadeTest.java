@@ -55,6 +55,7 @@ public class StashFacadeTest {
         stubFor(get(urlEqualTo(String.format(
                     "/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/changes",
                     SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)))
+                .withHeader("Authorization", equalTo("Basic dXNlcjpwYXNz"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
