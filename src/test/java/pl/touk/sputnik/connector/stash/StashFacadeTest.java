@@ -52,11 +52,9 @@ public class StashFacadeTest {
 
     @Test
     public void shouldGetChangeInfo() throws Exception {
-        String url = String.format(
-                "/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/changes",
-                SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID
-        );
-        stubFor(get(urlEqualTo(url))
+        stubFor(get(urlEqualTo(String.format(
+                    "/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/changes",
+                    SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
@@ -68,7 +66,9 @@ public class StashFacadeTest {
 
     @Test
     public void shouldReturnDiffAsMapOfLines() throws Exception {
-        stubFor(get(urlMatching("/rest/api/1.0/projects/mykey/repos/myproject/pull-requests/12/diff.*"))
+        stubFor(get(urlMatching(String.format(
+                        "/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/diff.*",
+                        SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
