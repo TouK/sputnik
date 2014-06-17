@@ -22,19 +22,10 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import pl.touk.sputnik.Connectors;
 
 @Slf4j
 public class StashFacade implements ConnectorFacade {
-
-    private static final String CONNECTOR_NAME = "stash";
-    public static final String STASH_HOST = "stash.host";
-    public static final String STASH_PORT = "stash.port";
-    public static final String STASH_USE_HTTPS = "stash.useHttps";
-    public static final String STASH_USERNAME = "stash.username";
-    public static final String STASH_PASSWORD = "stash.password";
-    public static final String STASH_PROJECT_KEY = "stash.projectKey";
-    public static final String STASH_REPOSITORY_SLUG = "stash.repositorySlug";
-
     private StashConnector stashConnector;
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -43,8 +34,8 @@ public class StashFacade implements ConnectorFacade {
     }
 
     @Override
-    public String name() {
-        return CONNECTOR_NAME;
+    public Connectors name() {
+        return Connectors.STASH;
     }
 
     @Override

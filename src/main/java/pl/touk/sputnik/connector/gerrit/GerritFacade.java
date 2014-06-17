@@ -13,6 +13,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import pl.touk.sputnik.Connectors;
 
 public class GerritFacade implements ConnectorFacade {
     private static final String CONNECTOR_NAME = "gerrit";
@@ -66,7 +67,7 @@ public class GerritFacade implements ConnectorFacade {
     }
 
     @Override
-    public String name() {
-        return CONNECTOR_NAME;
+    public Connectors name() {
+        return Connectors.GERRIT;
     }
 }

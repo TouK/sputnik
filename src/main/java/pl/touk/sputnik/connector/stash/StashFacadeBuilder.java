@@ -15,11 +15,11 @@ public class StashFacadeBuilder {
     private HttpHelper httpHelper = new HttpHelper();
 
     public StashFacade build() {
-        String host = ConfigurationHolder.instance().getProperty(StashFacade.STASH_HOST);
-        String port = ConfigurationHolder.instance().getProperty(StashFacade.STASH_PORT);
-        String username = ConfigurationHolder.instance().getProperty(StashFacade.STASH_USERNAME);
-        String password = ConfigurationHolder.instance().getProperty(StashFacade.STASH_PASSWORD);
-        String useHttps = ConfigurationHolder.instance().getProperty(StashFacade.STASH_USE_HTTPS);
+        String host = ConfigurationHolder.instance().getProperty(StashOption.HOST);
+        String port = ConfigurationHolder.instance().getProperty(StashOption.PORT);
+        String username = ConfigurationHolder.instance().getProperty(StashOption.USERNAME);
+        String password = ConfigurationHolder.instance().getProperty(StashOption.PASSWORD);
+        String useHttps = ConfigurationHolder.instance().getProperty(StashOption.USE_HTTPS);
         boolean isHttps = Boolean.parseBoolean(useHttps);
 
         notBlank(host, "You must provide non blank Stash host");
@@ -38,8 +38,8 @@ public class StashFacadeBuilder {
 
     public StashPatchset buildStashPatchset() {
         String pullRequestId = ConfigurationHolder.instance().getProperty(CliOption.PULL_REQUEST_ID);
-        String repositorySlug = ConfigurationHolder.instance().getProperty(StashFacade.STASH_REPOSITORY_SLUG);
-        String projectKey = ConfigurationHolder.instance().getProperty(StashFacade.STASH_PROJECT_KEY);
+        String repositorySlug = ConfigurationHolder.instance().getProperty(StashOption.REPOSITORY_SLUG);
+        String projectKey = ConfigurationHolder.instance().getProperty(StashOption.PROJECT_KEY);
 
         notBlank(pullRequestId, "You must provide non blank Stash pull request id");
         notBlank(repositorySlug, "You must provide non blank Stash repository slug");
