@@ -4,6 +4,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.ParseException;
 import org.jetbrains.annotations.NotNull;
+import pl.touk.sputnik.configuration.CliOption;
 import pl.touk.sputnik.configuration.CliWrapper;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.connector.ConnectorFacade;
@@ -28,9 +29,9 @@ public final class Main {
             System.exit(1);
         }
 
-        ConfigurationHolder.initFromFile(commandLine.getOptionValue(CliWrapper.CONF));
+        ConfigurationHolder.initFromFile(commandLine.getOptionValue(CliOption.CONF.getCommandLineParam()));
         ConfigurationHolder.instance().updateWithCliOptions(commandLine);
-        ConnectorFacade facade = ConnectorFacadeFactory.INSTANCE.build(ConfigurationHolder.instance().getProperty("cli.connector"));
+        ConnectorFacade facade = ConnectorFacadeFactory.INSTANCE.build(ConfigurationHolder.instance().getProperty(CliOption.CONNECTOR));
 
         new Engine(facade).run();
     }
