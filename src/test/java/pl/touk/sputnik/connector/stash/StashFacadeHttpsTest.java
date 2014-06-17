@@ -1,18 +1,10 @@
 package pl.touk.sputnik.connector.stash;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.http.HttpClientFactory;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.util.EntityUtils;
-import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.review.ReviewFile;
@@ -22,10 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static junit.framework.Assert.assertTrue;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
 public class StashFacadeHttpsTest {
 
@@ -45,14 +34,9 @@ public class StashFacadeHttpsTest {
     );
 
     private StashFacade stashFacade;
-    private WireMockServer wireMockServer;
-    private HttpClient httpClient;
 
-
-    @After
-    public void serverShutdown() {
-        wireMockServer.stop();
-    }
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule(PORT, HTTPS_PORT);
 
     @Before
     public void setUp() {
@@ -61,16 +45,6 @@ public class StashFacadeHttpsTest {
         joinedMap.putAll(STASH_PATCHSET_MAP);
         new ConfigurationSetup().setUp(joinedMap);
         stashFacade = new StashFacadeBuilder().build();
-        startServerWithDefaultKeystore();
-    }
-
-    public void startServerWithDefaultKeystore() {
-        //this is wiremock's default keystore
-        WireMockConfiguration config = wireMockConfig().port(PORT).httpsPort(HTTPS_PORT);
-        wireMockServer = new WireMockServer(config);
-        wireMockServer.start();
-        WireMock.configure();
-        httpClient = HttpClientFactory.createClient();
     }
 
     @Test
@@ -86,34 +60,5 @@ public class StashFacadeHttpsTest {
 
         List<ReviewFile> files = stashFacade.listFiles();
         assertThat(files).hasSize(4);
-    }
-
-    private String url(String path) {
-        return String.format("https://localhost:%d%s", HTTPS_PORT, path);
-    }
-
-    private void getAndAssertUnderlyingExceptionInstanceClass(String url, Class<?> expectedClass) {
-        boolean thrown = false;
-        try {
-            contentFor(url);
-        } catch (Exception e) {
-            Throwable cause = e.getCause();
-            if (cause != null) {
-                Assert.assertThat(e.getCause(), instanceOf(expectedClass));
-            } else {
-                Assert.assertThat(e, instanceOf(expectedClass));
-            }
-
-            thrown = true;
-        }
-
-        assertTrue("No exception was thrown", thrown);
-    }
-
-    private String contentFor(String url) throws Exception {
-        HttpGet get = new HttpGet(url);
-        HttpResponse response = httpClient.execute(get);
-        String content = EntityUtils.toString(response.getEntity());
-        return content;
     }
 }
