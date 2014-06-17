@@ -23,7 +23,7 @@ public class CollectorBugReporter extends AbstractBugReporter {
 
     @Override
     public void reportAnalysisError(AnalysisError error) {
-        log.warn("Analysis error {}", error);
+        log.warn("Analysis error {}", error.getMessage(), error.getExceptionMessage());
     }
 
     @Override
