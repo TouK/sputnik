@@ -6,11 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.Connectors;
 
 public class CliWrapper {
-    public static final String CONF = "conf";
-    public static final String CHANGE_ID = "changeId";
-    public static final String REVISION_ID = "revisionId";
-    public static final String CONNECTOR = "connector";
-    public static final String PULL_REQUEST_ID = "pullRequestId";
 
     @Getter
     private final Options options;
@@ -22,16 +17,16 @@ public class CliWrapper {
     @NotNull
     @SuppressWarnings("unchecked")
     private Options createOptions() {
-        Options options = new Options();
-        options.addOption(buildOption(CONF, true, true, "Configuration properties file"));
-        options.addOption(buildOption(CONNECTOR, true, true, "Connector: <stash|gerrit>"));
+        Options localOptions = new Options();
+        localOptions.addOption(buildOption(CliOption.CONF, true, true));
+        localOptions.addOption(buildOption(CliOption.CONNECTOR, true, true));
 
-        options.addOption(buildOption(CHANGE_ID, true, false, "Gerrit change id"));
-        options.addOption(buildOption(REVISION_ID, true, false, "Gerrit revision id"));
+        localOptions.addOption(buildOption(CliOption.CHANGE_ID, true, false));
+        localOptions.addOption(buildOption(CliOption.REVISION_ID, true, false));
 
-        options.addOption(buildOption(PULL_REQUEST_ID, true, false, "Stash pull request Id"));
+        localOptions.addOption(buildOption(CliOption.PULL_REQUEST_ID, true, false));
 
-        return options;
+        return localOptions;
     }
 
     @NotNull
@@ -42,20 +37,20 @@ public class CliWrapper {
 
     @NotNull
     @SuppressWarnings("all")
-    private Option buildOption(@NotNull String name, boolean hasArgs, boolean isRequired, @NotNull String description) {
-        return OptionBuilder.withArgName(name)
-            .withLongOpt(name)
+    private Option buildOption(@NotNull CliOption name, boolean hasArgs, boolean isRequired) {
+        return OptionBuilder.withArgName(name.getCommandLineParam())
+            .withLongOpt(name.getCommandLineParam())
             .hasArg(hasArgs)
             .isRequired(isRequired)
-            .withDescription(description)
+            .withDescription(name.getDescription())
             .create();
     }
 
     public Connectors contextSensitiveValidation(CommandLine cli) throws ParseException {
-        Connectors connector = Connectors.valueOf(cli.getOptionValue(CONNECTOR).toUpperCase());
-        if (connector == Connectors.GERRIT && cli.hasOption(CHANGE_ID) && cli.hasOption(REVISION_ID)) {
+        Connectors connector = connector(cli);
+        if (connector == Connectors.GERRIT && cli.hasOption(CliOption.CHANGE_ID.getCommandLineParam()) && cli.hasOption(CliOption.REVISION_ID.getCommandLineParam())) {
             return connector;
-        } else if (connector == Connectors.STASH && cli.hasOption(PULL_REQUEST_ID)) {
+        } else if (connector == Connectors.STASH && cli.hasOption(CliOption.PULL_REQUEST_ID.getCommandLineParam())) {
             return connector;
         }
 
@@ -63,6 +58,6 @@ public class CliWrapper {
     }
 
     public Connectors connector(CommandLine commandLine) {
-        return Connectors.valueOf(commandLine.getOptionValue(CONNECTOR).toUpperCase());
+        return Connectors.valueOf(commandLine.getOptionValue(CliOption.CONNECTOR.getCommandLineParam()).toUpperCase());
     }
 }

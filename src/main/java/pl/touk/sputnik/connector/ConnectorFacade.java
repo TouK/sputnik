@@ -4,9 +4,10 @@ import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
 import pl.touk.sputnik.review.ReviewFile;
 
 import java.util.List;
+import pl.touk.sputnik.Connectors;
 
 public interface ConnectorFacade {
-    String name();
+    Connectors name();
 
     List<ReviewFile> listFiles();
 

@@ -3,6 +3,7 @@ package pl.touk.sputnik;
 import org.apache.commons.cli.CommandLine;
 import org.junit.Test;
 import org.junit.Assert;
+import pl.touk.sputnik.configuration.CliOption;
 import pl.touk.sputnik.configuration.CliWrapper;
 
 public class CliOptionsTest {
@@ -25,10 +26,10 @@ public class CliOptionsTest {
         fixture.contextSensitiveValidation(commandLine);
 
         // then
-        _(commandLine).hasOption(CliWrapper.CONNECTOR).withValue("gerrit");
-        _(commandLine).hasOption(CliWrapper.CONF).withValue(SAMPLE_CONFIG);
-        _(commandLine).hasOption(CliWrapper.CHANGE_ID).withValue(SAMPLE_CHANGE_ID);
-        _(commandLine).hasOption(CliWrapper.REVISION_ID).withValue(SAMPLE_REVISION_ID);
+        _(commandLine).hasOption(CliOption.CONNECTOR.getCommandLineParam()).withValue("gerrit");
+        _(commandLine).hasOption(CliOption.CONF.getCommandLineParam()).withValue(SAMPLE_CONFIG);
+        _(commandLine).hasOption(CliOption.CHANGE_ID.getCommandLineParam()).withValue(SAMPLE_CHANGE_ID);
+        _(commandLine).hasOption(CliOption.REVISION_ID.getCommandLineParam()).withValue(SAMPLE_REVISION_ID);
     }
 
     @Test
@@ -41,8 +42,8 @@ public class CliOptionsTest {
         fixture.contextSensitiveValidation(commandLine);
 
         // then
-        _(commandLine).hasOption(CliWrapper.CONNECTOR).withValue("stash");
-        _(commandLine).hasOption(CliWrapper.PULL_REQUEST_ID).withValue(SAMPLE_PULL_REQUEST_ID);
+        _(commandLine).hasOption(CliOption.CONNECTOR.getCommandLineParam()).withValue("stash");
+        _(commandLine).hasOption(CliOption.PULL_REQUEST_ID.getCommandLineParam()).withValue(SAMPLE_PULL_REQUEST_ID);
     }
 
     private String[] toArgs(String argsFormat, String... substitutions) {

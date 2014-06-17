@@ -17,9 +17,15 @@ public class Configuration {
     Configuration(Properties properties) {
         this.properties = properties;
     }
-
+    
     @Nullable
+    @Deprecated
     public String getProperty(@NotNull String key) {
+        return getPropertyByKey(key);
+    }
+    
+    @Nullable
+    private String getPropertyByKey(@NotNull String key) {
         String value = properties.getProperty(key);
         if (StringUtils.isBlank(value)) {
             value = System.getProperty(key);
@@ -28,10 +34,9 @@ public class Configuration {
     }
 
     @Nullable
-    public String getProperty(CliOption cliOption) {
-        return getProperty(cliOption.getKey());
+    public String getProperty(@NotNull ConfigurationOption confOption) {
+        return getPropertyByKey(confOption.getKey());
     }
-
 
     public void updateWithCliOptions(CommandLine commandLine) {
         for (Option option : commandLine.getOptions()) {
