@@ -17,16 +17,16 @@ public class CliWrapper {
     @NotNull
     @SuppressWarnings("unchecked")
     private Options createOptions() {
-        Options opt = new Options();
-        opt.addOption(buildOption(CliOption.CONF, true, true));
-        opt.addOption(buildOption(CliOption.CONNECTOR, true, true));
+        Options localOptions = new Options();
+        localOptions.addOption(buildOption(CliOption.CONF, true, true));
+        localOptions.addOption(buildOption(CliOption.CONNECTOR, true, true));
 
-        opt.addOption(buildOption(CliOption.CHANGE_ID, true, false));
-        opt.addOption(buildOption(CliOption.REVISION_ID, true, false));
+        localOptions.addOption(buildOption(CliOption.CHANGE_ID, true, false));
+        localOptions.addOption(buildOption(CliOption.REVISION_ID, true, false));
 
-        opt.addOption(buildOption(CliOption.PULL_REQUEST_ID, true, false));
+        localOptions.addOption(buildOption(CliOption.PULL_REQUEST_ID, true, false));
 
-        return opt;
+        return localOptions;
     }
 
     @NotNull
