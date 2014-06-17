@@ -56,7 +56,7 @@ public class StashConnector implements Connector {
     }
 
     public String getDiffByLine(String filename) throws URISyntaxException, IOException {
-        URI uri = httpConnector.buildUri(createUrl(stashPatchset, DIFF_URL_FORMAT),
+        URI uri = httpConnector.buildUri(createUrl(stashPatchset, DIFF_URL_FORMAT) + "/" + filename,
                 new BasicNameValuePair("contextLines", "-1"),
                 new BasicNameValuePair("srcPath", filename),
                 new BasicNameValuePair("withComments", "false"));
