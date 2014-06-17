@@ -25,7 +25,7 @@ public class Configuration {
     }
     
     @Nullable
-    public String getPropertyByKey(@NotNull String key) {
+    private String getPropertyByKey(@NotNull String key) {
         String value = properties.getProperty(key);
         if (StringUtils.isBlank(value)) {
             value = System.getProperty(key);
@@ -37,12 +37,6 @@ public class Configuration {
     public String getProperty(@NotNull ConfigurationOption confOption) {
         return getPropertyByKey(confOption.getKey());
     }
-
-    @Nullable
-    public String getProperty(CliOption cliOption) {
-        return getPropertyByKey(cliOption.getKey());
-    }
-
 
     public void updateWithCliOptions(CommandLine commandLine) {
         for (Option option : commandLine.getOptions()) {
