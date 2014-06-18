@@ -28,7 +28,7 @@ checkstyle.enabled=true
 checkstyle.configurationFile=sun_checks.xml
 checkstyle.propertiesFile=
 pmd.enabled=true
-pmd.ruleSets=rulesets/java/android.xml,rulesets/java/basic.xml,rulesets/java/braces.xml,rulesets/java/clone.xml,rulesets/java/codesize.xml,rulesets/java/comments.xml,rulesets/java/controversial.xml,rulesets/java/coupling.xml,rulesets/java/design.xml,rulesets/java/empty.xml,rulesets/java/finalizers.xml,rulesets/java/imports.xml,rulesets/java/j2ee.xml,rulesets/java/javabeans.xml,rulesets/java/junit.xml,rulesets/java/logging-jakarta-commons.xml,rulesets/java/logging-java.xml,rulesets/java/migrating.xml,rulesets/java/naming.xml,rulesets/java/optimizations.xml,rulesets/java/strictexception.xml,rulesets/java/strings.xml,rulesets/java/sunsecure.xml,rulesets/java/unnecessary.xml,rulesets/java/unusedcode.xml
+pmd.ruleSets=rulesets/java/android.xml,rulesets/java/basic.xml
 findbugs.enabled=true
 findbugs.includeFilter=
 findbugs.excludeFilter=
@@ -64,7 +64,7 @@ If you have Jenkins job that uses Gerrit Trigger plugin it's very easy to integr
 - create a user in Gerrit with HTTP password access and Non-Interactive Users group (take a look at Gerrit documentation [https://git.eclipse.org/r/Documentation/cmd-create-account.html][here])
 - add Post-Build step to your Jenkins job: Execute bash shell:
 ```
-/opt/sputnik/sputnik-1.0/bin/sputnik -conf /opt/sputnik/myconf.properties -changeId $GERRIT_CHANGE_ID -revisionId $GERRIT_PATCHSET_REVISION
+/opt/sputnik/sputnik-1.0/bin/sputnik -connector gerrit -conf /opt/sputnik/myconf.properties -changeId $GERRIT_CHANGE_ID -revisionId $GERRIT_PATCHSET_REVISION
 # This line makes sure that this Post-Build step always returns exit code 0
 # so it won't affect your main build result
 echo "exit 0 workaround"
@@ -78,6 +78,13 @@ TODO
 
 - Gerrit 2.8 is required (REST API for reviews was introduced in this version)
 - Jenkins or other CI server to download and build patchsets
+
+## Contributors
+
+- Tomasz Kalkosiński
+- Marcin Cylke
+- Piotr Jagielski
+- Karol Lassak
 
 ## License
 
