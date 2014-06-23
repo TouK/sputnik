@@ -81,6 +81,7 @@ public class Review {
             }
             reviewInput.comments.put(file.getReviewFilename(), comments);
         }
+        log.info(reviewInput.message);
 
         return reviewInput;
     }
