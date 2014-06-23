@@ -18,6 +18,7 @@ import java.util.List;
 @Slf4j
 public class Review {
     /* Source, severity, message, e.g. [Checkstyle] Info: This is bad */
+
     private static final String COMMENT_FORMAT = "[%s] %s: %s";
     private final List<ReviewFile> files;
     private int totalViolationsCount = 0;
@@ -28,12 +29,12 @@ public class Review {
         } else {
             // Filter test files
             this.files = FluentIterable.from(files)
-                .filter(new Predicate<ReviewFile>() {
-                    @Override
-                    public boolean apply(ReviewFile file) {
-                        return !file.isTestFile();
-                    }
-                }).toList();
+                    .filter(new Predicate<ReviewFile>() {
+                @Override
+                public boolean apply(ReviewFile file) {
+                    return !file.isTestFile();
+                }
+            }).toList();
         }
     }
 
@@ -74,12 +75,14 @@ public class Review {
         for (ReviewFile file : files) {
             List<ReviewFileComment> comments = new ArrayList<>();
             for (Comment comment : file.getComments()) {
-                if (maxComments != 0 && commentsPut <= maxComments) {
+                commentsPut++;
+                if (maxComments == 0 || commentsPut <= maxComments) {
                     comments.add(new ReviewLineComment(comment.getLine(), comment.getMessage()));
                 }
-                commentsPut++;
             }
-            reviewInput.comments.put(file.getReviewFilename(), comments);
+            if (!comments.isEmpty()) {
+                reviewInput.comments.put(file.getReviewFilename(), comments);
+            }
         }
         log.info(reviewInput.message);
 
@@ -87,16 +90,16 @@ public class Review {
     }
 
     public void add(@NotNull String source, @NotNull ReviewResult reviewResult) {
-        for(Violation violation : reviewResult.getViolations()) {
+        for (Violation violation : reviewResult.getViolations()) {
             addError(source, violation);
         }
     }
 
     public void addError(String source, Violation violation) {
         for (ReviewFile file : files) {
-            if (file.getReviewFilename().equals(violation.getFilenameOrJavaClassName()) ||
-                    file.getIoFile().getAbsolutePath().equals(violation.getFilenameOrJavaClassName()) ||
-                    file.getJavaClassName().equals(violation.getFilenameOrJavaClassName())) {
+            if (file.getReviewFilename().equals(violation.getFilenameOrJavaClassName())
+                    || file.getIoFile().getAbsolutePath().equals(violation.getFilenameOrJavaClassName())
+                    || file.getJavaClassName().equals(violation.getFilenameOrJavaClassName())) {
                 addError(file, source, violation.getLine(), violation.getMessage(), violation.getSeverity());
                 totalViolationsCount++;
                 return;
@@ -110,7 +113,9 @@ public class Review {
     }
 
     private static class ReviewFileFileFunction implements Function<ReviewFile, File> {
-        ReviewFileFileFunction() { }
+
+        ReviewFileFileFunction() {
+        }
 
         @Override
         public File apply(ReviewFile from) {
@@ -119,7 +124,9 @@ public class Review {
     }
 
     private static class ReviewFileFilenameFunction implements Function<ReviewFile, String> {
-        ReviewFileFilenameFunction() { }
+
+        ReviewFileFilenameFunction() {
+        }
 
         @Override
         public String apply(ReviewFile from) {
@@ -128,7 +135,9 @@ public class Review {
     }
 
     private static class ReviewFileJavaFileNameFunction implements Function<ReviewFile, String> {
-        ReviewFileJavaFileNameFunction() { }
+
+        ReviewFileJavaFileNameFunction() {
+        }
 
         @Override
         public String apply(ReviewFile from) {
@@ -137,7 +146,9 @@ public class Review {
     }
 
     private static class ReviewFileBuildDirFunction implements Function<ReviewFile, String> {
-        ReviewFileBuildDirFunction() { }
+
+        ReviewFileBuildDirFunction() {
+        }
 
         @Override
         public String apply(ReviewFile from) {
@@ -146,7 +157,9 @@ public class Review {
     }
 
     private static class ReviewFileSourceDirFunction implements Function<ReviewFile, String> {
-        ReviewFileSourceDirFunction() { }
+
+        ReviewFileSourceDirFunction() {
+        }
 
         @Override
         public String apply(ReviewFile from) {

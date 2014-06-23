@@ -10,26 +10,33 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.Before;
 
 public class ReviewTest {
     
-    List<ReviewFile> reviewList;
-    
-    @Before
-    public void prepare() {
-        reviewList = ImmutableList.of(
+    public Review prepare(boolean test) {
+        List<ReviewFile> reviewList = ImmutableList.of(
                 new ReviewFile("/src/main/java/file1.java"),
                 new ReviewFile("/src/main/java/file2.java"),
                 new ReviewFile("/src/test/java/file1.java"),
                 new ReviewFile("/src/test/java/file2.java")
                 );
+        
+        Review review = new Review(reviewList, test);
+        
+        int i = 0;
+        for (ReviewFile file : reviewList) {
+            i++;
+            for (int y = 0; y < i; y++) {
+                review.addError(file.getReviewFilename(), new Violation(file.getReviewFilename(), 10 + y, "Test error " + y, Severity.ERROR));
+            }
+        }
+        return review;
     }
 
     @Test
     public void shouldConvertToReviewInput() {
         //given
-        Review review = new Review(reviewList, true);
+        Review review = prepare(true);
 
         //when
         ReviewInput reviewInput = review.toReviewInput(0);
@@ -42,7 +49,7 @@ public class ReviewTest {
     @Test
     public void shouldNotProcessTestFiles() {
         //given
-        Review review = new Review(reviewList, false);
+        Review review = prepare(false);
 
         //when
         ReviewInput reviewInput = review.toReviewInput(0);
@@ -50,27 +57,29 @@ public class ReviewTest {
         //then
         assertThat(reviewInput.comments)
                 .hasSize(2)
-                .containsEntry("/src/main/java/file1.java", Collections.<ReviewFileComment>emptyList());
+                .containsKeys("/src/main/java/file1.java", "/src/main/java/file2.java");
         
     }
     
     @Test
     public void shouldNotProcessMoreFiles() {
         //given
-        Review review = new Review(reviewList, true);
+        Review review = prepare(true);
 
         //when
-        ReviewInput reviewInput = review.toReviewInput(1);
+        ReviewInput reviewInput = review.toReviewInput(3);
+        
+        
 
         //then
         assertThat(reviewInput.comments)
-                .hasSize(4);
+                .hasSize(2);
         
         int count = 0;
         for (Map.Entry<String, List<ReviewFileComment>> reviewFile : reviewInput.comments.entrySet()) {
             count += reviewFile.getValue().size();
         }
-        assertThat(count == 1);        
+        assertThat(count == 3);        
     }
 
 }
