@@ -27,11 +27,11 @@ import scala.Some;
 
 import java.io.File;
 import java.util.List;
+import pl.touk.sputnik.configuration.GeneralOption;
 
 @Slf4j
 public class ScalastyleProcessor implements ReviewProcessor {
     private static final String SOURCE_NAME = "Scalastyle";
-    private static final String SCALASTYLE_CONFIG = "scalastyle.config";
 
     private final MessageHelper messageHelper = new MessageHelper(ClassLoader.getSystemClassLoader());
 
@@ -39,7 +39,7 @@ public class ScalastyleProcessor implements ReviewProcessor {
     @Override
     @SuppressWarnings("unchecked")
     public ReviewResult process(@NotNull Review review) {
-        String scalastyleConfigFile = ConfigurationHolder.instance().getProperty(SCALASTYLE_CONFIG);
+        String scalastyleConfigFile = ConfigurationHolder.instance().getProperty(GeneralOption.SCALASTYLE_CONFIG);
         ScalastyleConfiguration configuration = ScalastyleConfiguration.readFromXml(scalastyleConfigFile);
         List<Message> messages = new ScalastyleChecker().checkFilesAsJava(configuration,
                 toFileSpec(onlyScala(review.getIOFiles())));
@@ -49,7 +49,7 @@ public class ScalastyleProcessor implements ReviewProcessor {
     private List<FileSpec> toFileSpec(List<File> ioFiles) {
         List<FileSpec> fileSpecs = Lists.newArrayList();
         for (File file : ioFiles) {
-            fileSpecs.add(new RealFileSpec(file.getAbsolutePath(), new Some<String>("UTF-8")));
+            fileSpecs.add(new RealFileSpec(file.getAbsolutePath(), new Some<>("UTF-8")));
         }
         return fileSpecs;
     }
@@ -57,6 +57,7 @@ public class ScalastyleProcessor implements ReviewProcessor {
     private List<File> onlyScala(List<File> transform) {
         return FluentIterable.from(transform)
                 .filter(new Predicate<File>() {
+                    @Override
                     public boolean apply(File file) {
                         return file.getAbsolutePath().endsWith("scala");
                     }

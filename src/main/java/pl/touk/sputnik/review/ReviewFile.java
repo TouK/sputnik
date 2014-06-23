@@ -20,35 +20,40 @@ public class ReviewFile {
     private static final String DOT = ".";
     private static final Pattern MAVEN_ENTRY_PATTERN = Pattern.compile(MAVEN_ENTRY_REGEX);
 
-    private final String gerritFilename;
+    private final String reviewFilename;
     private final String javaClassName;
     private final File ioFile;
-    private final List<Comment> comments = new ArrayList<Comment>();
+    private final List<Comment> comments = new ArrayList<>();
 
-    public ReviewFile(@NotNull String gerritFilename) {
-        this.gerritFilename = gerritFilename;
+    public ReviewFile(@NotNull String reviewFilename) {
+        this.reviewFilename = reviewFilename;
         this.javaClassName = createJavaClassName();
-        this.ioFile = new File(gerritFilename);
+        this.ioFile = new File(reviewFilename);
     }
 
     @NotNull
     public String getSourceDir() {
-        return StringUtils.substringBeforeLast(gerritFilename, JAVA).concat(JAVA);
+        return StringUtils.substringBeforeLast(reviewFilename, JAVA).concat(JAVA);
     }
 
     @NotNull
     public String getBuildDir() {
-        if (StringUtils.contains(gerritFilename, SRC_MAIN)) {
-            return StringUtils.substringBeforeLast(gerritFilename, SRC_MAIN).concat(BUILD_MAIN);
+        if (StringUtils.contains(reviewFilename, SRC_MAIN)) {
+            return StringUtils.substringBeforeLast(reviewFilename, SRC_MAIN).concat(BUILD_MAIN);
         }
-        if (StringUtils.contains(gerritFilename, SRC_TEST)) {
-            return StringUtils.substringBeforeLast(gerritFilename, SRC_TEST).concat(BUILD_TEST);
+        if (StringUtils.contains(reviewFilename, SRC_TEST)) {
+            return StringUtils.substringBeforeLast(reviewFilename, SRC_TEST).concat(BUILD_TEST);
         }
         return getSourceDir();
     }
 
     @NotNull
     private String createJavaClassName() {
-        return StringUtils.substringBeforeLast(MAVEN_ENTRY_PATTERN.matcher(gerritFilename).replaceFirst(""), DOT).replace('/', '.');
+        return StringUtils.substringBeforeLast(MAVEN_ENTRY_PATTERN.matcher(reviewFilename).replaceFirst(""), DOT).replace('/', '.');
+    }
+    
+    @NotNull
+    public Boolean isTestFile() {
+        return StringUtils.contains(reviewFilename, SRC_TEST);
     }
 }

@@ -1,6 +1,8 @@
 package pl.touk.sputnik.review;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -20,8 +22,19 @@ public class Review {
     private final List<ReviewFile> files;
     private int totalViolationsCount = 0;
 
-    public Review(List<ReviewFile> files) {
-        this.files = files;
+    public Review(List<ReviewFile> files, boolean revievTestFiles) {
+        if (revievTestFiles) {
+            this.files = files;
+        } else {
+            // Filter test files
+            this.files = FluentIterable.from(files)
+                .filter(new Predicate<ReviewFile>() {
+                    @Override
+                    public boolean apply(ReviewFile file) {
+                        return !file.isTestFile();
+                    }
+                }).toList();
+        }
     }
 
     @NotNull
@@ -55,11 +68,11 @@ public class Review {
         reviewInput.message = "Total " + totalViolationsCount + " violations found";
         reviewInput.setLabelToPlusOne();
         for (ReviewFile file : files) {
-            List<ReviewFileComment> comments = new ArrayList<ReviewFileComment>();
+            List<ReviewFileComment> comments = new ArrayList<>();
             for (Comment comment : file.getComments()) {
                 comments.add(new ReviewLineComment(comment.getLine(), comment.getMessage()));
             }
-            reviewInput.comments.put(file.getGerritFilename(), comments);
+            reviewInput.comments.put(file.getReviewFilename(), comments);
         }
 
         return reviewInput;
@@ -73,7 +86,7 @@ public class Review {
 
     public void addError(String source, Violation violation) {
         for (ReviewFile file : files) {
-            if (file.getGerritFilename().equals(violation.getFilenameOrJavaClassName()) ||
+            if (file.getReviewFilename().equals(violation.getFilenameOrJavaClassName()) ||
                     file.getIoFile().getAbsolutePath().equals(violation.getFilenameOrJavaClassName()) ||
                     file.getJavaClassName().equals(violation.getFilenameOrJavaClassName())) {
                 addError(file, source, violation.getLine(), violation.getMessage(), violation.getSeverity());
@@ -102,7 +115,7 @@ public class Review {
 
         @Override
         public String apply(ReviewFile from) {
-            return from.getGerritFilename();
+            return from.getReviewFilename();
         }
     }
 

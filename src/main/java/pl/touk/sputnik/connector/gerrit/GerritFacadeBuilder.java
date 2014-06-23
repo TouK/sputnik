@@ -16,11 +16,11 @@ public class GerritFacadeBuilder {
     private HttpHelper httpHelper = new HttpHelper();
 
     public GerritFacade build() {
-        String host = ConfigurationHolder.instance().getProperty(GerritFacade.GERRIT_HOST);
-        String port = ConfigurationHolder.instance().getProperty(GerritFacade.GERRIT_PORT);
-        String username = ConfigurationHolder.instance().getProperty(GerritFacade.GERRIT_USERNAME);
-        String password = ConfigurationHolder.instance().getProperty(GerritFacade.GERRIT_PASSWORD);
-        String useHttps = ConfigurationHolder.instance().getProperty(GerritFacade.GERRIT_USE_HTTPS);
+        String host = ConfigurationHolder.instance().getProperty(GerritOption.HOST);
+        String port = ConfigurationHolder.instance().getProperty(GerritOption.PORT);
+        String username = ConfigurationHolder.instance().getProperty(GerritOption.USERNAME);
+        String password = ConfigurationHolder.instance().getProperty(GerritOption.PASSWORD);
+        String useHttps = ConfigurationHolder.instance().getProperty(GerritOption.USE_HTTPS);
         boolean isHttps = Boolean.parseBoolean(useHttps);
 
         notBlank(host, "You must provide non blank Gerrit host");

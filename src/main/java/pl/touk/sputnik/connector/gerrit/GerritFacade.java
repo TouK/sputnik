@@ -16,14 +16,8 @@ import java.util.Set;
 import pl.touk.sputnik.Connectors;
 
 public class GerritFacade implements ConnectorFacade {
-    private static final String CONNECTOR_NAME = "gerrit";
     private static final String RESPONSE_PREFIX = ")]}'";
     private static final String COMMIT_MSG = "/COMMIT_MSG";
-    public static final String GERRIT_HOST = "gerrit.host";
-    public static final String GERRIT_PORT = "gerrit.port";
-    public static final String GERRIT_USE_HTTPS = "gerrit.useHttps";
-    public static final String GERRIT_USERNAME = "gerrit.username";
-    public static final String GERRIT_PASSWORD = "gerrit.password";
     private GerritConnector gerritConnector;
     private ObjectMapper objectMapper = new ObjectMapper();
 

@@ -20,7 +20,7 @@ public class Configuration {
     
     @Nullable
     @Deprecated
-    public String getProperty(@NotNull String key) {
+    private String getProperty(@NotNull String key) {
         return getPropertyByKey(key);
     }
     
@@ -35,7 +35,11 @@ public class Configuration {
 
     @Nullable
     public String getProperty(@NotNull ConfigurationOption confOption) {
-        return getPropertyByKey(confOption.getKey());
+        String value = getPropertyByKey(confOption.getKey());
+        if (StringUtils.isBlank(value)) {
+            value = confOption.getDefaultValue();
+        }
+        return value;
     }
 
     public void updateWithCliOptions(CommandLine commandLine) {
