@@ -63,14 +63,21 @@ public class Review {
     }
 
     @NotNull
-    public ReviewInput toReviewInput() {
+    public ReviewInput toReviewInput(int maxComments) {
         ReviewInput reviewInput = new ReviewInput();
+        int commentsPut = 0;
         reviewInput.message = "Total " + totalViolationsCount + " violations found";
+        if (maxComments != 0 && totalViolationsCount > maxComments) {
+            reviewInput.message = reviewInput.message + ", but showing only first " + maxComments;
+        }
         reviewInput.setLabelToPlusOne();
         for (ReviewFile file : files) {
             List<ReviewFileComment> comments = new ArrayList<>();
             for (Comment comment : file.getComments()) {
-                comments.add(new ReviewLineComment(comment.getLine(), comment.getMessage()));
+                if (maxComments != 0 && commentsPut <= maxComments) {
+                    comments.add(new ReviewLineComment(comment.getLine(), comment.getMessage()));
+                }
+                commentsPut++;
             }
             reviewInput.comments.put(file.getReviewFilename(), comments);
         }

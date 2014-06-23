@@ -32,8 +32,10 @@ public class Engine {
         for (ReviewProcessor processor : processors) {
             review(review, processor);
         }
+        
+        int maxNumberOfComments = Integer.parseInt(ConfigurationHolder.instance().getProperty(GeneralOption.MAX_NUMBER_OF_COMMENTS));
 
-        facade.setReview(review.toReviewInput());
+        facade.setReview(review.toReviewInput(maxNumberOfComments));
     }
 
     private void review(@NotNull Review review, @NotNull ReviewProcessor processor) {
