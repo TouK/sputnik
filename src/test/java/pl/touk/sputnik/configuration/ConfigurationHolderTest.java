@@ -41,7 +41,7 @@ public class ConfigurationHolderTest {
         System.setProperty("some.system.property", "1234");
         ConfigurationHolder.initFromResource("sample-test.properties");
 
-        assertThat(ConfigurationHolder.instance().getProperty(GerritOption.PORT)).isEqualTo("1234");
+        assertThat(ConfigurationHolder.instance().getProperty(GerritOption.PORT)).isEqualTo("9999");
     }
 
     @Test

@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum GeneralOption implements ConfigurationOption {
-    CHECKSTYLE_ENABLED("checkstyle.enabled", "Checkstyle enabled", "true"),
+    CHECKSTYLE_ENABLED("checkstyle.enabled", "Checkstyle enabled", "false"),
     CHECKSTYLE_CONFIGURATION_FILE("checkstyle.configurationFile", "Checkstyle configuration file", "sun_checks.xml"),
     PMD_ENABLED("pmd.enabled", "PMD enabled", "false"),
     PMD_RULESETS("pmd.ruleSets", "PMD rule sets", "rulesets/java/basic.xml"),
