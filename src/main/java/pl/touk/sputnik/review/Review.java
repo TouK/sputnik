@@ -1,6 +1,8 @@
 package pl.touk.sputnik.review;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -16,12 +18,18 @@ import java.util.List;
 @Slf4j
 public class Review {
     /* Source, severity, message, e.g. [Checkstyle] Info: This is bad */
+
     private static final String COMMENT_FORMAT = "[%s] %s: %s";
     private final List<ReviewFile> files;
     private int totalViolationsCount = 0;
 
-    public Review(List<ReviewFile> files) {
-        this.files = files;
+    public Review(List<ReviewFile> files, boolean revievTestFiles) {
+        if (revievTestFiles) {
+            this.files = files;
+        } else {
+            // Filter test files
+            this.files = filterOutTestFiles(files);
+        }
     }
 
     @NotNull
@@ -50,32 +58,42 @@ public class Review {
     }
 
     @NotNull
-    public ReviewInput toReviewInput() {
+    public ReviewInput toReviewInput(int maxComments) {
         ReviewInput reviewInput = new ReviewInput();
+        int commentsPut = 0;
         reviewInput.message = "Total " + totalViolationsCount + " violations found";
+        if (maxComments != 0 && totalViolationsCount > maxComments) {
+            reviewInput.message = reviewInput.message + ", but showing only first " + maxComments;
+        }
         reviewInput.setLabelToPlusOne();
         for (ReviewFile file : files) {
-            List<ReviewFileComment> comments = new ArrayList<ReviewFileComment>();
+            List<ReviewFileComment> comments = new ArrayList<>();
             for (Comment comment : file.getComments()) {
-                comments.add(new ReviewLineComment(comment.getLine(), comment.getMessage()));
+                commentsPut++;
+                if (maxComments == 0 || commentsPut <= maxComments) {
+                    comments.add(new ReviewLineComment(comment.getLine(), comment.getMessage()));
+                }
             }
-            reviewInput.comments.put(file.getGerritFilename(), comments);
+            if (!comments.isEmpty()) {
+                reviewInput.comments.put(file.getReviewFilename(), comments);
+            }
         }
+        log.info(reviewInput.message);
 
         return reviewInput;
     }
 
     public void add(@NotNull String source, @NotNull ReviewResult reviewResult) {
-        for(Violation violation : reviewResult.getViolations()) {
+        for (Violation violation : reviewResult.getViolations()) {
             addError(source, violation);
         }
     }
 
     public void addError(String source, Violation violation) {
         for (ReviewFile file : files) {
-            if (file.getGerritFilename().equals(violation.getFilenameOrJavaClassName()) ||
-                    file.getIoFile().getAbsolutePath().equals(violation.getFilenameOrJavaClassName()) ||
-                    file.getJavaClassName().equals(violation.getFilenameOrJavaClassName())) {
+            if (file.getReviewFilename().equals(violation.getFilenameOrJavaClassName())
+                    || file.getIoFile().getAbsolutePath().equals(violation.getFilenameOrJavaClassName())
+                    || file.getJavaClassName().equals(violation.getFilenameOrJavaClassName())) {
                 addError(file, source, violation.getLine(), violation.getMessage(), violation.getSeverity());
                 totalViolationsCount++;
                 return;
@@ -88,8 +106,20 @@ public class Review {
         reviewFile.getComments().add(new Comment(line, String.format(COMMENT_FORMAT, source, severity, message)));
     }
 
+    private List<ReviewFile> filterOutTestFiles(List<ReviewFile> files) {
+        return FluentIterable.from(files)
+                .filter(new Predicate<ReviewFile>() {
+            @Override
+            public boolean apply(ReviewFile file) {
+                return !file.isTestFile();
+            }
+        }).toList();
+    }
+
     private static class ReviewFileFileFunction implements Function<ReviewFile, File> {
-        ReviewFileFileFunction() { }
+
+        ReviewFileFileFunction() {
+        }
 
         @Override
         public File apply(ReviewFile from) {
@@ -98,16 +128,20 @@ public class Review {
     }
 
     private static class ReviewFileFilenameFunction implements Function<ReviewFile, String> {
-        ReviewFileFilenameFunction() { }
+
+        ReviewFileFilenameFunction() {
+        }
 
         @Override
         public String apply(ReviewFile from) {
-            return from.getGerritFilename();
+            return from.getReviewFilename();
         }
     }
 
     private static class ReviewFileJavaFileNameFunction implements Function<ReviewFile, String> {
-        ReviewFileJavaFileNameFunction() { }
+
+        ReviewFileJavaFileNameFunction() {
+        }
 
         @Override
         public String apply(ReviewFile from) {
@@ -116,7 +150,9 @@ public class Review {
     }
 
     private static class ReviewFileBuildDirFunction implements Function<ReviewFile, String> {
-        ReviewFileBuildDirFunction() { }
+
+        ReviewFileBuildDirFunction() {
+        }
 
         @Override
         public String apply(ReviewFile from) {
@@ -125,7 +161,9 @@ public class Review {
     }
 
     private static class ReviewFileSourceDirFunction implements Function<ReviewFile, String> {
-        ReviewFileSourceDirFunction() { }
+
+        ReviewFileSourceDirFunction() {
+        }
 
         @Override
         public String apply(ReviewFile from) {

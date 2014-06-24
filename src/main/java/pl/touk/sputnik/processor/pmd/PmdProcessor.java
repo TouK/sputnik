@@ -18,8 +18,6 @@ import net.sourceforge.pmd.renderers.Renderer;
 import net.sourceforge.pmd.util.datasource.DataSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewProcessor;
@@ -30,11 +28,12 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
+import pl.touk.sputnik.configuration.GeneralOption;
 
+@Slf4j
 public class PmdProcessor implements ReviewProcessor {
-    private static final Logger LOG = LoggerFactory.getLogger(PmdProcessor.class);
     private static final String SOURCE_NAME = "PMD";
-    private static final String PMD_RULESETS = "pmd.ruleSets";
     private static final char PMD_INPUT_PATH_SEPARATOR = ',';
     private Renderer renderer;
 
@@ -48,7 +47,7 @@ public class PmdProcessor implements ReviewProcessor {
             configuration.setInputPaths(Joiner.on(PMD_INPUT_PATH_SEPARATOR).join(review.getIOFilenames()));
             doPMD(configuration);
         } catch (Throwable e) {
-            LOG.error("PMD processor error", e);
+            log.error("PMD processor error", e);
         }
         return renderer != null ? ((CollectorRenderer)renderer).getReviewResult() : null;
     }
@@ -61,8 +60,8 @@ public class PmdProcessor implements ReviewProcessor {
 
     @Nullable
     private String getRulesets() {
-        String ruleSets = ConfigurationHolder.instance().getProperty(PMD_RULESETS);
-        LOG.info("Using PMD rulesets {}", ruleSets);
+        String ruleSets = ConfigurationHolder.instance().getProperty(GeneralOption.PMD_RULESETS);
+        log.info("Using PMD rulesets {}", ruleSets);
         return ruleSets;
     }
 
@@ -98,7 +97,7 @@ public class PmdProcessor implements ReviewProcessor {
             reportStart = System.nanoTime();
             renderer.end();
         } catch (IOException e) {
-            LOG.error("PMD analysis error", e);
+            log.error("PMD analysis error", e);
         } finally {
             Benchmarker.mark(Benchmark.Reporting, System.nanoTime() - reportStart, 0);
         }
@@ -118,7 +117,7 @@ public class PmdProcessor implements ReviewProcessor {
             LanguageVersion version = discoverer.getDefaultLanguageVersion(language);
             if (RuleSet.applies(rule, version)) {
                 languages.add(language);
-                LOG.debug("Using " + language.getShortName() + " version: " + version.getShortName());
+                log.debug("Using {} version: {}", language.getShortName(), version.getShortName());
             }
         }
         return languages;

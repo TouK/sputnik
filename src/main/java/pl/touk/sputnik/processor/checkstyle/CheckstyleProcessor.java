@@ -17,12 +17,11 @@ import pl.touk.sputnik.review.ReviewResult;
 import java.io.File;
 import java.util.List;
 import java.util.Properties;
+import pl.touk.sputnik.configuration.GeneralOption;
 
 @Slf4j
 public class CheckstyleProcessor implements ReviewProcessor {
     private static final String SOURCE_NAME = "Checkstyle";
-    private static final String CHECKSTYLE_CONFIGURATION_FILE = "checkstyle.configurationFile";
-    private static final String CHECKSTYLE_PROPERTIES_FILE = "checkstyle.propertiesFile";
     private final CollectorListener collectorListener = new CollectorListener();
 
     @Nullable
@@ -63,7 +62,7 @@ public class CheckstyleProcessor implements ReviewProcessor {
 
     @Nullable
     private String getConfigurationFilename() {
-        String configurationFile = ConfigurationHolder.instance().getProperty(CHECKSTYLE_CONFIGURATION_FILE);
+        String configurationFile = ConfigurationHolder.instance().getProperty(GeneralOption.CHECKSTYLE_CONFIGURATION_FILE);
         log.info("Using Checkstyle configuration file {}", configurationFile);
         return configurationFile;
     }

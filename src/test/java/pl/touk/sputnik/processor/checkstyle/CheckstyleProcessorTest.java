@@ -39,7 +39,7 @@ public class CheckstyleProcessorTest {
     @Test
     public void shouldReturnNotFoundViolation() {
         //given
-        Review review = new Review(ImmutableList.of(new ReviewFile("test")));
+        Review review = new Review(ImmutableList.of(new ReviewFile("test")), true);
 
         //when
         ReviewResult reviewResult = fixture.process(review);

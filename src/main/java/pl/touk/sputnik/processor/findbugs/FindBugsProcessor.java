@@ -2,21 +2,19 @@ package pl.touk.sputnik.processor.findbugs;
 
 import edu.umd.cs.findbugs.*;
 import edu.umd.cs.findbugs.config.UserPreferences;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
 
+@Slf4j
 public class FindBugsProcessor implements ReviewProcessor {
-    private static final Logger LOG = LoggerFactory.getLogger(FindBugsProcessor.class);
     private static final String SOURCE_NAME = "FindBugs";
-    private static final String FINDBUGS_INCLUDE_FILTER = "findbugs.includeFilter";
-    private static final String FINDBUGS_EXCLUDE_FILTER = "findbugs.excludeFilter";
     private CollectorBugReporter collectorBugReporter;
 
     @Nullable
@@ -27,7 +25,7 @@ public class FindBugsProcessor implements ReviewProcessor {
         try {
             findBugs.execute();
         } catch (Throwable e) {
-            LOG.error("FindBugs process error", e);
+            log.error("FindBugs process error", e);
         }
         return collectorBugReporter.getReviewResult();
     }
@@ -91,15 +89,15 @@ public class FindBugsProcessor implements ReviewProcessor {
 
     @Nullable
     private String getIncludeFilterFilename() {
-        String includeFilterFilename = ConfigurationHolder.instance().getProperty(FINDBUGS_INCLUDE_FILTER);
-        LOG.info("Using FindBugs include filter file {}", includeFilterFilename);
+        String includeFilterFilename = ConfigurationHolder.instance().getProperty(GeneralOption.FINDBUGS_INCLUDE_FILTER);
+        log.info("Using FindBugs include filter file {}", includeFilterFilename);
         return includeFilterFilename;
     }
 
     @Nullable
     private String getExcludeFilterFilename() {
-        String excludeFilterFilename = ConfigurationHolder.instance().getProperty(FINDBUGS_EXCLUDE_FILTER);
-        LOG.info("Using FindBugs exclude filter file {}", excludeFilterFilename);
+        String excludeFilterFilename = ConfigurationHolder.instance().getProperty(GeneralOption.FINDBUGS_EXCLUDE_FILTER);
+        log.info("Using FindBugs exclude filter file {}", excludeFilterFilename);
         return excludeFilterFilename;
     }
 }

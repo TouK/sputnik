@@ -11,13 +11,10 @@ import pl.touk.sputnik.processor.scalastyle.ScalastyleProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
+import pl.touk.sputnik.configuration.GeneralOption;
 
 @Slf4j
 public class Engine {
-    private static final String CHECKSTYLE_ENABLED = "checkstyle.enabled";
-    private static final String PMD_ENABLED = "pmd.enabled";
-    private static final String FINDBUGS_ENABLED = "findbugs.enabled";
-    private static final String SCALASTYLE_ENABLED = "scalastyle.enabled";
     private static final long THOUSAND = 1000L;
     private final ConnectorFacade facade;
 
@@ -27,14 +24,18 @@ public class Engine {
 
     public void run() {
         List<ReviewFile> reviewFiles = facade.listFiles();
-        Review review = new Review(reviewFiles);
+        Boolean reviewTestFiles = Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.PROCESS_TEST_FILES));
+        
+        Review review = new Review(reviewFiles, reviewTestFiles);
 
         List<ReviewProcessor> processors = createProcessors();
         for (ReviewProcessor processor : processors) {
             review(review, processor);
         }
+        
+        int maxNumberOfComments = Integer.parseInt(ConfigurationHolder.instance().getProperty(GeneralOption.MAX_NUMBER_OF_COMMENTS));
 
-        facade.setReview(review.toReviewInput());
+        facade.setReview(review.toReviewInput(maxNumberOfComments));
     }
 
     private void review(@NotNull Review review, @NotNull ReviewProcessor processor) {
@@ -54,17 +55,17 @@ public class Engine {
 
     @NotNull
     private List<ReviewProcessor> createProcessors() {
-        List<ReviewProcessor> processors = new ArrayList<ReviewProcessor>();
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(CHECKSTYLE_ENABLED))) {
+        List<ReviewProcessor> processors = new ArrayList<>();
+        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.CHECKSTYLE_ENABLED))) {
             processors.add(new CheckstyleProcessor());
         }
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(PMD_ENABLED))) {
+        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.PMD_ENABLED))) {
             processors.add(new PmdProcessor());
         }
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(FINDBUGS_ENABLED))) {
+        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.FINDBUGS_ENABLED))) {
             processors.add(new FindBugsProcessor());
         }
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(SCALASTYLE_ENABLED))) {
+        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.SCALASTYLE_ENABLED))) {
             processors.add(new ScalastyleProcessor());
         }
         return processors;

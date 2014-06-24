@@ -30,13 +30,21 @@ import java.util.Map;
  * }
  */
 public class ReviewInput {
+
     public static final String CODE_REVIEW = "Code-Review";
     public String message = "Looks good to me.";
-    public Map<String, Integer> labels = new HashMap<String, Integer>();
-    public Map<String, List<ReviewFileComment>> comments = new HashMap<String, List<ReviewFileComment>>();
+    public Map<String, Integer> labels = new HashMap<>();
+    public Map<String, List<ReviewFileComment>> comments = new HashMap<>();
 
     public void setLabelToPlusOne() {
         labels.put(CODE_REVIEW, 1);
     }
 
+    public int getRevievCount() {
+        int count = 0;
+        for (Map.Entry<String, List<ReviewFileComment>> reviewFile : comments.entrySet()) {
+            count += reviewFile.getValue().size();
+        }
+        return count;
+    }
 }

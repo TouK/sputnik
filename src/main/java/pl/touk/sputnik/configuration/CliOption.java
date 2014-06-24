@@ -6,14 +6,15 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum CliOption implements ConfigurationOption {
-    CONF("cli.conf", "Configuration properties file"),
-    CHANGE_ID("cli.changeId", "Gerrit change id"),
-    REVISION_ID("cli.revisionId", "Gerrit revision id"),
-    PULL_REQUEST_ID("cli.pullRequestId", "Stash pull request id"),
-    CONNECTOR("cli.connector", "Connector: <stash|gerrit>");
+    CONF("cli.conf", "Configuration properties file", null),
+    CHANGE_ID("cli.changeId", "Gerrit change id", null),
+    REVISION_ID("cli.revisionId", "Gerrit revision id", null),
+    PULL_REQUEST_ID("cli.pullRequestId", "Stash pull request id", null),
+    CONNECTOR("cli.connector", "Connector: <stash|gerrit>", "gerrit");
 
     private String key;
     private String description;
+    private String defaultValue;
     
     public String getCommandLineParam() {
         return key.substring(4);

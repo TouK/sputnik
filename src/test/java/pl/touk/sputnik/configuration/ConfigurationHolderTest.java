@@ -7,10 +7,9 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import pl.touk.sputnik.connector.gerrit.GerritOption;
 
 public class ConfigurationHolderTest {
-
-    private static final String GERRIT_PORT = "gerrit.port";
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldFailWhenConfigFilenameIsEmpty() {
@@ -26,15 +25,15 @@ public class ConfigurationHolderTest {
     public void shouldReadPropertiesFromFile() {
         ConfigurationHolder.initFromResource("sample-test.properties");
 
-        assertThat(ConfigurationHolder.instance().getProperty("gerrit.port")).isEqualTo("9999");
+        assertThat(ConfigurationHolder.instance().getProperty(GerritOption.PORT)).isEqualTo("9999");
     }
 
     @Test
     public void shouldOverrideSystemProperties() {
-        System.setProperty(GERRIT_PORT, "1234");
+        System.setProperty(GerritOption.USERNAME.getKey(), "userala");
         ConfigurationHolder.initFromResource("sample-test.properties");
 
-        assertThat(ConfigurationHolder.instance().getProperty(GERRIT_PORT)).isEqualTo("9999");
+        assertThat(ConfigurationHolder.instance().getProperty(GerritOption.USERNAME)).isEqualTo("userala");
     }
 
     @Test
@@ -42,7 +41,7 @@ public class ConfigurationHolderTest {
         System.setProperty("some.system.property", "1234");
         ConfigurationHolder.initFromResource("sample-test.properties");
 
-        assertThat(ConfigurationHolder.instance().getProperty("some.system.property")).isEqualTo("1234");
+        assertThat(ConfigurationHolder.instance().getProperty(GerritOption.PORT)).isEqualTo("9999");
     }
 
     @Test
@@ -52,7 +51,7 @@ public class ConfigurationHolderTest {
 
         ConfigurationHolder.instance().updateWithCliOptions(commandLineMock);
 
-        assertThat(ConfigurationHolder.instance().getProperty("cli.changeId")).isEqualTo("99999");
+        assertThat(ConfigurationHolder.instance().getProperty(CliOption.CHANGE_ID)).isEqualTo("99999");
     }
 
     private CommandLine buildCommandLine() {
