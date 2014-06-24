@@ -39,7 +39,7 @@ public class ScalastyleProcessor implements ReviewProcessor {
     @Override
     @SuppressWarnings("unchecked")
     public ReviewResult process(@NotNull Review review) {
-        String scalastyleConfigFile = ConfigurationHolder.instance().getProperty(GeneralOption.SCALASTYLE_CONFIG);
+        String scalastyleConfigFile = ConfigurationHolder.instance().getProperty(GeneralOption.SCALASTYLE_CONFIGURATION_FILE);
         ScalastyleConfiguration configuration = ScalastyleConfiguration.readFromXml(scalastyleConfigFile);
         List<Message> messages = new ScalastyleChecker().checkFilesAsJava(configuration,
                 toFileSpec(onlyScala(review.getIOFiles())));
