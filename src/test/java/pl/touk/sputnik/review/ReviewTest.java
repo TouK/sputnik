@@ -2,18 +2,15 @@ package pl.touk.sputnik.review;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
-import pl.touk.sputnik.connector.gerrit.json.ReviewFileComment;
 import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ReviewTest {
     
-    public Review prepare(boolean test) {
+    public Review prepare(boolean revievTestFiles) {
         List<ReviewFile> reviewList = ImmutableList.of(
                 new ReviewFile("/src/main/java/file1.java"),
                 new ReviewFile("/src/main/java/file2.java"),
@@ -21,8 +18,9 @@ public class ReviewTest {
                 new ReviewFile("/src/test/java/file2.java")
                 );
         
-        Review review = new Review(reviewList, test);
+        Review review = new Review(reviewList, revievTestFiles);
         
+        // Create warnings for all files
         int i = 0;
         for (ReviewFile file : reviewList) {
             i++;
@@ -44,6 +42,7 @@ public class ReviewTest {
         //then
         assertThat(reviewInput.comments)
                 .hasSize(4);
+        assertThat(reviewInput.getRevievCount() == 10);
     }
     
     @Test
@@ -58,7 +57,7 @@ public class ReviewTest {
         assertThat(reviewInput.comments)
                 .hasSize(2)
                 .containsKeys("/src/main/java/file1.java", "/src/main/java/file2.java");
-        
+        assertThat(reviewInput.getRevievCount() == 3);
     }
     
     @Test
@@ -75,11 +74,7 @@ public class ReviewTest {
         assertThat(reviewInput.comments)
                 .hasSize(2);
         
-        int count = 0;
-        for (Map.Entry<String, List<ReviewFileComment>> reviewFile : reviewInput.comments.entrySet()) {
-            count += reviewFile.getValue().size();
-        }
-        assertThat(count == 3);        
+        assertThat(reviewInput.getRevievCount() == 3);
     }
 
 }

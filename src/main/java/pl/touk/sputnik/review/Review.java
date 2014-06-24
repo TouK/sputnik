@@ -28,13 +28,7 @@ public class Review {
             this.files = files;
         } else {
             // Filter test files
-            this.files = FluentIterable.from(files)
-                    .filter(new Predicate<ReviewFile>() {
-                @Override
-                public boolean apply(ReviewFile file) {
-                    return !file.isTestFile();
-                }
-            }).toList();
+            this.files = filterOutTestFiles(files);
         }
     }
 
@@ -110,6 +104,16 @@ public class Review {
 
     private void addError(@NotNull ReviewFile reviewFile, @NotNull String source, int line, @Nullable String message, Severity severity) {
         reviewFile.getComments().add(new Comment(line, String.format(COMMENT_FORMAT, source, severity, message)));
+    }
+
+    private List<ReviewFile> filterOutTestFiles(List<ReviewFile> files) {
+        return FluentIterable.from(files)
+                .filter(new Predicate<ReviewFile>() {
+            @Override
+            public boolean apply(ReviewFile file) {
+                return !file.isTestFile();
+            }
+        }).toList();
     }
 
     private static class ReviewFileFileFunction implements Function<ReviewFile, File> {

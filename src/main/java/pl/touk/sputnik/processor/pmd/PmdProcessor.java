@@ -117,7 +117,7 @@ public class PmdProcessor implements ReviewProcessor {
             LanguageVersion version = discoverer.getDefaultLanguageVersion(language);
             if (RuleSet.applies(rule, version)) {
                 languages.add(language);
-                log.debug("Using " + language.getShortName() + " version: " + version.getShortName());
+                log.debug("Using {} version: {}", language.getShortName(), version.getShortName());
             }
         }
         return languages;
