@@ -15,8 +15,8 @@ public enum GeneralOption implements ConfigurationOption {
     FINDBUGS_EXCLUDE_FILTER("findbugs.excludeFilter", "FindBugs exclude filter file", ""),
     SCALASTYLE_ENABLED("scalastyle.enabled", "ScalaStyle enabled", "false"),
     SCALASTYLE_CONFIG("scalastyle.config", "ScalaStyle config file", ""),
-    PROCESS_TEST_FILES("global.process_test", "Process test files?", "true"),
-    MAX_NUMBER_OF_COMMENTS("global.max_number_of_comments", "Maximum number of comments to submit", "50");
+    PROCESS_TEST_FILES("global.processTestFiles", "Process test files?", "true"),
+    MAX_NUMBER_OF_COMMENTS("global.maxNumberOfComments", "Maximum number of comments to submit", "50");
 
     private String key;
     private String description;
