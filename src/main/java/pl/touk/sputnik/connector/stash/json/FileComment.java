@@ -1,5 +1,9 @@
 package pl.touk.sputnik.connector.stash.json;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /*
  {
          "text": "A pithy comment on a particular line within a file.",
@@ -12,7 +16,10 @@ package pl.touk.sputnik.connector.stash.json;
          }
      }
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class FileComment {
-    public String text;
-    public Anchor anchor;
+    private String text;
+    private Anchor anchor;
 }

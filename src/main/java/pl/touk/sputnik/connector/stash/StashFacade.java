@@ -69,6 +69,9 @@ public class StashFacade implements ConnectorFacade {
                     stashConnector.sendReview(json);
                 }
             }
+            // Add comment with number of violations
+            String json = objectMapper.writeValueAsString(new Comment(reviewInput.message));
+            stashConnector.sendReview(json);
         } catch (URISyntaxException | IOException e) {
             throw new StashException("Error setting review", e);
         }
@@ -83,12 +86,14 @@ public class StashFacade implements ConnectorFacade {
 
     private FileComment toFileComment(String key, ReviewLineComment comment, ChangeType changeType) {
         FileComment fileComment = new FileComment();
-        fileComment.text = comment.message;
-        fileComment.anchor = new Anchor();
-        fileComment.anchor.path = key;
-        fileComment.anchor.srcPath = key;
-        fileComment.anchor.line = comment.line;
-        fileComment.anchor.lineType = changeType.name();
+        fileComment.setText(comment.message);
+        Anchor anchor = Anchor.builder().
+                path(key).
+                srcPath(key).
+                line(comment.line).
+                lineType(changeType.name()).
+                build();
+        fileComment.setAnchor(anchor);
         return fileComment;
     }
 

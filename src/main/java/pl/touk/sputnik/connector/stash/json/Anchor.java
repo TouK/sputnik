@@ -1,5 +1,8 @@
 package pl.touk.sputnik.connector.stash.json;
 
+import lombok.Data;
+import lombok.experimental.Builder;
+
 /*
 {
              "line": 1,
@@ -9,6 +12,8 @@ package pl.touk.sputnik.connector.stash.json;
              "srcPath": "path/to/file"
          }
  */
+@Data
+@Builder
 public class Anchor {
     public int line;
     public String lineType = "CONTEXT";
