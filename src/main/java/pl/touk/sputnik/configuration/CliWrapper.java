@@ -19,7 +19,6 @@ public class CliWrapper {
     private Options createOptions() {
         Options localOptions = new Options();
         localOptions.addOption(buildOption(CliOption.CONF, true, true));
-        localOptions.addOption(buildOption(CliOption.CONNECTOR, true, true));
 
         localOptions.addOption(buildOption(CliOption.CHANGE_ID, true, false));
         localOptions.addOption(buildOption(CliOption.REVISION_ID, true, false));
@@ -44,20 +43,5 @@ public class CliWrapper {
             .isRequired(isRequired)
             .withDescription(name.getDescription())
             .create();
-    }
-
-    public Connectors contextSensitiveValidation(CommandLine cli) throws ParseException {
-        Connectors connector = connector(cli);
-        if (connector == Connectors.GERRIT && cli.hasOption(CliOption.CHANGE_ID.getCommandLineParam()) && cli.hasOption(CliOption.REVISION_ID.getCommandLineParam())) {
-            return connector;
-        } else if (connector == Connectors.STASH && cli.hasOption(CliOption.PULL_REQUEST_ID.getCommandLineParam())) {
-            return connector;
-        }
-
-        throw new ParseException("CLI arguments out of context");
-    }
-
-    public Connectors connector(CommandLine commandLine) {
-        return Connectors.valueOf(commandLine.getOptionValue(CliOption.CONNECTOR.getCommandLineParam()).toUpperCase());
     }
 }

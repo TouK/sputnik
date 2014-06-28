@@ -7,7 +7,6 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import pl.touk.sputnik.connector.gerrit.GerritOption;
 
 public class ConfigurationHolderTest {
 
@@ -25,15 +24,15 @@ public class ConfigurationHolderTest {
     public void shouldReadPropertiesFromFile() {
         ConfigurationHolder.initFromResource("sample-test.properties");
 
-        assertThat(ConfigurationHolder.instance().getProperty(GerritOption.PORT)).isEqualTo("9999");
+        assertThat(ConfigurationHolder.instance().getProperty(GeneralOption.PORT)).isEqualTo("9999");
     }
 
     @Test
     public void shouldOverrideSystemProperties() {
-        System.setProperty(GerritOption.USERNAME.getKey(), "userala");
+        System.setProperty(GeneralOption.USERNAME.getKey(), "userala");
         ConfigurationHolder.initFromResource("sample-test.properties");
 
-        assertThat(ConfigurationHolder.instance().getProperty(GerritOption.USERNAME)).isEqualTo("userala");
+        assertThat(ConfigurationHolder.instance().getProperty(GeneralOption.USERNAME)).isEqualTo("userala");
     }
 
     @Test
@@ -41,7 +40,7 @@ public class ConfigurationHolderTest {
         System.setProperty("some.system.property", "1234");
         ConfigurationHolder.initFromResource("sample-test.properties");
 
-        assertThat(ConfigurationHolder.instance().getProperty(GerritOption.PORT)).isEqualTo("9999");
+        assertThat(ConfigurationHolder.instance().getProperty(GeneralOption.PORT)).isEqualTo("9999");
     }
 
     @Test

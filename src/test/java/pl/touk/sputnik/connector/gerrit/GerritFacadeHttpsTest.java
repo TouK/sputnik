@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
+import pl.touk.sputnik.connector.FacadeConfigUtil;
 import pl.touk.sputnik.connector.stash.StashFacadeBuilder;
 import pl.touk.sputnik.review.ReviewFile;
 
@@ -18,33 +19,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class GerritFacadeHttpsTest {
 
-    private static Integer PORT = 8089;
-    private static Integer HTTPS_PORT = 8443;
     private static String SOME_CHANGE_ID = "12314";
     private static String SOME_REVISION_ID = "12314";
 
-    private static final Map<String, String> GERRIT_CONFIG_MAP = ImmutableMap.of(
-            "gerrit.host", "localhost",
-            "gerrit.port", HTTPS_PORT.toString(),
-            "gerrit.username", "user",
-            "gerrit.password", "pass",
-            "gerrit.useHttps", "true"
-    );
-
     private static final Map<String, String> GERRIT_PATCHSET_MAP = ImmutableMap.of(
             "cli.changeId", SOME_CHANGE_ID,
-            "cli.revisionId", SOME_REVISION_ID,
-            "gerrit.projectKey", "mykey"
+            "cli.revisionId", SOME_REVISION_ID
     );
 
     private GerritFacade gerritFacade;
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(PORT, HTTPS_PORT);
+    public WireMockRule wireMockRule = new WireMockRule(FacadeConfigUtil.HTTP_PORT, FacadeConfigUtil.HTTPS_PORT);
 
     @Before
     public void setUp() {
-        new ConfigurationSetup().setUp(GERRIT_CONFIG_MAP, GERRIT_PATCHSET_MAP);
+        new ConfigurationSetup().setUp(FacadeConfigUtil.getHttpsConfig("gerrit"), GERRIT_PATCHSET_MAP);
         gerritFacade = new GerritFacadeBuilder().build();
     }
 

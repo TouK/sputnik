@@ -13,6 +13,9 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import pl.touk.sputnik.connector.ConnectorDetails;
 
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -25,20 +28,23 @@ public class HttpHelper {
     private static final String HTTP_SCHEME = "http";
     private static final String HTTPS_SCHEME = "https";
 
-    public HttpHost buildHttpHost(String host, int port, boolean isHttps) {
-        return new HttpHost(host, port, isHttps ? HTTPS_SCHEME : HTTP_SCHEME);
+    @NotNull
+    public HttpHost buildHttpHost(@NotNull ConnectorDetails connectorDetails) {
+        return new HttpHost(connectorDetails.getHost(), connectorDetails.getPort(), connectorDetails.isHttps() ? HTTPS_SCHEME : HTTP_SCHEME);
     }
 
-    public CloseableHttpClient buildClient(HttpHost httpHost, String username, String password, boolean isHttps) {
+    @NotNull
+    public CloseableHttpClient buildClient(@NotNull HttpHost httpHost, @NotNull ConnectorDetails connectorDetails) {
         HttpClientBuilder httpClientBuilder = HttpClients.custom();
-        httpClientBuilder.setDefaultCredentialsProvider(buildBasicCredentialsProvider(httpHost, username, password));
-        if (isHttps) {
+        httpClientBuilder.setDefaultCredentialsProvider(buildBasicCredentialsProvider(httpHost, connectorDetails.getUsername(), connectorDetails.getPassword()));
+        if (connectorDetails.isHttps()) {
             httpClientBuilder.setSSLSocketFactory(buildSSLSocketFactory());
         }
         return httpClientBuilder.build();
     }
 
-    public HttpClientContext buildClientContext(HttpHost httpHost, AuthScheme authScheme) {
+    @NotNull
+    public HttpClientContext buildClientContext(@NotNull HttpHost httpHost, @NotNull AuthScheme authScheme) {
         AuthCache basicAuthCache = new BasicAuthCache();
         basicAuthCache.put(httpHost, authScheme);
         HttpClientContext httpClientContext = HttpClientContext.create();
@@ -47,7 +53,8 @@ public class HttpHelper {
         return httpClientContext;
     }
 
-    private CredentialsProvider buildBasicCredentialsProvider(HttpHost httpHost, String username, String password) {
+    @NotNull
+    private CredentialsProvider buildBasicCredentialsProvider(@NotNull HttpHost httpHost, @NotNull String username, @NotNull String password) {
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(
                 new AuthScope(httpHost),
@@ -55,6 +62,7 @@ public class HttpHelper {
         return credentialsProvider;
     }
 
+    @Nullable
     private LayeredConnectionSocketFactory buildSSLSocketFactory() {
         try {
             return new SSLConnectionSocketFactory(

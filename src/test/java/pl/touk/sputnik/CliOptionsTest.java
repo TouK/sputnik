@@ -18,15 +18,13 @@ public class CliOptionsTest {
     @Test
     public void shouldExecuteGerritReview() throws Exception {
         // given
-        String[] args = toArgs("-connector gerrit -conf %s -changeId %s -revisionId %s",
+        String[] args = toArgs("-conf %s -changeId %s -revisionId %s",
                 SAMPLE_CONFIG, SAMPLE_CHANGE_ID, SAMPLE_REVISION_ID);
 
         // when
         CommandLine commandLine = fixture.parse(args);
-        fixture.contextSensitiveValidation(commandLine);
 
         // then
-        _(commandLine).hasOption(CliOption.CONNECTOR.getCommandLineParam()).withValue("gerrit");
         _(commandLine).hasOption(CliOption.CONF.getCommandLineParam()).withValue(SAMPLE_CONFIG);
         _(commandLine).hasOption(CliOption.CHANGE_ID.getCommandLineParam()).withValue(SAMPLE_CHANGE_ID);
         _(commandLine).hasOption(CliOption.REVISION_ID.getCommandLineParam()).withValue(SAMPLE_REVISION_ID);
@@ -35,14 +33,12 @@ public class CliOptionsTest {
     @Test
     public void shouldExecuteStashReview() throws Exception {
         // given
-        String[] args = toArgs("-connector stash -conf %s -pullRequestId %s", SAMPLE_CONFIG, SAMPLE_PULL_REQUEST_ID);
+        String[] args = toArgs("-conf %s -pullRequestId %s", SAMPLE_CONFIG, SAMPLE_PULL_REQUEST_ID);
 
         // when
         CommandLine commandLine = fixture.parse(args);
-        fixture.contextSensitiveValidation(commandLine);
 
         // then
-        _(commandLine).hasOption(CliOption.CONNECTOR.getCommandLineParam()).withValue("stash");
         _(commandLine).hasOption(CliOption.PULL_REQUEST_ID.getCommandLineParam()).withValue(SAMPLE_PULL_REQUEST_ID);
     }
 

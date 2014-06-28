@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.CliOption;
 import pl.touk.sputnik.configuration.CliWrapper;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.ConnectorFacadeFactory;
 import pl.touk.sputnik.review.Engine;
@@ -31,7 +32,7 @@ public final class Main {
 
         ConfigurationHolder.initFromFile(commandLine.getOptionValue(CliOption.CONF.getCommandLineParam()));
         ConfigurationHolder.instance().updateWithCliOptions(commandLine);
-        ConnectorFacade facade = ConnectorFacadeFactory.INSTANCE.build(ConfigurationHolder.instance().getProperty(CliOption.CONNECTOR));
+        ConnectorFacade facade = ConnectorFacadeFactory.INSTANCE.build(ConfigurationHolder.instance().getProperty(GeneralOption.CONNECTOR_TYPE));
 
         new Engine(facade).run();
     }

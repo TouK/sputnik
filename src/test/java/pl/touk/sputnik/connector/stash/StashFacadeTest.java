@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
+import pl.touk.sputnik.connector.FacadeConfigUtil;
 import pl.touk.sputnik.review.ReviewFile;
 
 import java.util.List;
@@ -17,32 +18,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class StashFacadeTest {
 
-    private static Integer PORT = 8089;
     private static String SOME_PULL_REQUEST_ID = "12314";
     private static String SOME_REPOSITORY = "repo";
     private static String SOME_PROJECT_KEY = "key";
 
-    private static final Map<String, String> STASH_CONFIG_MAP = ImmutableMap.of(
-            "stash.host", "localhost",
-            "stash.port", PORT.toString(),
-            "stash.username", "user",
-            "stash.password", "pass",
-            "stash.useHttps", "false"
-    );
     private static final Map<String, String> STASH_PATCHSET_MAP = ImmutableMap.of(
             "cli.pullRequestId", SOME_PULL_REQUEST_ID,
-            "stash.repositorySlug", SOME_REPOSITORY,
-            "stash.projectKey", SOME_PROJECT_KEY
+            "connector.repositorySlug", SOME_REPOSITORY,
+            "connector.projectKey", SOME_PROJECT_KEY
     );
 
     private StashFacade fixture;
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(PORT);
+    public WireMockRule wireMockRule = new WireMockRule(FacadeConfigUtil.HTTP_PORT);
 
     @Before
     public void setUp() {
-        new ConfigurationSetup().setUp(STASH_CONFIG_MAP, STASH_PATCHSET_MAP);
+        new ConfigurationSetup().setUp(FacadeConfigUtil.getHttpConfig("stash"), STASH_PATCHSET_MAP);
         fixture = new StashFacadeBuilder().build();
     }
 
