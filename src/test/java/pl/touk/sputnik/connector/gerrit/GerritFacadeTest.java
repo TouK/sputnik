@@ -39,10 +39,11 @@ public class GerritFacadeTest {
         new ConfigurationSetup().setUp(FacadeConfigUtil.getHttpConfig("gerrit"), GERRIT_PATCHSET_MAP);
         fixture = new GerritFacadeBuilder().build();
     }
+
     @Test
     public void shouldGetChangeInfo() throws Exception {
         //given
-        String url = String.format("/a/changes/%s/revisions/%s/files/", SOME_CHANGE_ID, SOME_REVISION_ID);
+        String url = String.format("%s/a/changes/%s/revisions/%s/files/", FacadeConfigUtil.PATH, SOME_CHANGE_ID, SOME_REVISION_ID);
         stubFor(get(urlEqualTo(url))
                 .willReturn(aResponse()
                         .withStatus(200)

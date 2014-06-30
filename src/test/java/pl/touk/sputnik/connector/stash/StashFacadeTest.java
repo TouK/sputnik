@@ -42,8 +42,8 @@ public class StashFacadeTest {
     @Test
     public void shouldGetChangeInfo() throws Exception {
         stubFor(get(urlEqualTo(String.format(
-                    "/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/changes",
-                    SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)))
+                "%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/changes",
+                FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)))
                 .withHeader("Authorization", equalTo("Basic dXNlcjpwYXNz"))
                 .willReturn(aResponse()
                         .withStatus(200)
@@ -57,8 +57,8 @@ public class StashFacadeTest {
     @Test
     public void shouldReturnDiffAsMapOfLines() throws Exception {
         stubFor(get(urlMatching(String.format(
-                "/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/diff.*",
-                SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)))
+                "%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/diff.*",
+                FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")

@@ -22,6 +22,7 @@ Typical configuration file looks like this:
 ```
 connector.type=gerrit
 connector.host=your.host.com
+connector.path=gerrit/
 connector.port=8080
 connector.username=sputnik
 connector.password=PassWd

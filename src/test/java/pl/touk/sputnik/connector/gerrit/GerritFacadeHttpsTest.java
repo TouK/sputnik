@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class GerritFacadeHttpsTest {
 
     private static String SOME_CHANGE_ID = "12314";
-    private static String SOME_REVISION_ID = "12314";
+    private static String SOME_REVISION_ID = "88970";
 
     private static final Map<String, String> GERRIT_PATCHSET_MAP = ImmutableMap.of(
             "cli.changeId", SOME_CHANGE_ID,
@@ -40,7 +40,7 @@ public class GerritFacadeHttpsTest {
 
     @Test
     public void shouldGetChangeInfo() throws Exception {
-        String url = String.format("/a/changes/%s/revisions/%s/files/", SOME_CHANGE_ID, SOME_REVISION_ID);
+        String url = String.format("%s/a/changes/%s/revisions/%s/files/", FacadeConfigUtil.PATH, SOME_CHANGE_ID, SOME_REVISION_ID);
         stubFor(get(urlEqualTo(url))
                 .willReturn(aResponse()
                         .withStatus(200)

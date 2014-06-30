@@ -9,6 +9,7 @@ import pl.touk.sputnik.configuration.CliOption;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.connector.ConnectorDetails;
+import pl.touk.sputnik.connector.http.HttpConnector;
 import pl.touk.sputnik.connector.http.HttpHelper;
 
 import static org.apache.commons.lang3.Validate.notBlank;
@@ -19,14 +20,14 @@ public class StashFacadeBuilder {
 
     @NotNull
     public StashFacade build() {
-        ConnectorDetails connectorDetails = new ConnectorDetails().build();
+        ConnectorDetails connectorDetails = new ConnectorDetails();
         StashPatchset stashPatchset = buildStashPatchset();
 
         HttpHost httpHost = httpHelper.buildHttpHost(connectorDetails);
         HttpClientContext httpClientContext = httpHelper.buildClientContext(httpHost, new BasicScheme());
         CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, connectorDetails);
 
-        return new StashFacade(closeableHttpClient, httpClientContext, stashPatchset);
+        return new StashFacade(new StashConnector(new HttpConnector(closeableHttpClient, httpClientContext, connectorDetails.getPath()), stashPatchset));
     }
 
     @NotNull

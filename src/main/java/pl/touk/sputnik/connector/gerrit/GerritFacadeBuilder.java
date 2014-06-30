@@ -19,14 +19,14 @@ public class GerritFacadeBuilder {
 
     @NotNull
     public GerritFacade build() {
-        ConnectorDetails connectorDetails = new ConnectorDetails().build();
+        ConnectorDetails connectorDetails = new ConnectorDetails();
         GerritPatchset gerritPatchset = buildGerritPatchset();
 
         HttpHost httpHost = httpHelper.buildHttpHost(connectorDetails);
         HttpClientContext httpClientContext = httpHelper.buildClientContext(httpHost, new DigestScheme());
         CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, connectorDetails);
 
-        return new GerritFacade(new GerritConnector(new HttpConnector(closeableHttpClient, httpClientContext), gerritPatchset));
+        return new GerritFacade(new GerritConnector(new HttpConnector(closeableHttpClient, httpClientContext, connectorDetails.getPath()), gerritPatchset));
     }
 
     @NotNull

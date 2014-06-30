@@ -12,6 +12,7 @@ public enum GeneralOption implements ConfigurationOption {
     CONNECTOR_TYPE("connector.type", "Connector: <stash|gerrit>", "gerrit"),
     HOST("connector.host", "Connector server host", "localhost"),
     PORT("connector.port", "Connector server port", "80"),
+    PATH("connector.path", "Connector server path", ""),
     USE_HTTPS("connector.useHttps", "Connector use https?", "false"),
     USERNAME("connector.username", "Connector server username", "user"),
     PASSWORD("connector.password", "Connector server password", "password"),

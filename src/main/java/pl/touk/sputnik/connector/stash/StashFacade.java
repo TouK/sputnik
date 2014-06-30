@@ -29,8 +29,8 @@ public class StashFacade implements ConnectorFacade {
     private StashConnector stashConnector;
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public StashFacade(@NotNull CloseableHttpClient httpClient, @NotNull HttpClientContext httpClientContext, @NotNull StashPatchset stashPatchset) {
-        stashConnector = new StashConnector(new HttpConnector(httpClient, httpClientContext), stashPatchset);
+    public StashFacade(@NotNull StashConnector stashConnector) {
+        this.stashConnector = stashConnector;
     }
 
     @Override

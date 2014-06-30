@@ -26,6 +26,7 @@ public class HttpConnector {
 
     private CloseableHttpClient httpClient;
     private HttpClientContext httpClientContext;
+    private String contextPath = StringUtils.EMPTY;
 
     @NotNull
     public URI buildUri(String path, NameValuePair... parameters) throws URISyntaxException {
@@ -35,7 +36,7 @@ public class HttpConnector {
                 .setHost(targetHost.getHostName())
                 .setPort(targetHost.getPort())
                 .setScheme(targetHost.getSchemeName())
-                .setPath(path)
+                .setPath(contextPath + path)
                 .setParameters(parameters)
                 .build();
     }

@@ -11,20 +11,21 @@ public class ConnectorDetails {
 
     private String host;
     private Integer port;
+    private String path;
     private String username;
     private String password;
     private String useHttps;
     private boolean isHttps;
 
-    public ConnectorDetails build() {
+    public ConnectorDetails() {
         buildFromConfiguration();
         validate();
-        return this;
     }
 
     private void buildFromConfiguration() {
         host = ConfigurationHolder.instance().getProperty(GeneralOption.HOST);
         port = Integer.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.PORT));
+        path = ConfigurationHolder.instance().getProperty(GeneralOption.PATH);
         username = ConfigurationHolder.instance().getProperty(GeneralOption.USERNAME);
         password = ConfigurationHolder.instance().getProperty(GeneralOption.PASSWORD);
         useHttps = ConfigurationHolder.instance().getProperty(GeneralOption.USE_HTTPS);
