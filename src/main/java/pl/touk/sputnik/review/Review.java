@@ -65,7 +65,9 @@ public class Review {
         if (maxComments != 0 && totalViolationsCount > maxComments) {
             reviewInput.message = reviewInput.message + ", but showing only first " + maxComments;
         }
-        reviewInput.setLabelToPlusOne();
+        if (totalViolationsCount == 0) {
+            reviewInput.setLabelToPlusOne();
+        }
         for (ReviewFile file : files) {
             List<ReviewFileComment> comments = new ArrayList<>();
             for (Comment comment : file.getComments()) {
