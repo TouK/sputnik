@@ -22,10 +22,11 @@ Typical configuration file looks like this:
 ```
 connector.type=gerrit
 connector.host=your.host.com
-connector.path=gerrit/
+connector.path=/gerrit
 connector.port=8080
 connector.username=sputnik
 connector.password=PassWd
+connector.useHttps=false
 checkstyle.enabled=true
 checkstyle.configurationFile=sun_checks.xml
 checkstyle.propertiesFile=
