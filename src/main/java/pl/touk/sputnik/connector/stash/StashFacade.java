@@ -64,9 +64,11 @@ public class StashFacade implements ConnectorFacade {
                 SingleFileChanges changes = changesForSingleFile(review.getKey());
                 for (ReviewFileComment comment : review.getValue()) {
                     ReviewLineComment lineComment = (ReviewLineComment) comment;
-                    String json = objectMapper.writeValueAsString(
-                            toFileComment(review.getKey(), lineComment, getChangeType(changes, lineComment.line)));
-                    stashConnector.sendReview(json);
+                    if (noCommentExists(changes, lineComment.line)) {
+                        String json = objectMapper.writeValueAsString(
+                                toFileComment(review.getKey(), lineComment, getChangeType(changes, lineComment.line)));
+                        stashConnector.sendReview(json);
+                    }
                 }
             }
             // Add comment with number of violations
@@ -77,8 +79,13 @@ public class StashFacade implements ConnectorFacade {
         }
     }
 
+    private boolean noCommentExists(SingleFileChanges changes, Integer line) {
+        //if (changes.getChangesMap() != null && changes.getChangesMap().containsKey(line))
+        return true;
+    }
+
     private ChangeType getChangeType(SingleFileChanges changes, Integer line) {
-        if (changes.getChangesMap().containsKey(line)) {
+        if (changes.getChangesMap() != null && changes.getChangesMap().containsKey(line)) {
             return changes.getChangesMap().get(line);
         }
         return ChangeType.CONTEXT;

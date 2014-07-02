@@ -59,7 +59,7 @@ public class StashConnector implements Connector {
         URI uri = httpConnector.buildUri(createUrl(stashPatchset, DIFF_URL_FORMAT) + "/" + filename,
                 new BasicNameValuePair("contextLines", "-1"),
                 new BasicNameValuePair("srcPath", filename),
-                new BasicNameValuePair("withComments", "false"));
+                new BasicNameValuePair("withComments", "true"));
         HttpGet httpGet = new HttpGet(uri);
         addBasicAuthHeader(httpGet);
         CloseableHttpResponse httpResponse = httpConnector.logAndExecute(httpGet);

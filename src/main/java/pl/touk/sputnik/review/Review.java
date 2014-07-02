@@ -23,8 +23,8 @@ public class Review {
     private final List<ReviewFile> files;
     private int totalViolationsCount = 0;
 
-    public Review(List<ReviewFile> files, boolean revievTestFiles) {
-        if (revievTestFiles) {
+    public Review(List<ReviewFile> files, boolean reviewTestFiles) {
+        if (reviewTestFiles) {
             this.files = files;
         } else {
             // Filter test files
