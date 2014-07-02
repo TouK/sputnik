@@ -63,8 +63,8 @@ public class StashFacade implements ConnectorFacade {
                 log.info("{} : {}", review.getKey(), Joiner.on(", ").join(review.getValue()));
                 SingleFileChanges changes = changesForSingleFile(review.getKey());
                 for (ReviewFileComment comment : review.getValue()) {
-                    ReviewLineComment lineComment = (ReviewLineComment) comment;
-                    if (noCommentExists(changes, lineComment.line)) {
+                    CrcMessage lineComment = new CrcMessage((ReviewLineComment) comment);
+                    if (noCommentExists(changes, lineComment)) {
                         String json = objectMapper.writeValueAsString(
                                 toFileComment(review.getKey(), lineComment, getChangeType(changes, lineComment.line)));
                         stashConnector.sendReview(json);
@@ -79,9 +79,10 @@ public class StashFacade implements ConnectorFacade {
         }
     }
 
-    private boolean noCommentExists(SingleFileChanges changes, Integer line) {
-        //if (changes.getChangesMap() != null && changes.getChangesMap().containsKey(line))
-        return true;
+    private boolean noCommentExists(SingleFileChanges changes, CrcMessage lineComment) {
+        return changes.getChangesMap() == null
+                || !changes.getChangesMap().containsKey(lineComment.line)
+                || !changes.getCommentsCrcSet().contains(lineComment.getCrc());
     }
 
     private ChangeType getChangeType(SingleFileChanges changes, Integer line) {
@@ -93,7 +94,7 @@ public class StashFacade implements ConnectorFacade {
 
     private FileComment toFileComment(String key, ReviewLineComment comment, ChangeType changeType) {
         FileComment fileComment = new FileComment();
-        fileComment.setText(comment.message);
+        fileComment.setText(comment.getMessage());
         Anchor anchor = Anchor.builder().
                 path(key).
                 srcPath(key).
@@ -119,9 +120,11 @@ public class StashFacade implements ConnectorFacade {
     SingleFileChanges changesForSingleFile(String filename) {
         try {
             String response = stashConnector.getDiffByLine(filename);
-            List<JSONObject> jsonList = JsonPath.read(response, "$.diffs[*].hunks[*].segments[*]");
-            List<DiffSegment> segments = transform(jsonList, DiffSegment.class);
+            List<JSONObject> diffJsonList = JsonPath.read(response, "$.diffs[*].hunks[*].segments[*]");
+            List<String> lineList = JsonPath.read(response, "$.diffs[*].lineComments[*].text");
+            List<DiffSegment> segments = transform(diffJsonList, DiffSegment.class);
             SingleFileChanges changes = SingleFileChanges.builder().filename(filename).build();
+            changes.setComments(lineList);
             for (DiffSegment segment : segments) {
                 for (LineSegment line : segment.lines) {
                     changes.addChange(line.destination, ChangeType.valueOf(segment.type));
