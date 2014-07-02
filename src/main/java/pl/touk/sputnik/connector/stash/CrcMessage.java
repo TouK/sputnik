@@ -13,6 +13,6 @@ public class CrcMessage extends ReviewLineComment {
     }
 
     public String getCrc() {
-        return Integer.toHexString(String.format("%s %s", line, message).hashCode() % 1000);
+        return Integer.toHexString(Math.abs(String.format("%s %s", line, message).hashCode()) % 1000).toUpperCase();
     }
 }
