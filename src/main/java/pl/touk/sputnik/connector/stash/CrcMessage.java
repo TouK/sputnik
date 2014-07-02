@@ -9,10 +9,6 @@ public class CrcMessage extends ReviewLineComment {
 
     @Override
     public String getMessage() {
-        return String.format("%s (%s)", message, getCrc());
-    }
-
-    public String getCrc() {
-        return Integer.toHexString(Math.abs(String.format("%s %s", line, message).hashCode()) % 1000).toUpperCase();
+        return String.format("%s (%s)", message, line);
     }
 }
