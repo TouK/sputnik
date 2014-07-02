@@ -72,7 +72,7 @@
                 {
                     "id": 1,
                     "version": 1,
-                    "text": "An insightful comment.\ncrc:4d53426263324e686247467a64486c735a56306752564a535431493649475679636d39794947316c63334e685a32553d",
+                    "text": "[scalastyle] ERROR: error message (163)",
                     "author": {
                         "name": "jcitizen",
                         "emailAddress": "jane@example.com",

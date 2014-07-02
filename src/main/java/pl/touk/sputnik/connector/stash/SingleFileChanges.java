@@ -28,7 +28,7 @@ public class SingleFileChanges {
         return changesMap;
     }
 
-    private Set<String> getSet() {
+    public Set<String> getCommentsCrcSet() {
         if (commentsCrcSet == null) {
             commentsCrcSet = Sets.newHashSet();
         }
@@ -37,17 +37,7 @@ public class SingleFileChanges {
 
     public void setComments(List<String> comments) {
         for (String comment : comments) {
-            getSet().add(extractCrc(comment));
+            getCommentsCrcSet().add(comment);
         }
-    }
-
-    private String extractCrc(String comment) {
-        String[] commentLines = comment.split("\n");
-        String lastLine = commentLines[commentLines.length - 1];
-
-        if (lastLine.startsWith("crc:")) {
-            return lastLine.replace("crc:", "");
-        }
-        return "";
     }
 }

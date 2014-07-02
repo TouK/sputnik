@@ -82,7 +82,7 @@ public class StashFacade implements ConnectorFacade {
     private boolean noCommentExists(SingleFileChanges changes, CrcMessage lineComment) {
         return changes.getChangesMap() == null
                 || !changes.getChangesMap().containsKey(lineComment.line)
-                || !changes.getCommentsCrcSet().contains(lineComment.getCrc());
+                || !changes.getCommentsCrcSet().contains(lineComment.getMessage());
     }
 
     private ChangeType getChangeType(SingleFileChanges changes, Integer line) {
