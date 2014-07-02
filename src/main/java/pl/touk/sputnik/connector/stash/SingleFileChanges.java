@@ -18,10 +18,10 @@ public class SingleFileChanges {
     private Set<String> commentsCrcSet;
 
     public void addChange(int line, ChangeType changeType) {
-        getMap().put(line, changeType);
+        getChangesMap().put(line, changeType);
     }
 
-    private Map<Integer, ChangeType> getMap() {
+    public Map<Integer, ChangeType> getChangesMap() {
         if (changesMap == null) {
             changesMap = Maps.newHashMap();
         }

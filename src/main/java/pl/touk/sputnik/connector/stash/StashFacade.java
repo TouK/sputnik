@@ -6,14 +6,11 @@ import com.google.common.collect.Lists;
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.gerrit.json.ReviewFileComment;
 import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
 import pl.touk.sputnik.connector.gerrit.json.ReviewLineComment;
-import pl.touk.sputnik.connector.http.HttpConnector;
 import pl.touk.sputnik.connector.stash.json.*;
 import pl.touk.sputnik.review.ReviewFile;
 
@@ -23,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import pl.touk.sputnik.Connectors;
+import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.GeneralOption;
 
 @Slf4j
 public class StashFacade implements ConnectorFacade {
@@ -58,6 +57,7 @@ public class StashFacade implements ConnectorFacade {
 
     @Override
     public void setReview(ReviewInput reviewInput) {
+        boolean commentOnlyChangedLines = Boolean.parseBoolean(ConfigurationHolder.instance().getProperty(GeneralOption.COMMENT_ONLY_CHANGED_LINES));
         try {
             for (Map.Entry<String, List<ReviewFileComment>> review : reviewInput.comments.entrySet()) {
                 log.info("{} : {}", review.getKey(), Joiner.on(", ").join(review.getValue()));
@@ -65,9 +65,13 @@ public class StashFacade implements ConnectorFacade {
                 for (ReviewFileComment comment : review.getValue()) {
                     CrcMessage lineComment = new CrcMessage((ReviewLineComment) comment);
                     if (noCommentExists(changes, lineComment)) {
-                        String json = objectMapper.writeValueAsString(
-                                toFileComment(review.getKey(), lineComment, getChangeType(changes, lineComment.line)));
-                        stashConnector.sendReview(json);
+                        ChangeType changeType = getChangeType(changes, lineComment.line);
+                        if (changeType.equals(ChangeType.NONE) && commentOnlyChangedLines) {
+                            log.info("Not posting out of context warning: {}", lineComment.message);
+                        } else {
+                            String json = objectMapper.writeValueAsString(toFileComment(review.getKey(), lineComment, changeType));
+                            stashConnector.sendReview(json);
+                        }
                     }
                 }
             }
@@ -80,16 +84,15 @@ public class StashFacade implements ConnectorFacade {
     }
 
     private boolean noCommentExists(SingleFileChanges changes, CrcMessage lineComment) {
-        return changes.getChangesMap() == null
-                || !changes.getChangesMap().containsKey(lineComment.line)
-                || !changes.getCommentsCrcSet().contains(lineComment.getMessage());
+        return !changes.getChangesMap().containsKey(lineComment.line)
+            || !changes.getCommentsCrcSet().contains(lineComment.getMessage());
     }
 
     private ChangeType getChangeType(SingleFileChanges changes, Integer line) {
-        if (changes.getChangesMap() != null && changes.getChangesMap().containsKey(line)) {
+        if (changes.getChangesMap().containsKey(line)) {
             return changes.getChangesMap().get(line);
         }
-        return ChangeType.CONTEXT;
+        return ChangeType.NONE;
     }
 
     private FileComment toFileComment(String key, ReviewLineComment comment, ChangeType changeType) {
@@ -99,7 +102,7 @@ public class StashFacade implements ConnectorFacade {
                 path(key).
                 srcPath(key).
                 line(comment.line).
-                lineType(changeType.name()).
+                lineType(changeType.getNameForStash()).
                 build();
         fileComment.setAnchor(anchor);
         return fileComment;
