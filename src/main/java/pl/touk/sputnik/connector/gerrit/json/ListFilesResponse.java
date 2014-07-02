@@ -7,5 +7,5 @@ import java.util.Map;
  * Gerrit response to ListFiles model.
  * Used with JSON unmarshaller only.
  */
-public class ListFilesResponse extends HashMap<String, Map<String, String>> {
+public class ListFilesResponse extends HashMap<String, FileInfo> {
 }

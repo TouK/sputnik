@@ -23,10 +23,12 @@ public class ReviewFile {
     private final String reviewFilename;
     private final String javaClassName;
     private final File ioFile;
+    private final ModificationType modificationType;
     private final List<Comment> comments = new ArrayList<>();
 
-    public ReviewFile(@NotNull String reviewFilename) {
+    public ReviewFile(@NotNull String reviewFilename, @NotNull ModificationType modificationType) {
         this.reviewFilename = reviewFilename;
+        this.modificationType = modificationType;
         this.javaClassName = createJavaClassName();
         this.ioFile = new File(reviewFilename);
     }
@@ -51,7 +53,7 @@ public class ReviewFile {
     private String createJavaClassName() {
         return StringUtils.substringBeforeLast(MAVEN_ENTRY_PATTERN.matcher(reviewFilename).replaceFirst(""), DOT).replace('/', '.');
     }
-    
+
     @NotNull
     public Boolean isTestFile() {
         return StringUtils.contains(reviewFilename, SRC_TEST);

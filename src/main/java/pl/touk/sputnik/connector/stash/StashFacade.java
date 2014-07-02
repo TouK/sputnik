@@ -15,6 +15,7 @@ import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
 import pl.touk.sputnik.connector.gerrit.json.ReviewLineComment;
 import pl.touk.sputnik.connector.http.HttpConnector;
 import pl.touk.sputnik.connector.stash.json.*;
+import pl.touk.sputnik.review.ModificationType;
 import pl.touk.sputnik.review.ReviewFile;
 
 import java.io.IOException;
@@ -48,7 +49,7 @@ public class StashFacade implements ConnectorFacade {
             List<ReviewFile> files = new ArrayList<>();
             for (ReviewElement container : containers) {
                 String filePath = String.format("%s/%s", container.parent, container.name);
-                files.add(new ReviewFile(filePath));
+                files.add(new ReviewFile(filePath, ModificationType.MODIFIED));
             }
             return files;
         } catch (URISyntaxException | IOException e) {
