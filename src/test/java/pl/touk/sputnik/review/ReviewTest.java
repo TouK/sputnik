@@ -10,15 +10,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ReviewTest {
 
-    public Review prepare(boolean revievTestFiles) {
+    public Review prepare(boolean reviewTestFiles) {
         List<ReviewFile> reviewList = ImmutableList.of(
-                new ReviewFile("/src/main/java/file1.java", ModificationType.MODIFIED),
-                new ReviewFile("/src/main/java/file2.java", ModificationType.MODIFIED),
-                new ReviewFile("/src/test/java/file1.java", ModificationType.MODIFIED),
-                new ReviewFile("/src/test/java/file2.java", ModificationType.MODIFIED)
+                new ReviewFile("/src/main/java/file1.java"),
+                new ReviewFile("/src/main/java/file2.java"),
+                new ReviewFile("/src/test/java/file1.java"),
+                new ReviewFile("/src/test/java/file2.java")
                 );
 
-        Review review = new Review(reviewList, revievTestFiles);
+        Review review = new Review(reviewList, reviewTestFiles);
 
         // Create warnings for all files
         int i = 0;
@@ -42,7 +42,7 @@ public class ReviewTest {
         //then
         assertThat(reviewInput.comments)
                 .hasSize(4);
-        assertThat(reviewInput.getRevievCount() == 10);
+        assertThat(reviewInput.getReviewCount() == 10);
     }
 
     @Test
@@ -57,7 +57,7 @@ public class ReviewTest {
         assertThat(reviewInput.comments)
                 .hasSize(2)
                 .containsKeys("/src/main/java/file1.java", "/src/main/java/file2.java");
-        assertThat(reviewInput.getRevievCount() == 3);
+        assertThat(reviewInput.getReviewCount() == 3);
     }
 
     @Test
@@ -74,7 +74,7 @@ public class ReviewTest {
         assertThat(reviewInput.comments)
                 .hasSize(2);
 
-        assertThat(reviewInput.getRevievCount() == 3);
+        assertThat(reviewInput.getReviewCount() == 3);
     }
 
 }

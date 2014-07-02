@@ -23,12 +23,10 @@ public class ReviewFile {
     private final String reviewFilename;
     private final String javaClassName;
     private final File ioFile;
-    private final ModificationType modificationType;
     private final List<Comment> comments = new ArrayList<>();
 
-    public ReviewFile(@NotNull String reviewFilename, @NotNull ModificationType modificationType) {
+    public ReviewFile(@NotNull String reviewFilename) {
         this.reviewFilename = reviewFilename;
-        this.modificationType = modificationType;
         this.javaClassName = createJavaClassName();
         this.ioFile = new File(reviewFilename);
     }

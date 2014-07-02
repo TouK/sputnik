@@ -32,6 +32,16 @@ public class GerritFacadeTest {
 
         List<ReviewFile> reviewFiles = gerritFacade.listFiles();
 
+        assertThat(reviewFiles).isNotEmpty();
+    }
+
+    @Test
+    public void shouldNotListDeletedFiles() throws IOException, URISyntaxException {
+        String listFilesJson = Resources.toString(Resources.getResource("json/gerrit-listfiles.json"), Charsets.UTF_8);
+        when(gerritConnectorMock.listFiles()).thenReturn(listFilesJson);
+
+        List<ReviewFile> reviewFiles = gerritFacade.listFiles();
+
         assertThat(reviewFiles).hasSize(1);
     }
 

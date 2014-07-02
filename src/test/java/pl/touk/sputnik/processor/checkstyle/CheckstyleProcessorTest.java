@@ -9,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
-import pl.touk.sputnik.review.ModificationType;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewResult;
@@ -40,7 +39,7 @@ public class CheckstyleProcessorTest {
     @Test
     public void shouldReturnNotFoundViolation() {
         //given
-        Review review = new Review(ImmutableList.of(new ReviewFile("test", ModificationType.MODIFIED)), true);
+        Review review = new Review(ImmutableList.of(new ReviewFile("test")), true);
 
         //when
         ReviewResult reviewResult = fixture.process(review);

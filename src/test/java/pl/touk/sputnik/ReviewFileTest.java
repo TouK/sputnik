@@ -1,7 +1,6 @@
 package pl.touk.sputnik;
 
 import org.junit.Test;
-import pl.touk.sputnik.review.ModificationType;
 import pl.touk.sputnik.review.ReviewFile;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -72,6 +71,6 @@ public class ReviewFileTest {
     }
 
     private ReviewFile createReviewFile(String reviewFileName) {
-        return new ReviewFile(reviewFileName, ModificationType.MODIFIED);
+        return new ReviewFile(reviewFileName);
     }
 }

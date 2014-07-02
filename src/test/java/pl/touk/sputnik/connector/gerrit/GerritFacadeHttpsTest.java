@@ -45,10 +45,10 @@ public class GerritFacadeHttpsTest {
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
-                        .withBody(IOUtils.toString(getClass().getResourceAsStream("/gerrit-changes.json")))));
+                        .withBody(IOUtils.toString(getClass().getResourceAsStream("/json/gerrit-listfiles.json")))));
 
         List<ReviewFile> files = gerritFacade.listFiles();
 
-        assertThat(files).hasSize(2);
+        assertThat(files).hasSize(1);
     }
 }

@@ -40,7 +40,11 @@ public class GerritFacade implements ConnectorFacade {
                 if (COMMIT_MSG.equals(stringFileInfoEntry.getKey())) {
                     continue;
                 }
-                files.add(new ReviewFile(stringFileInfoEntry.getKey(), stringFileInfoEntry.getValue().getStatus().getModificationType()));
+                FileInfo value = stringFileInfoEntry.getValue();
+                if (value.getStatus() == FileInfo.Status.DELETED) {
+                    continue;
+                }
+                files.add(new ReviewFile(stringFileInfoEntry.getKey()));
             }
             return files;
         } catch (IOException | URISyntaxException e) {

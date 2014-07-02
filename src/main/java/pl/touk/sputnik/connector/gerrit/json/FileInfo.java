@@ -3,9 +3,7 @@ package pl.touk.sputnik.connector.gerrit.json;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import pl.touk.sputnik.review.ModificationType;
 
 /**
  * Gerrit FileInfo entry.
@@ -22,15 +20,13 @@ public class FileInfo {
 
     @AllArgsConstructor
     public enum Status {
-        MODIFIED(ModificationType.MODIFIED, "M"),
-        ADDED(ModificationType.ADDED, "A"),
-        DELETED(ModificationType.DELETED, "D"),
-        RENAMED(ModificationType.RENAMED, "R"),
-        COPIED(ModificationType.COPIED, "C"),
-        REWRITTEN(ModificationType.REWRITTEN, "R");
+        MODIFIED("M"),
+        ADDED("A"),
+        DELETED("D"),
+        RENAMED("R"),
+        COPIED("C"),
+        REWRITTEN("R");
 
-        @Getter
-        private final ModificationType modificationType;
         private final String symbol;
 
         @JsonValue

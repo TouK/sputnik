@@ -6,16 +6,13 @@ import com.google.common.collect.Lists;
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.jetbrains.annotations.NotNull;
+import pl.touk.sputnik.Connectors;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.gerrit.json.ReviewFileComment;
 import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
 import pl.touk.sputnik.connector.gerrit.json.ReviewLineComment;
-import pl.touk.sputnik.connector.http.HttpConnector;
 import pl.touk.sputnik.connector.stash.json.*;
-import pl.touk.sputnik.review.ModificationType;
 import pl.touk.sputnik.review.ReviewFile;
 
 import java.io.IOException;
@@ -23,7 +20,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import pl.touk.sputnik.Connectors;
 
 @Slf4j
 public class StashFacade implements ConnectorFacade {
@@ -49,7 +45,7 @@ public class StashFacade implements ConnectorFacade {
             List<ReviewFile> files = new ArrayList<>();
             for (ReviewElement container : containers) {
                 String filePath = String.format("%s/%s", container.parent, container.name);
-                files.add(new ReviewFile(filePath, ModificationType.MODIFIED));
+                files.add(new ReviewFile(filePath));
             }
             return files;
         } catch (URISyntaxException | IOException e) {
