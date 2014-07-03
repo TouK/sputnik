@@ -72,7 +72,7 @@
                 {
                     "id": 1,
                     "version": 1,
-                    "text": "An insightful comment.",
+                    "text": "[scalastyle] ERROR: error message (1)",
                     "author": {
                         "name": "jcitizen",
                         "emailAddress": "jane@example.com",

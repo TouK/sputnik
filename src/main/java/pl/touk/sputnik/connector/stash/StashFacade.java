@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.GeneralOption;
+
 @Slf4j
 public class StashFacade implements ConnectorFacade {
     private StashConnector stashConnector;
@@ -55,15 +58,22 @@ public class StashFacade implements ConnectorFacade {
 
     @Override
     public void setReview(ReviewInput reviewInput) {
+        boolean commentOnlyChangedLines = Boolean.parseBoolean(ConfigurationHolder.instance().getProperty(GeneralOption.COMMENT_ONLY_CHANGED_LINES));
         try {
             for (Map.Entry<String, List<ReviewFileComment>> review : reviewInput.comments.entrySet()) {
                 log.info("{} : {}", review.getKey(), Joiner.on(", ").join(review.getValue()));
                 SingleFileChanges changes = changesForSingleFile(review.getKey());
                 for (ReviewFileComment comment : review.getValue()) {
-                    ReviewLineComment lineComment = (ReviewLineComment) comment;
-                    String json = objectMapper.writeValueAsString(
-                            toFileComment(review.getKey(), lineComment, getChangeType(changes, lineComment.line)));
-                    stashConnector.sendReview(json);
+                    CrcMessage lineComment = new CrcMessage((ReviewLineComment) comment);
+                    if (noCommentExists(changes, lineComment)) {
+                        ChangeType changeType = getChangeType(changes, lineComment.line);
+                        if (changeType.equals(ChangeType.NONE) && commentOnlyChangedLines) {
+                            log.info("Not posting out of context warning: {}", lineComment.message);
+                        } else {
+                            String json = objectMapper.writeValueAsString(toFileComment(review.getKey(), lineComment, changeType));
+                            stashConnector.sendReview(json);
+                        }
+                    }
                 }
             }
             // Add comment with number of violations
@@ -74,21 +84,26 @@ public class StashFacade implements ConnectorFacade {
         }
     }
 
+    private boolean noCommentExists(SingleFileChanges changes, CrcMessage lineComment) {
+        return !changes.getChangesMap().containsKey(lineComment.line)
+            || !changes.getCommentsCrcSet().contains(lineComment.getMessage());
+    }
+
     private ChangeType getChangeType(SingleFileChanges changes, Integer line) {
         if (changes.getChangesMap().containsKey(line)) {
             return changes.getChangesMap().get(line);
         }
-        return ChangeType.CONTEXT;
+        return ChangeType.NONE;
     }
 
     private FileComment toFileComment(String key, ReviewLineComment comment, ChangeType changeType) {
         FileComment fileComment = new FileComment();
-        fileComment.setText(comment.message);
+        fileComment.setText(comment.getMessage());
         Anchor anchor = Anchor.builder().
                 path(key).
                 srcPath(key).
                 line(comment.line).
-                lineType(changeType.name()).
+                lineType(changeType.getNameForStash()).
                 build();
         fileComment.setAnchor(anchor);
         return fileComment;
@@ -109,9 +124,11 @@ public class StashFacade implements ConnectorFacade {
     SingleFileChanges changesForSingleFile(String filename) {
         try {
             String response = stashConnector.getDiffByLine(filename);
-            List<JSONObject> jsonList = JsonPath.read(response, "$.diffs[*].hunks[*].segments[*]");
-            List<DiffSegment> segments = transform(jsonList, DiffSegment.class);
+            List<JSONObject> diffJsonList = JsonPath.read(response, "$.diffs[*].hunks[*].segments[*]");
+            List<String> lineList = JsonPath.read(response, "$.diffs[*].lineComments[*].text");
+            List<DiffSegment> segments = transform(diffJsonList, DiffSegment.class);
             SingleFileChanges changes = SingleFileChanges.builder().filename(filename).build();
+            changes.setComments(lineList);
             for (DiffSegment segment : segments) {
                 for (LineSegment line : segment.lines) {
                     changes.addChange(line.destination, ChangeType.valueOf(segment.type));

@@ -1,5 +1,6 @@
 package pl.touk.sputnik.connector.gerrit.json;
 
+import lombok.Getter;
 import lombok.ToString;
 
 /**
@@ -7,6 +8,7 @@ import lombok.ToString;
  * Used with JSON marshaller only.
  */
 @ToString
+@Getter
 public class ReviewFileComment {
     public String message;
 

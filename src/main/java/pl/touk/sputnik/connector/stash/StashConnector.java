@@ -3,7 +3,6 @@ package pl.touk.sputnik.connector.stash;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpRequest;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -39,8 +38,6 @@ public class StashConnector implements Connector {
     public String listFiles() throws URISyntaxException, IOException {
         URI uri = httpConnector.buildUri(createUrl(stashPatchset, CHANGES_URL_FORMAT));
         HttpGet httpGet = new HttpGet(uri);
-        // Is this needed?
-//        addBasicAuthHeader(httpGet);
         CloseableHttpResponse httpResponse = httpConnector.logAndExecute(httpGet);
         return httpConnector.consumeAndLogEntity(httpResponse);
     }
@@ -59,9 +56,8 @@ public class StashConnector implements Connector {
         URI uri = httpConnector.buildUri(createUrl(stashPatchset, DIFF_URL_FORMAT) + "/" + filename,
                 new BasicNameValuePair("contextLines", "-1"),
                 new BasicNameValuePair("srcPath", filename),
-                new BasicNameValuePair("withComments", "false"));
+                new BasicNameValuePair("withComments", "true"));
         HttpGet httpGet = new HttpGet(uri);
-        addBasicAuthHeader(httpGet);
         CloseableHttpResponse httpResponse = httpConnector.logAndExecute(httpGet);
         return httpConnector.consumeAndLogEntity(httpResponse);
     }
