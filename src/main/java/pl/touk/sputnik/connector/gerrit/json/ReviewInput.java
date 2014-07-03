@@ -40,7 +40,7 @@ public class ReviewInput {
         labels.put(CODE_REVIEW, 1);
     }
 
-    public int getRevievCount() {
+    public int getReviewCount() {
         int count = 0;
         for (Map.Entry<String, List<ReviewFileComment>> reviewFile : comments.entrySet()) {
             count += reviewFile.getValue().size();

@@ -19,7 +19,7 @@ public class ReviewFileTest {
     @Test
     public void shouldReturnMainJavaClassName() {
         //given
-        ReviewFile reviewFile = new ReviewFile(MAIN_FILENAME);
+        ReviewFile reviewFile = createReviewFile(MAIN_FILENAME);
 
         //expect
         assertThat(reviewFile.getJavaClassName()).isEqualTo(MAIN_JAVA_CLASS_NAME);
@@ -28,7 +28,7 @@ public class ReviewFileTest {
     @Test
     public void shouldReturnMainJavaSourceDirectory() {
         //given
-        ReviewFile reviewFile = new ReviewFile(MAIN_FILENAME);
+        ReviewFile reviewFile = createReviewFile(MAIN_FILENAME);
 
         //expect
         assertThat(reviewFile.getSourceDir()).isEqualTo(MAIN_JAVA_SOURCE_DIR);
@@ -37,7 +37,7 @@ public class ReviewFileTest {
     @Test
     public void shouldReturnMainJavaBuildDirectory() {
         //given
-        ReviewFile reviewFile = new ReviewFile(MAIN_FILENAME);
+        ReviewFile reviewFile = createReviewFile(MAIN_FILENAME);
 
         //expect
         assertThat(reviewFile.getBuildDir()).isEqualTo(MAIN_JAVA_BUILD_DIR);
@@ -46,7 +46,7 @@ public class ReviewFileTest {
     @Test
     public void shouldReturnTestJavaClassName() {
         //given
-        ReviewFile reviewFile = new ReviewFile(TEST_FILENAME);
+        ReviewFile reviewFile = createReviewFile(TEST_FILENAME);
 
         //expect
         assertThat(reviewFile.getJavaClassName()).isEqualTo(TEST_JAVA_CLASS_NAME);
@@ -55,7 +55,7 @@ public class ReviewFileTest {
     @Test
     public void shouldReturnTestJavaSourceDirectory() {
         //given
-        ReviewFile reviewFile = new ReviewFile(TEST_FILENAME);
+        ReviewFile reviewFile = createReviewFile(TEST_FILENAME);
 
         //expect
         assertThat(reviewFile.getSourceDir()).isEqualTo(TEST_JAVA_SOURCE_DIR);
@@ -64,9 +64,13 @@ public class ReviewFileTest {
     @Test
     public void shouldReturnTestJavaBuildDirectory() {
         //given
-        ReviewFile reviewFile = new ReviewFile(TEST_FILENAME);
+        ReviewFile reviewFile = createReviewFile(TEST_FILENAME);
 
         //expect
         assertThat(reviewFile.getBuildDir()).isEqualTo(TEST_JAVA_BUILD_DIR);
+    }
+
+    private ReviewFile createReviewFile(String reviewFileName) {
+        return new ReviewFile(reviewFileName);
     }
 }

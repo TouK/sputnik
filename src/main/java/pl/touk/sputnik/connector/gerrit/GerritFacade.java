@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.connector.ConnectorFacade;
+import pl.touk.sputnik.connector.gerrit.json.FileInfo;
 import pl.touk.sputnik.connector.gerrit.json.ListFilesResponse;
 import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
 import pl.touk.sputnik.review.ReviewFile;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import pl.touk.sputnik.Connectors;
 
@@ -34,10 +36,15 @@ public class GerritFacade implements ConnectorFacade {
             ListFilesResponse listFilesResponse = objectMapper.readValue(jsonString, ListFilesResponse.class);
 
             List<ReviewFile> files = new ArrayList<ReviewFile>();
-            Set<String> keys = listFilesResponse.keySet();
-            keys.remove(COMMIT_MSG);
-            for (String key : keys) {
-                files.add(new ReviewFile(key));
+            for (Map.Entry<String, FileInfo> stringFileInfoEntry : listFilesResponse.entrySet()) {
+                if (COMMIT_MSG.equals(stringFileInfoEntry.getKey())) {
+                    continue;
+                }
+                FileInfo value = stringFileInfoEntry.getValue();
+                if (value.getStatus() == FileInfo.Status.DELETED) {
+                    continue;
+                }
+                files.add(new ReviewFile(stringFileInfoEntry.getKey()));
             }
             return files;
         } catch (IOException | URISyntaxException e) {

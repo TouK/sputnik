@@ -1,0 +1,15 @@
+)]}'
+{
+  "/COMMIT_MSG": {
+    "status": "A",
+    "lines_inserted": 7
+  },
+  "gerrit-server/src/main/java/com/google/gerrit/server/project/RefControl.java": {
+    "lines_inserted": 5,
+    "lines_deleted": 3
+  },
+  "gerrit-server/src/main/java/com/google/gerrit/server/project/DeletedClass.java": {
+    "lines_deleted": 3,
+    "status": "D"
+  }
+}

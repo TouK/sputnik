@@ -9,17 +9,17 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ReviewTest {
-    
-    public Review prepare(boolean revievTestFiles) {
+
+    public Review prepare(boolean reviewTestFiles) {
         List<ReviewFile> reviewList = ImmutableList.of(
                 new ReviewFile("/src/main/java/file1.java"),
                 new ReviewFile("/src/main/java/file2.java"),
                 new ReviewFile("/src/test/java/file1.java"),
                 new ReviewFile("/src/test/java/file2.java")
                 );
-        
-        Review review = new Review(reviewList, revievTestFiles);
-        
+
+        Review review = new Review(reviewList, reviewTestFiles);
+
         // Create warnings for all files
         int i = 0;
         for (ReviewFile file : reviewList) {
@@ -42,9 +42,9 @@ public class ReviewTest {
         //then
         assertThat(reviewInput.comments)
                 .hasSize(4);
-        assertThat(reviewInput.getRevievCount() == 10);
+        assertThat(reviewInput.getReviewCount() == 10);
     }
-    
+
     @Test
     public void shouldNotProcessTestFiles() {
         //given
@@ -57,9 +57,9 @@ public class ReviewTest {
         assertThat(reviewInput.comments)
                 .hasSize(2)
                 .containsKeys("/src/main/java/file1.java", "/src/main/java/file2.java");
-        assertThat(reviewInput.getRevievCount() == 3);
+        assertThat(reviewInput.getReviewCount() == 3);
     }
-    
+
     @Test
     public void shouldNotProcessMoreFiles() {
         //given
@@ -67,14 +67,14 @@ public class ReviewTest {
 
         //when
         ReviewInput reviewInput = review.toReviewInput(3);
-        
-        
+
+
 
         //then
         assertThat(reviewInput.comments)
                 .hasSize(2);
-        
-        assertThat(reviewInput.getRevievCount() == 3);
+
+        assertThat(reviewInput.getReviewCount() == 3);
     }
 
 }

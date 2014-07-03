@@ -7,6 +7,7 @@ import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import org.jetbrains.annotations.NotNull;
+import pl.touk.sputnik.Connectors;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.gerrit.json.ReviewFileComment;
 import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
@@ -19,7 +20,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import pl.touk.sputnik.Connectors;
+
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
 

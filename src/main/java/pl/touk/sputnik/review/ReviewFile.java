@@ -51,7 +51,7 @@ public class ReviewFile {
     private String createJavaClassName() {
         return StringUtils.substringBeforeLast(MAVEN_ENTRY_PATTERN.matcher(reviewFilename).replaceFirst(""), DOT).replace('/', '.');
     }
-    
+
     @NotNull
     public Boolean isTestFile() {
         return StringUtils.contains(reviewFilename, SRC_TEST);
