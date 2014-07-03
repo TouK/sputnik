@@ -18,17 +18,17 @@ public class SingleFileChanges {
     private Set<String> commentsCrcSet;
 
     public void addChange(int line, ChangeType changeType) {
-        getMap().put(line, changeType);
+        getChangesMap().put(line, changeType);
     }
 
-    private Map<Integer, ChangeType> getMap() {
+    public Map<Integer, ChangeType> getChangesMap() {
         if (changesMap == null) {
             changesMap = Maps.newHashMap();
         }
         return changesMap;
     }
 
-    private Set<String> getSet() {
+    public Set<String> getCommentsCrcSet() {
         if (commentsCrcSet == null) {
             commentsCrcSet = Sets.newHashSet();
         }
@@ -37,17 +37,7 @@ public class SingleFileChanges {
 
     public void setComments(List<String> comments) {
         for (String comment : comments) {
-            getSet().add(extractCrc(comment));
+            getCommentsCrcSet().add(comment);
         }
-    }
-
-    private String extractCrc(String comment) {
-        String[] commentLines = comment.split("\n");
-        String lastLine = commentLines[commentLines.length - 1];
-
-        if (lastLine.startsWith("crc:")) {
-            return lastLine.replace("crc:", "");
-        }
-        return "";
     }
 }

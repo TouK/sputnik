@@ -10,8 +10,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.connector.FacadeConfigUtil;
-import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
-import pl.touk.sputnik.connector.gerrit.json.ReviewLineComment;
 import pl.touk.sputnik.review.*;
 
 import java.util.List;
