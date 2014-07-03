@@ -38,8 +38,6 @@ public class StashConnector implements Connector {
     public String listFiles() throws URISyntaxException, IOException {
         URI uri = httpConnector.buildUri(createUrl(stashPatchset, CHANGES_URL_FORMAT));
         HttpGet httpGet = new HttpGet(uri);
-        // Is this needed?
-//        addBasicAuthHeader(httpGet);
         CloseableHttpResponse httpResponse = httpConnector.logAndExecute(httpGet);
         return httpConnector.consumeAndLogEntity(httpResponse);
     }
@@ -60,7 +58,6 @@ public class StashConnector implements Connector {
                 new BasicNameValuePair("srcPath", filename),
                 new BasicNameValuePair("withComments", "true"));
         HttpGet httpGet = new HttpGet(uri);
-        addBasicAuthHeader(httpGet);
         CloseableHttpResponse httpResponse = httpConnector.logAndExecute(httpGet);
         return httpConnector.consumeAndLogEntity(httpResponse);
     }

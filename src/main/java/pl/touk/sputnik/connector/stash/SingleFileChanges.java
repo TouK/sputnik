@@ -1,7 +1,7 @@
 package pl.touk.sputnik.connector.stash;
 
-import com.beust.jcommander.internal.Sets;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import lombok.Data;
 import lombok.experimental.Builder;
 

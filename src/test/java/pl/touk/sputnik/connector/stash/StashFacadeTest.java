@@ -93,6 +93,7 @@ public class StashFacadeTest {
 
     private void stubGet(UrlMatchingStrategy url, String responseFile) throws Exception {
         stubFor(get(url)
+                .withHeader("Authorization", equalTo("Basic dXNlcjpwYXNz"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
@@ -101,6 +102,7 @@ public class StashFacadeTest {
 
     private void stubPost(UrlMatchingStrategy url, String responseFile) throws Exception {
         stubFor(post(url)
+                .withHeader("Authorization", equalTo("Basic dXNlcjpwYXNz"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
