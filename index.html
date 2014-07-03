@@ -84,7 +84,7 @@ findbugs.excludeFilter=
 <li>create configuration file (you can just paste and edit an example above), e.g. <code>/opt/sputnik/myconf.properties</code>
 </li>
 <li>you can now run sputnik like this:</li>
-</ul><pre><code>/opt/sputnik/sputnik-1.0/bin/sputnik -conf /opt/sputnik/gerrit.properties -changeId I0a2afb7ae4a94ab1ab473ba00e2ec7de381799a0 -revisionId 3f37692af2290e8e3fd16d2f43701c24346197f0
+</ul><pre><code>/opt/sputnik/sputnik-1.0/bin/sputnik --conf /opt/sputnik/gerrit.properties --changeId I0a2afb7ae4a94ab1ab473ba00e2ec7de381799a0 --revisionId 3f37692af2290e8e3fd16d2f43701c24346197f0
 </code></pre>
 
 <h3>
@@ -92,7 +92,7 @@ findbugs.excludeFilter=
 
 <p>If you choose to run sputnik with Stash instead of Gerrit, you'll need to run it in the following manner:</p>
 
-<pre><code>/opt/sputnik/sputnik-1.0/bin/sputnik --conf /opt/sputnik/stash.properties -pullRequestId 15
+<pre><code>/opt/sputnik/sputnik-1.0/bin/sputnik --conf /opt/sputnik/stash.properties --pullRequestId 15
 </code></pre>
 
 <p>It is convenient to add sputnik's configuration file (<code>myconf.properties</code> in the above example) to your
@@ -104,9 +104,9 @@ project's repo. This way, it will be easier to run it from CI server.</p>
 <p>If you have Jenkins job that uses Gerrit Trigger plugin it's very easy to integrate it as Post-Build step:</p>
 
 <ul>
-<li>create a user in Gerrit with HTTP password access and Non-Interactive Users group (take a look at Gerrit documentation [<a href="https://git.eclipse.org/r/Documentation/cmd-create-account.html%5D%5Bhere%5D">https://git.eclipse.org/r/Documentation/cmd-create-account.html][here]</a>)</li>
+<li>create a user in Gerrit with HTTP password access and Non-Interactive Users group (take a look at Gerrit documentation <a href="here">https://git.eclipse.org/r/Documentation/cmd-create-account.html</a>)</li>
 <li>add Post-Build step to your Jenkins job: Execute bash shell:</li>
-</ul><pre><code>/opt/sputnik/sputnik-1.0/bin/sputnik -conf /opt/sputnik/myconf.properties -changeId $GERRIT_CHANGE_ID -revisionId $GERRIT_PATCHSET_REVISION
+</ul><pre><code>/opt/sputnik/sputnik-1.0/bin/sputnik --conf /opt/sputnik/myconf.properties --changeId $GERRIT_CHANGE_ID --revisionId $GERRIT_PATCHSET_REVISION
 # This line makes sure that this Post-Build step always returns exit code 0
 # so it won't affect your main build result
 echo "exit 0 workaround"
@@ -115,9 +115,30 @@ echo "exit 0 workaround"
 <h3>
 <a name="add-post-build-step-to-bamboo" class="anchor" href="#add-post-build-step-to-bamboo"><span class="octicon octicon-link"></span></a>Add Post-Build step to Bamboo</h3>
 
-<p>TODO</p>
+<p>When stash is build on Bamboo there is no direct way to check which pull
+request id it matches. This is a simple way to find required id. </p>
 
-<h2>
+<p>Assumptions:</p>
+
+<ul>
+<li>there is sputnik's config file in project's root directory</li>
+<li>user and password are configured in bamboo plan as variables
+<em>ecosystem.username</em> and <em>ecosystem.password</em>
+</li>
+<li>config file has placeholders for user and password:</li>
+</ul><pre><code>stash.username=&lt;username&gt;
+stash.password=&lt;password&gt;
+</code></pre>
+
+<p>With those steps in place you can use a step from
+<code>contrib/stash-execute.sh</code>. You need to change the script to match your
+environment - there are three variables to change:</p>
+
+<ul>
+<li>stash_host</li>
+<li>project_key</li>
+<li>repository_slug</li>
+</ul><h2>
 <a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h2>
 
 <ul>
