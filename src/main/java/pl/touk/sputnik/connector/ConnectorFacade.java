@@ -1,7 +1,6 @@
 package pl.touk.sputnik.connector;
 
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.Connectors;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 
