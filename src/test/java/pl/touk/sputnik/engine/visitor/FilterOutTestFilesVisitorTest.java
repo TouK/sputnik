@@ -1,4 +1,4 @@
-package pl.touk.sputnik.review.visitor;
+package pl.touk.sputnik.engine.visitor;
 
 import org.junit.Test;
 import pl.touk.sputnik.review.Review;

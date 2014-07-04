@@ -1,13 +1,8 @@
-package pl.touk.sputnik.review.visitor;
+package pl.touk.sputnik.engine.visitor;
 
 import org.junit.Test;
 import pl.touk.sputnik.ReviewBuilder;
-import pl.touk.sputnik.review.Comment;
 import pl.touk.sputnik.review.Review;
-import pl.touk.sputnik.review.ReviewFile;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
