@@ -1,4 +1,4 @@
-package pl.touk.sputnik.review.visitor;
+package pl.touk.sputnik.engine.visitor;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;

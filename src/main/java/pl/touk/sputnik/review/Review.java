@@ -1,19 +1,12 @@
 package pl.touk.sputnik.review;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pl.touk.sputnik.connector.gerrit.json.ReviewFileComment;
-import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
-import pl.touk.sputnik.connector.gerrit.json.ReviewLineComment;
-import pl.touk.sputnik.review.visitor.AfterReviewVisitor;
-import pl.touk.sputnik.review.visitor.BeforeReviewVisitor;
 
 import java.io.File;
 import java.util.ArrayList;

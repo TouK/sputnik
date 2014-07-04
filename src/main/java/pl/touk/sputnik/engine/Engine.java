@@ -3,15 +3,9 @@ package pl.touk.sputnik.engine;
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.math.NumberUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.scalastyle.scalariform.SpacesBeforePlusChecker;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.connector.ConnectorFacade;
-import pl.touk.sputnik.processor.checkstyle.CheckstyleProcessor;
-import pl.touk.sputnik.processor.findbugs.FindBugsProcessor;
-import pl.touk.sputnik.processor.pmd.PmdProcessor;
-import pl.touk.sputnik.processor.scalastyle.ScalastyleProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +14,7 @@ import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
-import pl.touk.sputnik.review.visitor.*;
+import pl.touk.sputnik.engine.visitor.*;
 
 @Slf4j
 public class Engine {
