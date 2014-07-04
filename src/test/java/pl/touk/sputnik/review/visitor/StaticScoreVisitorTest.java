@@ -16,9 +16,9 @@ public class StaticScoreVisitorTest {
     public void shouldAddScoreToReview() {
         Review review = new Review(Collections.<ReviewFile>emptyList());
 
-        new StaticScoreVisitor(ImmutableMap.of("Verified", "+1")).afterReview(review);
+        new StaticScoreVisitor(ImmutableMap.of("Verified", 1)).afterReview(review);
 
-        assertThat(review.getScores()).containsOnly(entry("Verified", "+1"));
+        assertThat(review.getScores()).containsOnly(entry("Verified", 1));
     }
 
 }

@@ -1,6 +1,7 @@
 package pl.touk.sputnik.connector.stash;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +55,17 @@ public class StashFacade implements ConnectorFacade {
 
     @Override
     public void setReview(@NotNull Review review) {
+        sendFileComments(review);
+
+        try {
+            String json = objectMapper.writeValueAsString(new Comment(Joiner.on(". ").join(review.getMessages())));
+            stashConnector.sendReview(json);
+        } catch (URISyntaxException | IOException e) {
+            throw new StashException("Error setting review", e);
+        }
+    }
+
+    private void sendFileComments(Review review) {
         boolean commentOnlyChangedLines = Boolean.parseBoolean(ConfigurationHolder.instance().getProperty(GeneralOption.COMMENT_ONLY_CHANGED_LINES));
 
         for (ReviewFile reviewFile : review.getFiles()) {
@@ -81,7 +93,7 @@ public class StashFacade implements ConnectorFacade {
 
     private boolean noCommentExists(SingleFileChanges changes, CrcMessage lineComment) {
         return !changes.getChangesMap().containsKey(lineComment.getLine())
-            || !changes.getCommentsCrcSet().contains(lineComment.getMessage());
+                || !changes.getCommentsCrcSet().contains(lineComment.getMessage());
     }
 
     private ChangeType getChangeType(SingleFileChanges changes, Integer line) {
