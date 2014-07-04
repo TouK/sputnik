@@ -4,32 +4,37 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.touk.sputnik.connector.gerrit.json.ReviewFileComment;
 import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
 import pl.touk.sputnik.connector.gerrit.json.ReviewLineComment;
+import pl.touk.sputnik.review.visitor.AfterReviewVisitor;
+import pl.touk.sputnik.review.visitor.BeforeReviewVisitor;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
+@Getter
+@Setter
 public class Review {
     /* Source, severity, message, e.g. [Checkstyle] Info: This is bad */
 
     private static final String COMMENT_FORMAT = "[%s] %s: %s";
-    private final List<ReviewFile> files;
+    private List<ReviewFile> files;
     private int totalViolationsCount = 0;
+    private List<String> messages = new ArrayList<>();
+    private Map<String, String> scores = new HashMap<>();
 
-    public Review(List<ReviewFile> files, boolean reviewTestFiles) {
-        if (reviewTestFiles) {
-            this.files = files;
-        } else {
-            // Filter test files
-            this.files = filterOutTestFiles(files);
-        }
+    public Review(List<ReviewFile> files) {
+        this.files = files;
     }
 
     @NotNull
@@ -104,16 +109,6 @@ public class Review {
 
     private void addError(@NotNull ReviewFile reviewFile, @NotNull String source, int line, @Nullable String message, Severity severity) {
         reviewFile.getComments().add(new Comment(line, String.format(COMMENT_FORMAT, source, severity, message)));
-    }
-
-    private List<ReviewFile> filterOutTestFiles(List<ReviewFile> files) {
-        return FluentIterable.from(files)
-                .filter(new Predicate<ReviewFile>() {
-            @Override
-            public boolean apply(ReviewFile file) {
-                return !file.isTestFile();
-            }
-        }).toList();
     }
 
     private static class ReviewFileFileFunction implements Function<ReviewFile, File> {

@@ -18,7 +18,7 @@ public class ReviewTest {
                 new ReviewFile("/src/test/java/file2.java")
                 );
 
-        Review review = new Review(reviewList, reviewTestFiles);
+        Review review = new Review(reviewList);
 
         // Create warnings for all files
         int i = 0;
