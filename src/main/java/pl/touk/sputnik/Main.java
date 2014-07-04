@@ -10,7 +10,7 @@ import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.ConnectorFacadeFactory;
-import pl.touk.sputnik.review.Engine;
+import pl.touk.sputnik.engine.Engine;
 
 public final class Main {
     private static final String SPUTNIK = "sputnik";

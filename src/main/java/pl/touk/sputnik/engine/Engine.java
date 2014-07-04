@@ -1,4 +1,4 @@
-package pl.touk.sputnik.review;
+package pl.touk.sputnik.engine;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +16,10 @@ import pl.touk.sputnik.processor.scalastyle.ScalastyleProcessor;
 import java.util.ArrayList;
 import java.util.List;
 import pl.touk.sputnik.configuration.GeneralOption;
+import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewProcessor;
+import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.visitor.*;
 
 @Slf4j
@@ -35,7 +39,7 @@ public class Engine {
             beforeReviewVisitor.beforeReview(review);
         }
 
-        List<ReviewProcessor> processors = createProcessors();
+        List<ReviewProcessor> processors = new ProcessorBuilder().buildProcessors();
         for (ReviewProcessor processor : processors) {
             review(review, processor);
         }
@@ -60,24 +64,6 @@ public class Engine {
             log.info("Review for processor {} returned {} violations", processor.getName(), reviewResult.getViolations().size());
             review.add(processor.getName(), reviewResult);
         }
-    }
-
-    @NotNull
-    private List<ReviewProcessor> createProcessors() {
-        List<ReviewProcessor> processors = new ArrayList<>();
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.CHECKSTYLE_ENABLED))) {
-            processors.add(new CheckstyleProcessor());
-        }
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.PMD_ENABLED))) {
-            processors.add(new PmdProcessor());
-        }
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.FINDBUGS_ENABLED))) {
-            processors.add(new FindBugsProcessor());
-        }
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.SCALASTYLE_ENABLED))) {
-            processors.add(new ScalastyleProcessor());
-        }
-        return processors;
     }
 
     @NotNull
