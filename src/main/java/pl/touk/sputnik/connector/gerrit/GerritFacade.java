@@ -1,12 +1,10 @@
 package pl.touk.sputnik.connector.gerrit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Joiner;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.gerrit.json.*;
-import pl.touk.sputnik.review.Comment;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 
@@ -15,8 +13,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import pl.touk.sputnik.Connectors;
+
+import pl.touk.sputnik.connector.Connectors;
 
 public class GerritFacade implements ConnectorFacade {
     private static final String RESPONSE_PREFIX = ")]}'";
