@@ -2,6 +2,7 @@ package pl.touk.sputnik.review.visitor;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.review.Comment;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
@@ -14,7 +15,7 @@ public class LimitCommentVisitor implements AfterReviewVisitor {
     private int maximumCount;
 
     @Override
-    public void afterReview(Review review) {
+    public void afterReview(@NotNull Review review) {
         if (review.getTotalViolationsCount() <= maximumCount) {
             log.info("There are {} total violations for this review, which is below maximum comment count {}. No comments are filtered", review.getTotalViolationsCount(), maximumCount);
             return;

@@ -33,7 +33,7 @@ public class Review {
     private List<String> messages = new ArrayList<>();
     private Map<String, String> scores = new HashMap<>();
 
-    public Review(List<ReviewFile> files) {
+    public Review(@NotNull List<ReviewFile> files) {
         this.files = files;
     }
 
