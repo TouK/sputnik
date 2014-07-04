@@ -12,6 +12,7 @@ import java.util.Iterator;
 @Slf4j
 @AllArgsConstructor
 public class LimitCommentVisitor implements AfterReviewVisitor {
+    private static final String MESSAGE_FORMAT = "Showing only first %d comments. %d comments are filtered out";
     private int maximumCount;
 
     @Override
@@ -40,6 +41,6 @@ public class LimitCommentVisitor implements AfterReviewVisitor {
     }
 
     private void addMessage(Review review) {
-        review.getMessages().add(String.format("Showing only first %d comments. %d comments are filtered out.", maximumCount, review.getTotalViolationsCount() - maximumCount));
+        review.getMessages().add(String.format(MESSAGE_FORMAT, maximumCount, review.getTotalViolationsCount() - maximumCount));
     }
 }
