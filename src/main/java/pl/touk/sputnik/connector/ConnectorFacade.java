@@ -1,15 +1,17 @@
 package pl.touk.sputnik.connector;
 
-import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
+import org.jetbrains.annotations.NotNull;
+import pl.touk.sputnik.Connectors;
+import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 
 import java.util.List;
-import pl.touk.sputnik.Connectors;
 
 public interface ConnectorFacade {
     Connectors name();
 
+    @NotNull
     List<ReviewFile> listFiles();
 
-    void setReview(ReviewInput reviewInput);
+    void setReview(@NotNull Review review);
 }

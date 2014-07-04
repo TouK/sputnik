@@ -10,7 +10,7 @@ import java.util.Map;
 @Slf4j
 @AllArgsConstructor
 public class StaticScoreVisitor implements AfterReviewVisitor {
-    private Map<String, String> scores;
+    private Map<String, Integer> scores;
 
     @Override
     public void afterReview(@NotNull Review review) {

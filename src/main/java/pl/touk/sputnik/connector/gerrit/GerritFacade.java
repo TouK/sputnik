@@ -1,12 +1,13 @@
 package pl.touk.sputnik.connector.gerrit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Joiner;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.connector.ConnectorFacade;
-import pl.touk.sputnik.connector.gerrit.json.FileInfo;
-import pl.touk.sputnik.connector.gerrit.json.ListFilesResponse;
-import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
+import pl.touk.sputnik.connector.gerrit.json.*;
+import pl.touk.sputnik.review.Comment;
+import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 
 import java.io.IOException;
@@ -53,13 +54,29 @@ public class GerritFacade implements ConnectorFacade {
     }
 
     @Override
-    public void setReview(@NotNull ReviewInput reviewInput) {
+    public void setReview(@NotNull Review review) {
         try {
-            String json = objectMapper.writeValueAsString(reviewInput);
+            String json = objectMapper.writeValueAsString(toReviewInput(review));
             gerritConnector.sendReview(json);
         } catch (IOException | URISyntaxException e) {
             throw new GerritException("Error setting review", e);
         }
+    }
+
+    @NotNull
+    private ReviewInput toReviewInput(@NotNull Review review) {
+        ReviewInput reviewInput = new ReviewInput();
+        reviewInput.message = Joiner.on(". ").join(review.getMessages());
+        reviewInput.labels.putAll(review.getScores());
+        for (ReviewFile file : review.getFiles()) {
+            List<ReviewFileComment> comments = new ArrayList<ReviewFileComment>();
+            for (Comment comment : file.getComments()) {
+                comments.add(new ReviewLineComment(comment.getLine(), comment.getMessage()));
+            }
+            reviewInput.comments.put(file.getReviewFilename(), comments);
+        }
+
+        return reviewInput;
     }
 
     @NotNull
