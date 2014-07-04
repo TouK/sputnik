@@ -29,7 +29,7 @@ public class Engine {
         List<ReviewFile> reviewFiles = facade.listFiles();
         Review review = new Review(reviewFiles);
 
-        for (BeforeReviewVisitor beforeReviewVisitor : buildBeforeReviewVisitors()) {
+        for (BeforeReviewVisitor beforeReviewVisitor : new VisitorBuilder().buildBeforeReviewVisitors()) {
             beforeReviewVisitor.beforeReview(review);
         }
 
@@ -38,7 +38,7 @@ public class Engine {
             review(review, processor);
         }
 
-        for (AfterReviewVisitor afterReviewVisitor : buildAfterReviewVisitors()) {
+        for (AfterReviewVisitor afterReviewVisitor : new VisitorBuilder().buildAfterReviewVisitors()) {
             afterReviewVisitor.afterReview(review);
         }
 
@@ -60,28 +60,5 @@ public class Engine {
         }
     }
 
-    @NotNull
-    private List<BeforeReviewVisitor> buildBeforeReviewVisitors() {
-        List<BeforeReviewVisitor> beforeReviewVisitors = new ArrayList<>();
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.PROCESS_TEST_FILES))) {
-            beforeReviewVisitors.add(new FilterOutTestFilesVisitor());
-        }
-        return beforeReviewVisitors;
-    }
 
-    @NotNull
-    private List<AfterReviewVisitor> buildAfterReviewVisitors() {
-        List<AfterReviewVisitor> afterReviewVisitors = new ArrayList<>();
-
-        afterReviewVisitors.add(new SummaryMessageVisitor());
-
-        int maxNumberOfComments = NumberUtils.toInt(ConfigurationHolder.instance().getProperty(GeneralOption.MAX_NUMBER_OF_COMMENTS), 0);
-        if (maxNumberOfComments > 0) {
-            afterReviewVisitors.add(new LimitCommentVisitor(maxNumberOfComments));
-        }
-
-        afterReviewVisitors.add(new StaticScoreVisitor(ImmutableMap.of("Code-Review", 1)));
-
-        return afterReviewVisitors;
-    }
 }
