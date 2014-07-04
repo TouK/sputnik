@@ -1,7 +1,10 @@
 package pl.touk.sputnik.review;
 
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.scalastyle.scalariform.SpacesBeforePlusChecker;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.processor.checkstyle.CheckstyleProcessor;
@@ -12,6 +15,7 @@ import pl.touk.sputnik.processor.scalastyle.ScalastyleProcessor;
 import java.util.ArrayList;
 import java.util.List;
 import pl.touk.sputnik.configuration.GeneralOption;
+import pl.touk.sputnik.review.visitor.*;
 
 @Slf4j
 public class Engine {
@@ -24,19 +28,22 @@ public class Engine {
 
     public void run() {
         List<ReviewFile> reviewFiles = facade.listFiles();
-        //TODO
-        Boolean reviewTestFiles = Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.PROCESS_TEST_FILES));
-
         Review review = new Review(reviewFiles);
+
+        for (BeforeReviewVisitor beforeReviewVisitor : buildBeforeReviewVisitors()) {
+            beforeReviewVisitor.beforeReview(review);
+        }
 
         List<ReviewProcessor> processors = createProcessors();
         for (ReviewProcessor processor : processors) {
             review(review, processor);
         }
 
-        int maxNumberOfComments = Integer.parseInt(ConfigurationHolder.instance().getProperty(GeneralOption.MAX_NUMBER_OF_COMMENTS));
+        for (AfterReviewVisitor afterReviewVisitor : buildAfterReviewVisitors()) {
+            afterReviewVisitor.afterReview(review);
+        }
 
-        facade.setReview(review.toReviewInput(maxNumberOfComments));
+        facade.setReview(review);
     }
 
     private void review(@NotNull Review review, @NotNull ReviewProcessor processor) {
@@ -70,5 +77,30 @@ public class Engine {
             processors.add(new ScalastyleProcessor());
         }
         return processors;
+    }
+
+    @NotNull
+    private List<BeforeReviewVisitor> buildBeforeReviewVisitors() {
+        List<BeforeReviewVisitor> beforeReviewVisitors = new ArrayList<>();
+        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.PROCESS_TEST_FILES))) {
+            beforeReviewVisitors.add(new FilterOutTestFilesVisitor());
+        }
+        return beforeReviewVisitors;
+    }
+
+    @NotNull
+    private List<AfterReviewVisitor> buildAfterReviewVisitors() {
+        List<AfterReviewVisitor> afterReviewVisitors = new ArrayList<>();
+
+        afterReviewVisitors.add(new SummaryMessageVisitor());
+
+        String maxNumberOfComments = ConfigurationHolder.instance().getProperty(GeneralOption.MAX_NUMBER_OF_COMMENTS);
+        if (StringUtils.isNotBlank(maxNumberOfComments) && StringUtils.isNumeric(maxNumberOfComments) && Integer.valueOf(maxNumberOfComments) > 0) {
+            afterReviewVisitors.add(new LimitCommentVisitor(Integer.valueOf(maxNumberOfComments)));
+        }
+
+        afterReviewVisitors.add(new StaticScoreVisitor(ImmutableMap.of("Code-Review", 1)));
+
+        return afterReviewVisitors;
     }
 }

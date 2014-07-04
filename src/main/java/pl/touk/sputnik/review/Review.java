@@ -31,7 +31,7 @@ public class Review {
     private List<ReviewFile> files;
     private int totalViolationsCount = 0;
     private List<String> messages = new ArrayList<>();
-    private Map<String, String> scores = new HashMap<>();
+    private Map<String, Integer> scores = new HashMap<>();
 
     public Review(@NotNull List<ReviewFile> files) {
         this.files = files;
