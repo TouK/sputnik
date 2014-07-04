@@ -62,32 +62,6 @@ public class Review {
         return Lists.transform(files, new ReviewFileSourceDirFunction());
     }
 
-    @NotNull
-    public ReviewInput toReviewInput(int maxComments) {
-        ReviewInput reviewInput = new ReviewInput();
-        int commentsPut = 0;
-        reviewInput.message = "Total " + totalViolationsCount + " violations found";
-        if (maxComments != 0 && totalViolationsCount > maxComments) {
-            reviewInput.message = reviewInput.message + ", but showing only first " + maxComments;
-        }
-        reviewInput.setLabelToPlusOne();
-        for (ReviewFile file : files) {
-            List<ReviewFileComment> comments = new ArrayList<>();
-            for (Comment comment : file.getComments()) {
-                commentsPut++;
-                if (maxComments == 0 || commentsPut <= maxComments) {
-                    comments.add(new ReviewLineComment(comment.getLine(), comment.getMessage()));
-                }
-            }
-            if (!comments.isEmpty()) {
-                reviewInput.comments.put(file.getReviewFilename(), comments);
-            }
-        }
-        log.info(reviewInput.message);
-
-        return reviewInput;
-    }
-
     public void add(@NotNull String source, @NotNull ReviewResult reviewResult) {
         for (Violation violation : reviewResult.getViolations()) {
             addError(source, violation);

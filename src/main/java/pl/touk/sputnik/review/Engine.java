@@ -2,6 +2,7 @@ package pl.touk.sputnik.review;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.scalastyle.scalariform.SpacesBeforePlusChecker;
@@ -94,9 +95,9 @@ public class Engine {
 
         afterReviewVisitors.add(new SummaryMessageVisitor());
 
-        String maxNumberOfComments = ConfigurationHolder.instance().getProperty(GeneralOption.MAX_NUMBER_OF_COMMENTS);
-        if (StringUtils.isNotBlank(maxNumberOfComments) && StringUtils.isNumeric(maxNumberOfComments) && Integer.valueOf(maxNumberOfComments) > 0) {
-            afterReviewVisitors.add(new LimitCommentVisitor(Integer.valueOf(maxNumberOfComments)));
+        int maxNumberOfComments = NumberUtils.toInt(ConfigurationHolder.instance().getProperty(GeneralOption.MAX_NUMBER_OF_COMMENTS), 0);
+        if (maxNumberOfComments > 0) {
+            afterReviewVisitors.add(new LimitCommentVisitor(maxNumberOfComments));
         }
 
         afterReviewVisitors.add(new StaticScoreVisitor(ImmutableMap.of("Code-Review", 1)));
