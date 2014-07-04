@@ -56,28 +56,14 @@ public class GerritFacade implements ConnectorFacade {
     @Override
     public void setReview(@NotNull Review review) {
         try {
-            String json = objectMapper.writeValueAsString(toReviewInput(review));
+            String json = objectMapper.writeValueAsString(new ReviewInputBuilder().toReviewInput(review));
             gerritConnector.sendReview(json);
         } catch (IOException | URISyntaxException e) {
             throw new GerritException("Error setting review", e);
         }
     }
 
-    @NotNull
-    private ReviewInput toReviewInput(@NotNull Review review) {
-        ReviewInput reviewInput = new ReviewInput();
-        reviewInput.message = Joiner.on(". ").join(review.getMessages());
-        reviewInput.labels.putAll(review.getScores());
-        for (ReviewFile file : review.getFiles()) {
-            List<ReviewFileComment> comments = new ArrayList<ReviewFileComment>();
-            for (Comment comment : file.getComments()) {
-                comments.add(new ReviewLineComment(comment.getLine(), comment.getMessage()));
-            }
-            reviewInput.comments.put(file.getReviewFilename(), comments);
-        }
 
-        return reviewInput;
-    }
 
     @NotNull
     protected String trimResponse(@NotNull String response) {
