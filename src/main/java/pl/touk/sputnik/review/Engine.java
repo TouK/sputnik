@@ -24,15 +24,16 @@ public class Engine {
 
     public void run() {
         List<ReviewFile> reviewFiles = facade.listFiles();
+        //TODO
         Boolean reviewTestFiles = Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.PROCESS_TEST_FILES));
-        
-        Review review = new Review(reviewFiles, reviewTestFiles);
+
+        Review review = new Review(reviewFiles);
 
         List<ReviewProcessor> processors = createProcessors();
         for (ReviewProcessor processor : processors) {
             review(review, processor);
         }
-        
+
         int maxNumberOfComments = Integer.parseInt(ConfigurationHolder.instance().getProperty(GeneralOption.MAX_NUMBER_OF_COMMENTS));
 
         facade.setReview(review.toReviewInput(maxNumberOfComments));

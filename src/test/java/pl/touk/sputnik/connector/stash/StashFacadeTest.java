@@ -76,7 +76,7 @@ public class StashFacadeTest {
                 "%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/comments",
                 FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)), "/json/stash-diff-empty.json");
 
-        Review review = new Review(ImmutableList.of(new ReviewFile(filename)), true);
+        Review review = new Review(ImmutableList.of(new ReviewFile(filename)));
         review.addError("scalastyle", new Violation(filename, 1, "error message", Severity.ERROR));
 
         fixture.setReview(review.toReviewInput(5));
