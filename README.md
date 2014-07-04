@@ -41,8 +41,8 @@ If you want sputnik to use your SonarQube rules just download them from your Son
 
 ## Installation
 
-- clone this repository and build it: `gradle distZip` or download distribution file: https://github.com/TouK/sputnik/releases/download/v1.0/sputnik-1.0.zip
-- copy distribution file `build/distributions/sputnik-1.0.zip` to your installation dir, e.g. `/opt/sputnik` and unzip it
+- clone this repository and build it: `gradle distZip` or download distribution file: https://github.com/TouK/sputnik/releases/download/v1.2/sputnik-1.2.zip
+- copy distribution file `build/distributions/sputnik-1.2.zip` to your installation dir, e.g. `/opt/sputnik` and unzip it
 - create configuration file (you can just paste and edit an example above), e.g. `/opt/sputnik/myconf.properties`
 - you can now run sputnik like this:
 ```
@@ -54,7 +54,7 @@ If you want sputnik to use your SonarQube rules just download them from your Son
 If you choose to run sputnik with Stash instead of Gerrit, you'll need to run it in the following manner:
 
 ```
-/opt/sputnik/sputnik-1.0/bin/sputnik --conf /opt/sputnik/stash.properties --pullRequestId 15
+/opt/sputnik/sputnik-1.2/bin/sputnik --conf /opt/sputnik/stash.properties --pullRequestId 15
 ```
 
 It is convenient to add sputnik's configuration file (`myconf.properties` in the above example) to your
@@ -106,6 +106,7 @@ environment - there are three variables to change:
 - Marcin Cylke
 - Piotr Jagielski
 - Karol Lassak
+- Henning Hoefer
 
 ## License
 
