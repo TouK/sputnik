@@ -6,7 +6,8 @@ apply plugin: 'coveralls'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
-version = '1.2'
+group = 'pl.touk'
+version = '1.2.0'
 mainClassName = 'pl.touk.sputnik.Main'
 
 repositories {
