@@ -1,6 +1,7 @@
 package pl.touk.sputnik.review.visitor;
 
 import org.junit.Test;
+import pl.touk.sputnik.ReviewBuilder;
 import pl.touk.sputnik.review.Comment;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
@@ -14,7 +15,7 @@ public class LimitCommentVisitorTest {
 
     @Test
     public void shouldNotLimitCommentsIfCountIsBelowMaximumCount() {
-        Review review = buildReview();
+        Review review = ReviewBuilder.buildReview();
 
         new LimitCommentVisitor(10).afterReview(review);
 
@@ -28,7 +29,7 @@ public class LimitCommentVisitorTest {
 
     @Test
     public void shouldLimitCommentsIfCountIsHigherMaximumCount() {
-        Review review = buildReview();
+        Review review = ReviewBuilder.buildReview();
 
         new LimitCommentVisitor(3).afterReview(review);
 
@@ -40,19 +41,4 @@ public class LimitCommentVisitorTest {
         assertThat(review.getFiles().get(2).getComments()).isEmpty();
         assertThat(review.getFiles().get(3).getComments()).isEmpty();
     }
-
-    private Review buildReview() {
-        List<ReviewFile> reviewFiles = Arrays.asList(buildReviewFile(), buildReviewFile(), buildReviewFile(), buildReviewFile());
-        Review review = new Review(reviewFiles);
-        review.setTotalViolationsCount(8);
-        return review;
-    }
-
-    private ReviewFile buildReviewFile() {
-        ReviewFile reviewFile = new ReviewFile("test");
-        reviewFile.getComments().add(new Comment(0, "test"));
-        reviewFile.getComments().add(new Comment(0, "test"));
-        return reviewFile;
-    }
-
 }
