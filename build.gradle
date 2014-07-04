@@ -4,6 +4,9 @@ apply plugin: 'idea'
 apply plugin: 'jacoco'
 apply plugin: 'coveralls'
 
+apply plugin: 'maven'
+apply plugin: 'signing'
+
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 group = 'pl.touk'
@@ -87,5 +90,78 @@ jacocoTestReport {
     reports {
         xml.enabled = true // coveralls plugin depends on xml format report
         html.enabled = true
+    }
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+
+            pom.project {
+                name 'Sputnik'
+                packaging 'jar'
+                description 'Static code review for your Gerrit patchsets. Runs Checkstyle, PMD and FindBugs for you!'
+                url 'https://github.com/TouK/sputnik/'
+
+                scm {
+                    url 'scm:git@github.com:TouK/sputnik.git'
+                    connection 'scm:git@github.com:TouK/sputnik.git'
+                    developerConnection 'scm:git@github.com:Touk/sputnik.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'tomasz_kalkosinski'
+                        name 'Tomasz Kalkosinski'
+                    }
+                    developer {
+                        id 'marcin_cylke'
+                        name 'Marcin Cylke'
+                    }
+                    developer {
+                        id 'piotr_jagielski'
+                        name 'Piotr Jagielski'
+                    }
+                    developer {
+                        id 'karol_lassak'
+                        name 'Karol Lassak'
+                    }
+                }
+            }
+        }
     }
 }
