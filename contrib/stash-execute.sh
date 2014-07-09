@@ -2,7 +2,7 @@ user="${bamboo_ecosystem_username}"
 password="${bamboo_ecosystem_password}"
 current_branch=${bamboo.repository.branch.name}
 
-sputnik_version="1.1"
+sputnik_version="1.2"
 stash_host=???
 project_key=???
 repository_slug=???
