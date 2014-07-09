@@ -95,6 +95,10 @@ environment - there are three variables to change:
 - project_key
 - repository_slug
 
+## Sputnik Maven plugin
+
+If you prefere running Sputnik from Maven, there is a plugin developed by Karol Lassak here: https://github.com/ingwarsw/sputnik-maven-plugin. Read plugin documentation for reference.
+
 ## Requirements
 
 - Gerrit 2.8 is required (REST API for reviews was introduced in this version)
