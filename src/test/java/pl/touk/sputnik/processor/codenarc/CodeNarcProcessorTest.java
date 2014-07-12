@@ -9,23 +9,48 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CodeNarcProcessorTest {
 
+    CodeNarcProcessor sut = new CodeNarcProcessor();
+
     @Test
     public void shouldReturnSomeViolationsForFile() {
         //given
-        CodeNarcProcessor codeNarcProcessor = new CodeNarcProcessor();
-        String reviewFilePath = "src/test/resources/codeNarcTestFiles/MyFile1.groovy";
+        String reviewFilePath = "src/test/resources/codeNarcTestFiles/FileWithOneViolationLevel2.groovy";
         ReviewFile reviewFile = new ReviewFile(reviewFilePath);
         Review review = new Review(Arrays.asList(reviewFile));
         //when
-        ReviewResult result = codeNarcProcessor.process(review);
+        ReviewResult result = sut.process(review);
         //then
         assertThat(result).isNotNull();
-        assertThat(result.getViolations()).isNotNull().isNotEmpty().hasSize(1);
-        Violation violation = result.getViolations().get(0);
-        assertThat(violation).isNotNull();
-        assertThat(violation.getLine()).isEqualTo(5);
-        assertThat(violation.getMessage()).isEqualTo("EmptyTryBlock: The try block is empty");
-        assertThat(violation.getSeverity()).isEqualTo(Severity.WARNING);
-        assertThat(violation.getFilenameOrJavaClassName()).isEqualTo(reviewFilePath);
+        assertThat(result.getViolations()).isNotNull().isNotEmpty().hasSize(1).contains(new Violation(reviewFilePath, 5, "EmptyTryBlock: The try block is empty", Severity.WARNING));
+    }
+
+    @Test
+    public void shouldReturnViolationsOfEachLevelForFile() {
+        //given
+        String reviewFilePath = "src/test/resources/codeNarcTestFiles/FileWithOneViolationPerEachLevel.groovy";
+        ReviewFile reviewFile = new ReviewFile(reviewFilePath);
+        Review review = new Review(Arrays.asList(reviewFile));
+        //when
+        ReviewResult result = sut.process(review);
+        //then
+        assertThat(result).isNotNull();
+        assertThat(result.getViolations()).isNotNull().isNotEmpty().hasSize(3).containsSequence(
+                new Violation(reviewFilePath, 5, "ForLoopShouldBeWhileLoop: The for loop can be simplified to a while loop", Severity.ERROR),
+                new Violation(reviewFilePath, 9, "AssertWithinFinallyBlock: A finally block within class FileWithOneViolationPerEachLevel contains an assert statement, potentially hiding the original exception, if there is one", Severity.WARNING),
+                new Violation(reviewFilePath, 13, "EmptyMethod: Violation in class FileWithOneViolationPerEachLevel. The method bar is both empty and not marked with @Override", Severity.INFO)
+        );
+    }
+
+    @Test
+    public void shouldReturnNoViolationsForPerfectFile() {
+        //given
+        String reviewFilePath = "src/test/resources/codeNarcTestFiles/FileWithoutViolations.groovy";
+        ReviewFile reviewFile = new ReviewFile(reviewFilePath);
+        Review review = new Review(Arrays.asList(reviewFile));
+        //when
+        ReviewResult result = sut.process(review);
+        //then
+        assertThat(result).isNotNull();
+        assertThat(result.getViolations()).isNotNull().isEmpty();
     }
 }

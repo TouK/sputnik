@@ -2,9 +2,9 @@ package codeNarcTestFiles
 
 class MyFile {
     String foo() {
-        try{
+        try {
 
-        }catch(Exception e){
+        } catch (Exception e) {
             return "gdsadas"
         }
         return "bar";
