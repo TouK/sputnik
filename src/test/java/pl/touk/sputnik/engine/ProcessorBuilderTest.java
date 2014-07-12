@@ -24,7 +24,8 @@ public class ProcessorBuilderTest {
                 GeneralOption.CHECKSTYLE_ENABLED.getKey(), "false",
                 GeneralOption.FINDBUGS_ENABLED.getKey(), "false",
                 GeneralOption.PMD_ENABLED.getKey(), "false",
-                GeneralOption.SCALASTYLE_ENABLED.getKey(), "false"
+                GeneralOption.SCALASTYLE_ENABLED.getKey(), "false",
+                GeneralOption.CODE_NARC_ENABLED.getKey(), "false"
         ));
 
         assertThat(new ProcessorBuilder().buildProcessors()).isEmpty();
@@ -36,9 +37,10 @@ public class ProcessorBuilderTest {
                 GeneralOption.CHECKSTYLE_ENABLED.getKey(), "true",
                 GeneralOption.FINDBUGS_ENABLED.getKey(), "true",
                 GeneralOption.PMD_ENABLED.getKey(), "true",
-                GeneralOption.SCALASTYLE_ENABLED.getKey(), "true"
+                GeneralOption.SCALASTYLE_ENABLED.getKey(), "true",
+                GeneralOption.CODE_NARC_ENABLED.getKey(), "true"
         ));
 
-        assertThat(new ProcessorBuilder().buildProcessors()).hasSize(4);
+        assertThat(new ProcessorBuilder().buildProcessors()).hasSize(5);
     }
 }
