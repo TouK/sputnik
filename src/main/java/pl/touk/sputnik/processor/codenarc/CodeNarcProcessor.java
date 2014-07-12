@@ -79,7 +79,11 @@ public class CodeNarcProcessor implements ReviewProcessor {
     private SourceAnalyzer createSourceAnalyzer(Review review) {
         FilesystemSourceAnalyzer sourceAnalyzer = new FilesystemSourceAnalyzer();
         sourceAnalyzer.setBaseDirectory(".");
-        sourceAnalyzer.setIncludes("**/" + review.getIOFilenames().get(0));
+        StringBuilder stringBuilder = new StringBuilder();
+        for(String filesPath : review.getIOFilenames()){
+            stringBuilder.append("**/").append(filesPath).append(",");
+        }
+        sourceAnalyzer.setIncludes(stringBuilder.toString());
         return sourceAnalyzer;
     }
 
