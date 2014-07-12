@@ -1,5 +1,6 @@
 package pl.touk.sputnik.processor.codenarc;
 
+import lombok.extern.slf4j.Slf4j;
 import org.codenarc.results.FileResults;
 import org.codenarc.results.Results;
 import org.codenarc.rule.Rule;
@@ -10,6 +11,7 @@ import pl.touk.sputnik.review.Violation;
 
 import java.util.Stack;
 
+@Slf4j
 class ResultParser {
     public ReviewResult parseResults(Results results) {
         ReviewResult reviewResult = new ReviewResult();
@@ -42,10 +44,18 @@ class ResultParser {
     private void parseFileResult(ReviewResult reviewResult, FileResults fileResults) {
         for (Object object : fileResults.getViolations()) {
             org.codenarc.rule.Violation codeNarcViolation = (org.codenarc.rule.Violation) object;
+            log.debug("Found violation: {}", codeNarcViolation);
             Rule rule = codeNarcViolation.getRule();
-            Violation violation = new Violation(fileResults.getPath(), codeNarcViolation.getLineNumber(), createViolationMessage(codeNarcViolation, rule), getRuleSeverity(rule));
-            reviewResult.add(violation);
+            reviewResult.add(createViolation(fileResults, codeNarcViolation, rule));
         }
+    }
+
+    private Violation createViolation(FileResults fileResults, org.codenarc.rule.Violation codeNarcViolation, Rule rule) {
+        return new Violation(fileResults.getPath(), setLineNumber(codeNarcViolation.getLineNumber()), createViolationMessage(codeNarcViolation, rule), getRuleSeverity(rule));
+    }
+
+    private int setLineNumber(Integer lineNumber) {
+        return lineNumber == null ? 0 : lineNumber;
     }
 
     private String createViolationMessage(org.codenarc.rule.Violation codeNarcViolation, Rule rule) {
