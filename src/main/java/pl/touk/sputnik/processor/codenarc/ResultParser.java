@@ -1,6 +1,7 @@
 package pl.touk.sputnik.processor.codenarc;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.codenarc.results.FileResults;
 import org.codenarc.results.Results;
 import org.codenarc.rule.Rule;
@@ -61,7 +62,7 @@ class ResultParser {
     private String createViolationMessage(org.codenarc.rule.Violation codeNarcViolation, Rule rule) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(rule.getName());
-        if (codeNarcViolation.getMessage() != null) {
+        if (StringUtils.isNotBlank(codeNarcViolation.getMessage())) {
             stringBuilder.append(": ").append(codeNarcViolation.getMessage());
         }
         return stringBuilder.toString();
