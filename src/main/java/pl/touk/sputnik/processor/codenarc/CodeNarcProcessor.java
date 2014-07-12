@@ -6,10 +6,14 @@ import org.codenarc.analyzer.FilesystemSourceAnalyzer;
 import org.codenarc.analyzer.SourceAnalyzer;
 import org.codenarc.results.FileResults;
 import org.codenarc.results.Results;
-import org.codenarc.rule.Rule;
+import org.codenarc.rule.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.ConfigurationOption;
+import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.*;
+import pl.touk.sputnik.review.Violation;
 
 import java.util.Stack;
 
@@ -44,7 +48,7 @@ public class CodeNarcProcessor implements ReviewProcessor {
                 for (Object object : fileResults.getViolations()) {
                     org.codenarc.rule.Violation codeNarcViolation = (org.codenarc.rule.Violation) object;
                     Rule rule = codeNarcViolation.getRule();
-                    Violation violation = new Violation(fileResults.getPath(), codeNarcViolation.getLineNumber(), rule.getName() + ": " + codeNarcViolation.getMessage(), getRuleSeverity(rule));
+                    Violation violation = new Violation(fileResults.getPath(), codeNarcViolation.getLineNumber(), createViolationMessage(codeNarcViolation, rule), getRuleSeverity(rule));
                     reviewResult.add(violation);
                 }
             } else {
@@ -54,6 +58,10 @@ public class CodeNarcProcessor implements ReviewProcessor {
             }
         }
         return reviewResult;
+    }
+
+    private String createViolationMessage(org.codenarc.rule.Violation codeNarcViolation, Rule rule) {
+        return rule.getName() + (codeNarcViolation.getMessage() != null ? ": " + codeNarcViolation.getMessage() : "");
     }
 
     private Severity getRuleSeverity(Rule rule) {
@@ -71,7 +79,7 @@ public class CodeNarcProcessor implements ReviewProcessor {
 
     private CodeNarcRunner prepareCodeNarcRunner(Review review) {
         CodeNarcRunner codeNarcRunner = new CodeNarcRunner();
-        codeNarcRunner.setRuleSetFiles("codeNarcRuleSets/basic.xml");
+        codeNarcRunner.setRuleSetFiles(ConfigurationHolder.instance().getProperty(GeneralOption.CODE_NARC_RULESET));
         codeNarcRunner.setSourceAnalyzer(createSourceAnalyzer(review));
         return codeNarcRunner;
     }

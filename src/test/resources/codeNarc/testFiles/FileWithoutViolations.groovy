@@ -1,4 +1,4 @@
-package codeNarcTestFiles
+package codeNarc.testFiles
 
 class FileWithoutViolations {
     String bar(){
