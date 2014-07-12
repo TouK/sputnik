@@ -24,7 +24,7 @@ public class CodeNarcProcessorTest {
         Violation violation = result.getViolations().get(0);
         assertThat(violation).isNotNull();
         assertThat(violation.getLine()).isEqualTo(5);
-        assertThat(violation.getMessage()).isEqualTo("The try block is empty");
+        assertThat(violation.getMessage()).isEqualTo("EmptyTryBlock: The try block is empty");
         assertThat(violation.getSeverity()).isEqualTo(Severity.WARNING);
         assertThat(violation.getFilenameOrJavaClassName()).isEqualTo(reviewFilePath);
     }
