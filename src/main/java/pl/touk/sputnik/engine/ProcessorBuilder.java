@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.processor.checkstyle.CheckstyleProcessor;
+import pl.touk.sputnik.processor.codenarc.CodeNarcProcessor;
 import pl.touk.sputnik.processor.findbugs.FindBugsProcessor;
 import pl.touk.sputnik.processor.pmd.PmdProcessor;
 import pl.touk.sputnik.processor.scalastyle.ScalastyleProcessor;
@@ -28,6 +29,9 @@ public class ProcessorBuilder {
         }
         if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.SCALASTYLE_ENABLED))) {
             processors.add(new ScalastyleProcessor());
+        }
+        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.CODE_NARC_ENABLED))) {
+            processors.add(new CodeNarcProcessor());
         }
         return processors;
     }
