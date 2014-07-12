@@ -21,9 +21,16 @@ public class CodeNarcProcessor implements ReviewProcessor {
     @Nullable
     @Override
     public ReviewResult process(@NotNull Review review) {
+        if(noFilesToReview(review)){
+            return new ReviewResult();
+        }
         CodeNarcRunner codeNarcRunner = prepareCodeNarcRunner(review);
         Results results = codeNarcRunner.execute();
         return parseResults(results);
+    }
+
+    private boolean noFilesToReview(Review review) {
+        return review.getFiles().isEmpty();
     }
 
     private ReviewResult parseResults(Results results) {

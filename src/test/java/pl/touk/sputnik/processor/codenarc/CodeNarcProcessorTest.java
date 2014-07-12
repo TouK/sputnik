@@ -3,6 +3,7 @@ package pl.touk.sputnik.processor.codenarc;
 import org.junit.Test;
 import pl.touk.sputnik.review.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,6 +48,17 @@ public class CodeNarcProcessorTest {
         String reviewFilePath = "src/test/resources/codeNarcTestFiles/FileWithoutViolations.groovy";
         ReviewFile reviewFile = new ReviewFile(reviewFilePath);
         Review review = new Review(Arrays.asList(reviewFile));
+        //when
+        ReviewResult result = sut.process(review);
+        //then
+        assertThat(result).isNotNull();
+        assertThat(result.getViolations()).isNotNull().isEmpty();
+    }
+
+    @Test
+    public void shouldReturnNoViolationsWhenNoFiles() {
+        //given
+        Review review = new Review(new ArrayList<ReviewFile>());
         //when
         ReviewResult result = sut.process(review);
         //then
