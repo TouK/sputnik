@@ -19,6 +19,7 @@ public class ReviewFile {
     private static final String BUILD_TEST = "target/test-classes/";
     private static final String DOT = ".";
     private static final Pattern MAVEN_ENTRY_PATTERN = Pattern.compile(MAVEN_ENTRY_REGEX);
+    
     private final String reviewFilename;
     private final String javaClassName;
     private final File ioFile;
