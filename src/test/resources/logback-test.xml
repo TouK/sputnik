@@ -9,6 +9,8 @@
   <logger name="pl.touk" level="debug" />
   <logger name="com.github.tomakehurst.wiremock" level="debug" />
 
+  <logger name="org.codenarc" level="debug"/>
+
   <root level="info">
     <appender-ref ref="STDOUT" />
   </root>
