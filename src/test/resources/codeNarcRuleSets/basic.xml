@@ -38,11 +38,15 @@
     <rule class='org.codenarc.rule.basic.EmptyTryBlockRule'/>
     <rule class='org.codenarc.rule.basic.EmptyWhileStatementRule'/>
     <rule class='org.codenarc.rule.basic.EmptyInstanceInitializerRule'/>
-    <rule class='org.codenarc.rule.basic.EmptyMethodRule'/>
+    <rule class='org.codenarc.rule.basic.EmptyMethodRule'>
+        <property name='priority' value='3'/>
+    </rule>
     <rule class='org.codenarc.rule.basic.EqualsAndHashCodeRule'/>
     <rule class='org.codenarc.rule.basic.EqualsOverloadedRule'/>
     <rule class='org.codenarc.rule.basic.ExplicitGarbageCollectionRule'/>
-    <rule class='org.codenarc.rule.basic.ForLoopShouldBeWhileLoopRule'/>
+    <rule class='org.codenarc.rule.basic.ForLoopShouldBeWhileLoopRule'>
+        <property name='priority' value='1'/>
+    </rule>
     <rule class='org.codenarc.rule.basic.HardCodedWindowsFileSeparatorRule'/>
     <rule class='org.codenarc.rule.basic.HardCodedWindowsRootDirectoryRule'/>
     <rule class='org.codenarc.rule.basic.IntegerGetIntegerRule'/>

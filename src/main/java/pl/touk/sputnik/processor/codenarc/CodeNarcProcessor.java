@@ -3,8 +3,10 @@ package pl.touk.sputnik.processor.codenarc;
 import lombok.extern.slf4j.Slf4j;
 import org.codenarc.CodeNarcRunner;
 import org.codenarc.analyzer.FilesystemSourceAnalyzer;
+import org.codenarc.analyzer.SourceAnalyzer;
 import org.codenarc.results.FileResults;
 import org.codenarc.results.Results;
+import org.codenarc.rule.Rule;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.touk.sputnik.review.*;
@@ -19,13 +21,12 @@ public class CodeNarcProcessor implements ReviewProcessor {
     @Nullable
     @Override
     public ReviewResult process(@NotNull Review review) {
-        CodeNarcRunner codeNarcRunner = new CodeNarcRunner();
-        codeNarcRunner.setRuleSetFiles("codeNarcRuleSets/basic.xml");
-        FilesystemSourceAnalyzer sourceAnalyzer = new FilesystemSourceAnalyzer();
-        sourceAnalyzer.setBaseDirectory(".");
-        sourceAnalyzer.setIncludes("**/" + review.getIOFilenames().get(0));
-        codeNarcRunner.setSourceAnalyzer(sourceAnalyzer);
+        CodeNarcRunner codeNarcRunner = prepareCodeNarcRunner(review);
         Results results = codeNarcRunner.execute();
+        return parseResults(results);
+    }
+
+    private ReviewResult parseResults(Results results) {
         ReviewResult reviewResult = new ReviewResult();
         Stack<Results> resultsStack = new Stack<>();
         resultsStack.add(results);
@@ -35,7 +36,8 @@ public class CodeNarcProcessor implements ReviewProcessor {
                 FileResults fileResults = (FileResults) current;
                 for (Object object : fileResults.getViolations()) {
                     org.codenarc.rule.Violation codeNarcViolation = (org.codenarc.rule.Violation) object;
-                    Violation violation = new Violation(fileResults.getPath(), codeNarcViolation.getLineNumber(), codeNarcViolation.getRule().getName() + ": " + codeNarcViolation.getMessage(), codeNarcViolation.getRule().getPriority() == 2 ? Severity.WARNING : Severity.INFO );
+                    Rule rule = codeNarcViolation.getRule();
+                    Violation violation = new Violation(fileResults.getPath(), codeNarcViolation.getLineNumber(), rule.getName() + ": " + codeNarcViolation.getMessage(), getRuleSeverity(rule));
                     reviewResult.add(violation);
                 }
             } else {
@@ -45,6 +47,33 @@ public class CodeNarcProcessor implements ReviewProcessor {
             }
         }
         return reviewResult;
+    }
+
+    private Severity getRuleSeverity(Rule rule) {
+        switch (rule.getPriority()) {
+            case 1:
+                return Severity.ERROR;
+            case 2:
+                return Severity.WARNING;
+            case 3:
+                return Severity.INFO;
+            default:
+                throw new RuntimeException("Invalid priority of rule " + rule.getName());
+        }
+    }
+
+    private CodeNarcRunner prepareCodeNarcRunner(Review review) {
+        CodeNarcRunner codeNarcRunner = new CodeNarcRunner();
+        codeNarcRunner.setRuleSetFiles("codeNarcRuleSets/basic.xml");
+        codeNarcRunner.setSourceAnalyzer(createSourceAnalyzer(review));
+        return codeNarcRunner;
+    }
+
+    private SourceAnalyzer createSourceAnalyzer(Review review) {
+        FilesystemSourceAnalyzer sourceAnalyzer = new FilesystemSourceAnalyzer();
+        sourceAnalyzer.setBaseDirectory(".");
+        sourceAnalyzer.setIncludes("**/" + review.getIOFilenames().get(0));
+        return sourceAnalyzer;
     }
 
     @NotNull
