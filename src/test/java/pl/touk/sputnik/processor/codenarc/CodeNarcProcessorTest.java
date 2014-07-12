@@ -36,11 +36,10 @@ public class CodeNarcProcessorTest {
 
     @Test
     public void shouldReturnSomeViolationsForFile() {
-        //given
         Review review = getReview(REVIEW_FILE_WITH_ONE_VIOLATION);
-        //when
+        
         ReviewResult result = sut.process(review);
-        //then
+        
         assertThat(result).isNotNull();
         assertThat(result.getViolations())
                 .hasSize(1)
@@ -49,11 +48,10 @@ public class CodeNarcProcessorTest {
 
     @Test
     public void shouldReturnViolationsOfEachLevelForFile() {
-        //given
         Review review = getReview(REVIEW_FILE_WITH_ONE_VIOLATION_PER_EACH_SEVERITY);
-        //when
+        
         ReviewResult result = sut.process(review);
-        //then
+        
         assertThat(result).isNotNull();
         assertThat(result.getViolations())
                 .hasSize(3)
@@ -66,34 +64,30 @@ public class CodeNarcProcessorTest {
 
     @Test
     public void shouldReturnNoViolationsForPerfectFile() {
-        //given
-        ReviewFile reviewFile = new ReviewFile(REVIEW_FILE_WITHOUT_VIOLATIONS);
         Review review = getReview(REVIEW_FILE_WITHOUT_VIOLATIONS);
-        //when
+        
         ReviewResult result = sut.process(review);
-        //then
+        
         assertThat(result).isNotNull();
-        assertThat(result.getViolations()).isNotNull().isEmpty();
+        assertThat(result.getViolations()).isEmpty();
     }
 
     @Test
     public void shouldReturnNoViolationsWhenNoFiles() {
-        //given
         Review review = getReview();
-        //when
+        
         ReviewResult result = sut.process(review);
-        //then
+        
         assertThat(result).isNotNull();
-        assertThat(result.getViolations()).isNotNull().isEmpty();
+        assertThat(result.getViolations()).isEmpty();
     }
 
     @Test
     public void shouldReturnViolationsFromManyFiles() {
-        //given
         Review review = getReview(REVIEW_FILE_WITH_ONE_VIOLATION, REVIEW_FILE_WITHOUT_VIOLATIONS, REVIEW_FILE_WITH_ONE_VIOLATION_PER_EACH_SEVERITY);
-        //when
+        
         ReviewResult result = sut.process(review);
-        //then
+        
         assertThat(result).isNotNull();
         assertThat(result.getViolations())
                 .hasSize(4)
@@ -107,13 +101,12 @@ public class CodeNarcProcessorTest {
 
     @Test
     public void shouldReturnViolationsUsingImportRuleSet() {
-        //given
         ConfigurationHolder.reset();
         ConfigurationHolder.initFromResource(CONFIGURATION_WITH_IMPORT_RULE_SET);
         Review review = getReview(REVIEW_FILE_WITH_IMPORT_VIOLATION, REVIEW_FILE_WITH_ONE_VIOLATION);
-        //when
+        
         ReviewResult result = sut.process(review);
-        //then
+        
         assertThat(result).isNotNull();
         assertThat(result.getViolations())
                 .hasSize(2)
@@ -125,13 +118,12 @@ public class CodeNarcProcessorTest {
 
     @Test
     public void shouldReturnViolationsUsingDefaultRuleSetFromResources() {
-        //given
         ConfigurationHolder.reset();
         ConfigurationHolder.initFromResource(CONFIGURATION_WITHOUT_RULE_SET);
         Review review = getReview(REVIEW_FILE_WITH_ONE_VIOLATION_PER_EACH_SEVERITY);
-        //when
+        
         ReviewResult result = sut.process(review);
-        //then
+        
         assertThat(result).isNotNull();
         assertThat(result.getViolations())
                 .hasSize(3)
@@ -144,13 +136,12 @@ public class CodeNarcProcessorTest {
 
     @Test
     public void shouldReturnViolationsUsingImportAndBasicRuleSets() {
-        //given
         ConfigurationHolder.reset();
         ConfigurationHolder.initFromResource(CONFIGURATION_WITH_BASIC_AND_IMPORT_RULE_SET);
         Review review = getReview(REVIEW_FILE_WITH_ONE_VIOLATION, REVIEW_FILE_WITH_IMPORT_VIOLATION);
-        //when
+        
         ReviewResult result = sut.process(review);
-        //then
+        
         assertThat(result).isNotNull();
         assertThat(result.getViolations())
                 .hasSize(4)
