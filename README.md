@@ -37,6 +37,7 @@ findbugs.includeFilter=
 findbugs.excludeFilter=
 codenarc.enabled=true
 codenarc.ruleSets=
+codenarc.excludes=**/*.java
 ```
 
 If you want sputnik to use your SonarQube rules just download them from your SonarQube profile and use these with `checkstyle.configurationFile`, `pmd.ruleSets` and `findbugs.includeFilter` variables.

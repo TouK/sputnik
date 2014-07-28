@@ -19,6 +19,7 @@ class CodeNarcRunnerBuilder {
         FilesystemSourceAnalyzer sourceAnalyzer = new FilesystemSourceAnalyzer();
         sourceAnalyzer.setBaseDirectory(".");
         sourceAnalyzer.setIncludes(createFileList(review));
+        sourceAnalyzer.setExcludes(ConfigurationHolder.instance().getProperty(GeneralOption.CODE_NARC_EXCLUDES));
         return sourceAnalyzer;
     }
 
