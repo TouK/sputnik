@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pl.touk.sputnik.review.filter.FileFilter;
+import pl.touk.sputnik.review.transformer.FileTransformer;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,6 +30,10 @@ public class Review {
 
     public Review(@NotNull List<ReviewFile> files) {
         this.files = files;
+    }
+
+    public <T> List<T> getFiles(FileFilter fileFilter, FileTransformer<T> fileTransformer) {
+
     }
 
     @NotNull
@@ -78,7 +84,7 @@ public class Review {
         reviewFile.getComments().add(new Comment(line, String.format(COMMENT_FORMAT, source, severity, message)));
     }
 
-    private static class ReviewFileFileFunction implements Function<ReviewFile, File> {
+    public class ReviewFileFileFunction implements Function<ReviewFile, File> {
 
         ReviewFileFileFunction() {
         }
