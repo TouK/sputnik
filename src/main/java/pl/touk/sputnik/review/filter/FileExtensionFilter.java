@@ -11,12 +11,11 @@ import java.util.List;
 
 @AllArgsConstructor
 @Slf4j
-public class FileExtensionFilter {
-    private final List<ReviewFile> files;
+public class FileExtensionFilter implements FileFilter {
     private final List<String> allowedExtensions;
 
     @NotNull
-    public List<ReviewFile> filter() {
+    public List<ReviewFile> filter(@NotNull List<ReviewFile> files) {
         log.info("Filtering out review files with allowed extensions {}", allowedExtensions);
         List<ReviewFile> filtered = new ArrayList<>();
 
