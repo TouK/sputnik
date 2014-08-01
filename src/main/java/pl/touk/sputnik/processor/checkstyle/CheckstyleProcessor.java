@@ -15,6 +15,7 @@ import pl.touk.sputnik.review.ReviewException;
 import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.filter.FileExtensionFilter;
+import pl.touk.sputnik.review.filter.JavaFilter;
 import pl.touk.sputnik.review.transformer.IOFileTransformer;
 
 import java.io.File;
@@ -41,7 +42,7 @@ public class CheckstyleProcessor implements ReviewProcessor {
     }
 
     private void innerProcess(@NotNull Review review, @NotNull AuditListener auditListener) {
-        List<File> files = review.getFiles(new FileExtensionFilter(Collections.singletonList("java")), new IOFileTransformer());
+        List<File> files = review.getFiles(new JavaFilter(), new IOFileTransformer());
         Checker checker = createChecker(auditListener);
         checker.process(files);
         checker.destroy();

@@ -6,6 +6,8 @@ import org.codenarc.analyzer.SourceAnalyzer;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.filter.GroovyFilter;
+import pl.touk.sputnik.review.transformer.FileNameTransformer;
 
 class CodeNarcRunnerBuilder {
     public CodeNarcRunner prepareCodeNarcRunner(Review review) {
@@ -25,7 +27,7 @@ class CodeNarcRunnerBuilder {
 
     private String createFileList(Review review) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (String filesPath : review.getIOFilenames()) {
+        for (String filesPath : review.getFiles(new GroovyFilter(), new FileNameTransformer())) {
             stringBuilder.append("**/").append(filesPath).append(",");
         }
         return stringBuilder.toString();
