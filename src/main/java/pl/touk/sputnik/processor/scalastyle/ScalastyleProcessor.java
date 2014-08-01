@@ -22,6 +22,8 @@ import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;
+import pl.touk.sputnik.review.filter.ScalaFilter;
+import pl.touk.sputnik.review.transformer.IOFileTransformer;
 import scala.Option;
 import scala.Some;
 
@@ -41,8 +43,7 @@ public class ScalastyleProcessor implements ReviewProcessor {
     public ReviewResult process(@NotNull Review review) {
         String scalastyleConfigFile = ConfigurationHolder.instance().getProperty(GeneralOption.SCALASTYLE_CONFIGURATION_FILE);
         ScalastyleConfiguration configuration = ScalastyleConfiguration.readFromXml(scalastyleConfigFile);
-        List<Message> messages = new ScalastyleChecker().checkFilesAsJava(configuration,
-                toFileSpec(onlyScala(review.getIOFiles())));
+        List<Message> messages = new ScalastyleChecker().checkFilesAsJava(configuration, toFileSpec(review.getFiles(new ScalaFilter(), new IOFileTransformer())));
         return toReviewResult(messages);
     }
 
@@ -52,16 +53,6 @@ public class ScalastyleProcessor implements ReviewProcessor {
             fileSpecs.add(new RealFileSpec(file.getAbsolutePath(), new Some<>("UTF-8")));
         }
         return fileSpecs;
-    }
-
-    private List<File> onlyScala(List<File> transform) {
-        return FluentIterable.from(transform)
-                .filter(new Predicate<File>() {
-                    @Override
-                    public boolean apply(File file) {
-                        return file.getAbsolutePath().endsWith("scala");
-                    }
-                }).toList();
     }
 
     @SuppressWarnings("unchecked")

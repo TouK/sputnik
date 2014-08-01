@@ -32,23 +32,9 @@ public class Review {
         this.files = files;
     }
 
-    public <T> List<T> getFiles(FileFilter fileFilter, FileTransformer<T> fileTransformer) {
-
-    }
-
     @NotNull
-    public List<File> getIOFiles() {
-        return Lists.transform(files, new Review.ReviewFileFileFunction());
-    }
-
-    @NotNull
-    public List<String> getIOFilenames() {
-        return Lists.transform(files, new Review.ReviewFileFilenameFunction());
-    }
-
-    @NotNull
-    public List<String> getJavaClassNames() {
-        return Lists.transform(files, new Review.ReviewFileJavaFileNameFunction());
+    public <T> List<T> getFiles(@NotNull FileFilter fileFilter, @NotNull FileTransformer<T> fileTransformer) {
+        return fileTransformer.transform(fileFilter.filter(files));
     }
 
     @NotNull
@@ -82,39 +68,6 @@ public class Review {
 
     private void addError(@NotNull ReviewFile reviewFile, @NotNull String source, int line, @Nullable String message, Severity severity) {
         reviewFile.getComments().add(new Comment(line, String.format(COMMENT_FORMAT, source, severity, message)));
-    }
-
-    public class ReviewFileFileFunction implements Function<ReviewFile, File> {
-
-        ReviewFileFileFunction() {
-        }
-
-        @Override
-        public File apply(ReviewFile from) {
-            return from.getIoFile();
-        }
-    }
-
-    private static class ReviewFileFilenameFunction implements Function<ReviewFile, String> {
-
-        ReviewFileFilenameFunction() {
-        }
-
-        @Override
-        public String apply(ReviewFile from) {
-            return from.getReviewFilename();
-        }
-    }
-
-    private static class ReviewFileJavaFileNameFunction implements Function<ReviewFile, String> {
-
-        ReviewFileJavaFileNameFunction() {
-        }
-
-        @Override
-        public String apply(ReviewFile from) {
-            return from.getJavaClassName();
-        }
     }
 
     private static class ReviewFileBuildDirFunction implements Function<ReviewFile, String> {

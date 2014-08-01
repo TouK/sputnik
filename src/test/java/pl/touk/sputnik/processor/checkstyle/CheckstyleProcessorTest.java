@@ -12,10 +12,14 @@ import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewResult;
+import pl.touk.sputnik.review.filter.FileFilter;
+import pl.touk.sputnik.review.transformer.ClassNameTransformer;
+import pl.touk.sputnik.review.transformer.IOFileTransformer;
 
 import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -56,7 +60,7 @@ public class CheckstyleProcessorTest {
     @Test
     public void shouldReturnBasicSunViolationsOnSimpleClass() {
         //given
-        when(review.getIOFiles()).thenReturn(ImmutableList.of(getResourceAsFile("TestFile.java")));
+        when(review.getFiles(any(FileFilter.class), any(IOFileTransformer.class))).thenReturn(ImmutableList.of(getResourceAsFile("TestFile.java")));
 
         //when
         ReviewResult reviewResult = fixture.process(review);

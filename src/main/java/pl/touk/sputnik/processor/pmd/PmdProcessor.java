@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import pl.touk.sputnik.configuration.GeneralOption;
+import pl.touk.sputnik.review.filter.PmdFilter;
+import pl.touk.sputnik.review.transformer.FileNameTransformer;
 
 @Slf4j
 public class PmdProcessor implements ReviewProcessor {
@@ -44,7 +46,7 @@ public class PmdProcessor implements ReviewProcessor {
             PMDConfiguration configuration = new PMDConfiguration();
             configuration.setReportFormat(CollectorRenderer.class.getCanonicalName());
             configuration.setRuleSets(getRulesets());
-            configuration.setInputPaths(Joiner.on(PMD_INPUT_PATH_SEPARATOR).join(review.getIOFilenames()));
+            configuration.setInputPaths(Joiner.on(PMD_INPUT_PATH_SEPARATOR).join(review.getFiles(new PmdFilter(), new FileNameTransformer())));
             doPMD(configuration);
         } catch (Throwable e) {
             log.error("PMD processor error", e);

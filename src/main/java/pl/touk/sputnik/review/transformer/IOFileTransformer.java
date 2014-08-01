@@ -16,7 +16,7 @@ public class IOFileTransformer implements FileTransformer<File> {
         return Lists.transform(files, new Function<ReviewFile, File>() {
             @NotNull
             @Override
-            public File apply(ReviewFile from) {
+            public File apply(@NotNull ReviewFile from) {
                 return from.getIoFile();
             }
         });
