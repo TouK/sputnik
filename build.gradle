@@ -11,6 +11,9 @@ mainClassName = 'pl.touk.sputnik.Main'
 
 repositories {
     mavenCentral()
+    flatDir {
+        dirs 'lib'
+    }
 }
 
 //noinspection GroovyAssignabilityCheck
@@ -29,7 +32,7 @@ dependencies {
     compile 'com.jayway.jsonpath:json-path:0.9.1'
 
     // Checkstyle dependencies
-    compile 'com.puppycrawl.tools:checkstyle:5.7'
+    compile name: 'checkstyle-5.8-sabaka'
 
     // PMD dependencies
     compile('net.sourceforge.pmd:pmd:5.1.1') {
