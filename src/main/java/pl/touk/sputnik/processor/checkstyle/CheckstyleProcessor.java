@@ -9,15 +9,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
 import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
+import pl.touk.sputnik.review.filter.FileExtensionFilter;
+import pl.touk.sputnik.review.filter.JavaFilter;
+import pl.touk.sputnik.review.transformer.IOFileTransformer;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
-import pl.touk.sputnik.configuration.GeneralOption;
 
 @Slf4j
 public class CheckstyleProcessor implements ReviewProcessor {
@@ -38,7 +42,7 @@ public class CheckstyleProcessor implements ReviewProcessor {
     }
 
     private void innerProcess(@NotNull Review review, @NotNull AuditListener auditListener) {
-        List<File> files = review.getIOFiles();
+        List<File> files = review.getFiles(new JavaFilter(), new IOFileTransformer());
         Checker checker = createChecker(auditListener);
         checker.process(files);
         checker.destroy();

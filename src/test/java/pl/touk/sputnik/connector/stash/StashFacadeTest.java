@@ -76,17 +76,20 @@ public class StashFacadeTest {
                 "%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/comments",
                 FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)), "/json/stash-diff-empty.json");
 
-        Review review = new Review(ImmutableList.of(new ReviewFile(filename)), true);
+        Review review = new Review(ImmutableList.of(new ReviewFile(filename)));
         review.addError("scalastyle", new Violation(filename, 1, "error message", Severity.ERROR));
+        review.getMessages().add("Total 1 violations found");
 
-        fixture.setReview(review.toReviewInput(5));
+        fixture.setReview(review);
 
         stubGet(urlMatching(String.format(
                 "%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/diff.*",
                 FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)), "/json/stash-diff.json");
 
-        fixture.setReview(review.toReviewInput(5));
+        fixture.setReview(review);
 
+        // First review : 1 comment on file and 1 comment on summary message
+        // Second review: 1 comment on summary message
         verify(3, postRequestedFor(urlEqualTo(String.format("%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/comments",
                 FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID))));
     }

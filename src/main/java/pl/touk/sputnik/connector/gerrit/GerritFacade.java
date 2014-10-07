@@ -4,9 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.connector.ConnectorFacade;
-import pl.touk.sputnik.connector.gerrit.json.FileInfo;
-import pl.touk.sputnik.connector.gerrit.json.ListFilesResponse;
-import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
+import pl.touk.sputnik.connector.gerrit.json.*;
+import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 
 import java.io.IOException;
@@ -14,8 +13,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import pl.touk.sputnik.Connectors;
+
+import pl.touk.sputnik.connector.Connectors;
 
 public class GerritFacade implements ConnectorFacade {
     private static final String RESPONSE_PREFIX = ")]}'";
@@ -53,14 +52,16 @@ public class GerritFacade implements ConnectorFacade {
     }
 
     @Override
-    public void setReview(@NotNull ReviewInput reviewInput) {
+    public void setReview(@NotNull Review review) {
         try {
-            String json = objectMapper.writeValueAsString(reviewInput);
+            String json = objectMapper.writeValueAsString(new ReviewInputBuilder().toReviewInput(review));
             gerritConnector.sendReview(json);
         } catch (IOException | URISyntaxException e) {
             throw new GerritException("Error setting review", e);
         }
     }
+
+
 
     @NotNull
     protected String trimResponse(@NotNull String response) {

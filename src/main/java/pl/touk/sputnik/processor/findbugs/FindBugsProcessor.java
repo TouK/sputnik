@@ -11,6 +11,8 @@ import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
+import pl.touk.sputnik.review.filter.JavaFilter;
+import pl.touk.sputnik.review.transformer.ClassNameTransformer;
 
 @Slf4j
 public class FindBugsProcessor implements ReviewProcessor {
@@ -81,7 +83,7 @@ public class FindBugsProcessor implements ReviewProcessor {
     @NotNull
     private IClassScreener createClassScreener(@NotNull Review review) {
         ClassScreener classScreener = new ClassScreener();
-        for (String javaClassName : review.getJavaClassNames()) {
+        for (String javaClassName : review.getFiles(new JavaFilter(), new ClassNameTransformer())) {
             classScreener.addAllowedClass(javaClassName);
         }
         return classScreener;

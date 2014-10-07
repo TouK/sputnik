@@ -31,7 +31,12 @@ public enum GeneralOption implements ConfigurationOption {
     FINDBUGS_EXCLUDE_FILTER("findbugs.excludeFilter", "FindBugs exclude filter file", ""),
 
     SCALASTYLE_ENABLED("scalastyle.enabled", "ScalaStyle enabled", "false"),
-    SCALASTYLE_CONFIGURATION_FILE("scalastyle.configurationFile", "ScalaStyle configuration file", "");
+    SCALASTYLE_CONFIGURATION_FILE("scalastyle.configurationFile", "ScalaStyle configuration file", ""),
+
+    CODE_NARC_ENABLED("codenarc.enabled", "CodeNarc enabled", "false"),
+    CODE_NARC_RULESET("codenarc.ruleSets", "CodeNarc rulesets file liest", "codeNarcBasicRuleset.xml"),
+    CODE_NARC_EXCLUDES("codenarc.excludes", "CodeNarc exclude filter", "");
+
 
     private String key;
     private String description;

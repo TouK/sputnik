@@ -1,13 +1,14 @@
 package pl.touk.sputnik.connector.stash;
 
-import pl.touk.sputnik.connector.gerrit.json.ReviewLineComment;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-public class CrcMessage extends ReviewLineComment {
-    public CrcMessage(ReviewLineComment comment) {
-        super(comment.line, comment.message);
-    }
+@AllArgsConstructor
+@Getter
+public class CrcMessage {
+    private final int line;
+    private final String message;
 
-    @Override
     public String getMessage() {
         return String.format("%s (%s)", message, line);
     }

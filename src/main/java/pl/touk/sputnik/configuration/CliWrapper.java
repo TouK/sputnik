@@ -3,7 +3,6 @@ package pl.touk.sputnik.configuration;
 import lombok.Getter;
 import org.apache.commons.cli.*;
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.Connectors;
 
 public class CliWrapper {
 

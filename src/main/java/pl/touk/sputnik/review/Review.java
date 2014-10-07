@@ -1,50 +1,40 @@
 package pl.touk.sputnik.review;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pl.touk.sputnik.connector.gerrit.json.ReviewFileComment;
-import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
-import pl.touk.sputnik.connector.gerrit.json.ReviewLineComment;
+import pl.touk.sputnik.review.filter.FileFilter;
+import pl.touk.sputnik.review.transformer.FileTransformer;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
+@Getter
+@Setter
 public class Review {
     /* Source, severity, message, e.g. [Checkstyle] Info: This is bad */
 
     private static final String COMMENT_FORMAT = "[%s] %s: %s";
-    private final List<ReviewFile> files;
+    private List<ReviewFile> files;
     private int totalViolationsCount = 0;
+    private List<String> messages = new ArrayList<>();
+    private Map<String, Integer> scores = new HashMap<>();
 
-    public Review(List<ReviewFile> files, boolean reviewTestFiles) {
-        if (reviewTestFiles) {
-            this.files = files;
-        } else {
-            // Filter test files
-            this.files = filterOutTestFiles(files);
-        }
+    public Review(@NotNull List<ReviewFile> files) {
+        this.files = files;
     }
 
     @NotNull
-    public List<File> getIOFiles() {
-        return Lists.transform(files, new Review.ReviewFileFileFunction());
-    }
-
-    @NotNull
-    public List<String> getIOFilenames() {
-        return Lists.transform(files, new Review.ReviewFileFilenameFunction());
-    }
-
-    @NotNull
-    public List<String> getJavaClassNames() {
-        return Lists.transform(files, new Review.ReviewFileJavaFileNameFunction());
+    public <T> List<T> getFiles(@NotNull FileFilter fileFilter, @NotNull FileTransformer<T> fileTransformer) {
+        return fileTransformer.transform(fileFilter.filter(files));
     }
 
     @NotNull
@@ -55,32 +45,6 @@ public class Review {
     @NotNull
     public List<String> getSourceDirs() {
         return Lists.transform(files, new ReviewFileSourceDirFunction());
-    }
-
-    @NotNull
-    public ReviewInput toReviewInput(int maxComments) {
-        ReviewInput reviewInput = new ReviewInput();
-        int commentsPut = 0;
-        reviewInput.message = "Total " + totalViolationsCount + " violations found";
-        if (maxComments != 0 && totalViolationsCount > maxComments) {
-            reviewInput.message = reviewInput.message + ", but showing only first " + maxComments;
-        }
-        reviewInput.setLabelToPlusOne();
-        for (ReviewFile file : files) {
-            List<ReviewFileComment> comments = new ArrayList<>();
-            for (Comment comment : file.getComments()) {
-                commentsPut++;
-                if (maxComments == 0 || commentsPut <= maxComments) {
-                    comments.add(new ReviewLineComment(comment.getLine(), comment.getMessage()));
-                }
-            }
-            if (!comments.isEmpty()) {
-                reviewInput.comments.put(file.getReviewFilename(), comments);
-            }
-        }
-        log.info(reviewInput.message);
-
-        return reviewInput;
     }
 
     public void add(@NotNull String source, @NotNull ReviewResult reviewResult) {
@@ -104,49 +68,6 @@ public class Review {
 
     private void addError(@NotNull ReviewFile reviewFile, @NotNull String source, int line, @Nullable String message, Severity severity) {
         reviewFile.getComments().add(new Comment(line, String.format(COMMENT_FORMAT, source, severity, message)));
-    }
-
-    private List<ReviewFile> filterOutTestFiles(List<ReviewFile> files) {
-        return FluentIterable.from(files)
-                .filter(new Predicate<ReviewFile>() {
-            @Override
-            public boolean apply(ReviewFile file) {
-                return !file.isTestFile();
-            }
-        }).toList();
-    }
-
-    private static class ReviewFileFileFunction implements Function<ReviewFile, File> {
-
-        ReviewFileFileFunction() {
-        }
-
-        @Override
-        public File apply(ReviewFile from) {
-            return from.getIoFile();
-        }
-    }
-
-    private static class ReviewFileFilenameFunction implements Function<ReviewFile, String> {
-
-        ReviewFileFilenameFunction() {
-        }
-
-        @Override
-        public String apply(ReviewFile from) {
-            return from.getReviewFilename();
-        }
-    }
-
-    private static class ReviewFileJavaFileNameFunction implements Function<ReviewFile, String> {
-
-        ReviewFileJavaFileNameFunction() {
-        }
-
-        @Override
-        public String apply(ReviewFile from) {
-            return from.getJavaClassName();
-        }
     }
 
     private static class ReviewFileBuildDirFunction implements Function<ReviewFile, String> {

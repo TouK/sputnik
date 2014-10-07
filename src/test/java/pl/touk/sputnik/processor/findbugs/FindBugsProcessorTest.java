@@ -39,7 +39,7 @@ public class FindBugsProcessorTest {
     @Test
     public void shouldReturnEmptyResultWhenFileNotFound() {
         //given
-        Review review = new Review(ImmutableList.of(new ReviewFile("test")), true);
+        Review review = new Review(ImmutableList.of(new ReviewFile("test")));
 
         //when
         ReviewResult reviewResult = fixture.process(mock(Review.class));
@@ -54,7 +54,7 @@ public class FindBugsProcessorTest {
     @Ignore
     public void shouldReturnBasicViolationsOnEmptyClass() {
         //given
-        Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("TestFile.java").getFile())), true);
+        Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("TestFile.java").getFile())));
 
         //when
         ReviewResult reviewResult = fixture.process(review);
