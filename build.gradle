@@ -33,7 +33,7 @@ dependencies {
     compile 'com.jayway.jsonpath:json-path:0.9.1'
 
     // Checkstyle dependencies
-    compile 'com.puppycrawl.tools:checkstyle:5.7'
+    compile 'com.puppycrawl.tools:checkstyle:5.9'
 
     // PMD dependencies
     compile('net.sourceforge.pmd:pmd:5.1.1') {
