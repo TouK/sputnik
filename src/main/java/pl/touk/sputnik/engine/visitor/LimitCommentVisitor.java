@@ -17,11 +17,11 @@ public class LimitCommentVisitor implements AfterReviewVisitor {
 
     @Override
     public void afterReview(@NotNull Review review) {
-        if (review.getTotalViolationsCount() <= maximumCount) {
-            log.info("There are {} total violations for this review, which is below maximum comment count {}. No comments are filtered", review.getTotalViolationsCount(), maximumCount);
+        if (review.getTotalViolationCount() <= maximumCount) {
+            log.info("There are {} total violations for this review, which is below maximum comment count {}. No comments are filtered", review.getTotalViolationCount(), maximumCount);
             return;
         }
-        log.info("There are {} total violations for this review, which is higher than maximum comment count {}. {} comments will be filtered out.", review.getTotalViolationsCount(), maximumCount, review.getTotalViolationsCount() - maximumCount);
+        log.info("There are {} total violations for this review, which is higher than maximum comment count {}. {} comments will be filtered out.", review.getTotalViolationCount(), maximumCount, review.getTotalViolationCount() - maximumCount);
         filterOutComments(review);
         addMessage(review);
     }
@@ -41,6 +41,6 @@ public class LimitCommentVisitor implements AfterReviewVisitor {
     }
 
     private void addMessage(Review review) {
-        review.getMessages().add(String.format(MESSAGE_FORMAT, maximumCount, review.getTotalViolationsCount() - maximumCount));
+        review.getMessages().add(String.format(MESSAGE_FORMAT, maximumCount, review.getTotalViolationCount() - maximumCount));
     }
 }

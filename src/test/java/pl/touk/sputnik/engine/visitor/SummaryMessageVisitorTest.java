@@ -13,7 +13,7 @@ public class SummaryMessageVisitorTest {
     @Test
     public void shouldAddSummaryMessage() {
         Review review = new Review(Collections.<ReviewFile>emptyList());
-        review.setTotalViolationsCount(8);
+        review.setTotalViolationCount(8);
 
         new SummaryMessageVisitor().afterReview(review);
 

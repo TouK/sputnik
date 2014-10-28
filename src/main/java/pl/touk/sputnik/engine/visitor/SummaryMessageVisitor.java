@@ -9,7 +9,7 @@ public class SummaryMessageVisitor implements AfterReviewVisitor {
 
     @Override
     public void afterReview(@NotNull Review review) {
-        String message = String.format("Total %d violations found", review.getTotalViolationsCount());
+        String message = String.format("Total %d violations found", review.getTotalViolationCount());
         log.info("Adding summary message to review: {}", message);
         review.getMessages().add(message);
     }

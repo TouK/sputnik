@@ -20,6 +20,12 @@ public enum GeneralOption implements ConfigurationOption {
     PROJECT_KEY("connector.projectKey", "Connector server projectKey", null),
     REPOSITORY_SLUG("connector.repositorySlug", "Connector server repositorySlug", null),
 
+    SCORE_STRATEGY("score.strategy", "Score strategy: <NoScore|ScoreAlwaysPass|ScorePassIfEmpty|ScorePassIfNoErrors>", "ScoreAlwaysPass"),
+    SCORE_PASSING_KEY("score.passingKey", "Score passing key", "Code-Review"),
+    SCORE_PASSING_VALUE("score.passingValue", "Score passing value", "1"),
+    SCORE_FAILING_KEY("score.failingKey", "Score failing key", "Code-Review"),
+    SCORE_FAILING_VALUE("score.failingValue", "Score failing value", "-1"),
+
     CHECKSTYLE_ENABLED("checkstyle.enabled", "Checkstyle enabled", "false"),
     CHECKSTYLE_CONFIGURATION_FILE("checkstyle.configurationFile", "Checkstyle configuration file", "sun_checks.xml"),
 

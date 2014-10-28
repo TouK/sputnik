@@ -1,4 +1,4 @@
-package pl.touk.sputnik.engine.visitor;
+package pl.touk.sputnik.engine.visitor.score;
 
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
@@ -10,15 +10,15 @@ import java.util.Collections;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
-public class StaticScoreVisitorTest {
+public class ScoreAlwaysPassTest {
 
     @Test
     public void shouldAddScoreToReview() {
         Review review = new Review(Collections.<ReviewFile>emptyList());
 
-        new StaticScoreVisitor(ImmutableMap.of("Verified", 1)).afterReview(review);
+        new ScoreAlwaysPass(ImmutableMap.of("Sputnik-Pass", 1)).afterReview(review);
 
-        assertThat(review.getScores()).containsOnly(entry("Verified", 1));
+        assertThat(review.getScores()).containsOnly(entry("Sputnik-Pass", 1));
     }
 
 }

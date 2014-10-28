@@ -1,17 +1,30 @@
 package pl.touk.sputnik.engine;
 
 import com.google.common.collect.ImmutableMap;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.engine.visitor.*;
+import pl.touk.sputnik.engine.visitor.score.NoScore;
+import pl.touk.sputnik.engine.visitor.score.ScoreAlwaysPass;
+import pl.touk.sputnik.engine.visitor.score.ScorePassIfEmpty;
+import pl.touk.sputnik.engine.visitor.score.ScorePassIfNoErrors;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import static org.apache.commons.lang3.Validate.notBlank;
+
+@Slf4j
 public class VisitorBuilder {
+    private static final String NOSCORE = "NOSCORE";
+    private static final String SCOREALWAYSPASS = "SCOREALWAYSPASS";
+    private static final String SCOREPASSIFEMPTY = "SCOREPASSIFEMPTY";
+    private static final String SCOREPASSIFNOERRORS = "SCOREPASSIFNOERRORS";
 
     @NotNull
     public List<BeforeReviewVisitor> buildBeforeReviewVisitors() {
@@ -33,8 +46,40 @@ public class VisitorBuilder {
             afterReviewVisitors.add(new LimitCommentVisitor(maxNumberOfComments));
         }
 
-        afterReviewVisitors.add(new StaticScoreVisitor(ImmutableMap.of("Code-Review", 1)));
+        afterReviewVisitors.add(buildScoreAfterReviewVisitor());
 
         return afterReviewVisitors;
+    }
+
+    @NotNull
+    private AfterReviewVisitor buildScoreAfterReviewVisitor() {
+        Map<String, Integer> passingScore = ImmutableMap.<String, Integer>of(
+                ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_PASSING_KEY),
+                Integer.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_PASSING_VALUE))
+        );
+        Map<String, Integer> failingScore = ImmutableMap.<String, Integer>of(
+                ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_FAILING_KEY),
+                Integer.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_FAILING_VALUE))
+        );
+        String scoreStrategy = ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_STRATEGY);
+        notBlank(scoreStrategy);
+
+        switch(scoreStrategy.toUpperCase()) {
+            case NOSCORE:
+                return new NoScore();
+
+            case SCOREALWAYSPASS:
+                return new ScoreAlwaysPass(passingScore);
+
+            case SCOREPASSIFEMPTY:
+                return new ScorePassIfEmpty(passingScore, failingScore);
+
+            case SCOREPASSIFNOERRORS:
+                return new ScorePassIfNoErrors(passingScore, failingScore);
+
+            default:
+                log.warn("Score strategy {} not found, using default ScoreAlwaysPass", scoreStrategy);
+                return new ScoreAlwaysPass(passingScore);
+        }
     }
 }

@@ -10,21 +10,18 @@ import org.jetbrains.annotations.Nullable;
 import pl.touk.sputnik.review.filter.FileFilter;
 import pl.touk.sputnik.review.transformer.FileTransformer;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Getter
 @Setter
 public class Review {
     /* Source, severity, message, e.g. [Checkstyle] Info: This is bad */
-
     private static final String COMMENT_FORMAT = "[%s] %s: %s";
+
     private List<ReviewFile> files;
-    private int totalViolationsCount = 0;
+    private EnumMap<Severity, Integer> violationCount = new EnumMap<>(Severity.class);
+    private int totalViolationCount = 0;
     private List<String> messages = new ArrayList<>();
     private Map<String, Integer> scores = new HashMap<>();
 
@@ -59,7 +56,6 @@ public class Review {
                     || file.getIoFile().getAbsolutePath().equals(violation.getFilenameOrJavaClassName())
                     || file.getJavaClassName().equals(violation.getFilenameOrJavaClassName())) {
                 addError(file, source, violation.getLine(), violation.getMessage(), violation.getSeverity());
-                totalViolationsCount++;
                 return;
             }
         }
@@ -68,6 +64,12 @@ public class Review {
 
     private void addError(@NotNull ReviewFile reviewFile, @NotNull String source, int line, @Nullable String message, Severity severity) {
         reviewFile.getComments().add(new Comment(line, String.format(COMMENT_FORMAT, source, severity, message)));
+        incrementCounters(severity);
+    }
+
+    private void incrementCounters(Severity severity) {
+        Integer currentCount = violationCount.get(severity);
+        violationCount.put(severity, currentCount == null ? 1 : currentCount + 1);
     }
 
     private static class ReviewFileBuildDirFunction implements Function<ReviewFile, String> {
