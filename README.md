@@ -1,13 +1,13 @@
 # sputnik
 
-> Static code review for your Gerrit patchsets. Runs Checkstyle, PMD and FindBugs for you!
+> Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD and FindBugs for you!
 
 [![Build Status](https://api.travis-ci.org/TouK/sputnik.png)](https://travis-ci.org/TouK/sputnik)
 [![Coverage Status](https://coveralls.io/repos/TouK/sputnik/badge.png?branch=master)](https://coveralls.io/r/TouK/sputnik?branch=master)
 
 ## Usage
 
-Sputnik is intended to run just after your Jenkins/CI server build. It should be executed in that workspace directory to find files to analyse.
+Sputnik is intended to run just after your Jenkins/CI server build. It should be executed in the workspace root directory to find files to analyze.
 
 Three parameters are required: your configuration file (details below), Gerrit's changeId and revisionId:
 
@@ -15,7 +15,7 @@ Three parameters are required: your configuration file (details below), Gerrit's
 sputnik -conf /home/spoonman/sputnik/conf.properties -changeId I0a2afb7ae4a94ab1ab473ba00e2ec7de381799a0 -revisionId 3f37692af2290e8e3fd16d2f43701c24346197f0
 ```
 
-Sputnik runs Checkstyle, PMD, FindBugs and CodeNarc only on files affected by Gerrit's patchset. It collects all violations and report them back to Gerrit.
+Sputnik runs Checkstyle, PMD, FindBugs and CodeNarc only on files affected by Gerrit's patchset. It collects all violations and report them back to Gerrit or Stash.
 
 Typical configuration file looks like this:
 
@@ -44,8 +44,9 @@ If you want sputnik to use your SonarQube rules just download them from your Son
 
 ## Installation
 
-- clone this repository and build it: `gradle distZip` or download distribution file: https://github.com/TouK/sputnik/releases/download/v1.2/sputnik-1.2.zip
-- copy distribution file `build/distributions/sputnik-1.2.zip` to your installation dir, e.g. `/opt/sputnik` and unzip it
+- clone this repository and build it: `gradle distZip` or download distribution file: https://github.com/TouK/sputnik/releases/download/v1.3.0/sputnik-1.3.0.zip
+- copy distribution file `build/distributions/sputnik-1.3.0.zip` to your installation dir, e.g. `/opt/sputnik` and unzip it
+- to avoid problems with deployment keep the structure unchanged, so sputnik file is in `bin/` directory, jars in `lib/`
 - create configuration file (you can just paste and edit an example above), e.g. `/opt/sputnik/myconf.properties`
 - you can now run sputnik like this:
 ```
@@ -100,7 +101,7 @@ environment - there are three variables to change:
 
 ## Sputnik Maven plugin
 
-If you prefere running Sputnik from Maven, there is a plugin developed by Karol Lassak here: https://github.com/ingwarsw/sputnik-maven-plugin. Read plugin documentation for reference.
+If you prefer running Sputnik from Maven, there is a plugin developed by Karol Lassak here: https://github.com/ingwarsw/sputnik-maven-plugin. Read plugin documentation for reference.
 
 ## Requirements
 
