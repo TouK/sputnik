@@ -1,24 +1,32 @@
 package pl.touk.sputnik.connector.stash;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
-import com.jayway.jsonpath.JsonPath;
-import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONObject;
-import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.connector.Connectors;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
-import pl.touk.sputnik.configuration.GeneralOption;
-import pl.touk.sputnik.connector.ConnectorFacade;
-import pl.touk.sputnik.connector.stash.json.*;
-import pl.touk.sputnik.review.Review;
-import pl.touk.sputnik.review.ReviewFile;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONObject;
+
+import org.jetbrains.annotations.NotNull;
+
+import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.GeneralOption;
+import pl.touk.sputnik.connector.ConnectorFacade;
+import pl.touk.sputnik.connector.Connectors;
+import pl.touk.sputnik.connector.stash.json.Anchor;
+import pl.touk.sputnik.connector.stash.json.Comment;
+import pl.touk.sputnik.connector.stash.json.DiffSegment;
+import pl.touk.sputnik.connector.stash.json.FileComment;
+import pl.touk.sputnik.connector.stash.json.LineSegment;
+import pl.touk.sputnik.connector.stash.json.ReviewElement;
+import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewFile;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+import com.jayway.jsonpath.JsonPath;
 
 @Slf4j
 public class StashFacade implements ConnectorFacade {
@@ -49,7 +57,7 @@ public class StashFacade implements ConnectorFacade {
             }
             return files;
         } catch (URISyntaxException | IOException e) {
-            throw new StashException("Error listing files", e);
+            throw new StashException("Error when listing files", e);
         }
     }
 
