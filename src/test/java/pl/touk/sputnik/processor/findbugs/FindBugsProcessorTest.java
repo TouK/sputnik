@@ -1,7 +1,7 @@
 package pl.touk.sputnik.processor.findbugs;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.io.Resources;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -9,13 +9,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewResult;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
+import com.google.common.collect.ImmutableList;
+import com.google.common.io.Resources;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FindBugsProcessorTest {
@@ -42,7 +43,7 @@ public class FindBugsProcessorTest {
         Review review = new Review(ImmutableList.of(new ReviewFile("test")));
 
         //when
-        ReviewResult reviewResult = fixture.process(mock(Review.class));
+        ReviewResult reviewResult = fixture.process(review);
 
         //then
         assertThat(reviewResult).isNotNull();

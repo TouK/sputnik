@@ -1,16 +1,23 @@
 package pl.touk.sputnik.review;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import pl.touk.sputnik.review.filter.FileFilter;
 import pl.touk.sputnik.review.transformer.FileTransformer;
 
-import java.util.*;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 
 @Slf4j
 @Getter
@@ -20,7 +27,7 @@ public class Review {
     private static final String COMMENT_FORMAT = "[%s] %s: %s";
 
     private List<ReviewFile> files;
-    private EnumMap<Severity, Integer> violationCount = new EnumMap<>(Severity.class);
+    private Map<Severity, Integer> violationCount = new EnumMap<>(Severity.class);
     private int totalViolationCount = 0;
     private List<String> messages = new ArrayList<>();
     private Map<String, Integer> scores = new HashMap<>();

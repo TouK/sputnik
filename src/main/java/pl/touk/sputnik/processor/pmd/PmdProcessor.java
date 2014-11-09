@@ -73,10 +73,9 @@ public class PmdProcessor implements ReviewProcessor {
      */
     public void doPMD(@NotNull PMDConfiguration configuration) {
         // Load the RuleSets
-        long startLoadRules = System.nanoTime();
         RuleSetFactory ruleSetFactory = RulesetsFactoryUtils.getRulesetFactory(configuration);
 
-        RuleSets ruleSets = RulesetsFactoryUtils.getRuleSets(configuration.getRuleSets(), ruleSetFactory, startLoadRules);
+        RuleSets ruleSets = RulesetsFactoryUtils.getRuleSets(configuration.getRuleSets(), ruleSetFactory);
         if (ruleSets == null)
             return;
 
