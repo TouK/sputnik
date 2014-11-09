@@ -33,7 +33,7 @@ public class GerritFacadeExceptionTest {
         //then
         assertThat(caughtException())
                 .isInstanceOf(GerritException.class)
-                .hasMessageContaining("Error listing files");
+                .hasMessageContaining("Error when listing files");
     }
 
 }
