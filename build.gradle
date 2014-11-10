@@ -11,7 +11,7 @@ apply plugin: 'signing'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 group = 'pl.touk'
-version = '1.3.1'
+version = '1.4.0'
 mainClassName = 'pl.touk.sputnik.Main'
 
 repositories {
@@ -48,6 +48,11 @@ dependencies {
     // if you want to add more languages, copy below line and change language
     // list of supported languages can be find at http://search.maven.org/#search|ga|1|g%3A%22net.sourceforge.pmd%22
     compile'net.sourceforge.pmd:pmd-java:5.2.1'
+    compile'net.sourceforge.pmd:pmd-jsp:5.2.1'
+    compile'net.sourceforge.pmd:pmd-javascript:5.2.1'
+    compile'net.sourceforge.pmd:pmd-plsql:5.2.1'
+    compile'net.sourceforge.pmd:pmd-xml:5.2.1'
+    compile'net.sourceforge.pmd:pmd-vm:5.2.1'
 
     compile('jaxen:jaxen:1.1.6') { //1.1.6 in FindBugs
         exclude group: 'xerces'
