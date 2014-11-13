@@ -41,7 +41,9 @@ public enum GeneralOption implements ConfigurationOption {
 
     CODE_NARC_ENABLED("codenarc.enabled", "CodeNarc enabled", "false"),
     CODE_NARC_RULESET("codenarc.ruleSets", "CodeNarc rulesets file liest", "codeNarcBasicRuleset.xml"),
-    CODE_NARC_EXCLUDES("codenarc.excludes", "CodeNarc exclude filter", "");
+    CODE_NARC_EXCLUDES("codenarc.excludes", "CodeNarc exclude filter", ""),
+
+    JS_LINT_ENABLED("jslint.enabled", "JsLint enabled", "false");
 
 
     private String key;
