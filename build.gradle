@@ -34,7 +34,7 @@ dependencies {
     compile 'com.jayway.jsonpath:json-path:0.9.1'
 
     // Checkstyle dependencies
-    compile 'com.puppycrawl.tools:checkstyle:6.0'
+    compile 'com.puppycrawl.tools:checkstyle:6.1'
 
     // PMD dependencies
     compile('net.sourceforge.pmd:pmd-core:5.2.1') {
@@ -45,7 +45,7 @@ dependencies {
         exclude group: 'org.ow2.asm'
     }
     // PMD rules
-    // if you want to add more languages, copy below line and change language
+    // if you want to add support for new language, add new one below
     // list of supported languages can be find at http://search.maven.org/#search|ga|1|g%3A%22net.sourceforge.pmd%22
     compile'net.sourceforge.pmd:pmd-java:5.2.1'
     compile'net.sourceforge.pmd:pmd-jsp:5.2.1'
@@ -120,6 +120,14 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
     classifier = 'sources'
 }
+
+// quick way to copy all project dependencies (libs) into one directory
+// similar to dependency:copy-dependencies
+task copyToLib(type: Copy) {
+    into "$buildDir/lib"
+    from configurations.runtime
+}
+
 
 artifacts {
     archives jar
