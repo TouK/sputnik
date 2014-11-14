@@ -37,22 +37,13 @@ dependencies {
     compile 'com.puppycrawl.tools:checkstyle:6.1'
 
     // PMD dependencies
-    compile('net.sourceforge.pmd:pmd-core:5.2.1') {
+    compile('net.sourceforge.pmd:pmd-dist:5.2.1') {
         exclude group: 'jaxen'
         exclude group: 'xerces'
         exclude group: 'junit'
         exclude group: 'org.apache.ant'
         exclude group: 'org.ow2.asm'
     }
-    // PMD rules
-    // if you want to add support for new language, add new one below
-    // list of supported languages can be find at http://search.maven.org/#search|ga|1|g%3A%22net.sourceforge.pmd%22
-    compile'net.sourceforge.pmd:pmd-java:5.2.1'
-    compile'net.sourceforge.pmd:pmd-jsp:5.2.1'
-    compile'net.sourceforge.pmd:pmd-javascript:5.2.1'
-    compile'net.sourceforge.pmd:pmd-plsql:5.2.1'
-    compile'net.sourceforge.pmd:pmd-xml:5.2.1'
-    compile'net.sourceforge.pmd:pmd-vm:5.2.1'
 
     compile('jaxen:jaxen:1.1.6') { //1.1.6 in FindBugs
         exclude group: 'xerces'
