@@ -121,7 +121,7 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 
-// quick way to copy all project dependencies (libs) into one directory
+// quick way to copy all project dependencies (jar files) into one directory
 // similar to dependency:copy-dependencies
 task copyToLib(type: Copy) {
     into "$buildDir/lib"
