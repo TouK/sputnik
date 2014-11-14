@@ -11,16 +11,18 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewException;
 import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewResult;
 
+import static com.googlecode.catchexception.CatchException.caughtException;
+import static com.googlecode.catchexception.apis.CatchExceptionAssertJ.when;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FindBugsProcessorTest {
 
-    private final FindBugsProcessor fixture = new FindBugsProcessor();
+    private final FindBugsProcessor findBugsProcessor = new FindBugsProcessor();
 
     @Mock
     private Review review;
@@ -35,19 +37,16 @@ public class FindBugsProcessorTest {
         ConfigurationHolder.reset();
     }
 
-
     @Test
-    public void shouldReturnEmptyResultWhenFileNotFound() {
+    public void shouldThrowWhenFileNotFound() {
         //given
         Review review = new Review(ImmutableList.of(new ReviewFile("test")));
 
         //when
-        ReviewResult reviewResult = fixture.process(mock(Review.class));
+        when(findBugsProcessor).process(review);
 
         //then
-        assertThat(reviewResult).isNotNull();
-        assert reviewResult != null;
-        assertThat(reviewResult.getViolations()).isEmpty();
+        assertThat(caughtException()).isInstanceOf(ReviewException.class);
     }
 
     @Test
@@ -57,7 +56,7 @@ public class FindBugsProcessorTest {
         Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("TestFile.java").getFile())));
 
         //when
-        ReviewResult reviewResult = fixture.process(review);
+        ReviewResult reviewResult = findBugsProcessor.process(review);
 
         //then
         assertThat(reviewResult).isNotNull();

@@ -1,27 +1,19 @@
 package pl.touk.sputnik.processor.findbugs;
 
-import java.io.IOException;
-
+import edu.umd.cs.findbugs.*;
+import edu.umd.cs.findbugs.config.UserPreferences;
 import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewException;
 import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.filter.JavaFilter;
 import pl.touk.sputnik.review.transformer.ClassNameTransformer;
-import edu.umd.cs.findbugs.ClassScreener;
-import edu.umd.cs.findbugs.DetectorFactoryCollection;
-import edu.umd.cs.findbugs.FindBugs2;
-import edu.umd.cs.findbugs.IClassScreener;
-import edu.umd.cs.findbugs.Priorities;
-import edu.umd.cs.findbugs.Project;
-import edu.umd.cs.findbugs.config.UserPreferences;
 
 @Slf4j
 public class FindBugsProcessor implements ReviewProcessor {
@@ -35,12 +27,9 @@ public class FindBugsProcessor implements ReviewProcessor {
         FindBugs2 findBugs = createFindBugs2(review);
         try {
             findBugs.execute();
-        } catch (IOException e) {
-            // this may be thrown when there is no file to analyze
-            log.warn("FindBugs process warning or error", e);
-        } catch (InterruptedException e) {
-            // TODO this seems to be more complex issue, do we want to suppress it?
-            log.error("FindBugs process crytical error", e);
+        } catch (Exception e) {
+            log.error("FindBugs processing error", e);
+            throw new ReviewException("FindBugs processing error", e);
         }
         return collectorBugReporter.getReviewResult();
     }

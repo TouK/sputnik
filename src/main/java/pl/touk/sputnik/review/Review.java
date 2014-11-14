@@ -1,23 +1,17 @@
 package pl.touk.sputnik.review;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import pl.touk.sputnik.review.filter.FileFilter;
 import pl.touk.sputnik.review.transformer.FileTransformer;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import java.util.*;
 
 @Slf4j
 @Getter
@@ -25,10 +19,22 @@ import com.google.common.collect.Lists;
 public class Review {
     /* Source, severity, message, e.g. [Checkstyle] Info: This is bad */
     private static final String COMMENT_FORMAT = "[%s] %s: %s";
+    private static final String PROBLEM_FORMAT = "There is a problem with %s: %s";
 
     private List<ReviewFile> files;
     private Map<Severity, Integer> violationCount = new EnumMap<>(Severity.class);
     private int totalViolationCount = 0;
+
+    /**
+     * Report problems with configuration, processors and other.
+     * There problems should be displayed on review summary with your code-review tool
+     *
+     */
+    private List<String> problems = new ArrayList<>();
+
+    /**
+     * Messages that will be displayed on review summary with your code-review tool
+     */
     private List<String> messages = new ArrayList<>();
     private Map<String, Integer> scores = new HashMap<>();
 
@@ -49,6 +55,10 @@ public class Review {
     @NotNull
     public List<String> getSourceDirs() {
         return Lists.transform(files, new ReviewFileSourceDirFunction());
+    }
+
+    public void addProblem(@NotNull String source, @NotNull String problem) {
+        problems.add(String.format(PROBLEM_FORMAT, source, problem));
     }
 
     public void add(@NotNull String source, @NotNull ReviewResult reviewResult) {
@@ -75,14 +85,13 @@ public class Review {
     }
 
     private void incrementCounters(Severity severity) {
+        totalViolationCount += 1;
         Integer currentCount = violationCount.get(severity);
         violationCount.put(severity, currentCount == null ? 1 : currentCount + 1);
     }
 
+    @NoArgsConstructor
     private static class ReviewFileBuildDirFunction implements Function<ReviewFile, String> {
-
-        ReviewFileBuildDirFunction() {
-        }
 
         @Override
         public String apply(ReviewFile from) {
@@ -90,10 +99,8 @@ public class Review {
         }
     }
 
+    @NoArgsConstructor
     private static class ReviewFileSourceDirFunction implements Function<ReviewFile, String> {
-
-        ReviewFileSourceDirFunction() {
-        }
 
         @Override
         public String apply(ReviewFile from) {

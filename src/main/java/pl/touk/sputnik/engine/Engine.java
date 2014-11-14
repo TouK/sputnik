@@ -1,20 +1,13 @@
 package pl.touk.sputnik.engine;
 
-import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.math.NumberUtils;
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.connector.ConnectorFacade;
+import pl.touk.sputnik.engine.visitor.AfterReviewVisitor;
+import pl.touk.sputnik.engine.visitor.BeforeReviewVisitor;
+import pl.touk.sputnik.review.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import pl.touk.sputnik.configuration.GeneralOption;
-import pl.touk.sputnik.review.Review;
-import pl.touk.sputnik.review.ReviewFile;
-import pl.touk.sputnik.review.ReviewProcessor;
-import pl.touk.sputnik.review.ReviewResult;
-import pl.touk.sputnik.engine.visitor.*;
 
 @Slf4j
 public class Engine {
@@ -48,8 +41,15 @@ public class Engine {
     private void review(@NotNull Review review, @NotNull ReviewProcessor processor) {
         log.info("Review started for processor {}", processor.getName());
         long start = System.currentTimeMillis();
+        ReviewResult reviewResult = null;
 
-        ReviewResult reviewResult = processor.process(review);
+        try {
+            reviewResult = processor.process(review);
+        } catch (ReviewException e) {
+            log.error("Processor {} error", processor.getName(), e);
+            review.addProblem(processor.getName(), e.getMessage());
+
+        }
         log.info("Review finished for processor {}. Took {} s", processor.getName(), (System.currentTimeMillis() - start) / THOUSAND);
 
         if (reviewResult == null) {

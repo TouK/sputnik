@@ -1,14 +1,8 @@
 package pl.touk.sputnik.processor.pmd;
 
 import com.google.common.base.Joiner;
-import net.sourceforge.pmd.PMD;
-import net.sourceforge.pmd.PMDConfiguration;
-import net.sourceforge.pmd.Rule;
-import net.sourceforge.pmd.RuleContext;
-import net.sourceforge.pmd.RuleSet;
-import net.sourceforge.pmd.RuleSetFactory;
-import net.sourceforge.pmd.RuleSets;
-import net.sourceforge.pmd.RulesetsFactoryUtils;
+import lombok.extern.slf4j.Slf4j;
+import net.sourceforge.pmd.*;
 import net.sourceforge.pmd.benchmark.Benchmark;
 import net.sourceforge.pmd.benchmark.Benchmarker;
 import net.sourceforge.pmd.lang.Language;
@@ -19,19 +13,19 @@ import net.sourceforge.pmd.util.datasource.DataSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewException;
 import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
+import pl.touk.sputnik.review.filter.PmdFilter;
+import pl.touk.sputnik.review.transformer.FileNameTransformer;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import lombok.extern.slf4j.Slf4j;
-import pl.touk.sputnik.configuration.GeneralOption;
-import pl.touk.sputnik.review.filter.PmdFilter;
-import pl.touk.sputnik.review.transformer.FileNameTransformer;
 
 @Slf4j
 public class PmdProcessor implements ReviewProcessor {
@@ -49,8 +43,8 @@ public class PmdProcessor implements ReviewProcessor {
             configuration.setInputPaths(Joiner.on(PMD_INPUT_PATH_SEPARATOR).join(review.getFiles(new PmdFilter(), new FileNameTransformer())));
             doPMD(configuration);
         } catch (RuntimeException e) {
-            log.error("PMD processor error. Something wrong with configuration or analyzed files are not in workspace.", e);
-            // TODO: there is problem with configuration: stop processing and let the user fix the problem
+            log.error("PMD processing error. Something wrong with configuration or analyzed files are not in workspace.", e);
+            throw new ReviewException("PMD processing error", e);
         }
         return renderer != null ? ((CollectorRenderer)renderer).getReviewResult() : null;
     }
@@ -71,7 +65,7 @@ public class PmdProcessor implements ReviewProcessor {
     /**
      * PMD has terrible design of process configuration. You must use report file with it. I paste this method here and
      * improve it.
-     * 
+     *
      * @throws IllegalArgumentException
      *             if the configuration is not correct
      */
@@ -85,7 +79,7 @@ public class PmdProcessor implements ReviewProcessor {
         if (ruleSets == null) {
             return;
         }
-        
+
         Set<Language> languages = getApplicableLanguages(configuration, ruleSets);
         // this throws RuntimeException when modified file does not exist in workspace
         List<DataSource> files = PMD.getApplicableFiles(configuration, languages);
