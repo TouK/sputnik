@@ -48,8 +48,7 @@ public class JSLintProcessor implements ReviewProcessor {
     }
 
     private List<Issue> lintFile(JSLint jsLint, File file) {
-        try {
-            FileReader fileReader = new FileReader(file);
+        try (FileReader fileReader = new FileReader(file)) {
             JSLintResult lintResult = jsLint.lint(file.getAbsolutePath(), fileReader);
             return lintResult.getIssues();
         } catch (IOException e) {
