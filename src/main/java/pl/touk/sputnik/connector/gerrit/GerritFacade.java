@@ -47,7 +47,7 @@ public class GerritFacade implements ConnectorFacade {
             }
             return files;
         } catch (IOException | URISyntaxException e) {
-            throw new GerritException("Error listing files", e);
+            throw new GerritException("Error when listing files", e);
         }
     }
 
@@ -57,7 +57,7 @@ public class GerritFacade implements ConnectorFacade {
             String json = objectMapper.writeValueAsString(new ReviewInputBuilder().toReviewInput(review));
             gerritConnector.sendReview(json);
         } catch (IOException | URISyntaxException e) {
-            throw new GerritException("Error setting review", e);
+            throw new GerritException("Error when setting review", e);
         }
     }
 

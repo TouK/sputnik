@@ -48,8 +48,9 @@ public class PmdProcessor implements ReviewProcessor {
             configuration.setRuleSets(getRulesets());
             configuration.setInputPaths(Joiner.on(PMD_INPUT_PATH_SEPARATOR).join(review.getFiles(new PmdFilter(), new FileNameTransformer())));
             doPMD(configuration);
-        } catch (Throwable e) {
-            log.error("PMD processor error", e);
+        } catch (RuntimeException e) {
+            log.error("PMD processor error. Something wrong with configuration or analyzed files are not in workspace.", e);
+            // TODO: there is problem with configuration: stop processing and let the user fix the problem
         }
         return renderer != null ? ((CollectorRenderer)renderer).getReviewResult() : null;
     }
@@ -68,19 +69,26 @@ public class PmdProcessor implements ReviewProcessor {
     }
 
     /**
-     * PMD has terrible design of process configuration. You must use report file with it.
-     * I paste this method here and improve it.
+     * PMD has terrible design of process configuration. You must use report file with it. I paste this method here and
+     * improve it.
+     * 
+     * @throws IllegalArgumentException
+     *             if the configuration is not correct
      */
-    public void doPMD(@NotNull PMDConfiguration configuration) {
+    public void doPMD(@NotNull PMDConfiguration configuration) throws IllegalArgumentException {
         // Load the RuleSets
         long startLoadRules = System.nanoTime();
         RuleSetFactory ruleSetFactory = RulesetsFactoryUtils.getRulesetFactory(configuration);
 
         RuleSets ruleSets = RulesetsFactoryUtils.getRuleSets(configuration.getRuleSets(), ruleSetFactory, startLoadRules);
-        if (ruleSets == null)
+        // this is just double check - we don't get null here
+        // instead IllegalArgumentException/RuntimeException is thrown if configuration is wrong
+        if (ruleSets == null) {
             return;
-
+        }
+        
         Set<Language> languages = getApplicableLanguages(configuration, ruleSets);
+        // this throws RuntimeException when modified file does not exist in workspace
         List<DataSource> files = PMD.getApplicableFiles(configuration, languages);
 
         long reportStart = System.nanoTime();

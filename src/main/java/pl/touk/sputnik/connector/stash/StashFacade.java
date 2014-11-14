@@ -49,7 +49,7 @@ public class StashFacade implements ConnectorFacade {
             }
             return files;
         } catch (URISyntaxException | IOException e) {
-            throw new StashException("Error listing files", e);
+            throw new StashException("Error when listing files", e);
         }
     }
 
