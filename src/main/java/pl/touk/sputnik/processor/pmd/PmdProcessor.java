@@ -77,10 +77,9 @@ public class PmdProcessor implements ReviewProcessor {
      */
     public void doPMD(@NotNull PMDConfiguration configuration) throws IllegalArgumentException {
         // Load the RuleSets
-        long startLoadRules = System.nanoTime();
         RuleSetFactory ruleSetFactory = RulesetsFactoryUtils.getRulesetFactory(configuration);
 
-        RuleSets ruleSets = RulesetsFactoryUtils.getRuleSets(configuration.getRuleSets(), ruleSetFactory, startLoadRules);
+        RuleSets ruleSets = RulesetsFactoryUtils.getRuleSets(configuration.getRuleSets(), ruleSetFactory);
         // this is just double check - we don't get null here
         // instead IllegalArgumentException/RuntimeException is thrown if configuration is wrong
         if (ruleSets == null) {

@@ -1,15 +1,18 @@
 package pl.touk.sputnik.configuration;
 
-import lombok.extern.slf4j.Slf4j;
+import static com.google.common.io.Resources.getResource;
+import static org.apache.commons.lang3.Validate.notBlank;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.Properties;
 
-import static com.google.common.io.Resources.getResource;
-import static com.google.common.io.Resources.newInputStreamSupplier;
-import static org.apache.commons.lang3.Validate.notBlank;
+import lombok.extern.slf4j.Slf4j;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.CharSource;
+import com.google.common.io.Resources;
 
 @Slf4j
 public class ConfigurationHolder {
@@ -34,7 +37,8 @@ public class ConfigurationHolder {
         notBlank(configurationResource, "You need to provide url with configuration properties");
         log.info("Initializing configuration properties from url {}", configurationResource);
 
-        try (InputStream resourceStream = newInputStreamSupplier(getResource(configurationResource)).getInput()) {
+        CharSource charSource = Resources.asCharSource(getResource(configurationResource), Charsets.UTF_8);
+        try (Reader resourceStream = charSource.openStream()) {
             Properties properties = new Properties();
             properties.load(resourceStream);
             initFromProperties(properties);
