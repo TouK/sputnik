@@ -39,7 +39,6 @@ public class JSLintProcessorTest {
 
         // then
         assertThat(reviewResult).isNotNull();
-        assert reviewResult != null;
         assertThat(reviewResult.getViolations()).isEmpty();
     }
 
@@ -53,9 +52,7 @@ public class JSLintProcessorTest {
 
         // then
         assertThat(reviewResult).isNotNull();
-        assert reviewResult != null;
-        assertThat(reviewResult.getViolations()).isNotEmpty();
-        assertThat(reviewResult.getViolations().size()).isEqualTo(2);
+        assertThat(reviewResult.getViolations()).hasSize(2);
         assertThat(reviewResult.getViolations())
                 .extracting("message")
                 .containsOnly(
