@@ -7,7 +7,7 @@ import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.processor.checkstyle.CheckstyleProcessor;
 import pl.touk.sputnik.processor.codenarc.CodeNarcProcessor;
 import pl.touk.sputnik.processor.findbugs.FindBugsProcessor;
-import pl.touk.sputnik.processor.jslint.JSLintProcessor;
+import pl.touk.sputnik.processor.jslint.JsLintProcessor;
 import pl.touk.sputnik.processor.pmd.PmdProcessor;
 import pl.touk.sputnik.processor.scalastyle.ScalastyleProcessor;
 import pl.touk.sputnik.review.ReviewProcessor;
@@ -36,7 +36,7 @@ public class ProcessorBuilder {
             processors.add(new CodeNarcProcessor());
         }
         if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.JS_LINT_ENABLED))) {
-            processors.add(new JSLintProcessor());
+            processors.add(new JsLintProcessor());
         }
         return processors;
     }

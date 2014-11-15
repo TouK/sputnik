@@ -14,9 +14,9 @@ import pl.touk.sputnik.review.ReviewResult;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Resources;
 
-public class JSLintProcessorTest {
+public class JsLintProcessorTest {
 
-    private final JSLintProcessor fixture = new JSLintProcessor();
+    private final JsLintProcessor fixture = new JsLintProcessor();
 
     @Before
     public void setUp() throws Exception {

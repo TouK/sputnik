@@ -20,7 +20,7 @@ import com.googlecode.jslint4java.JSLint;
 import com.googlecode.jslint4java.JSLintBuilder;
 import com.googlecode.jslint4java.JSLintResult;
 
-public class JSLintProcessor implements ReviewProcessor {
+public class JsLintProcessor implements ReviewProcessor {
 
     private static final String SOURCE_NAME = "JSLint";
 
