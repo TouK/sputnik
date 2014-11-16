@@ -1,10 +1,17 @@
 package pl.touk.sputnik.connector.gerrit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+
+import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.GeneralOption;
+import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
 import pl.touk.sputnik.connector.ConnectorFacade;
-import pl.touk.sputnik.connector.gerrit.json.*;
+import pl.touk.sputnik.connector.Connectors;
+import pl.touk.sputnik.connector.gerrit.json.FileInfo;
+import pl.touk.sputnik.connector.gerrit.json.ListFilesResponse;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 
@@ -14,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import pl.touk.sputnik.connector.Connectors;
 
 public class GerritFacade implements ConnectorFacade {
     private static final String RESPONSE_PREFIX = ")]}'";
@@ -62,7 +68,6 @@ public class GerritFacade implements ConnectorFacade {
     }
 
 
-
     @NotNull
     protected String trimResponse(@NotNull String response) {
         return StringUtils.replaceOnce(response, RESPONSE_PREFIX, "");
@@ -71,5 +76,16 @@ public class GerritFacade implements ConnectorFacade {
     @Override
     public Connectors name() {
         return Connectors.GERRIT;
+    }
+
+    @Override
+    public void validate(Configuration configuration) throws GeneralOptionNotSupportedException {
+        boolean commentOnlyChangedLines = Boolean.parseBoolean(configuration
+                .getProperty(GeneralOption.COMMENT_ONLY_CHANGED_LINES));
+
+        if (commentOnlyChangedLines) {
+            throw new GeneralOptionNotSupportedException("This connector does not support "
+                    + GeneralOption.COMMENT_ONLY_CHANGED_LINES.getKey());
+        }
     }
 }
