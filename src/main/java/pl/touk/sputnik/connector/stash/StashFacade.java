@@ -6,9 +6,12 @@ import com.google.common.collect.Lists;
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
+
 import org.jetbrains.annotations.NotNull;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
+import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.Connectors;
 import pl.touk.sputnik.connector.stash.json.*;
@@ -145,5 +148,10 @@ public class StashFacade implements ConnectorFacade {
         } catch (URISyntaxException | IOException e) {
             throw new StashException("Error parsing json strings to objects", e);
         }
+    }
+
+    @Override
+    public void supports(Configuration configuration) throws GeneralOptionNotSupportedException {
+        // all features are suppored by Stash
     }
 }

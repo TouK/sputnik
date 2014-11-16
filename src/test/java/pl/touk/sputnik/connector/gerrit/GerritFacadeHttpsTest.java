@@ -8,7 +8,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.connector.FacadeConfigUtil;
-import pl.touk.sputnik.connector.stash.StashFacadeBuilder;
 import pl.touk.sputnik.review.ReviewFile;
 
 import java.util.List;

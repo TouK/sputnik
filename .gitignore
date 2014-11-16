@@ -11,4 +11,5 @@ build/
 classes
 gradle/
 gradlew*
+lib/
 out

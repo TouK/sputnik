@@ -4,12 +4,17 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.ParseException;
 import org.jetbrains.annotations.NotNull;
+
 import pl.touk.sputnik.configuration.CliOption;
 import pl.touk.sputnik.configuration.CliWrapper;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
+import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.ConnectorFacadeFactory;
+import pl.touk.sputnik.connector.ConnectorType;
+import pl.touk.sputnik.connector.gerrit.GerritException;
 import pl.touk.sputnik.engine.Engine;
 
 public final class Main {
@@ -31,8 +36,17 @@ public final class Main {
         }
 
         ConfigurationHolder.initFromFile(commandLine.getOptionValue(CliOption.CONF.getCommandLineParam()));
-        ConfigurationHolder.instance().updateWithCliOptions(commandLine);
-        ConnectorFacade facade = ConnectorFacadeFactory.INSTANCE.build(ConfigurationHolder.instance().getProperty(GeneralOption.CONNECTOR_TYPE));
+        Configuration configuration = ConfigurationHolder.instance();
+        configuration.updateWithCliOptions(commandLine);
+
+        ConnectorType connectorType = ConnectorType.valueOf(configuration.getProperty(GeneralOption.CONNECTOR_TYPE));
+        ConnectorFacade facade = ConnectorFacadeFactory.INSTANCE.build(connectorType);
+        try {
+            facade.supports(ConfigurationHolder.instance());
+        } catch (GerritException | GeneralOptionNotSupportedException e) {
+            System.out.println(e.getMessage());
+            System.exit(1);
+        }
 
         new Engine(facade).run();
     }
