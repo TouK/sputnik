@@ -1,11 +1,13 @@
 package pl.touk.sputnik.engine;
 
 import org.jetbrains.annotations.NotNull;
+
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.processor.checkstyle.CheckstyleProcessor;
 import pl.touk.sputnik.processor.codenarc.CodeNarcProcessor;
 import pl.touk.sputnik.processor.findbugs.FindBugsProcessor;
+import pl.touk.sputnik.processor.jslint.JsLintProcessor;
 import pl.touk.sputnik.processor.pmd.PmdProcessor;
 import pl.touk.sputnik.processor.scalastyle.ScalastyleProcessor;
 import pl.touk.sputnik.review.ReviewProcessor;
@@ -32,6 +34,9 @@ public class ProcessorBuilder {
         }
         if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.CODE_NARC_ENABLED))) {
             processors.add(new CodeNarcProcessor());
+        }
+        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.JS_LINT_ENABLED))) {
+            processors.add(new JsLintProcessor());
         }
         return processors;
     }
