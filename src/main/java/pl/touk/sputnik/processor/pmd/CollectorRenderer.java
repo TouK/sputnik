@@ -7,7 +7,10 @@ import net.sourceforge.pmd.RulePriority;
 import net.sourceforge.pmd.RuleViolation;
 import net.sourceforge.pmd.renderers.AbstractRenderer;
 import net.sourceforge.pmd.util.datasource.DataSource;
+
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;
@@ -38,7 +41,18 @@ public class CollectorRenderer extends AbstractRenderer {
     @Override
     public void renderFileReport(Report report) throws IOException {
         for (RuleViolation ruleViolation : report) {
-            reviewResult.add(new Violation(ruleViolation.getFilename(), ruleViolation.getBeginLine(), ruleViolation.getDescription(), convert(ruleViolation.getRule().getPriority())));
+            StringBuilder fullDescription = new StringBuilder(ruleViolation.getDescription());
+
+            String reason = ruleViolation.getRule().getDescription();
+            if (!StringUtils.isEmpty(reason)) {
+                fullDescription.append("\n").append(reason);
+            }
+            String url = ruleViolation.getRule().getExternalInfoUrl();
+            if (!StringUtils.isEmpty(url)) {
+                fullDescription.append("\n").append(url);
+            }
+
+            reviewResult.add(new Violation(ruleViolation.getFilename(), ruleViolation.getBeginLine(), fullDescription.toString(), convert(ruleViolation.getRule().getPriority())));
         }
     }
 
