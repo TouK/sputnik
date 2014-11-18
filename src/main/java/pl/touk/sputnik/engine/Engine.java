@@ -1,11 +1,12 @@
 package pl.touk.sputnik.engine;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.engine.visitor.AfterReviewVisitor;
 import pl.touk.sputnik.engine.visitor.BeforeReviewVisitor;
-import pl.touk.sputnik.review.*;
+import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewProcessor;
 
 import java.util.List;
 
@@ -27,8 +28,9 @@ public class Engine {
         }
 
         List<ReviewProcessor> processors = new ProcessorBuilder().buildProcessors();
+        ReviewRunner reviewRunner = new ReviewRunner(review);
         for (ReviewProcessor processor : processors) {
-            review(review, processor);
+            reviewRunner.review(processor);
         }
 
         for (AfterReviewVisitor afterReviewVisitor : new VisitorBuilder().buildAfterReviewVisitors()) {
@@ -37,28 +39,4 @@ public class Engine {
 
         facade.setReview(review);
     }
-
-    private void review(@NotNull Review review, @NotNull ReviewProcessor processor) {
-        log.info("Review started for processor {}", processor.getName());
-        long start = System.currentTimeMillis();
-        ReviewResult reviewResult = null;
-
-        try {
-            reviewResult = processor.process(review);
-        } catch (ReviewException e) {
-            log.error("Processor {} error", processor.getName(), e);
-            review.addProblem(processor.getName(), e.getMessage());
-
-        }
-        log.info("Review finished for processor {}. Took {} s", processor.getName(), (System.currentTimeMillis() - start) / THOUSAND);
-
-        if (reviewResult == null) {
-            log.warn("Review for processor {} returned empty review", processor.getName());
-        } else {
-            log.info("Review for processor {} returned {} violations", processor.getName(), reviewResult.getViolations().size());
-            review.add(processor.getName(), reviewResult);
-        }
-    }
-
-
 }
