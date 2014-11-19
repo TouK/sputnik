@@ -43,8 +43,10 @@ public enum GeneralOption implements ConfigurationOption {
     CODE_NARC_RULESET("codenarc.ruleSets", "CodeNarc rulesets file liest", "codeNarcBasicRuleset.xml"),
     CODE_NARC_EXCLUDES("codenarc.excludes", "CodeNarc exclude filter", ""),
 
-    JS_LINT_ENABLED("jslint.enabled", "JsLint enabled", "false");
+    JSLINT_ENABLED("jslint.enabled", "JSLint enabled", "false"),
 
+    JSHINT_ENABLED("jshint.enabled", "JSHint enabled", "false"),
+    JSHINT_CONFIGURATION_FILE("jshint.configurationFile", "JSHint configuration file", "");
 
     private String key;
     private String description;

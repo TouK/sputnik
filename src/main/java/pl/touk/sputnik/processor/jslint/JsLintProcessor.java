@@ -52,7 +52,7 @@ public class JsLintProcessor implements ReviewProcessor {
             JSLintResult lintResult = jsLint.lint(file.getAbsolutePath(), fileReader);
             return lintResult.getIssues();
         } catch (IOException e) {
-            throw new ReviewException("IO exception when running JsLint.", e);
+            throw new ReviewException("IO exception when running JSLint.", e);
         }
     }
 
