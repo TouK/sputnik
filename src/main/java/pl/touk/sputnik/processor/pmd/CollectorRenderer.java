@@ -11,6 +11,8 @@ import net.sourceforge.pmd.util.datasource.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
+import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;
@@ -43,13 +45,15 @@ public class CollectorRenderer extends AbstractRenderer {
         for (RuleViolation ruleViolation : report) {
             StringBuilder fullDescription = new StringBuilder(ruleViolation.getDescription());
 
-            String reason = ruleViolation.getRule().getDescription();
-            if (!StringUtils.isEmpty(reason)) {
-                fullDescription.append("\n").append(reason);
-            }
-            String url = ruleViolation.getRule().getExternalInfoUrl();
-            if (!StringUtils.isEmpty(url)) {
-                fullDescription.append("\n").append(url);
+            if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.VOLATIONS_WITH_DETAILS))) {
+                String reason = ruleViolation.getRule().getDescription();
+                if (StringUtils.isNotEmpty(reason)) {
+                    fullDescription.append("\n").append(reason);
+                }
+                String url = ruleViolation.getRule().getExternalInfoUrl();
+                if (StringUtils.isNotEmpty(url)) {
+                    fullDescription.append("\n").append(url);
+                }
             }
 
             reviewResult.add(new Violation(ruleViolation.getFilename(), ruleViolation.getBeginLine(), fullDescription.toString(), convert(ruleViolation.getRule().getPriority())));
@@ -67,7 +71,7 @@ public class CollectorRenderer extends AbstractRenderer {
     }
 
     @NotNull
-    private Severity convert(@NotNull RulePriority rulePriority) {
+    public Severity convert(@NotNull RulePriority rulePriority) {
         switch (rulePriority) {
             case HIGH:
                 return Severity.ERROR;
