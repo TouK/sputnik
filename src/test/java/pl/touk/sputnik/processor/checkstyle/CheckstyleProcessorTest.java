@@ -14,7 +14,6 @@ import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.filter.FileFilter;
-import pl.touk.sputnik.review.transformer.ClassNameTransformer;
 import pl.touk.sputnik.review.transformer.IOFileTransformer;
 
 import java.io.File;
