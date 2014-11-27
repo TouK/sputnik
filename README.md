@@ -104,7 +104,7 @@ environment - there are three variables to change:
 
 If you prefer running Sputnik from Maven, there is a plugin developed by Karol Lassak here: https://github.com/ingwarsw/sputnik-maven-plugin. Read plugin documentation for reference.
 
-## Lanching with Gradle
+## Launching with Gradle
 
 If you prefer running Sputnik from Gradle all you need is to have Gradle installed.
 Put build.gradle file in your repository, add config file and run:
