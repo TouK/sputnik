@@ -30,10 +30,9 @@ public class CollectorRendererTest {
 
     private CollectorRenderer renderer = new CollectorRenderer();
 
-    private String violationDescription = "this is bug!"; // text must be unique
-    private String ruleDescription = "...and should be fiexed"; // text must be unique
-    private String externalInfoUrl = "www.solution.tip"; // text must be unique
-    private RulePriority priority = RulePriority.HIGH;
+    private String violationDescription = "this is bug!";
+    private String ruleDescription = "...and should be fiexed";
+    private String externalInfoUrl = "www.solution.tip";
 
     @Before
     public void setUp() throws Exception {
@@ -58,16 +57,16 @@ public class CollectorRendererTest {
         new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.VOLATIONS_WITH_DETAILS.getKey(), "true"));
         renderer.getReviewResult().getViolations().clear();
 
-        Rule rule = createRule(ruleDescription, externalInfoUrl, priority);
+        Rule rule = createRule(ruleDescription, externalInfoUrl, RulePriority.HIGH);
         Report report = createReportWithVolation(createRuleViolation(rule, violationDescription));
 
         renderer.renderFileReport(report);
         Violation violation = renderer.getReviewResult().getViolations().get(0);
 
-        assertThat(violation.getMessage()).contains(violationDescription);
+        assertThat(violation.getMessage()).startsWith(violationDescription);
         assertThat(violation.getMessage()).contains(ruleDescription);
         assertThat(violation.getMessage()).contains(externalInfoUrl);
-        assertThat(violation.getSeverity()).isEqualTo(renderer.convert(priority));
+        assertThat(violation.getSeverity()).isEqualTo(Severity.ERROR);
     }
 
     @Test
@@ -75,14 +74,13 @@ public class CollectorRendererTest {
         new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.VOLATIONS_WITH_DETAILS.getKey(), "false"));
         renderer.getReviewResult().getViolations().clear();
 
-        Rule rule = createRule(ruleDescription, externalInfoUrl, priority);
+        Rule rule = createRule(ruleDescription, externalInfoUrl, RulePriority.MEDIUM);
         Report report = createReportWithVolation(createRuleViolation(rule, violationDescription));
 
         renderer.renderFileReport(report);
         Violation violation = renderer.getReviewResult().getViolations().get(0);
 
-        assertThat(violation.getMessage()).doesNotContain(ruleDescription);
-        assertThat(violation.getMessage()).doesNotContain(externalInfoUrl);
+        assertThat(violation.getMessage()).isEqualTo(violationDescription);
     }
 
     @NotNull
@@ -96,11 +94,7 @@ public class CollectorRendererTest {
     }
 
     @NotNull
-    private RuleViolation createRuleViolation(Rule rule, String description) {
-        if (rule == null) {
-            throw new IllegalArgumentException("Arguments cannot be null!");
-        }
-
+    private RuleViolation createRuleViolation(@NotNull Rule rule, String description) {
         RuleViolation violation = mock(RuleViolation.class);
         when(violation.getRule()).thenReturn(rule);
         when(violation.getDescription()).thenReturn(description);
@@ -109,11 +103,7 @@ public class CollectorRendererTest {
     }
 
     @NotNull
-    private Report createReportWithVolation(RuleViolation violation) {
-        if (violation == null) {
-            throw new IllegalArgumentException("Arguments cannot be null!");
-        }
-
+    private Report createReportWithVolation(@NotNull RuleViolation violation) {
         Report report = mock(Report.class);
         List<RuleViolation> list = new ArrayList<RuleViolation>();
         list.add(violation);
