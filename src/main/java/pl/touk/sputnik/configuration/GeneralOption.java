@@ -9,7 +9,7 @@ public enum GeneralOption implements ConfigurationOption {
     PROCESS_TEST_FILES("global.processTestFiles", "Process test files?", "true"),
     MAX_NUMBER_OF_COMMENTS("global.maxNumberOfComments", "Maximum number of comments to submit", "0"),
     COMMENT_ONLY_CHANGED_LINES("global.commentOnlyChangedLines", "Comment only changed lines and context", "false"),
-    VOLATIONS_WITH_DETAILS("global.volations.details", "When possible provide more details about volation's reason and solution", "false"),
+    VOLATIONS_WITH_DETAILS("global.volations.details", "Provides more details about volation's reason", "false"),
 
     CONNECTOR_TYPE("connector.type", "Connector: <stash|gerrit>", "gerrit"),
     HOST("connector.host", "Connector server host", "localhost"),

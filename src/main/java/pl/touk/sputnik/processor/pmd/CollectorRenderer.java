@@ -42,22 +42,32 @@ public class CollectorRenderer extends AbstractRenderer {
 
     @Override
     public void renderFileReport(Report report) throws IOException {
+        boolean addDetails = Boolean.valueOf(ConfigurationHolder.instance().
+                getProperty(GeneralOption.VOLATIONS_WITH_DETAILS));
+
         for (RuleViolation ruleViolation : report) {
             StringBuilder fullDescription = new StringBuilder(ruleViolation.getDescription());
-
-            if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.VOLATIONS_WITH_DETAILS))) {
-                String reason = ruleViolation.getRule().getDescription();
-                if (StringUtils.isNotEmpty(reason)) {
-                    fullDescription.append("\n").append(reason);
-                }
-                String url = ruleViolation.getRule().getExternalInfoUrl();
-                if (StringUtils.isNotEmpty(url)) {
-                    fullDescription.append("\n").append(url);
-                }
+            if (addDetails) {
+                fullDescription.append(extractDetailsFromViolation(ruleViolation));
             }
 
             reviewResult.add(new Violation(ruleViolation.getFilename(), ruleViolation.getBeginLine(), fullDescription.toString(), convert(ruleViolation.getRule().getPriority())));
         }
+    }
+
+    private String extractDetailsFromViolation(RuleViolation ruleViolation) {
+        StringBuilder fullDescription = new StringBuilder();
+
+        String reason = ruleViolation.getRule().getDescription();
+        if (StringUtils.isNotEmpty(reason)) {
+            fullDescription.append("\n").append(reason);
+        }
+        String url = ruleViolation.getRule().getExternalInfoUrl();
+        if (StringUtils.isNotEmpty(url)) {
+            fullDescription.append("\n").append(url);
+        }
+
+        return fullDescription.toString();
     }
 
     @Override
