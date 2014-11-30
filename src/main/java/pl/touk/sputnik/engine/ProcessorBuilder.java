@@ -11,6 +11,7 @@ import pl.touk.sputnik.processor.jslint.JsLintProcessor;
 import pl.touk.sputnik.processor.pmd.PmdProcessor;
 import pl.touk.sputnik.processor.scalastyle.ScalastyleProcessor;
 import pl.touk.sputnik.processor.sonar.SonarProcessor;
+import pl.touk.sputnik.processor.tslint.TSLintProcessor;
 import pl.touk.sputnik.review.ReviewProcessor;
 
 import java.util.ArrayList;
@@ -21,30 +22,45 @@ public class ProcessorBuilder {
     @NotNull
     public List<ReviewProcessor> buildProcessors() {
         List<ReviewProcessor> processors = new ArrayList<>();
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.CHECKSTYLE_ENABLED))) {
+
+        if (isProcessorEnabled(GeneralOption.CHECKSTYLE_ENABLED)) {
             processors.add(new CheckstyleProcessor());
         }
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.PMD_ENABLED))) {
+        if (isProcessorEnabled(GeneralOption.PMD_ENABLED)) {
             processors.add(new PmdProcessor());
         }
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.FINDBUGS_ENABLED))) {
+        if (isProcessorEnabled(GeneralOption.FINDBUGS_ENABLED)) {
             processors.add(new FindBugsProcessor());
         }
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.SCALASTYLE_ENABLED))) {
+        if (isProcessorEnabled(GeneralOption.SCALASTYLE_ENABLED)) {
             processors.add(new ScalastyleProcessor());
         }
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.CODE_NARC_ENABLED))) {
+        if (isProcessorEnabled(GeneralOption.CODE_NARC_ENABLED)) {
             processors.add(new CodeNarcProcessor());
         }
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.JSLINT_ENABLED))) {
+        if (isProcessorEnabled(GeneralOption.JSLINT_ENABLED)) {
             processors.add(new JsLintProcessor());
         }
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.JSHINT_ENABLED))) {
+        if (isProcessorEnabled(GeneralOption.JSHINT_ENABLED)) {
             processors.add(new JsHintProcessor());
         }
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.SONAR_ENABLED))) {
+        if (isProcessorEnabled(GeneralOption.TSLINT_ENABLED)) {
+            processors.add(new TSLintProcessor());
+        }
+        if (isProcessorEnabled(GeneralOption.SONAR_ENABLED)) {
             processors.add(new SonarProcessor());
         }
         return processors;
+    }
+
+    /**
+     * Checks if given processor was enabled in config file or not.
+     * 
+     * @param processorOption
+     *            key informs if processor is enabled
+     * @return true if given processor was enabled, otherwise false
+     */
+    private boolean isProcessorEnabled(GeneralOption processorOption) {
+        return Boolean.valueOf(ConfigurationHolder.instance().getProperty(processorOption));
     }
 }

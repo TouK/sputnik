@@ -23,6 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class GerritFacade implements ConnectorFacade {
+
+    /** First item in JSON response that shall be skipped. */
     private static final String COMMIT_MSG = "/COMMIT_MSG";
 
     private final GerritApi gerritApi;

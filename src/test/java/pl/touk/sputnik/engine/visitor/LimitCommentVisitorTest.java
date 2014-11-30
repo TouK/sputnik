@@ -1,6 +1,7 @@
 package pl.touk.sputnik.engine.visitor;
 
 import org.junit.Test;
+
 import pl.touk.sputnik.ReviewBuilder;
 import pl.touk.sputnik.review.Review;
 
@@ -29,7 +30,8 @@ public class LimitCommentVisitorTest {
         new LimitCommentVisitor(3).afterReview(review);
 
         assertThat(review.getFiles()).hasSize(4);
-        assertThat(review.getMessages()).containsExactly("Total 8 violations found", "Showing only first 3 comments. 5 comments are filtered out");
+        assertThat(review.getMessages()).containsExactly("Total 8 violations found",
+                "Showing only first 3 comments. Rest 5 comments are filtered out");
         assertThat(review.getFiles().get(0).getComments()).hasSize(2);
         assertThat(review.getFiles().get(1).getComments()).hasSize(1);
         assertThat(review.getFiles().get(2).getComments()).isEmpty();

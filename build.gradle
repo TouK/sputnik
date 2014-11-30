@@ -41,6 +41,12 @@ run {
         // Need to split the space-delimited value in the exec.args
         args arguments.split()
     }
+
+    // change working directory and run sputnk from workspace
+    def newWorkingDir = System.getProperty("exec.workingDir")
+    if (newWorkingDir) {
+        workingDir = newWorkingDir
+    }
 }
 
 repositories {
