@@ -1,0 +1,14 @@
+{
+  "rules": {
+    "indent": [true, 4],
+    "jsdoc-format": true,
+    "max-line-length": [true, 120],
+    "one-line": [true,
+        "check-open-brace",
+        "check-catch",
+        "check-else",
+        "check-whitespace"
+    ],
+    "quotemark": [true, "double"],
+  }
+}

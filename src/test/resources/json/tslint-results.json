@@ -1,0 +1,19 @@
+[
+    {
+        "name":"HelloWorld.ts",
+        "failure":"unused variable: 'greeter'",
+        "startPosition":
+        {
+            "position":191,
+            "line":10,
+            "character":4
+        },
+        "endPosition":
+        {
+            "position":198,
+            "line":10,
+            "character":11
+        },
+        "ruleName":"no-unused-variable"
+    }
+]
