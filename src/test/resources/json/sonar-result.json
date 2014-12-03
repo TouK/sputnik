@@ -8,7 +8,7 @@
         "severity": "MINOR",
         "rule": "cs-ndepend:TypesThatCouldHaveALowerVisibility",
         "status": "OPEN",
-        "isNew": false,
+        "isNew": true,
         "creationDate": "2014-11-28T15:46:26+0100",
         "updateDate": "2014-12-01T09:15:01+0100"
     },
@@ -20,7 +20,7 @@
         "severity": "MAJOR",
         "rule": "cs-ndepend:NonstaticClassesShouldBeInstantiatedOrTurnedToStatic",
         "status": "OPEN",
-        "isNew": false,
+        "isNew": true,
         "creationDate": "2014-11-28T15:46:26+0100",
         "updateDate": "2014-12-01T09:15:01+0100"
     },
@@ -32,12 +32,24 @@
         "severity": "CRITICAL",
         "rule": "cs-ndepend:NonstaticClassesShouldBeInstantiatedOrTurnedToStatic",
         "status": "OPEN",
-        "isNew": false,
+        "isNew": true,
         "creationDate": "2014-11-28T15:46:26+0100",
         "updateDate": "2014-12-01T09:15:01+0100"
     },
     {
         "key": "98fddd09-7a35-4d9a-8a80-da6c28b280ee",
+        "component": "projectKey:module2:dir/file2.cs",
+        "line": 9,
+        "message": "Blocker error",
+        "severity": "BLOCKER",
+        "rule": "cs-ndepend:NonstaticClassesShouldBeInstantiatedOrTurnedToStatic",
+        "status": "OPEN",
+        "isNew": true,
+        "creationDate": "2014-11-28T15:46:26+0100",
+        "updateDate": "2014-12-01T09:15:01+0100"
+    },
+    {
+        "key": "98fddd09-7a35-4d9a-8a80-da6c28b280ef",
         "component": "projectKey:module2:dir/file2.cs",
         "line": 9,
         "message": "Blocker error",
