@@ -1,6 +1,8 @@
 package pl.touk.sputnik.processor.sonar;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,13 +21,11 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.sonar.runner.api.EmbeddedRunner;
 
+import pl.touk.sputnik.configuration.ConfigurationHolder;
+
 import com.google.common.collect.ImmutableList;
 
 import freemarker.template.utility.StringUtil;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.any;
-import static org.assertj.core.api.Assertions.assertThat;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,7 +39,6 @@ public class SonarRunnerTest {
     @Before
     public void setUp() throws FileNotFoundException {
         ConfigurationHolder.initFromResource("test-sonar.properties");
-
     }
 
     @After

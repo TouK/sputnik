@@ -25,6 +25,7 @@ public class SonarRunner {
 
     @VisibleForTesting
     static final String OUTPUT_DIR = ".sonar";
+
     @VisibleForTesting
     static final String OUTPUT_FILE = "sonar-report.json";
 
@@ -46,23 +47,18 @@ public class SonarRunner {
     }
 
     /**
-     * Run sonar-runner
+     * Runs Sonar.
+     *
      * @throws IOException
+     * @return the json file containing the results.
      */
-    public void run() throws IOException {
-        runInProcess();
-    }
-
-    /**
-     * Run sonar in-process
-     * @throws IOException
-     */
-    private void runInProcess() throws IOException {
+    public File run() throws IOException {
         Properties props = loadBaseProperties();
         setAdditionalProperties(props);
         log.info("Sonar configuration: {}", props.toString());
         sonarEnbeddedRunner.addProperties(props);
         sonarEnbeddedRunner.execute();
+        return new File(OUTPUT_DIR, OUTPUT_FILE);
     }
 
     /**
