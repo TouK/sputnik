@@ -1,23 +1,27 @@
 package pl.touk.sputnik.processor.findbugs;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.io.Resources;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
 import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewResult;
+import pl.touk.sputnik.review.filter.FileFilter;
+import pl.touk.sputnik.review.transformer.ClassNameTransformer;
+
+import java.util.List;
 
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static com.googlecode.catchexception.apis.CatchExceptionAssertJ.when;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FindBugsProcessorTest {
@@ -50,24 +54,26 @@ public class FindBugsProcessorTest {
     }
 
     @Test
-    @Ignore
+//    @Ignore
     public void shouldReturnBasicViolationsOnEmptyClass() {
         //given
-        Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("TestFile.java").getFile())));
+        List<String> file = ImmutableList.of("toreview.TestClass");
+        Mockito.when(review.getFiles(any(FileFilter.class), any(ClassNameTransformer.class))).thenReturn(file);
+        Mockito.when(review.getBuildDirs()).thenReturn(ImmutableList.of("build/classes/test"));
+        Mockito.when(review.getSourceDirs()).thenReturn(ImmutableList.of("src/test/java"));
 
         //when
         ReviewResult reviewResult = findBugsProcessor.process(review);
 
         //then
         assertThat(reviewResult).isNotNull();
-        assert reviewResult != null;
-        assertThat(reviewResult.getViolations()).isNotEmpty();
-        assertThat(reviewResult.getViolations().size()).isEqualTo(3);
         assertThat(reviewResult.getViolations())
+                .isNotEmpty()
+                .hasSize(2)
                 .extracting("message")
                 .containsOnly(
-                        "Missing package-info.java file.",
-                        "Missing a Javadoc comment."
+                        "DLS: Dead store to value in toreview.TestClass.incorrectAssignmentInIfCondition()",
+                        "QBA: toreview.TestClass.incorrectAssignmentInIfCondition() assigns boolean literal in boolean expression"
                 );
     }
 
