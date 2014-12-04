@@ -42,7 +42,7 @@ jslint.enabled=false
 jshint.enable=true
 jshint.configurationFile=jshint.json
 sonar.enabled=true
-sonar.configurationFile=sonar-project.properties, sonar-runner.properties
+sonar.configurationFiles=sonar-project.properties, sonar-runner.properties
 sonar.verbose=false
 ```
 
