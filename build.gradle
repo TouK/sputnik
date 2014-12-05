@@ -14,6 +14,16 @@ group = 'pl.touk'
 version = '1.4.0'
 mainClassName = 'pl.touk.sputnik.Main'
 
+run {    
+    // You can launch Sputnik having only build.gradle file in your repo and executing:
+    // gradle run -Dexec.args="--conf example.properties --changeId 1234 --revisionId 4321"
+    def arguments = System.getProperty("exec.args")
+    if (arguments) {
+        // Need to split the space-delimited value in the exec.args
+        args arguments.split()
+    }
+}
+
 repositories {
     mavenCentral()
 }
@@ -74,8 +84,11 @@ dependencies {
 
     compile 'org.codehaus.groovy:groovy:2.3.4'
 
-    // JsLint
+    // JSLint
     compile 'com.googlecode.jslint4java:jslint4java:2.0.5'
+
+    // JSHint
+    compile 'pl.gildur:jshint4j:1.0.0'
 
     // Test dependencies
     testCompile 'junit:junit:4.11'
@@ -141,7 +154,9 @@ uploadArchives {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: sonatypeUsername, password: sonatypePassword)
+                if (new File("sputnik-gradle-test").exists()) {
+                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+                }
             }
 
             pom.project {

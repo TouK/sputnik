@@ -1,8 +1,11 @@
 language: java
+script: gradle build jacocoTestReport
 
 jdk:
   - openjdk7
   - oraclejdk7
 
+before_install:
+  sudo pip install codecov
 after_success:
-  - gradle jacocoTestReport coveralls
+  codecov
