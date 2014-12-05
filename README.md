@@ -1,9 +1,9 @@
 # sputnik
 
-> Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD, FindBugs and JSLint for you!
+> Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD, FindBugs, Scalastyle and JSLint for you!
 
-[![Build Status](https://api.travis-ci.org/TouK/sputnik.png)](https://travis-ci.org/TouK/sputnik)
-[![Coverage Status](https://coveralls.io/repos/TouK/sputnik/badge.png?branch=master)](https://coveralls.io/r/TouK/sputnik?branch=master)
+[![Build Status](https://img.shields.io/travis/TouK/sputnik.svg?style=flat)](https://img.shields.io/travis/TouK/sputnik.svg?style=flat)
+[![Coverage Status](https://img.shields.io/codecov/c/github/TouK/sputnik.svg?style=flat)](https://img.shields.io/codecov/c/github/TouK/sputnik.svg?style=flat)
 
 ## Usage
 
