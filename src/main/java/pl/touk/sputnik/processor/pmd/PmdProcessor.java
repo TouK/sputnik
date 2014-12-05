@@ -69,7 +69,7 @@ public class PmdProcessor implements ReviewProcessor {
      * @throws IllegalArgumentException
      *             if the configuration is not correct
      */
-    public void doPMD(@NotNull PMDConfiguration configuration) throws IllegalArgumentException {
+    private void doPMD(@NotNull PMDConfiguration configuration) throws IllegalArgumentException {
         // Load the RuleSets
         RuleSetFactory ruleSetFactory = RulesetsFactoryUtils.getRulesetFactory(configuration);
 

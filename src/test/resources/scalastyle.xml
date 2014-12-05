@@ -1,0 +1,14 @@
+<scalastyle commentFilter="enabled">
+    <name>Scalastyle standard configuration</name>
+    <check level="warning" class="org.scalastyle.file.FileTabChecker" enabled="true" />
+    <check level="warning" class="org.scalastyle.file.FileLengthChecker" enabled="true">
+        <parameters>
+            <parameter name="maxFileLength">800</parameter>
+        </parameters>
+    </check>
+    <check enabled="true" class="org.scalastyle.file.HeaderMatchesChecker" level="warning">
+        <parameters>
+            <parameter name="header">// Copyright (C) 2011-2012 the original author or authors.</parameter>
+        </parameters>
+    </check>
+</scalastyle>

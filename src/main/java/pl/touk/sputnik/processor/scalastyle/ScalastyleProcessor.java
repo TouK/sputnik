@@ -1,7 +1,5 @@
 package pl.touk.sputnik.processor.scalastyle;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +15,7 @@ import org.scalastyle.ScalastyleConfiguration;
 import org.scalastyle.StartFile;
 import org.scalastyle.StyleError;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
@@ -29,7 +28,6 @@ import scala.Some;
 
 import java.io.File;
 import java.util.List;
-import pl.touk.sputnik.configuration.GeneralOption;
 
 @Slf4j
 public class ScalastyleProcessor implements ReviewProcessor {
@@ -64,7 +62,7 @@ public class ScalastyleProcessor implements ReviewProcessor {
 
             if (msg instanceof StartFile) {
                 StartFile startFile = (StartFile) msg;
-                currentFileName = ((FileSpec)startFile.fileSpec()).name();
+                currentFileName = startFile.fileSpec().name();
             }
             if (msg instanceof EndFile) {
                 currentFileName = null;
@@ -73,7 +71,7 @@ public class ScalastyleProcessor implements ReviewProcessor {
             if (msg instanceof StyleError) {
                 StyleError styleError = (StyleError) msg;
                 reviewResult.add(new Violation(currentFileName,
-                        option(styleError.lineNumber(), Integer.valueOf(-1)),
+                        option(styleError.lineNumber(), -1),
                         messageHelper.message(styleError.clazz().getClassLoader(), styleError.key(), styleError.args()),
                         errorLevel(styleError.level())));
             }
