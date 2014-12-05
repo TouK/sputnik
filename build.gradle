@@ -84,8 +84,11 @@ dependencies {
 
     compile 'org.codehaus.groovy:groovy:2.3.4'
 
-    // JsLint
+    // JSLint
     compile 'com.googlecode.jslint4java:jslint4java:2.0.5'
+
+    // JSHint
+    compile 'pl.gildur:jshint4j:1.0.0'
 
     // Test dependencies
     testCompile 'junit:junit:4.11'
