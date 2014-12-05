@@ -1,6 +1,6 @@
 # sputnik
 
-> Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD and FindBugs for you!
+> Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD, FindBugs and JSLint for you!
 
 [![Build Status](https://api.travis-ci.org/TouK/sputnik.png)](https://travis-ci.org/TouK/sputnik)
 [![Coverage Status](https://coveralls.io/repos/TouK/sputnik/badge.png?branch=master)](https://coveralls.io/r/TouK/sputnik?branch=master)
@@ -101,9 +101,17 @@ environment - there are three variables to change:
 - project_key
 - repository_slug
 
-## Sputnik Maven plugin
+## Launching with Maven
 
 If you prefer running Sputnik from Maven, there is a plugin developed by Karol Lassak here: https://github.com/ingwarsw/sputnik-maven-plugin. Read plugin documentation for reference.
+
+## Launching with Gradle
+
+If you prefer running Sputnik from Gradle all you need is to have Gradle installed.
+Put build.gradle file in your repository, add config file and run:
+```
+gradle run -Dexec.args="--conf example.properties --changeId 1234 --revisionId 4321" 
+```
 
 ## Requirements
 
