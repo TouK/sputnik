@@ -1,4 +1,5 @@
 language: java
+script: gradle build jacocoTestReport
 
 jdk:
   - openjdk7
