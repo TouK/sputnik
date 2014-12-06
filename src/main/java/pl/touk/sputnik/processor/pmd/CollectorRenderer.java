@@ -7,7 +7,12 @@ import net.sourceforge.pmd.RulePriority;
 import net.sourceforge.pmd.RuleViolation;
 import net.sourceforge.pmd.renderers.AbstractRenderer;
 import net.sourceforge.pmd.util.datasource.DataSource;
+
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+
+import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;
@@ -37,9 +42,32 @@ public class CollectorRenderer extends AbstractRenderer {
 
     @Override
     public void renderFileReport(Report report) throws IOException {
+        boolean addDetails = Boolean.valueOf(ConfigurationHolder.instance().
+                getProperty(GeneralOption.PMD_VIOLATIONS_DETAILS));
+
         for (RuleViolation ruleViolation : report) {
-            reviewResult.add(new Violation(ruleViolation.getFilename(), ruleViolation.getBeginLine(), ruleViolation.getDescription(), convert(ruleViolation.getRule().getPriority())));
+            StringBuilder fullDescription = new StringBuilder(ruleViolation.getDescription());
+            if (addDetails) {
+                fullDescription.append(extractDetailsFromViolation(ruleViolation));
+            }
+
+            reviewResult.add(new Violation(ruleViolation.getFilename(), ruleViolation.getBeginLine(), fullDescription.toString(), convert(ruleViolation.getRule().getPriority())));
         }
+    }
+
+    private String extractDetailsFromViolation(RuleViolation ruleViolation) {
+        StringBuilder fullDescription = new StringBuilder();
+
+        String reason = ruleViolation.getRule().getDescription();
+        if (StringUtils.isNotEmpty(reason)) {
+            fullDescription.append("\n").append(reason);
+        }
+        String url = ruleViolation.getRule().getExternalInfoUrl();
+        if (StringUtils.isNotEmpty(url)) {
+            fullDescription.append("\n").append(url);
+        }
+
+        return fullDescription.toString();
     }
 
     @Override

@@ -31,6 +31,7 @@ public enum GeneralOption implements ConfigurationOption {
 
     PMD_ENABLED("pmd.enabled", "PMD enabled", "false"),
     PMD_RULESETS("pmd.ruleSets", "PMD rule sets", "rulesets/java/basic.xml"),
+    PMD_VIOLATIONS_DETAILS("pmd.violations.details", "Provides details about violation's reason", "false"),
 
     FINDBUGS_ENABLED("findbugs.enabled", "FindBugs enabled", "false"),
     FINDBUGS_INCLUDE_FILTER("findbugs.includeFilter", "FindBugs include filter file", ""),
