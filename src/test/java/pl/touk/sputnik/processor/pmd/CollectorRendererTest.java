@@ -30,9 +30,9 @@ public class CollectorRendererTest {
 
     private CollectorRenderer renderer = new CollectorRenderer();
 
-    private String violationDescription = "this is bug!";
-    private String ruleDescription = "...and should be fiexed";
-    private String externalInfoUrl = "www.solution.tip";
+    private final String violationDescription = "this is bug!";
+    private final String ruleDescription = "...and should be fixed";
+    private final String externalInfoUrl = "www.solution.tip";
 
     @Before
     public void setUp() throws Exception {
@@ -45,16 +45,8 @@ public class CollectorRendererTest {
     }
 
     @Test
-    public void shouldConvertPriorityToRelevantSeverity() {
-        RulePriority priority = RulePriority.MEDIUM;
-        Severity severity = renderer.convert(priority);
-
-        assertThat(severity).isEqualTo(Severity.INFO);
-    }
-
-    @Test
     public void shouldReportViolationWithDetails() throws IOException {
-        new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.VOLATIONS_WITH_DETAILS.getKey(), "true"));
+        new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.PMD_VIOLATIONS_DETAILS.getKey(), "true"));
         renderer.getReviewResult().getViolations().clear();
 
         Rule rule = createRule(ruleDescription, externalInfoUrl, RulePriority.HIGH);
@@ -63,15 +55,18 @@ public class CollectorRendererTest {
         renderer.renderFileReport(report);
         Violation violation = renderer.getReviewResult().getViolations().get(0);
 
-        assertThat(violation.getMessage()).startsWith(violationDescription);
-        assertThat(violation.getMessage()).contains(ruleDescription);
-        assertThat(violation.getMessage()).contains(externalInfoUrl);
+        StringBuilder expectedMessage = new StringBuilder();
+        expectedMessage.append(violationDescription).append("\n");
+        expectedMessage.append(ruleDescription).append("\n");
+        expectedMessage.append(externalInfoUrl);
+
+        assertThat(violation.getMessage()).isEqualTo(expectedMessage.toString());
         assertThat(violation.getSeverity()).isEqualTo(Severity.ERROR);
     }
 
     @Test
     public void shouldReportViolationWithOutDetails() throws IOException {
-        new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.VOLATIONS_WITH_DETAILS.getKey(), "false"));
+        new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.PMD_VIOLATIONS_DETAILS.getKey(), "false"));
         renderer.getReviewResult().getViolations().clear();
 
         Rule rule = createRule(ruleDescription, externalInfoUrl, RulePriority.MEDIUM);
@@ -84,9 +79,9 @@ public class CollectorRendererTest {
     }
 
     @NotNull
-    private Rule createRule(String description, String externalInfoUrl, RulePriority priority) {
+    private Rule createRule(String ruleDescription, String externalInfoUrl, RulePriority priority) {
         Rule rule = mock(Rule.class);
-        when(rule.getDescription()).thenReturn(description);
+        when(rule.getDescription()).thenReturn(ruleDescription);
         when(rule.getExternalInfoUrl()).thenReturn(externalInfoUrl);
         when(rule.getPriority()).thenReturn(priority);
 
@@ -94,10 +89,10 @@ public class CollectorRendererTest {
     }
 
     @NotNull
-    private RuleViolation createRuleViolation(@NotNull Rule rule, String description) {
+    private RuleViolation createRuleViolation(@NotNull Rule rule, String violationDescription) {
         RuleViolation violation = mock(RuleViolation.class);
         when(violation.getRule()).thenReturn(rule);
-        when(violation.getDescription()).thenReturn(description);
+        when(violation.getDescription()).thenReturn(violationDescription);
 
         return violation;
     }

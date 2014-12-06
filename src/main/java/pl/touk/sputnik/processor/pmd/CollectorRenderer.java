@@ -43,7 +43,7 @@ public class CollectorRenderer extends AbstractRenderer {
     @Override
     public void renderFileReport(Report report) throws IOException {
         boolean addDetails = Boolean.valueOf(ConfigurationHolder.instance().
-                getProperty(GeneralOption.VOLATIONS_WITH_DETAILS));
+                getProperty(GeneralOption.PMD_VIOLATIONS_DETAILS));
 
         for (RuleViolation ruleViolation : report) {
             StringBuilder fullDescription = new StringBuilder(ruleViolation.getDescription());
@@ -81,7 +81,7 @@ public class CollectorRenderer extends AbstractRenderer {
     }
 
     @NotNull
-    public Severity convert(@NotNull RulePriority rulePriority) {
+    private Severity convert(@NotNull RulePriority rulePriority) {
         switch (rulePriority) {
             case HIGH:
                 return Severity.ERROR;
