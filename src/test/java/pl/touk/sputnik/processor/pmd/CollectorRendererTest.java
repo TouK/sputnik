@@ -1,81 +1,59 @@
 package pl.touk.sputnik.processor.pmd;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableMap;
 import net.sourceforge.pmd.Report;
 import net.sourceforge.pmd.Rule;
 import net.sourceforge.pmd.RulePriority;
 import net.sourceforge.pmd.RuleViolation;
-
 import org.jetbrains.annotations.NotNull;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;
 
-import com.google.common.collect.ImmutableMap;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CollectorRendererTest {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+public class CollectorRendererTest extends TestEnvironment {
 
     private CollectorRenderer renderer = new CollectorRenderer();
 
-    private final String violationDescription = "this is bug!";
-    private final String ruleDescription = "...and should be fixed";
-    private final String externalInfoUrl = "www.solution.tip";
-
-    @Before
-    public void setUp() throws Exception {
-        ConfigurationHolder.initFromResource("test.properties");
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        ConfigurationHolder.reset();
-    }
+    private static final String VIOLATION_DESCRIPTION = "this is bug!";
+    private static final String RULE_DESCRIPTION = "...and should be fixed";
+    private static final String EXTERNAL_INFO_URL = "www.solution.tip";
+    private static final String DESCRIPTION_WITH_DETAILS = Joiner.on('\n').join(VIOLATION_DESCRIPTION, RULE_DESCRIPTION, EXTERNAL_INFO_URL);
 
     @Test
     public void shouldReportViolationWithDetails() throws IOException {
-        new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.PMD_VIOLATIONS_DETAILS.getKey(), "true"));
-        renderer.getReviewResult().getViolations().clear();
-
-        Rule rule = createRule(ruleDescription, externalInfoUrl, RulePriority.HIGH);
-        Report report = createReportWithVolation(createRuleViolation(rule, violationDescription));
+        new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.PMD_SHOW_VIOLATION_DETAILS.getKey(), "true"));
+        Rule rule = createRule(RULE_DESCRIPTION, EXTERNAL_INFO_URL, RulePriority.HIGH);
+        Report report = createReportWithVolation(createRuleViolation(rule, VIOLATION_DESCRIPTION));
 
         renderer.renderFileReport(report);
+
         Violation violation = renderer.getReviewResult().getViolations().get(0);
-
-        StringBuilder expectedMessage = new StringBuilder();
-        expectedMessage.append(violationDescription).append("\n");
-        expectedMessage.append(ruleDescription).append("\n");
-        expectedMessage.append(externalInfoUrl);
-
-        assertThat(violation.getMessage()).isEqualTo(expectedMessage.toString());
+        assertThat(violation.getMessage()).isEqualTo(DESCRIPTION_WITH_DETAILS);
         assertThat(violation.getSeverity()).isEqualTo(Severity.ERROR);
     }
 
     @Test
-    public void shouldReportViolationWithOutDetails() throws IOException {
-        new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.PMD_VIOLATIONS_DETAILS.getKey(), "false"));
-        renderer.getReviewResult().getViolations().clear();
-
-        Rule rule = createRule(ruleDescription, externalInfoUrl, RulePriority.MEDIUM);
-        Report report = createReportWithVolation(createRuleViolation(rule, violationDescription));
+    public void shouldReportViolationWithoutDetails() throws IOException {
+        new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.PMD_SHOW_VIOLATION_DETAILS.getKey(), "false"));
+        Rule rule = createRule(RULE_DESCRIPTION, EXTERNAL_INFO_URL, RulePriority.MEDIUM);
+        Report report = createReportWithVolation(createRuleViolation(rule, VIOLATION_DESCRIPTION));
 
         renderer.renderFileReport(report);
-        Violation violation = renderer.getReviewResult().getViolations().get(0);
 
-        assertThat(violation.getMessage()).isEqualTo(violationDescription);
+        Violation violation = renderer.getReviewResult().getViolations().get(0);
+        assertThat(violation.getMessage()).isEqualTo(VIOLATION_DESCRIPTION);
     }
 
     @NotNull

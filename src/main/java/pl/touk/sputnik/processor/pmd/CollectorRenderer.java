@@ -7,10 +7,8 @@ import net.sourceforge.pmd.RulePriority;
 import net.sourceforge.pmd.RuleViolation;
 import net.sourceforge.pmd.renderers.AbstractRenderer;
 import net.sourceforge.pmd.util.datasource.DataSource;
-
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.ReviewResult;
@@ -22,6 +20,7 @@ import java.io.IOException;
 @Slf4j
 public class CollectorRenderer extends AbstractRenderer {
     private static final String SPUTNIK_PMD_COLLECT_RENDERER = "Sputnik PMD Collect Renderer";
+    private static final char LINE_SEPARATOR = '\n';
 
     @Getter
     private final ReviewResult reviewResult = new ReviewResult();
@@ -42,29 +41,24 @@ public class CollectorRenderer extends AbstractRenderer {
 
     @Override
     public void renderFileReport(Report report) throws IOException {
-        boolean addDetails = Boolean.valueOf(ConfigurationHolder.instance().
-                getProperty(GeneralOption.PMD_VIOLATIONS_DETAILS));
+        boolean showDetails = Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.PMD_SHOW_VIOLATION_DETAILS));
 
         for (RuleViolation ruleViolation : report) {
-            StringBuilder fullDescription = new StringBuilder(ruleViolation.getDescription());
-            if (addDetails) {
-                fullDescription.append(extractDetailsFromViolation(ruleViolation));
-            }
-
-            reviewResult.add(new Violation(ruleViolation.getFilename(), ruleViolation.getBeginLine(), fullDescription.toString(), convert(ruleViolation.getRule().getPriority())));
+            String violationDescription = showDetails ? renderViolationDetails(ruleViolation) :ruleViolation.getDescription();
+            reviewResult.add(new Violation(ruleViolation.getFilename(), ruleViolation.getBeginLine(), violationDescription, convert(ruleViolation.getRule().getPriority())));
         }
     }
 
-    private String extractDetailsFromViolation(RuleViolation ruleViolation) {
-        StringBuilder fullDescription = new StringBuilder();
+    private String renderViolationDetails(RuleViolation ruleViolation) {
+        StringBuilder fullDescription = new StringBuilder(ruleViolation.getDescription());
 
         String reason = ruleViolation.getRule().getDescription();
         if (StringUtils.isNotEmpty(reason)) {
-            fullDescription.append("\n").append(reason);
+            fullDescription.append(LINE_SEPARATOR).append(reason);
         }
         String url = ruleViolation.getRule().getExternalInfoUrl();
         if (StringUtils.isNotEmpty(url)) {
-            fullDescription.append("\n").append(url);
+            fullDescription.append(LINE_SEPARATOR).append(url);
         }
 
         return fullDescription.toString();

@@ -5,6 +5,28 @@
 [![Build Status](https://img.shields.io/travis/TouK/sputnik.svg?style=flat)](https://img.shields.io/travis/TouK/sputnik.svg?style=flat)
 [![Coverage Status](https://img.shields.io/codecov/c/github/TouK/sputnik.svg?style=flat)](https://img.shields.io/codecov/c/github/TouK/sputnik.svg?style=flat)
 
+## Support
+
+Code analysis:
+
+| Tool | Version | Languages |
+|:-|:-|-:|
+|Checkstyle|5.9|Java|
+|Scalastyle|1.1|Scala|
+|CodeNarc|1.2|Groovy|
+
+| Analysis | Languages |
+|:---------|----------:|
+|Checkstyle|Java|
+|Scalastyle|Scala|
+|CodeNarc|Groovy|
+
+- Checkstyle
+- PMD
+- FindBugs
+- Scalastyle
+- CodeNarc
+
 ## Usage
 
 Sputnik is intended to run just after your Jenkins/CI server build. It should be executed in the workspace root directory to find files to analyze.
