@@ -36,6 +36,10 @@ public abstract class TestEnvironment {
         return new Review(ImmutableList.of(new ReviewFile("test")));
     }
 
+    protected Review nonexistantReview(String filename){
+        return new Review(ImmutableList.of(new ReviewFile(filename)));
+    }
+
     protected File getResourceAsFile(String resourceName) {
         return new File(getResource(resourceName).getFile());
     }

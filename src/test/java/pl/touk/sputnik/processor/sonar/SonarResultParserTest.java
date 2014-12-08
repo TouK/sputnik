@@ -7,16 +7,17 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.Severity;
 
 import com.google.common.io.Resources;
 
-public class SonarResultParserTest {
+public class SonarResultParserTest extends TestEnvironment {
 
     @Test
-    public void testParseJson() throws IOException {
-        File resultFile = new File(Resources.getResource("json/sonar-result.json").getFile());
+    public void shouldParseSonarJsonFile() throws IOException {
+        File resultFile = getResourceAsFile("json/sonar-result.json");
 
         SonarResultParser parser = new SonarResultParser(resultFile);
         ReviewResult reviewResult = parser.parseResults();

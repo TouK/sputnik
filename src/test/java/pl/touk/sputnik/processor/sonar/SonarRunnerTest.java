@@ -54,7 +54,7 @@ public class SonarRunnerTest {
     }
 
     @Test
-    public void testRun() throws IOException {
+    public void shouldRun() throws IOException {
         writeValidConfigFiles();
         List<String> files = ImmutableList.of("file");
         SonarRunner runner = new SonarRunner(files, sonarRunner);
@@ -64,7 +64,7 @@ public class SonarRunnerTest {
     }
 
     @Test
-    public void testLoadBaseProperties() throws IOException{
+    public void shouldLoadBaseProperties() throws IOException{
         writeValidConfigFiles();
         List<String> files = ImmutableList.of("file");
         SonarRunner runner = new SonarRunner(files, sonarRunner);
@@ -74,7 +74,7 @@ public class SonarRunnerTest {
     }
 
     @Test
-    public void testSetBaseConfig() throws IOException{
+    public void shouldSetBaseSonarConfig() throws IOException{
         writeValidConfigFiles();
         List<String> files = ImmutableList.of("first", "second");
         SonarRunner runner = new SonarRunner(files, sonarRunner);
