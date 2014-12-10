@@ -19,7 +19,7 @@ Sputnik runs Checkstyle, PMD, FindBugs, CodeNarc and JSHint (or JSLint) only on 
 
 Typical configuration file looks like this:
 
-```
+```properties
 connector.type=gerrit
 connector.host=your.host.com
 connector.path=/gerrit
@@ -91,7 +91,7 @@ Assumptions:
 - user and password are configured in bamboo plan as variables
   _ecosystem.username_ and _ecosystem.password_
 - config file has placeholders for user and password:
-```
+```properties
 stash.username=<username>
 stash.password=<password>
 ```
