@@ -64,7 +64,8 @@ class SonarResultParser {
             String message = issue.path("message").asText();
             String file = getIssueFilePath(issue.path("component").asText(), components);
             String severity = issue.path("severity").asText();
-            result.add(new Violation(file, line, message, getSeverity(severity)));
+            String rule = issue.path("rule").asText();
+            result.add(new Violation(file, line, String.format("%s (Rule: %s)", message, rule), getSeverity(severity)));
         }
         return result;
     }
