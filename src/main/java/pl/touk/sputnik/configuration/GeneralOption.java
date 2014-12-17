@@ -22,6 +22,7 @@ public enum GeneralOption implements ConfigurationOption {
 
     SCORE_STRATEGY("score.strategy", "Score strategy: <NoScore|ScoreAlwaysPass|ScorePassIfEmpty|ScorePassIfNoErrors>", "ScoreAlwaysPass"),
     SCORE_PASSING_KEY("score.passingKey", "Score passing key", "Code-Review"),
+    SCORE_PASSING_COMMENT("score.passingComment", "Comment when no errors are found", "Perfect!"),
     SCORE_PASSING_VALUE("score.passingValue", "Score passing value", "1"),
     SCORE_FAILING_KEY("score.failingKey", "Score failing key", "Code-Review"),
     SCORE_FAILING_VALUE("score.failingValue", "Score failing value", "-1"),

@@ -1,12 +1,13 @@
 package pl.touk.sputnik.engine.visitor;
 
-import org.junit.Test;
-import pl.touk.sputnik.review.Review;
-import pl.touk.sputnik.review.ReviewFile;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collections;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
+
+import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewFile;
 
 public class SummaryMessageVisitorTest {
 
@@ -20,7 +21,7 @@ public class SummaryMessageVisitorTest {
         Review review = new Review(Collections.<ReviewFile>emptyList());
         review.setTotalViolationCount(8);
 
-        new SummaryMessageVisitor().afterReview(review);
+        new SummaryMessageVisitor("Perfect").afterReview(review);
 
         assertThat(review.getMessages()).containsOnly(TOTAL_8_VIOLATIONS_FOUND);
     }
@@ -30,9 +31,9 @@ public class SummaryMessageVisitorTest {
         Review review = new Review(Collections.<ReviewFile>emptyList());
         review.setTotalViolationCount(0);
 
-        new SummaryMessageVisitor().afterReview(review);
+        new SummaryMessageVisitor("Perfect").afterReview(review);
 
-        assertThat(review.getMessages()).containsOnly("Perfect!");
+        assertThat(review.getMessages()).containsOnly("Perfect");
     }
 
     @Test
@@ -41,7 +42,7 @@ public class SummaryMessageVisitorTest {
         review.setTotalViolationCount(8);
         review.addProblem(PROBLEM_SOURCE, PROBLEM_MESSAGE);
 
-        new SummaryMessageVisitor().afterReview(review);
+        new SummaryMessageVisitor("Perfect").afterReview(review);
 
         assertThat(review.getMessages()).containsSequence(TOTAL_8_VIOLATIONS_FOUND, PROBLEM_FORMATTED_MESSAGE);
     }

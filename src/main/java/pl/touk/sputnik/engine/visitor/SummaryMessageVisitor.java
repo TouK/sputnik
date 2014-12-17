@@ -1,12 +1,20 @@
 package pl.touk.sputnik.engine.visitor;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.jetbrains.annotations.NotNull;
+
 import pl.touk.sputnik.review.Review;
 
 @Slf4j
+@AllArgsConstructor
 public class SummaryMessageVisitor implements AfterReviewVisitor {
-    private static final String PERFECT_MESSAGE = "Perfect!";
+
+    /**
+     * The message we display when there no problems have been found.
+     */
+    private final String perfectMessage;
 
     @Override
     public void afterReview(@NotNull Review review) {
@@ -22,7 +30,7 @@ public class SummaryMessageVisitor implements AfterReviewVisitor {
 
     private String getSummaryMessage(@NotNull Review review) {
         if (review.getTotalViolationCount() == 0) {
-            return PERFECT_MESSAGE;
+            return perfectMessage;
         }
         return String.format("Total %d violations found", review.getTotalViolationCount());
     }
