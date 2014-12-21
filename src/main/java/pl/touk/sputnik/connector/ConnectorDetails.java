@@ -3,6 +3,7 @@ package pl.touk.sputnik.connector;
 import lombok.Getter;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
+import pl.touk.sputnik.engine.VisitorBuilder.ScoreStrategies;
 
 import static org.apache.commons.lang3.Validate.notBlank;
 
@@ -36,6 +37,10 @@ public class ConnectorDetails {
         notBlank(host, "You must provide non blank connector host");
         notBlank(username, "You must provide non blank connector username");
         notBlank(password, "You must provide non blank connector password");
+
+        String strategy = ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_STRATEGY);
+        // IllegalArgumentException is thrown when strategy could not be mapped to enum
+        ScoreStrategies.valueOf(strategy);
     }
 
 }

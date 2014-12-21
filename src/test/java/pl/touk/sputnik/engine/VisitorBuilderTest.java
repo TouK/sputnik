@@ -2,8 +2,10 @@ package pl.touk.sputnik.engine;
 
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
+
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.configuration.GeneralOption;
+import pl.touk.sputnik.engine.VisitorBuilder.ScoreStrategies;
 import pl.touk.sputnik.engine.visitor.AfterReviewVisitor;
 import pl.touk.sputnik.engine.visitor.FilterOutTestFilesVisitor;
 import pl.touk.sputnik.engine.visitor.LimitCommentVisitor;
@@ -86,7 +88,7 @@ public class VisitorBuilderTest {
     @Test
     public void shouldBuildNoScoreVisitor() {
         new ConfigurationSetup().setUp(ImmutableMap.of(
-                GeneralOption.SCORE_STRATEGY.getKey(), "NOscore"
+                GeneralOption.SCORE_STRATEGY.getKey(), ScoreStrategies.NoScore.name()
         ));
 
         assertThat(new VisitorBuilder().buildAfterReviewVisitors())
@@ -98,7 +100,7 @@ public class VisitorBuilderTest {
     @Test
     public void shouldBuildScoreAlwaysPassVisitor() {
         new ConfigurationSetup().setUp(ImmutableMap.of(
-                GeneralOption.SCORE_STRATEGY.getKey(), "scoreAlwaysPass",
+                GeneralOption.SCORE_STRATEGY.getKey(), ScoreStrategies.ScoreAlwaysPass.name(),
                 GeneralOption.SCORE_PASSING_KEY.getKey(), "Verified",
                 GeneralOption.SCORE_PASSING_VALUE.getKey(), "2"
         ));
@@ -115,7 +117,7 @@ public class VisitorBuilderTest {
     @Test
     public void shouldBuildScorePassIfEmptyVisitor() {
         new ConfigurationSetup().setUp(ImmutableMap.of(
-                GeneralOption.SCORE_STRATEGY.getKey(), "SCOREPASSIFEMPTY",
+                GeneralOption.SCORE_STRATEGY.getKey(), ScoreStrategies.ScorePassIfEmpty.name(),
                 GeneralOption.SCORE_PASSING_KEY.getKey(), "Verified",
                 GeneralOption.SCORE_PASSING_VALUE.getKey(), "3",
                 GeneralOption.SCORE_FAILING_KEY.getKey(), "Verified",
@@ -135,7 +137,7 @@ public class VisitorBuilderTest {
     @Test
     public void shouldBuildScorePassIfNoErrorsVisitor() {
         new ConfigurationSetup().setUp(ImmutableMap.of(
-                GeneralOption.SCORE_STRATEGY.getKey(), "SCOREPassIfNoErrors",
+                GeneralOption.SCORE_STRATEGY.getKey(), ScoreStrategies.ScorePassIfNoErrors.name(),
                 GeneralOption.SCORE_PASSING_KEY.getKey(), "Code-Review",
                 GeneralOption.SCORE_PASSING_VALUE.getKey(), "1",
                 GeneralOption.SCORE_FAILING_KEY.getKey(), "Code-Review",
@@ -150,21 +152,6 @@ public class VisitorBuilderTest {
                 .containsExactly(SummaryMessageVisitor.class, ScorePassIfNoErrors.class);
         assertThat(((ScorePassIfNoErrors) afterReviewVisitors.get(1)).getPassingScore()).containsOnly(entry("Code-Review", 1));
         assertThat(((ScorePassIfNoErrors) afterReviewVisitors.get(1)).getFailingScore()).containsOnly(entry("Code-Review", -2));
-    }
-
-    @Test
-    public void shouldBuildDefaultScoreAlwaysPassIfStrategyIsUnknown() {
-        new ConfigurationSetup().setUp(ImmutableMap.of(
-                GeneralOption.SCORE_STRATEGY.getKey(), "mySimpleStrategy"
-        ));
-
-        List<AfterReviewVisitor> afterReviewVisitors = new VisitorBuilder().buildAfterReviewVisitors();
-
-        assertThat(afterReviewVisitors)
-                .hasSize(2)
-                .extracting("class")
-                .containsExactly(SummaryMessageVisitor.class, ScoreAlwaysPass.class);
-        assertThat(((ScoreAlwaysPass) afterReviewVisitors.get(1)).getPassingScore()).containsOnly(entry("Code-Review", 1));
     }
 
 }

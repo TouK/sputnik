@@ -2,12 +2,18 @@ package pl.touk.sputnik.engine;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.jetbrains.annotations.NotNull;
+
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
-import pl.touk.sputnik.engine.visitor.*;
+import pl.touk.sputnik.engine.visitor.AfterReviewVisitor;
+import pl.touk.sputnik.engine.visitor.BeforeReviewVisitor;
+import pl.touk.sputnik.engine.visitor.FilterOutTestFilesVisitor;
+import pl.touk.sputnik.engine.visitor.LimitCommentVisitor;
+import pl.touk.sputnik.engine.visitor.SummaryMessageVisitor;
 import pl.touk.sputnik.engine.visitor.score.NoScore;
 import pl.touk.sputnik.engine.visitor.score.ScoreAlwaysPass;
 import pl.touk.sputnik.engine.visitor.score.ScorePassIfEmpty;
@@ -17,14 +23,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.commons.lang3.Validate.notBlank;
-
 @Slf4j
 public class VisitorBuilder {
-    private static final String NOSCORE = "NOSCORE";
-    private static final String SCOREALWAYSPASS = "SCOREALWAYSPASS";
-    private static final String SCOREPASSIFEMPTY = "SCOREPASSIFEMPTY";
-    private static final String SCOREPASSIFNOERRORS = "SCOREPASSIFNOERRORS";
+
+    public enum ScoreStrategies {
+        NoScore,
+        ScoreAlwaysPass,
+        ScorePassIfEmpty,
+        ScorePassIfNoErrors;
+    }
 
     @NotNull
     public List<BeforeReviewVisitor> buildBeforeReviewVisitors() {
@@ -61,25 +68,24 @@ public class VisitorBuilder {
                 ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_FAILING_KEY),
                 Integer.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_FAILING_VALUE))
         );
-        String scoreStrategy = ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_STRATEGY);
-        notBlank(scoreStrategy);
+        ScoreStrategies score = ScoreStrategies.valueOf(ConfigurationHolder.instance().getProperty(
+                GeneralOption.SCORE_STRATEGY));
 
-        switch(scoreStrategy.toUpperCase()) {
-            case NOSCORE:
+        switch (score) {
+            case NoScore:
                 return new NoScore();
 
-            case SCOREALWAYSPASS:
+            case ScoreAlwaysPass:
                 return new ScoreAlwaysPass(passingScore);
 
-            case SCOREPASSIFEMPTY:
+            case ScorePassIfEmpty:
                 return new ScorePassIfEmpty(passingScore, failingScore);
 
-            case SCOREPASSIFNOERRORS:
+            case ScorePassIfNoErrors:
                 return new ScorePassIfNoErrors(passingScore, failingScore);
 
             default:
-                log.warn("Score strategy {} not found, using default ScoreAlwaysPass", scoreStrategy);
-                return new ScoreAlwaysPass(passingScore);
+                throw new IllegalArgumentException("Unknown strategy: " + score);
         }
     }
 }
