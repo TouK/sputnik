@@ -14,6 +14,7 @@ import pl.touk.sputnik.processor.jshint.JsHintProcessor;
 import pl.touk.sputnik.processor.jslint.JsLintProcessor;
 import pl.touk.sputnik.processor.pmd.PmdProcessor;
 import pl.touk.sputnik.processor.scalastyle.ScalastyleProcessor;
+import pl.touk.sputnik.processor.sonar.SonarProcessor;
 import pl.touk.sputnik.review.ReviewProcessor;
 
 public class ProcessorBuilder {
@@ -41,6 +42,9 @@ public class ProcessorBuilder {
         }
         if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.JSHINT_ENABLED))) {
             processors.add(new JsHintProcessor());
+        }
+        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.SONAR_ENABLED))) {
+            processors.add(new SonarProcessor());
         }
         return processors;
     }
