@@ -4,7 +4,9 @@ import edu.umd.cs.findbugs.*;
 import edu.umd.cs.findbugs.classfile.ClassDescriptor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+
 import org.jetbrains.annotations.NotNull;
+
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;
@@ -14,11 +16,15 @@ public class CollectorBugReporter extends AbstractBugReporter {
 
     @Getter
     private final ReviewResult reviewResult = new ReviewResult();
-    private String lastObservedClass;
 
     @Override
     protected void doReportBug(BugInstance bugInstance) {
-        reviewResult.add(new Violation(lastObservedClass, bugInstance.getPrimarySourceLineAnnotation().getStartLine(), bugInstance.getMessage(), convert(bugInstance.getPriority())));
+        SourceLineAnnotation primarySourceLineAnnotation = bugInstance.getPrimarySourceLineAnnotation();
+        Violation violation = new Violation(primarySourceLineAnnotation.getClassName(),
+                primarySourceLineAnnotation.getStartLine(), bugInstance.getMessage(),
+                convert(bugInstance.getPriority()));
+        log.debug("Violation found: {}", violation);
+        reviewResult.add(violation);
     }
 
     @Override
@@ -46,7 +52,6 @@ public class CollectorBugReporter extends AbstractBugReporter {
     @Override
     public void observeClass(@NotNull ClassDescriptor classDescriptor) {
         log.debug("Observe class {}", classDescriptor.getDottedClassName());
-        lastObservedClass = classDescriptor.getDottedClassName();
     }
 
     @NotNull
