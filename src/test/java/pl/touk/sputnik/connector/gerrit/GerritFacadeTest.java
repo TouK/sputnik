@@ -48,7 +48,7 @@ public class GerritFacadeTest {
         
         // when
         ConnectorFacade gerritFacade = connectionFacade.build(ConnectorType.GERRIT);
-        catchException(gerritFacade).supports(ConfigurationHolder.instance());
+        catchException(gerritFacade).validate(ConfigurationHolder.instance());
 
         // then
         assertThat(caughtException()).isInstanceOf(GeneralOptionNotSupportedException.class).hasMessage(

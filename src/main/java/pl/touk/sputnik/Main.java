@@ -14,7 +14,6 @@ import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.ConnectorFacadeFactory;
 import pl.touk.sputnik.connector.ConnectorType;
-import pl.touk.sputnik.connector.gerrit.GerritException;
 import pl.touk.sputnik.engine.Engine;
 
 public final class Main {
@@ -31,7 +30,7 @@ public final class Main {
             commandLine = cliWrapper.parse(args);
         } catch (ParseException e) {
             printUsage(cliWrapper);
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
             System.exit(1);
         }
 
@@ -39,16 +38,22 @@ public final class Main {
         Configuration configuration = ConfigurationHolder.instance();
         configuration.updateWithCliOptions(commandLine);
 
-        ConnectorType connectorType = ConnectorType.valueOf(configuration.getProperty(GeneralOption.CONNECTOR_TYPE));
-        ConnectorFacade facade = ConnectorFacadeFactory.INSTANCE.build(connectorType);
-        try {
-            facade.supports(ConfigurationHolder.instance());
-        } catch (GerritException | GeneralOptionNotSupportedException e) {
-            System.out.println(e.getMessage());
-            System.exit(1);
-        }
-
+        ConnectorFacade facade = getConnectorFacade(configuration);
         new Engine(facade).run();
+    }
+
+    private static ConnectorFacade getConnectorFacade(Configuration configuration) {
+        ConnectorType connectorType = ConnectorType.getValidConnectorType(configuration
+                .getProperty(GeneralOption.CONNECTOR_TYPE));
+        ConnectorFacade facade = null;
+        try {
+            facade = ConnectorFacadeFactory.INSTANCE.build(connectorType);
+            facade.validate(ConfigurationHolder.instance());
+        } catch (GeneralOptionNotSupportedException e) {
+            System.err.println(e.getMessage());
+            System.exit(2);
+        }
+        return facade;
     }
 
     private static void printUsage(@NotNull CliWrapper cliOptions) {

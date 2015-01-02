@@ -16,13 +16,12 @@ public interface ConnectorFacade {
     List<ReviewFile> listFiles();
 
     /**
-     * Validates if given options are supported by selected connector. If not it throws an exception with information
-     * which option won't be supported and shall be changed.
+     * Validates if given options are supported by selected connector.
      * 
      * @throws GeneralOptionNotSupportedException
-     *             if configuration is invalid
+     *             if passed configuration is not valid or not fully supported
      */
-    void supports(Configuration configuration) throws GeneralOptionNotSupportedException;
+    void validate(Configuration configuration) throws GeneralOptionNotSupportedException;
 
     void setReview(@NotNull Review review);
 }

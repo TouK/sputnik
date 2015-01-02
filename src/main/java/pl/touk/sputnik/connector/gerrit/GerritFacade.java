@@ -79,7 +79,7 @@ public class GerritFacade implements ConnectorFacade {
     }
 
     @Override
-    public void supports(Configuration configuration) throws GeneralOptionNotSupportedException {
+    public void validate(Configuration configuration) throws GeneralOptionNotSupportedException {
         boolean commentOnlyChangedLines = Boolean.parseBoolean(configuration
                 .getProperty(GeneralOption.COMMENT_ONLY_CHANGED_LINES));
 

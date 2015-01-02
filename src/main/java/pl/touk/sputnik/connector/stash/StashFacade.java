@@ -151,7 +151,7 @@ public class StashFacade implements ConnectorFacade {
     }
 
     @Override
-    public void supports(Configuration configuration) throws GeneralOptionNotSupportedException {
+    public void validate(Configuration configuration) throws GeneralOptionNotSupportedException {
         // all features are suppored by Stash
     }
 }
