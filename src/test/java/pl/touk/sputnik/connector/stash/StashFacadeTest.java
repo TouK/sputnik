@@ -30,7 +30,7 @@ public class StashFacadeTest {
             "connector.projectKey", SOME_PROJECT_KEY
     );
 
-    private StashFacade fixture;
+    private StashFacade stashFacade;
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(FacadeConfigUtil.HTTP_PORT);
@@ -38,7 +38,7 @@ public class StashFacadeTest {
     @Before
     public void setUp() {
         new ConfigurationSetup().setUp(FacadeConfigUtil.getHttpConfig("stash"), STASH_PATCHSET_MAP);
-        fixture = new StashFacadeBuilder().build();
+        stashFacade = new StashFacadeBuilder().build();
     }
 
     @Test
@@ -47,7 +47,7 @@ public class StashFacadeTest {
                 "%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/changes",
                 FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)), "/json/stash-changes.json");
 
-        List<ReviewFile> files = fixture.listFiles();
+        List<ReviewFile> files = stashFacade.listFiles();
         assertThat(files).hasSize(4);
     }
 
@@ -57,7 +57,7 @@ public class StashFacadeTest {
                 "%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/diff.*",
                 FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)), "/json/stash-diff.json");
 
-        SingleFileChanges singleFileChanges = fixture.changesForSingleFile("src/main/java/Main.java");
+        SingleFileChanges singleFileChanges = stashFacade.changesForSingleFile("src/main/java/Main.java");
         assertThat(singleFileChanges.getFilename()).isEqualTo("src/main/java/Main.java");
         assertThat(singleFileChanges.getChangesMap())
                 .containsEntry(1, ChangeType.ADDED)
@@ -80,13 +80,13 @@ public class StashFacadeTest {
         review.addError("scalastyle", new Violation(filename, 1, "error message", Severity.ERROR));
         review.getMessages().add("Total 1 violations found");
 
-        fixture.setReview(review);
+        stashFacade.setReview(review);
 
         stubGet(urlMatching(String.format(
                 "%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/diff.*",
                 FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)), "/json/stash-diff.json");
 
-        fixture.setReview(review);
+        stashFacade.setReview(review);
 
         // First review : 1 comment on file and 1 comment on summary message
         // Second review: 1 comment on summary message
