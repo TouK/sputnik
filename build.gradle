@@ -1,12 +1,32 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.3.0'
+        classpath group: 'pl.allegro.tech.build', name: 'axion-release-plugin', version: '0.9.9'
+    }
+}
+
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'jacoco'
 apply plugin: 'coveralls'
-
 apply plugin: 'maven'
 apply plugin: 'signing'
+apply plugin: 'pl.allegro.tech.build.axion-release'
+
+scmVersion {
+    tag {
+        prefix = 'sputnik'
+    }
+}
+
+project.version = scmVersion.version
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -62,19 +82,13 @@ dependencies {
         exclude group: 'xalan'
         exclude group: 'com.ibm.icu'
     }
-//    compile 'org.ow2.asm:asm:5.0_BETA' // conflicting with FindBugs
     compile('xerces:xercesImpl:2.9.1') {
         exclude group: 'xml-apis'
     }
 
     // FindBugs dependencies
-    compile('com.google.code.findbugs:findbugs:3.0.0') {
-//        exclude group: 'xml-apis'
-//        exclude group: 'jaxen'
-//        exclude group: 'asm'
-    }
+    compile 'com.google.code.findbugs:findbugs:3.0.0'
     compile 'xml-apis:xml-apis:1.0.b2' // this version is needed by FindBugs on runtime
-//    runtime 'asm:asm-commons:3.3'
 
     // Scalastyle http://www.scalastyle.org/
     compile 'org.scalastyle:scalastyle_2.10:0.4.0'
@@ -103,16 +117,6 @@ dependencies {
 }
 
 // Jacoco + coveralls
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.3.0'
-    }
-}
-
 jacocoTestReport {
     reports {
         xml.enabled = true // coveralls plugin depends on xml format report
