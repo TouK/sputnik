@@ -53,13 +53,13 @@ public class VisitorBuilder {
 
     @NotNull
     private AfterReviewVisitor buildScoreAfterReviewVisitor() {
-        Map<String, Integer> passingScore = ImmutableMap.<String, Integer>of(
+        Map<String, Short> passingScore = ImmutableMap.<String, Short>of(
                 ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_PASSING_KEY),
-                Integer.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_PASSING_VALUE))
+                Short.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_PASSING_VALUE))
         );
-        Map<String, Integer> failingScore = ImmutableMap.<String, Integer>of(
+        Map<String, Short> failingScore = ImmutableMap.<String, Short>of(
                 ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_FAILING_KEY),
-                Integer.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_FAILING_VALUE))
+                Short.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_FAILING_VALUE))
         );
         String scoreStrategy = ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_STRATEGY);
         notBlank(scoreStrategy);

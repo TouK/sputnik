@@ -109,7 +109,7 @@ public class VisitorBuilderTest {
                 .hasSize(2)
                 .extracting("class")
                 .containsExactly(SummaryMessageVisitor.class, ScoreAlwaysPass.class);
-        assertThat(((ScoreAlwaysPass) afterReviewVisitors.get(1)).getPassingScore()).containsOnly(entry("Verified", 2));
+        assertThat(((ScoreAlwaysPass) afterReviewVisitors.get(1)).getPassingScore()).containsOnly(entry("Verified", (short) 2));
     }
 
     @Test
@@ -128,8 +128,8 @@ public class VisitorBuilderTest {
                 .hasSize(2)
                 .extracting("class")
                 .containsExactly(SummaryMessageVisitor.class, ScorePassIfEmpty.class);
-        assertThat(((ScorePassIfEmpty) afterReviewVisitors.get(1)).getPassingScore()).containsOnly(entry("Verified", 3));
-        assertThat(((ScorePassIfEmpty) afterReviewVisitors.get(1)).getFailingScore()).containsOnly(entry("Verified", -3));
+        assertThat(((ScorePassIfEmpty) afterReviewVisitors.get(1)).getPassingScore()).containsOnly(entry("Verified", (short) 3));
+        assertThat(((ScorePassIfEmpty) afterReviewVisitors.get(1)).getFailingScore()).containsOnly(entry("Verified", (short) -3));
     }
 
     @Test
@@ -148,8 +148,8 @@ public class VisitorBuilderTest {
                 .hasSize(2)
                 .extracting("class")
                 .containsExactly(SummaryMessageVisitor.class, ScorePassIfNoErrors.class);
-        assertThat(((ScorePassIfNoErrors) afterReviewVisitors.get(1)).getPassingScore()).containsOnly(entry("Code-Review", 1));
-        assertThat(((ScorePassIfNoErrors) afterReviewVisitors.get(1)).getFailingScore()).containsOnly(entry("Code-Review", -2));
+        assertThat(((ScorePassIfNoErrors) afterReviewVisitors.get(1)).getPassingScore()).containsOnly(entry("Code-Review", (short) 1));
+        assertThat(((ScorePassIfNoErrors) afterReviewVisitors.get(1)).getFailingScore()).containsOnly(entry("Code-Review", (short) -2));
     }
 
     @Test
@@ -164,7 +164,7 @@ public class VisitorBuilderTest {
                 .hasSize(2)
                 .extracting("class")
                 .containsExactly(SummaryMessageVisitor.class, ScoreAlwaysPass.class);
-        assertThat(((ScoreAlwaysPass) afterReviewVisitors.get(1)).getPassingScore()).containsOnly(entry("Code-Review", 1));
+        assertThat(((ScoreAlwaysPass) afterReviewVisitors.get(1)).getPassingScore()).containsOnly(entry("Code-Review", (short) 1));
     }
 
 }

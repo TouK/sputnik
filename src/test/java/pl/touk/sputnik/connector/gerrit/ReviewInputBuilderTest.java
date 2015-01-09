@@ -1,8 +1,8 @@
 package pl.touk.sputnik.connector.gerrit;
 
+import com.google.gerrit.extensions.api.changes.ReviewInput;
 import org.junit.Test;
 import pl.touk.sputnik.ReviewBuilder;
-import pl.touk.sputnik.connector.gerrit.json.ReviewInput;
 import pl.touk.sputnik.review.Review;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,8 +18,8 @@ public class ReviewInputBuilderTest {
         assertThat(reviewInput.message).isEqualTo("Total 8 violations found");
         assertThat(reviewInput.comments).hasSize(4);
         assertThat(reviewInput.comments.get("filename1")).hasSize(2);
-        assertThat(reviewInput.comments.get("filename1").get(0).getMessage()).isEqualTo("test1");
-        assertThat(reviewInput.labels.get("Code-Review")).isEqualTo(1);
+        assertThat(reviewInput.comments.get("filename1").get(0).message).isEqualTo("test1");
+        assertThat(reviewInput.labels.get("Code-Review")).isEqualTo((short) 1);
     }
 
 }

@@ -16,9 +16,9 @@ public class ScoreAlwaysPassTest {
     public void shouldAddScoreToReview() {
         Review review = new Review(Collections.<ReviewFile>emptyList());
 
-        new ScoreAlwaysPass(ImmutableMap.of("Sputnik-Pass", 1)).afterReview(review);
+        new ScoreAlwaysPass(ImmutableMap.of("Sputnik-Pass", (short) 1)).afterReview(review);
 
-        assertThat(review.getScores()).containsOnly(entry("Sputnik-Pass", 1));
+        assertThat(review.getScores()).containsOnly(entry("Sputnik-Pass", (short) 1));
     }
 
 }
