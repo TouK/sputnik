@@ -4,13 +4,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.ParseException;
 import org.jetbrains.annotations.NotNull;
-
-import pl.touk.sputnik.configuration.CliOption;
-import pl.touk.sputnik.configuration.CliWrapper;
-import pl.touk.sputnik.configuration.Configuration;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
-import pl.touk.sputnik.configuration.GeneralOption;
-import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
+import pl.touk.sputnik.configuration.*;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.ConnectorFacadeFactory;
 import pl.touk.sputnik.connector.ConnectorType;
@@ -24,6 +18,7 @@ public final class Main {
     private Main() {}
 
     public static void main(String[] args) {
+        printWelcomeMessage();
         CliWrapper cliWrapper = new CliWrapper();
         CommandLine commandLine = null;
         try {
@@ -61,5 +56,9 @@ public final class Main {
         HelpFormatter helpFormatter = new HelpFormatter();
         helpFormatter.setWidth(WIDTH);
         helpFormatter.printHelp(SPUTNIK, cliOptions.getOptions(), true);
+    }
+
+    private static void printWelcomeMessage() {
+        System.out.println("Sputnik version " + Main.class.getPackage().getImplementationVersion());
     }
 }

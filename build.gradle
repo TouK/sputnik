@@ -34,7 +34,7 @@ group = 'pl.touk'
 version = '1.4.0'
 mainClassName = 'pl.touk.sputnik.Main'
 
-run {    
+run {
     // You can launch Sputnik having only build.gradle file in your repo and executing:
     // gradle run -Dexec.args="--conf example.properties --changeId 1234 --revisionId 4321"
     def arguments = System.getProperty("exec.args")
@@ -147,6 +147,15 @@ artifacts {
 
     archives javadocJar
     archives sourcesJar
+}
+
+jar {
+    manifest {
+        attributes("Specification-Title": "Sputnik",
+                   "Specification-Version": version,
+                   "Implementation-Title": "Sputnik",
+                   "Implementation-Version": scmVersion.rawVersion.version)
+    }
 }
 
 signing {
