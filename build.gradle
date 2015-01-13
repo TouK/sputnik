@@ -31,7 +31,6 @@ project.version = scmVersion.version
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 group = 'pl.touk'
-version = '1.4.0'
 mainClassName = 'pl.touk.sputnik.Main'
 
 run {
@@ -152,7 +151,7 @@ artifacts {
 jar {
     manifest {
         attributes("Specification-Title": "Sputnik",
-                   "Specification-Version": version,
+                   "Specification-Version": scmVersion.rawVersion.version,
                    "Implementation-Title": "Sputnik",
                    "Implementation-Version": scmVersion.rawVersion.version)
     }
