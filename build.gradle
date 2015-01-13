@@ -104,7 +104,7 @@ dependencies {
     compile 'com.googlecode.jslint4java:jslint4java:2.0.5'
 
     // JSHint
-    compile 'pl.gildur:jshint4j:1.0.0'
+    compile 'pl.gildur:jshint4j:1.0.1'
 
     // Test dependencies
     testCompile 'junit:junit:4.11'
