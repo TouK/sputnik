@@ -9,7 +9,10 @@ public enum GeneralOption implements ConfigurationOption {
     PROCESS_TEST_FILES("global.processTestFiles", "Process test files?", "true"),
     MAX_NUMBER_OF_COMMENTS("global.maxNumberOfComments", "Maximum number of comments to submit", "0"),
     COMMENT_ONLY_CHANGED_LINES("global.commentOnlyChangedLines", "Comment only changed lines and context", "false"),
-
+    COMMENT_FORMAT("global.commentFormat", "Sputnik comment format. {0}: reporter, {1}: level, {2}: message",
+            "[{0}] {1}: {2}"),
+    PROBLEM_FORMAT("global.problemFormat", "Sputnik problem format. {0}: reporter, {1}: message",
+            "There is a problem with {0}: {1}"),
     CONNECTOR_TYPE("connector.type", "Connector: <stash|gerrit>", "gerrit"),
     HOST("connector.host", "Connector server host", "localhost"),
     PORT("connector.port", "Connector server port", "80"),
