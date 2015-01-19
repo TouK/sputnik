@@ -9,13 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static pl.touk.sputnik.review.Paths.*;
+
 @Getter
 public class ReviewFile {
-    private static final String ENTRY_REGEX = ".*src/(main|test)/java/";
-    private static final String JAVA = "java/";
-    private static final String SRC_MAIN = "src/main/";
-    private static final String SRC_TEST = "src/test/";
-    private static final String DOT = ".";
     private static final Pattern ENTRY_PATTERN = Pattern.compile(ENTRY_REGEX);
 
     private final String reviewFilename;
