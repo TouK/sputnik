@@ -1,76 +1,71 @@
 package pl.touk.sputnik.connector.gerrit;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.apache.commons.lang3.StringUtils;
+import com.google.gerrit.extensions.api.GerritApi;
+import com.google.gerrit.extensions.api.changes.ReviewInput;
+import com.google.gerrit.extensions.common.FileInfo;
+import com.google.gerrit.extensions.restapi.RestApiException;
 import org.jetbrains.annotations.NotNull;
-
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.Connectors;
-import pl.touk.sputnik.connector.gerrit.json.FileInfo;
-import pl.touk.sputnik.connector.gerrit.json.ListFilesResponse;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 
 public class GerritFacade implements ConnectorFacade {
-    private static final String RESPONSE_PREFIX = ")]}'";
     private static final String COMMIT_MSG = "/COMMIT_MSG";
-    private GerritConnector gerritConnector;
-    private ObjectMapper objectMapper = new ObjectMapper();
 
-    public GerritFacade(GerritConnector gerritConnector) {
-        this.gerritConnector = gerritConnector;
+    private final GerritApi gerritApi;
+    private final GerritPatchset gerritPatchset;
+
+    public GerritFacade(GerritApi gerritApi, GerritPatchset gerritPatchset) {
+        this.gerritApi = gerritApi;
+        this.gerritPatchset = gerritPatchset;
     }
 
     @NotNull
     @Override
     public List<ReviewFile> listFiles() {
         try {
-            String response = gerritConnector.listFiles();
-            String jsonString = trimResponse(response);
-            ListFilesResponse listFilesResponse = objectMapper.readValue(jsonString, ListFilesResponse.class);
-
             List<ReviewFile> files = new ArrayList<ReviewFile>();
-            for (Map.Entry<String, FileInfo> stringFileInfoEntry : listFilesResponse.entrySet()) {
-                if (COMMIT_MSG.equals(stringFileInfoEntry.getKey())) {
+            Map<String, FileInfo> changeFiles = gerritApi.changes()
+                    .id(gerritPatchset.getChangeId()).revision(gerritPatchset.getRevisionId()).files();
+
+            for (Map.Entry<String, FileInfo> changeFileEntry : changeFiles.entrySet()) {
+                if (COMMIT_MSG.equals(changeFileEntry.getKey())) {
                     continue;
                 }
-                FileInfo value = stringFileInfoEntry.getValue();
-                if (value.getStatus() == FileInfo.Status.DELETED) {
+                FileInfo fileInfo = changeFileEntry.getValue();
+                if (isDeleted(fileInfo)) {
                     continue;
                 }
-                files.add(new ReviewFile(stringFileInfoEntry.getKey()));
+                files.add(new ReviewFile(changeFileEntry.getKey()));
             }
             return files;
-        } catch (IOException | URISyntaxException e) {
+        } catch (RestApiException e) {
             throw new GerritException("Error when listing files", e);
         }
+    }
+
+    private boolean isDeleted(FileInfo fileInfo) {
+        return fileInfo.status != null && fileInfo.status == 'D';
     }
 
     @Override
     public void setReview(@NotNull Review review) {
         try {
-            String json = objectMapper.writeValueAsString(new ReviewInputBuilder().toReviewInput(review));
-            gerritConnector.sendReview(json);
-        } catch (IOException | URISyntaxException e) {
+            ReviewInput reviewInput = new ReviewInputBuilder().toReviewInput(review);
+            gerritApi.changes().id(gerritPatchset.getChangeId()).revision(gerritPatchset.getRevisionId())
+                    .review(reviewInput);
+        } catch (RestApiException e) {
             throw new GerritException("Error when setting review", e);
         }
-    }
-
-
-    @NotNull
-    protected String trimResponse(@NotNull String response) {
-        return StringUtils.replaceOnce(response, RESPONSE_PREFIX, "");
     }
 
     @Override

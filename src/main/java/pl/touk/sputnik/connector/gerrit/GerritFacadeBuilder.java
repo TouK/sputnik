@@ -1,18 +1,21 @@
 package pl.touk.sputnik.connector.gerrit;
 
-import org.apache.http.HttpHost;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.impl.auth.DigestScheme;
-import org.apache.http.impl.client.CloseableHttpClient;
+import com.google.common.base.Strings;
+import com.google.gerrit.extensions.api.GerritApi;
+import com.urswolfer.gerrit.client.rest.GerritAuthData;
+import com.urswolfer.gerrit.client.rest.GerritRestApiFactory;
+import com.urswolfer.gerrit.client.rest.http.HttpClientBuilderExtension;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.CliOption;
 import pl.touk.sputnik.connector.ConnectorDetails;
-import pl.touk.sputnik.connector.http.HttpConnector;
 import pl.touk.sputnik.connector.http.HttpHelper;
 
 import static org.apache.commons.lang3.Validate.notBlank;
 
+@Slf4j
 public class GerritFacadeBuilder {
 
     private HttpHelper httpHelper = new HttpHelper();
@@ -22,11 +25,24 @@ public class GerritFacadeBuilder {
         ConnectorDetails connectorDetails = new ConnectorDetails();
         GerritPatchset gerritPatchset = buildGerritPatchset();
 
-        HttpHost httpHost = httpHelper.buildHttpHost(connectorDetails);
-        HttpClientContext httpClientContext = httpHelper.buildClientContext(httpHost, new DigestScheme());
-        CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, connectorDetails);
+        GerritRestApiFactory gerritRestApiFactory = new GerritRestApiFactory();
+        String hostUri = httpHelper.buildHttpHostUri(connectorDetails);
+        if (!Strings.isNullOrEmpty(connectorDetails.getPath())) {
+            hostUri += connectorDetails.getPath();
+        }
+        log.info("Using Gerrit URL: {}", hostUri);
+        GerritAuthData.Basic authData = new GerritAuthData.Basic(hostUri,
+                connectorDetails.getUsername(), connectorDetails.getPassword());
+        GerritApi gerritApi = gerritRestApiFactory.create(authData, new HttpClientBuilderExtension() {
+            @Override
+            public HttpClientBuilder extend(HttpClientBuilder httpClientBuilder, GerritAuthData authData) {
+                HttpClientBuilder clientBuilder = super.extend(httpClientBuilder, authData);
+                clientBuilder.setSSLSocketFactory(httpHelper.buildSSLSocketFactory());
+                return clientBuilder;
+            }
+        });
 
-        return new GerritFacade(new GerritConnector(new HttpConnector(closeableHttpClient, httpClientContext, connectorDetails.getPath()), gerritPatchset));
+        return new GerritFacade(gerritApi, gerritPatchset);
     }
 
     @NotNull

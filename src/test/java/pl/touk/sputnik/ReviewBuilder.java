@@ -14,7 +14,7 @@ public class ReviewBuilder {
         Review review = new Review(reviewFiles);
         review.setTotalViolationCount(8);
         review.getMessages().add("Total 8 violations found");
-        review.getScores().put("Code-Review", 1);
+        review.getScores().put("Code-Review", (short) 1);
         return review;
     }
 

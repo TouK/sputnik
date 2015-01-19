@@ -13,7 +13,7 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor
 public class ScoreAlwaysPass implements AfterReviewVisitor {
-    private final Map<String, Integer> passingScore;
+    private final Map<String, Short> passingScore;
 
     @Override
     public void afterReview(@NotNull Review review) {

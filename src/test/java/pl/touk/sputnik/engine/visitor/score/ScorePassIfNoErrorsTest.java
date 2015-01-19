@@ -10,8 +10,8 @@ import java.util.Map;
 import static org.mockito.Mockito.*;
 
 public class ScorePassIfNoErrorsTest {
-    private static final Map<String, Integer> PASSING_SCORE = ImmutableMap.of("Sputnik-Pass", 1);
-    private static final Map<String, Integer> FAILING_SCORE = ImmutableMap.of("Code-Review", -2);
+    private static final Map<String, Short> PASSING_SCORE = ImmutableMap.of("Sputnik-Pass", (short) 1);
+    private static final Map<String, Short> FAILING_SCORE = ImmutableMap.of("Code-Review", (short) -2);
 
     private Review reviewMock = mock(Review.class, RETURNS_DEEP_STUBS);
 

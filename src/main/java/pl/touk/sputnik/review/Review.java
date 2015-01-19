@@ -36,7 +36,7 @@ public class Review {
      * Messages that will be displayed on review summary with your code-review tool
      */
     private List<String> messages = new ArrayList<>();
-    private Map<String, Integer> scores = new HashMap<>();
+    private Map<String, Short> scores = new HashMap<>();
 
     public Review(@NotNull List<ReviewFile> files) {
         this.files = files;

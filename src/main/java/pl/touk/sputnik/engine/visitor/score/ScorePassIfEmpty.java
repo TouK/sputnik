@@ -13,8 +13,8 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor
 public class ScorePassIfEmpty implements AfterReviewVisitor {
-    private final Map<String, Integer> passingScore;
-    private final Map<String, Integer> failingScore;
+    private final Map<String, Short> passingScore;
+    private final Map<String, Short> failingScore;
 
     @Override
     public void afterReview(@NotNull Review review) {
