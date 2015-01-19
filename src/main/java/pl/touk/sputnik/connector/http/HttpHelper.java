@@ -34,6 +34,11 @@ public class HttpHelper {
     }
 
     @NotNull
+    public String buildHttpHostUri(@NotNull ConnectorDetails connectorDetails) {
+        return buildHttpHost(connectorDetails).toURI();
+    }
+
+    @NotNull
     public CloseableHttpClient buildClient(@NotNull HttpHost httpHost, @NotNull ConnectorDetails connectorDetails) {
         HttpClientBuilder httpClientBuilder = HttpClients.custom();
         httpClientBuilder.setDefaultCredentialsProvider(buildBasicCredentialsProvider(httpHost, connectorDetails.getUsername(), connectorDetails.getPassword()));
@@ -63,7 +68,7 @@ public class HttpHelper {
     }
 
     @Nullable
-    private LayeredConnectionSocketFactory buildSSLSocketFactory() {
+    public LayeredConnectionSocketFactory buildSSLSocketFactory() {
         try {
             return new SSLConnectionSocketFactory(
                     SSLContexts.custom().loadTrustMaterial(null, new TrustStrategy() {
