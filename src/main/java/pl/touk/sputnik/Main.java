@@ -38,8 +38,7 @@ public final class Main {
     }
 
     private static ConnectorFacade getConnectorFacade(Configuration configuration) {
-        ConnectorType connectorType = ConnectorType.getValidConnectorType(configuration
-                .getProperty(GeneralOption.CONNECTOR_TYPE));
+        ConnectorType connectorType = ConnectorType.getValidConnectorType(configuration.getProperty(GeneralOption.CONNECTOR_TYPE));
         ConnectorFacade facade = null;
         try {
             facade = ConnectorFacadeFactory.INSTANCE.build(connectorType);

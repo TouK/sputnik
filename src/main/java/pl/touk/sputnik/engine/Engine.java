@@ -2,6 +2,7 @@ package pl.touk.sputnik.engine;
 
 import lombok.extern.slf4j.Slf4j;
 import pl.touk.sputnik.connector.ConnectorFacade;
+import pl.touk.sputnik.di.DIContext;
 import pl.touk.sputnik.engine.visitor.AfterReviewVisitor;
 import pl.touk.sputnik.engine.visitor.BeforeReviewVisitor;
 import pl.touk.sputnik.review.Review;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Slf4j
 public class Engine {
-    private static final long THOUSAND = 1000L;
+
     private final ConnectorFacade facade;
 
     public Engine(ConnectorFacade facade) {
@@ -27,7 +28,7 @@ public class Engine {
             beforeReviewVisitor.beforeReview(review);
         }
 
-        List<ReviewProcessor> processors = new ProcessorBuilder().buildProcessors();
+        List<ReviewProcessor> processors = new ProcessorBuilder().buildProcessors(DIContext.context());
         ReviewRunner reviewRunner = new ReviewRunner(review);
         for (ReviewProcessor processor : processors) {
             reviewRunner.review(processor);

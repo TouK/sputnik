@@ -11,7 +11,11 @@ import org.jetbrains.annotations.Nullable;
 import pl.touk.sputnik.review.filter.FileFilter;
 import pl.touk.sputnik.review.transformer.FileTransformer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Getter
@@ -45,11 +49,6 @@ public class Review {
     @NotNull
     public <T> List<T> getFiles(@NotNull FileFilter fileFilter, @NotNull FileTransformer<T> fileTransformer) {
         return fileTransformer.transform(fileFilter.filter(files));
-    }
-
-    @NotNull
-    public List<String> getBuildDirs() {
-        return Lists.transform(files, new ReviewFileBuildDirFunction());
     }
 
     @NotNull
@@ -88,15 +87,6 @@ public class Review {
         totalViolationCount += 1;
         Integer currentCount = violationCount.get(severity);
         violationCount.put(severity, currentCount == null ? 1 : currentCount + 1);
-    }
-
-    @NoArgsConstructor
-    private static class ReviewFileBuildDirFunction implements Function<ReviewFile, String> {
-
-        @Override
-        public String apply(ReviewFile from) {
-            return from.getBuildDir();
-        }
     }
 
     @NoArgsConstructor

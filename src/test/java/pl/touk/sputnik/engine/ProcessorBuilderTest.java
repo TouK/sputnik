@@ -8,6 +8,7 @@ import pl.touk.sputnik.configuration.GeneralOption;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static pl.touk.sputnik.di.DIContext.context;
 
 public class ProcessorBuilderTest {
 
@@ -15,7 +16,7 @@ public class ProcessorBuilderTest {
     public void shouldNotBuildAnyProcessor() {
         new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
 
-        assertThat(new ProcessorBuilder().buildProcessors()).isEmpty();
+        assertThat(new ProcessorBuilder().buildProcessors(context())).isEmpty();
     }
 
     @Test
@@ -28,7 +29,7 @@ public class ProcessorBuilderTest {
                 GeneralOption.CODE_NARC_ENABLED.getKey(), "false"
         ));
 
-        assertThat(new ProcessorBuilder().buildProcessors()).isEmpty();
+        assertThat(new ProcessorBuilder().buildProcessors(context())).isEmpty();
     }
 
     @Test
@@ -41,6 +42,6 @@ public class ProcessorBuilderTest {
                 GeneralOption.CODE_NARC_ENABLED.getKey(), "true"
         ));
 
-        assertThat(new ProcessorBuilder().buildProcessors()).hasSize(5);
+        assertThat(new ProcessorBuilder().buildProcessors(context())).hasSize(5);
     }
 }

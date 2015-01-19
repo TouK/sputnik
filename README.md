@@ -7,7 +7,7 @@
 
 ## Usage
 
-Sputnik is intended to run just after your Jenkins/CI server build. It should be executed in the workspace root directory to find files to analyze.
+Sputnik is intended to run just after your Jenkins/CI server build. It should be executed in the root directory of the analyzed project to find files to analyze.
 
 Three parameters are required: your configuration file (details below), Gerrit's changeId and revisionId:
 
@@ -57,15 +57,20 @@ If you want sputnik to use your SonarQube rules just download them from your Son
 - create configuration file (you can just paste and edit an example above), e.g. `/opt/sputnik/myconf.properties`
 - you can now run sputnik like this:
 ```
-/opt/sputnik/sputnik-1.0/bin/sputnik --conf /opt/sputnik/gerrit.properties --changeId I0a2afb7ae4a94ab1ab473ba00e2ec7de381799a0 --revisionId 3f37692af2290e8e3fd16d2f43701c24346197f0
+/opt/sputnik/bin/sputnik --conf /opt/sputnik/gerrit.properties --changeId I0a2afb7ae4a94ab1ab473ba00e2ec7de381799a0 --revisionId 3f37692af2290e8e3fd16d2f43701c24346197f0
 ```
+
+### Build tool
+
+Sputnik currently supports Maven (default) and Gradle. Some processors (e.g. FindBugs) analyze compiled classes, so it's important to set
+the build tool property correctly. To change it to Gradle just set `project.build.tool=gradle` in your `sputnik.properties` file.
 
 ### Stash support
 
 If you choose to run sputnik with Stash instead of Gerrit, you'll need to run it in the following manner:
 
 ```
-/opt/sputnik/sputnik-1.2/bin/sputnik --conf /opt/sputnik/stash.properties --pullRequestId 15
+/opt/sputnik/bin/sputnik --conf /opt/sputnik/stash.properties --pullRequestId 15
 ```
 
 It is convenient to add sputnik's configuration file (`myconf.properties` in the above example) to your
@@ -78,7 +83,7 @@ If you have Jenkins job that uses Gerrit Trigger plugin it's very easy to integr
 - create a user in Gerrit with HTTP password access and Non-Interactive Users group (take a look at Gerrit documentation [https://git.eclipse.org/r/Documentation/cmd-create-account.html](here))
 - add Post-Build step to your Jenkins job: Execute bash shell:
 ```
-/opt/sputnik/sputnik-1.0/bin/sputnik --conf /opt/sputnik/myconf.properties --changeId $GERRIT_CHANGE_ID --revisionId $GERRIT_PATCHSET_REVISION
+/opt/sputnik/bin/sputnik --conf /opt/sputnik/myconf.properties --changeId $GERRIT_CHANGE_ID --revisionId $GERRIT_PATCHSET_REVISION
 # This line makes sure that this Post-Build step always returns exit code 0
 # so it won't affect your main build result
 echo "exit 0 workaround"

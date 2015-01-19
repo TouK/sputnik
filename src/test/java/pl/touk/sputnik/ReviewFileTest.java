@@ -9,12 +9,10 @@ public class ReviewFileTest {
     private static final String MAIN_FILENAME = "gerrit-server/src/main/java/com/google/gerrit/server/project/RefControl.java";
     private static final String MAIN_JAVA_CLASS_NAME = "com.google.gerrit.server.project.RefControl";
     private static final String MAIN_JAVA_SOURCE_DIR = "gerrit-server/src/main/java/";
-    private static final String MAIN_JAVA_BUILD_DIR = "gerrit-server/target/classes/";
 
     private static final String TEST_FILENAME = "gerrit-server/src/test/java/com/google/gerrit/server/project/RefControlTest.java";
     private static final String TEST_JAVA_CLASS_NAME = "com.google.gerrit.server.project.RefControlTest";
     private static final String TEST_JAVA_SOURCE_DIR = "gerrit-server/src/test/java/";
-    private static final String TEST_JAVA_BUILD_DIR = "gerrit-server/target/test-classes/";
 
     @Test
     public void shouldReturnMainJavaClassName() {
@@ -35,15 +33,6 @@ public class ReviewFileTest {
     }
 
     @Test
-    public void shouldReturnMainJavaBuildDirectory() {
-        //given
-        ReviewFile reviewFile = createReviewFile(MAIN_FILENAME);
-
-        //expect
-        assertThat(reviewFile.getBuildDir()).isEqualTo(MAIN_JAVA_BUILD_DIR);
-    }
-
-    @Test
     public void shouldReturnTestJavaClassName() {
         //given
         ReviewFile reviewFile = createReviewFile(TEST_FILENAME);
@@ -59,15 +48,6 @@ public class ReviewFileTest {
 
         //expect
         assertThat(reviewFile.getSourceDir()).isEqualTo(TEST_JAVA_SOURCE_DIR);
-    }
-
-    @Test
-    public void shouldReturnTestJavaBuildDirectory() {
-        //given
-        ReviewFile reviewFile = createReviewFile(TEST_FILENAME);
-
-        //expect
-        assertThat(reviewFile.getBuildDir()).isEqualTo(TEST_JAVA_BUILD_DIR);
     }
 
     private ReviewFile createReviewFile(String reviewFileName) {
