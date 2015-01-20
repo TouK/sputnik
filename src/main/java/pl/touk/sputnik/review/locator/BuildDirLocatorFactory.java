@@ -1,6 +1,6 @@
 package pl.touk.sputnik.review.locator;
 
-import pl.touk.sputnik.build.BuildTool;
+import pl.touk.sputnik.configuration.BuildTool;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;

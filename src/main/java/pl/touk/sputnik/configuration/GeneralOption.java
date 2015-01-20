@@ -2,7 +2,6 @@ package pl.touk.sputnik.configuration;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import pl.touk.sputnik.build.BuildTool;
 import pl.touk.sputnik.connector.ConnectorType;
 
 @AllArgsConstructor
