@@ -64,7 +64,7 @@ dependencies {
 
     compile 'com.jayway.jsonpath:json-path:0.9.1'
 
-    compile 'com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:0.8.0'
+    compile 'com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:0.8.1'
 
     // Checkstyle dependencies
     compile 'com.puppycrawl.tools:checkstyle:6.1'
