@@ -45,10 +45,10 @@ public enum GeneralOption implements ConfigurationOption {
     CODE_NARC_EXCLUDES("codenarc.excludes", "CodeNarc exclude filter", ""),
 
     JSLINT_ENABLED("jslint.enabled", "JSLint enabled", "false"),
-    JSLINT_CONFIGURATION_FILE("jslint.configurationFile", "JSLint configuration file", "jslint.properties"),
+    JSLINT_CONFIGURATION_FILE("jslint.configurationFile", "JSLint configuration file", ""),
 
     JSHINT_ENABLED("jshint.enabled", "JSHint enabled", "false"),
-    JSHINT_CONFIGURATION_FILE("jshint.configurationFile", "JSHint configuration file", "jshint.js"),
+    JSHINT_CONFIGURATION_FILE("jshint.configurationFile", "JSHint configuration file", ""),
 
     SONAR_ENABLED("sonar.enabled", "Sonar enabled", "false"),
     SONAR_PROPERTIES("sonar.configurationFiles", "Sonar base configuration", "sonar-project.properties"),

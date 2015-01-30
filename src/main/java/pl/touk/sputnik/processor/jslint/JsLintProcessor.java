@@ -22,6 +22,7 @@ import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.google.common.base.Strings;
 import com.googlecode.jslint4java.Issue;
 import com.googlecode.jslint4java.JSLint;
 import com.googlecode.jslint4java.JSLintBuilder;
@@ -35,7 +36,7 @@ public class JsLintProcessor implements ReviewProcessor {
 
     @Override
     public ReviewResult process(Review review) {
-        final Properties configProperties = loadBaseProperties();
+        final Properties configProperties = loadConfigurationProperties();
         return toReviewResult(lint(review, configProperties));
     }
 
@@ -59,6 +60,9 @@ public class JsLintProcessor implements ReviewProcessor {
     }
 
     private void applyProperties(JSLint jsLint, Properties configProperties) {
+        if (configProperties == null) {
+            return;
+        }
         for (String propertyName : configProperties.stringPropertyNames()) {
             Option option;
             try {
@@ -81,23 +85,36 @@ public class JsLintProcessor implements ReviewProcessor {
     }
 
     /**
-     * Load JSHint configuration property files specified by {@link GeneralOption#JSLINT_CONFIGURATION_FILE}
+     * Load JSLint configuration property file specified by {@link GeneralOption#JSLINT_CONFIGURATION_FILE}
      * configuration key
      *
      * @return a Properties instance
      */
-    private Properties loadBaseProperties() {
+    private Properties loadConfigurationProperties() {
+        String configurationFileName = getConfigurationFileName();
+        if (Strings.isNullOrEmpty(configurationFileName)) {
+            log.info("JSLint property file not specified. Using default configuration.");
+            return null;
+        }
+        return loadProperties(configurationFileName);
+    }
+
+    private Properties loadProperties(String configurationFileName) {
         final Properties props = new Properties();
-        String configurationFile = ConfigurationHolder.instance().getProperty(GeneralOption.JSLINT_CONFIGURATION_FILE);
-        final File propertyFile = new File(StringUtils.strip(configurationFile));
+        final File propertyFile = new File(StringUtils.strip(configurationFileName));
         log.info("Loading {}", propertyFile.getAbsolutePath());
         try {
             props.load(new FileInputStream(propertyFile));
         } catch (IOException e) {
             throw new ReviewException("IO exception when reading JSLint configuration file.", e);
         }
-
         return props;
+    }
+
+    private String getConfigurationFileName() {
+        String configurationFile = ConfigurationHolder.instance().getProperty(GeneralOption.JSLINT_CONFIGURATION_FILE);
+        log.info("Using JSLint configuration file {}", configurationFile);
+        return configurationFile;
     }
 
 
