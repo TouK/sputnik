@@ -1,27 +1,25 @@
 package pl.touk.sputnik.processor.sonar;
 
+import com.google.common.annotations.VisibleForTesting;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
+import org.sonar.runner.api.EmbeddedRunner;
+import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.GeneralOption;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-import org.apache.commons.lang.StringUtils;
-import org.sonar.runner.api.EmbeddedRunner;
-import com.google.common.annotations.VisibleForTesting;
-
-import pl.touk.sputnik.configuration.ConfigurationHolder;
-import pl.touk.sputnik.configuration.GeneralOption;
-
 @Slf4j
 @AllArgsConstructor
 public class SonarRunner {
 
     private final List<String> files;
-    private final EmbeddedRunner sonarEnbeddedRunner;
+    private final EmbeddedRunner sonarEmbeddedRunner;
 
     @VisibleForTesting
     static final String OUTPUT_DIR = ".sonar";
@@ -56,8 +54,8 @@ public class SonarRunner {
         Properties props = loadBaseProperties();
         setAdditionalProperties(props);
         log.info("Sonar configuration: {}", props.toString());
-        sonarEnbeddedRunner.addProperties(props);
-        sonarEnbeddedRunner.execute();
+        sonarEmbeddedRunner.addProperties(props);
+        sonarEmbeddedRunner.execute();
         return new File(OUTPUT_DIR, OUTPUT_FILE);
     }
 

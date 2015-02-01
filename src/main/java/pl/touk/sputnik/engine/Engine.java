@@ -2,7 +2,6 @@ package pl.touk.sputnik.engine;
 
 import lombok.extern.slf4j.Slf4j;
 import pl.touk.sputnik.connector.ConnectorFacade;
-import pl.touk.sputnik.di.DIContext;
 import pl.touk.sputnik.engine.visitor.AfterReviewVisitor;
 import pl.touk.sputnik.engine.visitor.BeforeReviewVisitor;
 import pl.touk.sputnik.review.Review;
@@ -28,7 +27,7 @@ public class Engine {
             beforeReviewVisitor.beforeReview(review);
         }
 
-        List<ReviewProcessor> processors = new ProcessorBuilder().buildProcessors(DIContext.context());
+        List<ReviewProcessor> processors = new ProcessorBuilder().buildProcessors();
         ReviewRunner reviewRunner = new ReviewRunner(review);
         for (ReviewProcessor processor : processors) {
             reviewRunner.review(processor);

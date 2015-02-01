@@ -1,6 +1,5 @@
 package pl.touk.sputnik.engine;
 
-import com.truward.di.InjectionContext;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
@@ -20,7 +19,7 @@ import java.util.List;
 public class ProcessorBuilder {
 
     @NotNull
-    public List<ReviewProcessor> buildProcessors(InjectionContext context) {
+    public List<ReviewProcessor> buildProcessors() {
         List<ReviewProcessor> processors = new ArrayList<>();
         if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.CHECKSTYLE_ENABLED))) {
             processors.add(new CheckstyleProcessor());
@@ -29,7 +28,7 @@ public class ProcessorBuilder {
             processors.add(new PmdProcessor());
         }
         if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.FINDBUGS_ENABLED))) {
-            processors.add(new FindBugsProcessor(context));
+            processors.add(new FindBugsProcessor());
         }
         if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.SCALASTYLE_ENABLED))) {
             processors.add(new ScalastyleProcessor());

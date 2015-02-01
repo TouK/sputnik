@@ -19,7 +19,6 @@ import java.util.List;
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.assertj.core.api.Assertions.assertThat;
-import static pl.touk.sputnik.di.DIContext.context;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FindBugsProcessorTest extends TestEnvironment {
@@ -29,7 +28,7 @@ public class FindBugsProcessorTest extends TestEnvironment {
     @Before
     public void setUp() throws Exception {
         new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.BUILD_TOOL.getKey(), "gradle"));
-        findBugsProcessor = new FindBugsProcessor(context());
+        findBugsProcessor = new FindBugsProcessor();
     }
 
     @Test

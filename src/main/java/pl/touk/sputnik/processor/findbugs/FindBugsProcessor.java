@@ -1,6 +1,5 @@
 package pl.touk.sputnik.processor.findbugs;
 
-import com.truward.di.InjectionContext;
 import edu.umd.cs.findbugs.ClassScreener;
 import edu.umd.cs.findbugs.DetectorFactoryCollection;
 import edu.umd.cs.findbugs.FindBugs2;
@@ -20,6 +19,7 @@ import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.filter.JavaFilter;
 import pl.touk.sputnik.review.locator.BuildDirLocator;
+import pl.touk.sputnik.review.locator.BuildDirLocatorFactory;
 import pl.touk.sputnik.review.transformer.ClassNameTransformer;
 
 @Slf4j
@@ -28,9 +28,9 @@ public class FindBugsProcessor implements ReviewProcessor {
     private final CollectorBugReporter collectorBugReporter;
     private final BuildDirLocator buildDirLocator;
 
-    public FindBugsProcessor(InjectionContext context) {
+    public FindBugsProcessor() {
         collectorBugReporter = createBugReporter();
-        buildDirLocator = context.getBean(BuildDirLocator.class);
+        buildDirLocator = BuildDirLocatorFactory.create();
     }
 
     @Nullable
