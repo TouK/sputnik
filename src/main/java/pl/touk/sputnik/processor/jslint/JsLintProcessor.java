@@ -13,14 +13,11 @@ import pl.touk.sputnik.review.filter.JavaScriptFilter;
 import pl.touk.sputnik.review.transformer.IOFileTransformer;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
-import org.apache.commons.lang.StringUtils;
 
 import com.google.common.base.Strings;
 import com.googlecode.jslint4java.Issue;
@@ -101,11 +98,11 @@ public class JsLintProcessor implements ReviewProcessor {
 
     private Properties loadProperties(String configurationFileName) {
         final Properties props = new Properties();
-        final File propertyFile = new File(StringUtils.strip(configurationFileName));
-        log.info("Loading {}", propertyFile.getAbsolutePath());
-        try {
-            props.load(new FileInputStream(propertyFile));
+        try (FileReader fileReader = new FileReader(configurationFileName)) {
+            log.info("Loading {}", configurationFileName);
+            props.load(fileReader);
         } catch (IOException e) {
+            log.error("Load JSLint properties operation failed", e);
             throw new ReviewException("IO exception when reading JSLint configuration file.", e);
         }
         return props;
