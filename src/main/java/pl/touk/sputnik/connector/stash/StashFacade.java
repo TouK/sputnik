@@ -47,13 +47,23 @@ public class StashFacade implements ConnectorFacade {
 
             List<ReviewFile> files = new ArrayList<>();
             for (ReviewElement container : containers) {
-                String filePath = String.format("%s/%s", container.parent, container.name);
+                String filePath = getFilePath(container);
                 files.add(new ReviewFile(filePath));
             }
             return files;
         } catch (URISyntaxException | IOException e) {
             throw new StashException("Error when listing files", e);
         }
+    }
+
+    private String getFilePath(ReviewElement container) {
+        String filePath;
+        if (container.parent.isEmpty()) {
+            filePath = container.name;
+        } else {
+            filePath = String.format("%s/%s", container.parent, container.name);
+        }
+        return filePath;
     }
 
     @Override

@@ -48,7 +48,10 @@ public class StashFacadeTest {
                 FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)), "/json/stash-changes.json");
 
         List<ReviewFile> files = stashFacade.listFiles();
-        assertThat(files).hasSize(4);
+
+        assertThat(files).extracting("reviewFilename").containsOnly("project/RecoBuild.scala", "project/RecoRelease.scala",
+                "reco-analyzer/src/main/scala/com/allegrogroup/reco/analyzer/spark/ImportUserRecommendationsToCassandraSparkJob.scala",
+                "version.sbt");
     }
 
     @Test
