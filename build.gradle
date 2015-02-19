@@ -28,8 +28,8 @@ scmVersion {
 
 project.version = scmVersion.version
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 group = 'pl.touk'
 mainClassName = 'pl.touk.sputnik.Main'
 
@@ -44,7 +44,11 @@ run {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
+    maven {
+        url "https://repo.eclipse.org/content/groups/releases/"
+    }
 }
 
 //noinspection GroovyAssignabilityCheck
@@ -97,6 +101,7 @@ dependencies {
     // CodeNarc http://codenarc.sourceforge.net/
     compile('org.codenarc:CodeNarc:0.21') {
         exclude module: 'groovy'
+        exclude group: 'junit'
     }
 
     compile 'org.codehaus.groovy:groovy:2.3.4'
@@ -107,9 +112,13 @@ dependencies {
     // JSHint
     compile 'pl.gildur:jshint4j:1.0.1'
 
+    // github connector
+    compile 'com.jcabi:jcabi-github:0.18.1'
+    compile 'org.eclipse.jgit:org.eclipse.jgit:3.6.1.201501031845-r'
+
     // Test dependencies
     testCompile 'junit:junit:4.11'
-    testCompile 'org.mockito:mockito-all:1.9.5'
+    testCompile 'org.mockito:mockito-core:1.9.5'
     testCompile 'org.assertj:assertj-core:1.5.0'
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
     testCompile('com.github.tomakehurst:wiremock:1.46') {

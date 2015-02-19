@@ -6,8 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class StashPatchset {
-    public String pullRequestId;
-    public String repositorySlug;
-    public String projectKey;
-
+    public final String pullRequestId;
+    public final String repositorySlug;
+    public final String projectKey;
 }

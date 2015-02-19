@@ -6,6 +6,9 @@
     </encoder>
   </appender>
 
+  <logger name="org.apache.http.wire" level="DEBUG"/>
+  <logger name="com.jcabi" level="INFO"/>
+
   <root level="info">
     <appender-ref ref="STDOUT" />
   </root>

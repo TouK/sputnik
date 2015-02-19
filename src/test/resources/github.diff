@@ -1,0 +1,156 @@
+diff --git a/build.gradle b/build.gradle
+index 92953fa..1d2feef 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -4,12 +4,17 @@
+ apply plugin: 'jacoco'
+ apply plugin: 'coveralls'
+ 
++apply plugin: 'maven'
++apply plugin: 'signing'
++
+ sourceCompatibility = 1.7
+ targetCompatibility = 1.7
+-version = '1.2'
++group = 'pl.touk'
++version = '1.3.0'
+ mainClassName = 'pl.touk.sputnik.Main'
+ 
+ repositories {
++    mavenLocal()
+     mavenCentral()
+ }
+ 
+@@ -61,6 +66,15 @@
+     // Scalastyle http://www.scalastyle.org/
+     compile 'org.scalastyle:scalastyle_2.10:0.4.0'
+ 
++    // CodeNarc http://codenarc.sourceforge.net/
++    compile('org.codenarc:CodeNarc:0.21') {
++        exclude module: 'groovy'
++    }
++    compile 'org.codehaus.groovy:groovy:2.3.4'
++
++    // github connector
++    compile 'com.jcabi:jcabi-github:1.0-SNAPSHOT'
++
+     // Test dependencies
+     testCompile 'junit:junit:4.11'
+     testCompile 'org.mockito:mockito-all:1.9.5'
+@@ -88,3 +102,77 @@
+         html.enabled = true
+     }
+ }
++
++task javadocJar(type: Jar, dependsOn: javadoc) {
++    classifier = 'javadoc'
++    from 'build/docs/javadoc'
++}
++
++task sourcesJar(type: Jar) {
++    from sourceSets.main.allSource
++    classifier = 'sources'
++}
++
++artifacts {
++    archives jar
++
++    archives javadocJar
++    archives sourcesJar
++}
++
++signing {
++    required { gradle.taskGraph.hasTask("uploadArchives") }
++    sign configurations.archives
++}
+
+
+diff --git a/contrib/stash-execute.sh b/contrib/stash-execute.sh
+new file mode 100644
+index 0000000..f3180cb
+--- /dev/null
++++ b/contrib/stash-execute.sh
+@@ -0,0 +1,74 @@
++user="${bamboo_ecosystem_username}"
++password="${bamboo_ecosystem_password}"
++current_branch=${bamboo.repository.branch.name}
++
++sputnik_version="1.2"
++stash_host=???
++project_key=???
++repository_slug=???
++
++echo "current branch is: $current_branch"
++
++
++url="https://$stash_host/rest/api/1.0/projects/$project_key/repos/$repository_slug/pull-requests"
++sputnik_url="https://github.com/TouK/sputnik/releases/download/v$sputnik_version/sputnik-$sputnik_version.zip"
++
++tmp_dir=`mktemp -d`
++
++#############
++
++case "$current_branch" in
++    master|production|release*)
++        echo "Not checking master or production or release branch, exiting."
++        exit
++        ;;
++esac
++
++tmp_output="$tmp_dir/json"
++curl -s $url -u $user:$password > $tmp_output
++
++
++pyexec() {
++    echo "`/usr/bin/python -c 'import sys; exec sys.stdin.read()'`"
++}
++
++pullRequestId() {
++    pyexec <<END
++import json
++from pprint import pprint
++json_data=open('$tmp_output')
++
++data = json.load(json_data)
++json_data.close()
++
++for pr in data["values"]:
++    if pr["fromRef"]["displayId"] == "$current_branch":
++        print pr["id"]
++END
++}
++
++prId=`pullRequestId`
++
++## download sputnik
++wget -O "$tmp_dir/sputnik.zip" $sputnik_url
++cd $tmp_dir
++unzip sputnik.zip
++cd -
++
++## filter properties file
++sed -i -e "s/<username>/$user/; s/<password>/$password/" sputnik.properties
++
++## run code analysis
++cd ${bamboo.build.working.directory}
++if [ -e "sputnik.properties" ]; then 
++$tmp_dir/sputnik-$sputnik_version/bin/sputnik \
++    --conf sputnik.properties \
++    --pullRequestId $prId
++
++else
++  echo "no sputnik.properties present"
++fi
++
++## cleanup
++
++rm -R $tmp_dir
+
+diff --git a/gradle.properties b/gradle.properties
+new file mode 100644
+index 0000000..b95c940
+--- /dev/null
++++ b/gradle.properties
+@@ -0,0 +1,2 @@
++sonatypeUsername=YourSonatypeJiraUsername
++sonatypePassword=YourSonatypeJiraPassword

@@ -11,7 +11,9 @@
 
   <logger name="org.codenarc" level="debug"/>
 
-  <root level="info">
+  <logger name="org.apache.http.wire" level="debug"/>
+  
+  <root level="INFO">
     <appender-ref ref="STDOUT" />
   </root>
 </configuration>

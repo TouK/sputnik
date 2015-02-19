@@ -7,6 +7,7 @@ import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ConnectorFacade {

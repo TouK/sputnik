@@ -44,6 +44,8 @@ public enum GeneralOption implements ConfigurationOption {
     CODE_NARC_RULESET("codenarc.ruleSets", "CodeNarc rulesets file liest", "codeNarcBasicRuleset.xml"),
     CODE_NARC_EXCLUDES("codenarc.excludes", "CodeNarc exclude filter", ""),
 
+    GITHUB_API_KEY("github.api.key", "Personal access tokens for Github", ""),
+
     JSLINT_ENABLED("jslint.enabled", "JSLint enabled", "false"),
 
     JSHINT_ENABLED("jshint.enabled", "JSHint enabled", "false"),
