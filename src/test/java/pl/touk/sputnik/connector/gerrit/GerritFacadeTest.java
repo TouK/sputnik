@@ -4,9 +4,6 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import com.google.common.collect.ImmutableMap;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
-
 import com.google.gerrit.extensions.api.GerritApi;
 import com.google.gerrit.extensions.api.changes.ChangeApi;
 import com.google.gerrit.extensions.api.changes.Changes;
@@ -39,6 +36,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static pl.touk.sputnik.CatchException.catchException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GerritFacadeTest {
@@ -61,11 +59,11 @@ public class GerritFacadeTest {
 
         // when
         ConnectorFacade gerritFacade = connectionFacade.build(ConnectorType.GERRIT);
-        catchException(gerritFacade).validate(ConfigurationHolder.instance());
+        catchException(() -> gerritFacade.validate(ConfigurationHolder.instance()), (caughtException) ->
 
         // then
-        assertThat(caughtException()).isInstanceOf(GeneralOptionNotSupportedException.class).hasMessage(
-                "This connector does not support global.commentOnlyChangedLines");
+        assertThat(caughtException).isInstanceOf(GeneralOptionNotSupportedException.class).hasMessage(
+                "This connector does not support global.commentOnlyChangedLines"));
     }
 
     @Test
