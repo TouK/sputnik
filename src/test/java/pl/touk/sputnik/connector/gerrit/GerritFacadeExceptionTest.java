@@ -8,11 +8,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static pl.touk.sputnik.CatchException.catchException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GerritFacadeExceptionTest {
@@ -29,12 +28,12 @@ public class GerritFacadeExceptionTest {
         GerritFacade gerritFacade = new GerritFacade(gerritApi, new GerritPatchset("foo", "bar"));
 
         //when
-        catchException(gerritFacade).listFiles();
+        catchException(gerritFacade::listFiles, (caughtException) ->
 
         //then
-        assertThat(caughtException())
-                .isInstanceOf(GerritException.class)
-                .hasMessageContaining("Error when listing files");
+        assertThat(caughtException)
+                    .isInstanceOf(GerritException.class)
+                    .hasMessageContaining("Error when listing files"));
     }
 
 }
