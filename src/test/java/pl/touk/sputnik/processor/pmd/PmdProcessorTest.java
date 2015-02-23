@@ -5,8 +5,9 @@ import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.review.ReviewException;
 import pl.touk.sputnik.review.ReviewResult;
 
+import static com.googlecode.catchexception.CatchException.catchException;
+import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.assertj.core.api.Assertions.assertThat;
-import static pl.touk.sputnik.CatchException.catchException;
 
 public class PmdProcessorTest extends TestEnvironment {
 
@@ -29,10 +30,10 @@ public class PmdProcessorTest extends TestEnvironment {
     @Test
     public void shouldThrowReviewExceptionOnNotFoundFile() {
         // when
-        catchException(() -> fixture.process(nonexistantReview()), (caughtException) ->
+        catchException(fixture).process(nonexistantReview());
 
         // then
-        assertThat(caughtException).isInstanceOf(ReviewException.class));
+        assertThat(caughtException()).isInstanceOf(ReviewException.class);
     }
 
 }
