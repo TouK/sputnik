@@ -28,8 +28,8 @@ scmVersion {
 
 project.version = scmVersion.version
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 group = 'pl.touk'
 mainClassName = 'pl.touk.sputnik.Main'
 
@@ -111,6 +111,7 @@ dependencies {
     testCompile 'junit:junit:4.11'
     testCompile 'org.mockito:mockito-all:1.9.5'
     testCompile 'org.assertj:assertj-core:1.5.0'
+    testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
     testCompile('com.github.tomakehurst:wiremock:1.46') {
         exclude group: 'log4j'
     }

@@ -14,10 +14,11 @@ import pl.touk.sputnik.review.transformer.ClassNameTransformer;
 
 import java.util.List;
 
+import static com.googlecode.catchexception.CatchException.catchException;
+import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
-import static pl.touk.sputnik.CatchException.catchException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FindBugsProcessorTest extends TestEnvironment {
@@ -53,10 +54,10 @@ public class FindBugsProcessorTest extends TestEnvironment {
     @Test
     public void shouldThrowWhenFileNotFound() {
         //when
-        catchException(() -> findBugsProcessor.process(nonexistantReview()), (caughtException) ->
+        catchException(findBugsProcessor).process(nonexistantReview());
 
         //then
-        assertThat(caughtException).isInstanceOf(ReviewException.class));
+        assertThat(caughtException()).isInstanceOf(ReviewException.class);
     }
 
 }
