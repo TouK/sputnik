@@ -1,4 +1,4 @@
-# sputnik
+![sputnik](http://touk.github.io/sputnik/images/sputnik.png)
 
 > Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD, FindBugs, Scalastyle, JSLint and Sonar for you!
 
