@@ -115,7 +115,11 @@ If you prefer running Sputnik from Maven, there is a plugin developed by Karol L
 If you prefer running Sputnik from Gradle all you need is to have Gradle installed.
 Put build.gradle file in your repository, add config file and run:
 ```
-gradle run -Dexec.args="--conf example.properties --changeId 1234 --revisionId 4321" 
+gradle run -Dexec.args="--conf example.properties --changeId 1234 --revisionId 4321"
+```
+or use following task when launching by Jenkins plugin for Gradle:
+```
+run -Dexec.workingDir="${WORKSPACE}" -Dexec.args="--conf example.properties --changeId ${GERRIT_CHANGE_ID} --revisionId ${GERRIT_PATCHSET_REVISION}"
 ```
 
 ## Requirements

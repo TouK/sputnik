@@ -34,12 +34,17 @@ group = 'pl.touk'
 mainClassName = 'pl.touk.sputnik.Main'
 
 run {
-    // You can launch Sputnik having only build.gradle file in your repo and executing:
-    // gradle run -Dexec.args="--conf example.properties --changeId 1234 --revisionId 4321"
+    // You can launch Sputnik having only build.gradle file in your repo 
     def arguments = System.getProperty("exec.args")
     if (arguments) {
         // Need to split the space-delimited value in the exec.args
         args arguments.split()
+    }
+
+    // if gradle.build is not in project root directory workingDir needs to be set to root
+    def newWorkingDir = System.getProperty("exec.workingDir")
+    if (newWorkingDir) {
+        workingDir = newWorkingDir
     }
 }
 
