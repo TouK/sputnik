@@ -1,6 +1,11 @@
 package pl.touk.sputnik.processor.findbugs;
 
-import edu.umd.cs.findbugs.*;
+import edu.umd.cs.findbugs.ClassScreener;
+import edu.umd.cs.findbugs.DetectorFactoryCollection;
+import edu.umd.cs.findbugs.FindBugs2;
+import edu.umd.cs.findbugs.IClassScreener;
+import edu.umd.cs.findbugs.Priorities;
+import edu.umd.cs.findbugs.Project;
 import edu.umd.cs.findbugs.config.UserPreferences;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -13,17 +18,24 @@ import pl.touk.sputnik.review.ReviewException;
 import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.filter.JavaFilter;
+import pl.touk.sputnik.review.locator.BuildDirLocator;
+import pl.touk.sputnik.review.locator.BuildDirLocatorFactory;
 import pl.touk.sputnik.review.transformer.ClassNameTransformer;
 
 @Slf4j
 public class FindBugsProcessor implements ReviewProcessor {
     private static final String SOURCE_NAME = "FindBugs";
-    private CollectorBugReporter collectorBugReporter;
+    private final CollectorBugReporter collectorBugReporter;
+    private final BuildDirLocator buildDirLocator;
+
+    public FindBugsProcessor() {
+        collectorBugReporter = createBugReporter();
+        buildDirLocator = BuildDirLocatorFactory.create();
+    }
 
     @Nullable
     @Override
     public ReviewResult process(@NotNull Review review) {
-        createBugReporter();
         FindBugs2 findBugs = createFindBugs2(review);
         try {
             findBugs.execute();
@@ -65,7 +77,7 @@ public class FindBugsProcessor implements ReviewProcessor {
 
     @NotNull
     public CollectorBugReporter createBugReporter() {
-        collectorBugReporter = new CollectorBugReporter();
+        CollectorBugReporter collectorBugReporter = new CollectorBugReporter();
         collectorBugReporter.setPriorityThreshold(Priorities.NORMAL_PRIORITY);
         return collectorBugReporter;
     }
@@ -73,7 +85,7 @@ public class FindBugsProcessor implements ReviewProcessor {
     @NotNull
     private Project createProject(@NotNull Review review) {
         Project project = new Project();
-        for (String buildDir : review.getBuildDirs()) {
+        for (String buildDir : buildDirLocator.getBuildDirs(review)) {
             project.addFile(buildDir);
         }
         for (String sourceDir : review.getSourceDirs()) {

@@ -1,40 +1,41 @@
 package pl.touk.sputnik.processor.findbugs;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import pl.touk.sputnik.TestEnvironment;
+import pl.touk.sputnik.configuration.ConfigurationSetup;
+import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
+import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewResult;
-import pl.touk.sputnik.review.filter.FileFilter;
-import pl.touk.sputnik.review.transformer.ClassNameTransformer;
 
 import java.util.List;
 
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FindBugsProcessorTest extends TestEnvironment {
 
-    private final FindBugsProcessor findBugsProcessor = new FindBugsProcessor();
+    private FindBugsProcessor findBugsProcessor;
 
-    @Mock
-    private Review review;
+    @Before
+    public void setUp() throws Exception {
+        new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.BUILD_TOOL.getKey(), "gradle"));
+        findBugsProcessor = new FindBugsProcessor();
+    }
 
     @Test
     public void shouldReturnBasicViolationsOnEmptyClass() {
         //given
-        List<String> file = ImmutableList.of("toreview.TestClass");
-        when(review.getFiles(any(FileFilter.class), any(ClassNameTransformer.class))).thenReturn(file);
-        when(review.getBuildDirs()).thenReturn(ImmutableList.of("build/classes/test"));
-        when(review.getSourceDirs()).thenReturn(ImmutableList.of("src/test/java"));
+        List<ReviewFile> files = ImmutableList.of(new ReviewFile("src/test/java/toreview/TestClass.java"));
+        Review review = new Review(files);
 
         //when
         ReviewResult reviewResult = findBugsProcessor.process(review);

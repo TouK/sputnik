@@ -12,7 +12,7 @@ import java.util.List;
 
 @Slf4j
 public class Engine {
-    private static final long THOUSAND = 1000L;
+
     private final ConnectorFacade facade;
 
     public Engine(ConnectorFacade facade) {

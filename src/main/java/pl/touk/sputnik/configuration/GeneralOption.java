@@ -2,15 +2,19 @@ package pl.touk.sputnik.configuration;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import pl.touk.sputnik.connector.ConnectorType;
 
 @AllArgsConstructor
 @Getter
 public enum GeneralOption implements ConfigurationOption {
+
+    BUILD_TOOL("project.build.tool", "Build tool: <maven|gradle>", BuildTool.MAVEN.getName()),
+
     PROCESS_TEST_FILES("global.processTestFiles", "Process test files?", "true"),
     MAX_NUMBER_OF_COMMENTS("global.maxNumberOfComments", "Maximum number of comments to submit", "0"),
     COMMENT_ONLY_CHANGED_LINES("global.commentOnlyChangedLines", "Comment only changed lines and context", "false"),
 
-    CONNECTOR_TYPE("connector.type", "Connector: <stash|gerrit>", "gerrit"),
+    CONNECTOR_TYPE("connector.type", "Connector: <stash|gerrit>", ConnectorType.GERRIT.getName()),
     HOST("connector.host", "Connector server host", "localhost"),
     PORT("connector.port", "Connector server port", "80"),
     PATH("connector.path", "Connector server path", ""),

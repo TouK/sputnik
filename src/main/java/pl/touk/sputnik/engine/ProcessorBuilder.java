@@ -1,10 +1,6 @@
 package pl.touk.sputnik.engine;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jetbrains.annotations.NotNull;
-
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.processor.checkstyle.CheckstyleProcessor;
@@ -16,6 +12,9 @@ import pl.touk.sputnik.processor.pmd.PmdProcessor;
 import pl.touk.sputnik.processor.scalastyle.ScalastyleProcessor;
 import pl.touk.sputnik.processor.sonar.SonarProcessor;
 import pl.touk.sputnik.review.ReviewProcessor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProcessorBuilder {
 
