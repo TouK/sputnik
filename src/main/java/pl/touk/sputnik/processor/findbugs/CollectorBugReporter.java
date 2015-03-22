@@ -20,8 +20,11 @@ public class CollectorBugReporter extends AbstractBugReporter {
     @Override
     protected void doReportBug(BugInstance bugInstance) {
         SourceLineAnnotation primarySourceLineAnnotation = bugInstance.getPrimarySourceLineAnnotation();
-        Violation violation = new Violation(primarySourceLineAnnotation.getClassName(),
-                primarySourceLineAnnotation.getStartLine(), bugInstance.getMessage(),
+        int line = primarySourceLineAnnotation.getStartLine();
+        if (line < 0) {
+            line = 0;
+        }
+        Violation violation = new Violation(primarySourceLineAnnotation.getClassName(), line, bugInstance.getMessage(),
                 convert(bugInstance.getPriority()));
         log.debug("Violation found: {}", violation);
         reviewResult.add(violation);

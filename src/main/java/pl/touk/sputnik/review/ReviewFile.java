@@ -1,6 +1,8 @@
 package pl.touk.sputnik.review;
 
 import lombok.Getter;
+import lombok.ToString;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,6 +14,7 @@ import java.util.regex.Pattern;
 import static pl.touk.sputnik.review.Paths.*;
 
 @Getter
+@ToString
 public class ReviewFile {
     private static final Pattern ENTRY_PATTERN = Pattern.compile(ENTRY_REGEX);
 

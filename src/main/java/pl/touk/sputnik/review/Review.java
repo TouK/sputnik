@@ -2,12 +2,16 @@ package pl.touk.sputnik.review;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import pl.touk.sputnik.review.filter.FileFilter;
 import pl.touk.sputnik.review.transformer.FileTransformer;
 
@@ -20,6 +24,7 @@ import java.util.Map;
 @Slf4j
 @Getter
 @Setter
+@ToString
 public class Review {
     /* Source, severity, message, e.g. [Checkstyle] Info: This is bad */
     private static final String COMMENT_FORMAT = "[%s] %s: %s";
