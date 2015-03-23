@@ -1,10 +1,11 @@
 package pl.touk.sputnik.processor.pmd;
 
 import org.junit.Test;
+
 import pl.touk.sputnik.TestEnvironment;
+import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
 import pl.touk.sputnik.review.ReviewResult;
-
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,10 +31,21 @@ public class PmdProcessorTest extends TestEnvironment {
     @Test
     public void shouldThrowReviewExceptionOnNotFoundFile() {
         // when
-        catchException(fixture).process(nonexistantReview());
+        catchException(fixture).process(nonexistantReview("NotExistingFile.java"));
 
         // then
         assertThat(caughtException()).isInstanceOf(ReviewException.class);
     }
 
+    @Test
+    public void shouldReturnEmptyResultWhenNoFilesToReview() {
+        // given
+        Review review = nonexistantReview("FileWithoutJavaExtension.txt");
+
+        // when
+        ReviewResult reviewResult = fixture.process(review);
+
+        // then
+        assertThat(reviewResult).isNull();
+    }
 }

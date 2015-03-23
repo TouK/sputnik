@@ -1,5 +1,7 @@
 package pl.touk.sputnik.processor.findbugs;
 
+import java.util.List;
+
 import edu.umd.cs.findbugs.ClassScreener;
 import edu.umd.cs.findbugs.DetectorFactoryCollection;
 import edu.umd.cs.findbugs.FindBugs2;
@@ -8,9 +10,11 @@ import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.Project;
 import edu.umd.cs.findbugs.config.UserPreferences;
 import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
@@ -36,6 +40,10 @@ public class FindBugsProcessor implements ReviewProcessor {
     @Nullable
     @Override
     public ReviewResult process(@NotNull Review review) {
+        if (classesToReview(review).isEmpty()) {
+            return null;
+        }
+        
         FindBugs2 findBugs = createFindBugs2(review);
         try {
             findBugs.execute();
@@ -97,10 +105,14 @@ public class FindBugsProcessor implements ReviewProcessor {
     @NotNull
     private IClassScreener createClassScreener(@NotNull Review review) {
         ClassScreener classScreener = new ClassScreener();
-        for (String javaClassName : review.getFiles(new JavaFilter(), new ClassNameTransformer())) {
+        for (String javaClassName : classesToReview(review)) {
             classScreener.addAllowedClass(javaClassName);
         }
         return classScreener;
+    }
+
+    private List<String> classesToReview(@NotNull Review review) {
+        return review.getFiles(new JavaFilter(), new ClassNameTransformer());
     }
 
     @Nullable

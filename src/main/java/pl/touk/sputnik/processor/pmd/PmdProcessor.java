@@ -1,6 +1,7 @@
 package pl.touk.sputnik.processor.pmd;
 
 import com.google.common.base.Joiner;
+
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.pmd.*;
 import net.sourceforge.pmd.benchmark.Benchmark;
@@ -10,8 +11,10 @@ import net.sourceforge.pmd.lang.LanguageVersion;
 import net.sourceforge.pmd.lang.LanguageVersionDiscoverer;
 import net.sourceforge.pmd.renderers.Renderer;
 import net.sourceforge.pmd.util.datasource.DataSource;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
@@ -36,11 +39,16 @@ public class PmdProcessor implements ReviewProcessor {
     @Nullable
     @Override
     public ReviewResult process(@NotNull Review review) {
+        List<String> filesToReview = review.getFiles(new PmdFilter(), new FileNameTransformer());
+        if (filesToReview.isEmpty()) {
+            return null;
+        }
+        
         try {
             PMDConfiguration configuration = new PMDConfiguration();
             configuration.setReportFormat(CollectorRenderer.class.getCanonicalName());
             configuration.setRuleSets(getRulesets());
-            configuration.setInputPaths(Joiner.on(PMD_INPUT_PATH_SEPARATOR).join(review.getFiles(new PmdFilter(), new FileNameTransformer())));
+            configuration.setInputPaths(Joiner.on(PMD_INPUT_PATH_SEPARATOR).join(filesToReview));
             doPMD(configuration);
         } catch (RuntimeException e) {
             log.error("PMD processing error. Something wrong with configuration or analyzed files are not in workspace.", e);
