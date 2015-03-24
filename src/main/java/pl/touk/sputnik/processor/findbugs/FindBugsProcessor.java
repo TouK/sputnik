@@ -59,6 +59,7 @@ public class FindBugsProcessor implements ReviewProcessor {
         findBugs.setDetectorFactoryCollection(DetectorFactoryCollection.instance());
         findBugs.setClassScreener(createClassScreener(review));
         findBugs.setUserPreferences(createUserPreferences());
+        findBugs.setNoClassOk(true);
         return findBugs;
     }
 
