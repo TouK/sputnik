@@ -17,8 +17,8 @@ public class ReviewFormatter {
      * @param config a configuration instance
      */
     public ReviewFormatter(Configuration config) {
-        this.commentFormat = config.getProperty(GeneralOption.COMMENT_FORMAT);
-        this.problemFormat = config.getProperty(GeneralOption.PROBLEM_FORMAT);
+        this.commentFormat = config.getProperty(GeneralOption.MESSAGE_COMMENT_FORMAT);
+        this.problemFormat = config.getProperty(GeneralOption.MESSAGE_PROBLEM_FORMAT);
     }
 
     public String stringify(@Nullable Object obj) {

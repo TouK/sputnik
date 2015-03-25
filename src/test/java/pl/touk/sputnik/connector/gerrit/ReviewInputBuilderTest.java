@@ -3,6 +3,7 @@ package pl.touk.sputnik.connector.gerrit;
 import com.google.gerrit.extensions.api.changes.ReviewInput;
 import org.junit.Test;
 import pl.touk.sputnik.ReviewBuilder;
+import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.review.Review;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,6 +12,7 @@ public class ReviewInputBuilderTest {
 
     @Test
     public void shouldBuildReviewInput() {
+        ConfigurationHolder.initFromResource("test.properties");
         Review review = ReviewBuilder.buildReview();
 
         ReviewInput reviewInput = new ReviewInputBuilder().toReviewInput(review);

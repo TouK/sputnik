@@ -39,7 +39,7 @@ public class VisitorBuilder {
     public List<AfterReviewVisitor> buildAfterReviewVisitors() {
         List<AfterReviewVisitor> afterReviewVisitors = new ArrayList<>();
 
-        String passingComment = ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_PASSING_COMMENT);
+        String passingComment = ConfigurationHolder.instance().getProperty(GeneralOption.MESSAGE_SCORE_PASSING_COMMENT);
         afterReviewVisitors.add(new SummaryMessageVisitor(passingComment));
 
         int maxNumberOfComments = NumberUtils.toInt(ConfigurationHolder.instance().getProperty(GeneralOption.MAX_NUMBER_OF_COMMENTS), 0);
