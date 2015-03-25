@@ -13,6 +13,10 @@ public enum GeneralOption implements ConfigurationOption {
     PROCESS_TEST_FILES("global.processTestFiles", "Process test files?", "true"),
     MAX_NUMBER_OF_COMMENTS("global.maxNumberOfComments", "Maximum number of comments to submit", "0"),
     COMMENT_ONLY_CHANGED_LINES("global.commentOnlyChangedLines", "Comment only changed lines and context", "false"),
+    COMMENT_FORMAT("global.commentFormat", "Sputnik comment format. {0}: reporter, {1}: level, {2}: message",
+            "[{0}] {1}: {2}"),
+    PROBLEM_FORMAT("global.problemFormat", "Sputnik problem format. {0}: reporter, {1}: message",
+            "There is a problem with {0}: {1}"),
 
     CONNECTOR_TYPE("connector.type", "Connector: <stash|gerrit>", ConnectorType.GERRIT.getName()),
     HOST("connector.host", "Connector server host", "localhost"),
@@ -26,6 +30,7 @@ public enum GeneralOption implements ConfigurationOption {
 
     SCORE_STRATEGY("score.strategy", "Score strategy: <NoScore|ScoreAlwaysPass|ScorePassIfEmpty|ScorePassIfNoErrors>", "ScoreAlwaysPass"),
     SCORE_PASSING_KEY("score.passingKey", "Score passing key", "Code-Review"),
+    SCORE_PASSING_COMMENT("score.passingComment", "Comment when no errors are found", "Perfect!"),
     SCORE_PASSING_VALUE("score.passingValue", "Score passing value", "1"),
     SCORE_FAILING_KEY("score.failingKey", "Score failing key", "Code-Review"),
     SCORE_FAILING_VALUE("score.failingValue", "Score failing value", "-1"),
@@ -52,7 +57,7 @@ public enum GeneralOption implements ConfigurationOption {
 
     JSHINT_ENABLED("jshint.enabled", "JSHint enabled", "false"),
     JSHINT_CONFIGURATION_FILE("jshint.configurationFile", "JSHint configuration file", ""),
- 
+
     SONAR_ENABLED("sonar.enabled", "Sonar enabled", "false"),
     SONAR_PROPERTIES("sonar.configurationFiles", "Sonar base configuration", "sonar-project.properties"),
     SONAR_VERBOSE("sonar.verbose", "Run sonar in verbose mode", "false");
