@@ -4,7 +4,9 @@ import com.google.gerrit.extensions.api.GerritApi;
 import com.google.gerrit.extensions.api.changes.ReviewInput;
 import com.google.gerrit.extensions.common.FileInfo;
 import com.google.gerrit.extensions.restapi.RestApiException;
+
 import org.jetbrains.annotations.NotNull;
+
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
@@ -17,7 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class GerritFacade implements ConnectorFacade {
     private static final String COMMIT_MSG = "/COMMIT_MSG";
 
@@ -60,6 +64,7 @@ public class GerritFacade implements ConnectorFacade {
     @Override
     public void setReview(@NotNull Review review) {
         try {
+            log.debug("Set review in Gerrit: {}", review);
             ReviewInput reviewInput = new ReviewInputBuilder().toReviewInput(review);
             gerritApi.changes().id(gerritPatchset.getChangeId()).revision(gerritPatchset.getRevisionId())
                     .review(reviewInput);

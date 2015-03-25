@@ -44,7 +44,8 @@ run {
 }
 
 repositories {
-    mavenCentral()
+        mavenCentral()
+        maven { url "http://central.maven.org/maven2" }
 }
 
 //noinspection GroovyAssignabilityCheck

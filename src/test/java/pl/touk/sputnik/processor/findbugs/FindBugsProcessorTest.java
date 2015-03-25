@@ -53,7 +53,7 @@ public class FindBugsProcessorTest extends TestEnvironment {
     }
 
     @Test
-    public void shouldReturnEmptyWhenNoClasses() {
+    public void shouldReturnEmptyWhenNoFilesToReview() {
         //when
         ReviewResult reviewResult = findBugsProcessor.process(nonexistantReview());
 
