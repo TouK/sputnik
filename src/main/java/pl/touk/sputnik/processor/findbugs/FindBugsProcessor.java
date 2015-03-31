@@ -40,10 +40,6 @@ public class FindBugsProcessor implements ReviewProcessor {
     @Nullable
     @Override
     public ReviewResult process(@NotNull Review review) {
-        if (classesToReview(review).isEmpty()) {
-            return null;
-        }
-        
         FindBugs2 findBugs = createFindBugs2(review);
         try {
             findBugs.execute();
@@ -67,6 +63,7 @@ public class FindBugsProcessor implements ReviewProcessor {
         findBugs.setDetectorFactoryCollection(DetectorFactoryCollection.instance());
         findBugs.setClassScreener(createClassScreener(review));
         findBugs.setUserPreferences(createUserPreferences());
+        findBugs.setNoClassOk(true);
         return findBugs;
     }
 
@@ -105,14 +102,10 @@ public class FindBugsProcessor implements ReviewProcessor {
     @NotNull
     private IClassScreener createClassScreener(@NotNull Review review) {
         ClassScreener classScreener = new ClassScreener();
-        for (String javaClassName : classesToReview(review)) {
+        for (String javaClassName : review.getFiles(new JavaFilter(), new ClassNameTransformer())) {
             classScreener.addAllowedClass(javaClassName);
         }
         return classScreener;
-    }
-
-    private List<String> classesToReview(@NotNull Review review) {
-        return review.getFiles(new JavaFilter(), new ClassNameTransformer());
     }
 
     @Nullable

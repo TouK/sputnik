@@ -53,23 +53,13 @@ public class FindBugsProcessorTest extends TestEnvironment {
     }
 
     @Test
-    public void shouldThrowWhenFileNotFound() {
+    public void shouldReturnEmptyWhenNoFilesToReview() {
         //when
-        catchException(findBugsProcessor).process(nonexistantReview("NotExistingFile.java"));
+        ReviewResult reviewResult = findBugsProcessor.process(nonexistantReview());
 
         //then
-        assertThat(caughtException()).isInstanceOf(ReviewException.class);
+        assertThat(reviewResult).isNotNull();
+        assertThat(reviewResult.getViolations()).isEmpty();
     }
 
-    @Test
-    public void shouldReturnNoReviewWhenNoFilesToReview() {
-        // given
-        Review review = nonexistantReview("FileWithoutJavaExtension.txt");
-
-        // when
-        ReviewResult reviewResult = findBugsProcessor.process(review);
-
-        // then
-        assertThat(reviewResult).isNull();
-    }
 }
