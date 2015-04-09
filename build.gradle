@@ -44,6 +44,7 @@ run {
 }
 
 repositories {
+        mavenLocal()
         mavenCentral()
         maven { url "http://central.maven.org/maven2" }
 }
@@ -97,6 +98,7 @@ dependencies {
     // CodeNarc http://codenarc.sourceforge.net/
     compile('org.codenarc:CodeNarc:0.21') {
         exclude module: 'groovy'
+        exclude group: 'junit'
     }
 
     compile 'org.codehaus.groovy:groovy:2.3.4'
@@ -106,6 +108,10 @@ dependencies {
 
     // JSHint
     compile 'pl.gildur:jshint4j:1.0.1'
+
+    // github connector
+    //compile 'com.jcabi:jcabi-github:0.18.1'
+    compile 'com.jcabi:jcabi-github:1.0-SNAPSHOT'
 
     // Test dependencies
     testCompile 'junit:junit:4.11'

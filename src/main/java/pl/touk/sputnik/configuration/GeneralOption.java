@@ -60,7 +60,8 @@ public enum GeneralOption implements ConfigurationOption {
 
     SONAR_ENABLED("sonar.enabled", "Sonar enabled", "false"),
     SONAR_PROPERTIES("sonar.configurationFiles", "Sonar base configuration", "sonar-project.properties"),
-    SONAR_VERBOSE("sonar.verbose", "Run sonar in verbose mode", "false");
+    SONAR_VERBOSE("sonar.verbose", "Run sonar in verbose mode", "false"),
+    GITHUB_API_KEY("github.api.key", "Personal access tokens for Github", ""),;
 
     private final String key;
     private final String description;
