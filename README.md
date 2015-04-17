@@ -95,9 +95,9 @@ When stash is build on Bamboo there is no direct way to check which pull
 request id it matches. This is a simple way to find required id. 
 
 Assumptions:
-- there is sputnik's config file in project's root directory
-- user and password are configured in bamboo plan as variables
-  _ecosystem.username_ and _ecosystem.password_
+- there is sputnik's config file named `sputnik.properties` in project's root directory
+- user and password are configured in bamboo plan as variables (e.g. 
+  _ecosystem.username_ and _ecosystem.password_)
 - config file has placeholders for user and password:
 ```properties
 stash.username=<username>
@@ -105,11 +105,11 @@ stash.password=<password>
 ```
 
 With those steps in place you can use a step from
-`contrib/stash-execute.sh`. You need to change the script to match your
-environment - there are three variables to change:
-- stash_host
-- project_key
-- repository_slug
+`contrib/stash-execute.sh`: 
+
+```
+current_branch=${bamboo.repository.branch.name} sputnik_distribution_url=https://github.com/TouK/sputnik/releases/download/sputnik-1.4.0/sputnik-1.4.0.zip stash_password=${bamboo_ecosystem_password} stash_user=${bamboo_ecosystem_username} ./stash-execute.sh
+```
 
 ## Launching with Maven
 
