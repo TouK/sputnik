@@ -100,9 +100,6 @@ class SonarResultParser {
         while(it.hasNext()){
             JsonNode componentNode = it.next();
             JsonNode pathNode = componentNode.path("path");
-            if (pathNode.isMissingNode()){
-                continue;
-            }
             JsonNode moduleNode = componentNode.path("moduleKey");
             components.put(componentNode.path("key").asText(),
                     new Component(pathNode.asText(), moduleNode.isMissingNode()?null:moduleNode.asText()));
