@@ -67,7 +67,7 @@ dependencies {
     compile 'com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:0.8.1'
 
     // Checkstyle dependencies
-    compile 'com.puppycrawl.tools:checkstyle:6.1'
+    compile 'com.puppycrawl.tools:checkstyle:6.6'
 
     // PMD dependencies
     compile('net.sourceforge.pmd:pmd-dist:5.2.1') {
@@ -95,7 +95,7 @@ dependencies {
     compile 'org.scalastyle:scalastyle_2.10:0.4.0'
 
     // CodeNarc http://codenarc.sourceforge.net/
-    compile('org.codenarc:CodeNarc:0.21') {
+    compile('org.codenarc:CodeNarc:0.23') {
         exclude module: 'groovy'
     }
 
