@@ -1,6 +1,6 @@
 ![sputnik](http://touk.github.io/sputnik/images/sputnik.png)
 
-> Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD, FindBugs, Scalastyle, JSLint and Sonar for you!
+> Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD, FindBugs, Scalastyle, CodeNarc, JSLint and Sonar for you!
 
 [![Build Status](https://img.shields.io/travis/TouK/sputnik/master.svg?style=flat)](https://travis-ci.org/TouK/sputnik)
 [![Coverage Status](https://img.shields.io/codecov/c/github/TouK/sputnik/master.svg?style=flat)](https://codecov.io/github/TouK/sputnik)
@@ -51,8 +51,8 @@ If you want sputnik to use your SonarQube rules just download them from your Son
 ## Installation
 
 - clone this repository and build it: `gradle distZip` or download distribution file:
-- https://github.com/TouK/sputnik/releases/download/sputnik-1.3.0/sputnik-1.3.0.zip
-- copy distribution file `build/distributions/sputnik-1.3.0.zip` to your installation dir, e.g. `/opt/sputnik` and unzip it
+- https://github.com/TouK/sputnik/releases/download/sputnik-1.4.0/sputnik-1.4.0.zip
+- copy distribution file `build/distributions/sputnik-1.4.0.zip` to your installation dir, e.g. `/opt/sputnik` and unzip it
 - to avoid problems with deployment keep the structure unchanged, so sputnik file is in `bin/` directory, jars in `lib/`
 - create configuration file (you can just paste and edit an example above), e.g. `/opt/sputnik/myconf.properties`
 - you can now run sputnik like this:
