@@ -58,6 +58,10 @@ public enum GeneralOption implements ConfigurationOption {
     JSHINT_ENABLED("jshint.enabled", "JSHint enabled", "false"),
     JSHINT_CONFIGURATION_FILE("jshint.configurationFile", "JSHint configuration file", ""),
 
+    SCSSLINT_ENABLED("scsslint.enabled", "Sass linter enabled", "false"),
+    SCSSLINT_SCRIPT("scsslint.script", "Sass script for validating files", "scss-lint"),
+    SCSSLINT_CONFIGURATION_FILE("scsslint.configurationFile", "Sass linter configuration file", "scss-config.yml"),
+
     SONAR_ENABLED("sonar.enabled", "Sonar enabled", "false"),
     SONAR_PROPERTIES("sonar.configurationFiles", "Sonar base configuration", "sonar-project.properties"),
     SONAR_VERBOSE("sonar.verbose", "Run sonar in verbose mode", "false");
