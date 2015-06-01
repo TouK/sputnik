@@ -1,43 +1,44 @@
 package pl.touk.sputnik.connector.stash;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.experimental.Builder;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Data
 @Builder
 public class SingleFileChanges {
 
-    private String filename;
-    private Map<Integer, ChangeType> changesMap;
-    private Set<String> commentsCrcSet;
+    private final String filename;
+    @Getter(AccessLevel.NONE)
+    private final Map<Integer, ChangeDetails> changesMap = new HashMap<>();
 
-    public void addChange(int line, ChangeType changeType) {
-        getChangesMap().put(line, changeType);
+    public void addChange(int line, ChangeType changeType, List<String> comments) {
+        changesMap.put(line, new ChangeDetails(changeType, new ArrayList<>(comments)));
     }
 
-    public Map<Integer, ChangeType> getChangesMap() {
-        if (changesMap == null) {
-            changesMap = Maps.newHashMap();
-        }
-        return changesMap;
+    public ChangeType getChangeType(int line) {
+        return changesMap.get(line).changeType;
     }
 
-    public Set<String> getCommentsCrcSet() {
-        if (commentsCrcSet == null) {
-            commentsCrcSet = Sets.newHashSet();
-        }
-        return commentsCrcSet;
+    public boolean containsComment(Integer line, String message) {
+        return changesMap.containsKey(line) && changesMap.get(line).comments.contains(message);
     }
 
-    public void setComments(List<String> comments) {
-        for (String comment : comments) {
-            getCommentsCrcSet().add(comment);
-        }
+    public boolean containsChange(Integer line) {
+        return changesMap.containsKey(line);
     }
+
+    @AllArgsConstructor
+    private static class ChangeDetails {
+        private final ChangeType changeType;
+        private final List<String> comments;
+    }
+
 }
