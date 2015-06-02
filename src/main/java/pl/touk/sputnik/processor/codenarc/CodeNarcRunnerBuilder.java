@@ -5,29 +5,28 @@ import org.codenarc.analyzer.FilesystemSourceAnalyzer;
 import org.codenarc.analyzer.SourceAnalyzer;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
-import pl.touk.sputnik.review.Review;
-import pl.touk.sputnik.review.filter.GroovyFilter;
-import pl.touk.sputnik.review.transformer.FileNameTransformer;
+
+import java.util.List;
 
 class CodeNarcRunnerBuilder {
-    public CodeNarcRunner prepareCodeNarcRunner(Review review) {
+    public CodeNarcRunner prepareCodeNarcRunner(List<String> reviewFiles) {
         CodeNarcRunner codeNarcRunner = new CodeNarcRunner();
         codeNarcRunner.setRuleSetFiles(ConfigurationHolder.instance().getProperty(GeneralOption.CODE_NARC_RULESET));
-        codeNarcRunner.setSourceAnalyzer(createSourceAnalyzer(review));
+        codeNarcRunner.setSourceAnalyzer(createSourceAnalyzer(reviewFiles));
         return codeNarcRunner;
     }
 
-    private SourceAnalyzer createSourceAnalyzer(Review review) {
+    private SourceAnalyzer createSourceAnalyzer(List<String> reviewFiles) {
         FilesystemSourceAnalyzer sourceAnalyzer = new FilesystemSourceAnalyzer();
         sourceAnalyzer.setBaseDirectory(".");
-        sourceAnalyzer.setIncludes(createFileList(review));
+        sourceAnalyzer.setIncludes(createFileList(reviewFiles));
         sourceAnalyzer.setExcludes(ConfigurationHolder.instance().getProperty(GeneralOption.CODE_NARC_EXCLUDES));
         return sourceAnalyzer;
     }
 
-    private String createFileList(Review review) {
+    private String createFileList(List<String> reviewFiles) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (String filesPath : review.getFiles(new GroovyFilter(), new FileNameTransformer())) {
+        for (String filesPath : reviewFiles) {
             stringBuilder.append("**/").append(filesPath).append(",");
         }
         return stringBuilder.toString();
