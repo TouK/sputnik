@@ -112,6 +112,7 @@ dependencies {
     // github connector
     //compile 'com.jcabi:jcabi-github:0.18.1'
     compile 'com.jcabi:jcabi-github:1.0-SNAPSHOT'
+    compile 'com.github.spullara.mustache.java:compiler:0.8.17'
 
     // Test dependencies
     testCompile 'junit:junit:4.11'

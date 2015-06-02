@@ -34,10 +34,10 @@ public class Status {
 
     private RtStatus createStatus(Review review, Optional<Integer> issueId) {
         if (review.getFiles().size() != 0) {
-            return new RtStatus(StatusState.failure, createIssueLink(issueId),
+            return new RtStatus(com.jcabi.github.Status.State.Failure, createIssueLink(issueId),
                     "Sputnik says you have code smells in this branch", CONTEXT);
         } else {
-            return new RtStatus(StatusState.success, createIssueLink(issueId),
+            return new RtStatus(com.jcabi.github.Status.State.Success, createIssueLink(issueId),
                     "Looks good to me", CONTEXT);
         }
     }

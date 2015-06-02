@@ -14,14 +14,16 @@ public class Notification {
     public static final String ISSUE_TITLE = " Detected some code smells";
 
     private final Issues issues;
+    private final ContentRenderer renderer;
 
-    public Notification(Issues issues) {
+    public Notification(Issues issues, ContentRenderer renderer) {
         this.issues = issues;
+        this.renderer = renderer;
     }
 
     public Optional<Integer> upsertComment(ReviewStatus reviewStatus) {
         Optional<Integer> issueId = getSputnikIssue();
-        String content = reviewStatus.description();
+        String content = reviewStatus.description(renderer);
         if (reviewStatus.isAlarming()) {
             if (issueId.isPresent()) {
                 appendComment(issueId.get(),content);
