@@ -8,6 +8,10 @@ import org.jetbrains.annotations.Nullable;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
+import pl.touk.sputnik.review.filter.GroovyFilter;
+import pl.touk.sputnik.review.transformer.FileNameTransformer;
+
+import java.util.List;
 
 @Slf4j
 public class CodeNarcProcessor implements ReviewProcessor {
@@ -20,16 +24,17 @@ public class CodeNarcProcessor implements ReviewProcessor {
     @Nullable
     @Override
     public ReviewResult process(@NotNull Review review) {
-        if (noFilesToReview(review)) {
+        List<String> reviewFiles = review.getFiles(new GroovyFilter(), new FileNameTransformer());
+        if (noFilesToReview(reviewFiles)) {
             return new ReviewResult();
         }
-        CodeNarcRunner codeNarcRunner = codeNarcRunnerBuilder.prepareCodeNarcRunner(review);
+        CodeNarcRunner codeNarcRunner = codeNarcRunnerBuilder.prepareCodeNarcRunner(reviewFiles);
         Results results = codeNarcRunner.execute();
         return resultParser.parseResults(results);
     }
 
-    private boolean noFilesToReview(Review review) {
-        return review.getFiles().isEmpty();
+    private boolean noFilesToReview(List<String> reviewFiles) {
+        return reviewFiles.isEmpty();
     }
 
 

@@ -1,6 +1,6 @@
 ![sputnik](http://touk.github.io/sputnik/images/sputnik.png)
 
-> Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD, FindBugs, Scalastyle, JSLint and Sonar for you!
+> Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD, FindBugs, Scalastyle, CodeNarc, JSLint and Sonar for you!
 
 [![Build Status](https://img.shields.io/travis/TouK/sputnik/master.svg?style=flat)](https://travis-ci.org/TouK/sputnik)
 [![Coverage Status](https://img.shields.io/codecov/c/github/TouK/sputnik/master.svg?style=flat)](https://codecov.io/github/TouK/sputnik)
@@ -51,8 +51,8 @@ If you want sputnik to use your SonarQube rules just download them from your Son
 ## Installation
 
 - clone this repository and build it: `gradle distZip` or download distribution file:
-- https://github.com/TouK/sputnik/releases/download/sputnik-1.3.0/sputnik-1.3.0.zip
-- copy distribution file `build/distributions/sputnik-1.3.0.zip` to your installation dir, e.g. `/opt/sputnik` and unzip it
+- https://github.com/TouK/sputnik/releases/download/sputnik-1.4.0/sputnik-1.4.0.zip
+- copy distribution file `build/distributions/sputnik-1.4.0.zip` to your installation dir, e.g. `/opt/sputnik` and unzip it
 - to avoid problems with deployment keep the structure unchanged, so sputnik file is in `bin/` directory, jars in `lib/`
 - create configuration file (you can just paste and edit an example above), e.g. `/opt/sputnik/myconf.properties`
 - you can now run sputnik like this:
@@ -95,9 +95,9 @@ When stash is build on Bamboo there is no direct way to check which pull
 request id it matches. This is a simple way to find required id. 
 
 Assumptions:
-- there is sputnik's config file in project's root directory
-- user and password are configured in bamboo plan as variables
-  _ecosystem.username_ and _ecosystem.password_
+- there is sputnik's config file named `sputnik.properties` in project's root directory
+- user and password are configured in bamboo plan as variables (e.g. 
+  _ecosystem.username_ and _ecosystem.password_)
 - config file has placeholders for user and password:
 ```properties
 stash.username=<username>
@@ -105,11 +105,11 @@ stash.password=<password>
 ```
 
 With those steps in place you can use a step from
-`contrib/stash-execute.sh`. You need to change the script to match your
-environment - there are three variables to change:
-- stash_host
-- project_key
-- repository_slug
+`contrib/stash-execute.sh`: 
+
+```
+current_branch=${bamboo.repository.branch.name} sputnik_distribution_url=https://github.com/TouK/sputnik/releases/download/sputnik-1.4.0/sputnik-1.4.0.zip stash_password=${bamboo_ecosystem_password} stash_user=${bamboo_ecosystem_username} ./stash-execute.sh
+```
 
 ## Launching with Maven
 

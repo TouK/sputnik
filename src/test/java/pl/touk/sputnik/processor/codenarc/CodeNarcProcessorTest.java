@@ -24,6 +24,8 @@ public class CodeNarcProcessorTest {
     private final String REVIEW_FILE_WITH_ONE_VIOLATION_PER_EACH_SEVERITY = "src/test/resources/codeNarc/testFiles/FileWithOneViolationPerEachLevel.groovy";
     private final String REVIEW_FILE_WITHOUT_VIOLATIONS = "src/test/resources/codeNarc/testFiles/FileWithoutViolations.groovy";
     private final String REVIEW_FILE_WITH_IMPORT_VIOLATION = "src/test/resources/codeNarc/testFiles/FileWithImportViolation.groovy";
+    private final String REVIEW_FILE_WITH_NOT_GROOVY_EXTENSION = "src/test/resources/wrongExtension.java";
+    private final String REVIEW_FILE_WITHOUT_EXTENSION = "src/test/resources/withoutExtension";
 
     @Before
     public void setUp() throws Exception {
@@ -164,6 +166,26 @@ public class CodeNarcProcessorTest {
                 .containsOnly(
                         new Violation(REVIEW_FILE_WITH_ONE_VIOLATION, 5, "EmptyTryBlock: The try block is empty", Severity.WARNING)
                 );
+    }
+
+    @Test
+    public void shouldReturnNoViolationsForFileWithNotGroovyExtension() {
+        Review review = getReview(REVIEW_FILE_WITH_NOT_GROOVY_EXTENSION);
+
+        ReviewResult result = sut.process(review);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getViolations()).isEmpty();
+    }
+
+    @Test
+    public void shouldReturnNoViolationsForFileWithoutExtension() {
+        Review review = getReview(REVIEW_FILE_WITH_NOT_GROOVY_EXTENSION);
+
+        ReviewResult result = sut.process(review);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getViolations()).isEmpty();
     }
 
     private Review getReview(String... filePaths) {

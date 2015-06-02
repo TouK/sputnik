@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
-
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationHolder;
@@ -14,7 +13,13 @@ import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.Connectors;
-import pl.touk.sputnik.connector.stash.json.*;
+import pl.touk.sputnik.connector.stash.json.Anchor;
+import pl.touk.sputnik.connector.stash.json.Comment;
+import pl.touk.sputnik.connector.stash.json.DiffSegment;
+import pl.touk.sputnik.connector.stash.json.FileComment;
+import pl.touk.sputnik.connector.stash.json.LineComment;
+import pl.touk.sputnik.connector.stash.json.LineSegment;
+import pl.touk.sputnik.connector.stash.json.ReviewElement;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 
@@ -84,8 +89,7 @@ public class StashFacade implements ConnectorFacade {
         for (ReviewFile reviewFile : review.getFiles()) {
             SingleFileChanges changes = changesForSingleFile(reviewFile.getReviewFilename());
             for (pl.touk.sputnik.review.Comment comment : reviewFile.getComments()) {
-                CrcMessage lineComment = new CrcMessage(comment.getLine(), comment.getMessage());
-                if (noCommentExists(changes, lineComment)) {
+                if (noCommentExists(changes, comment)) {
                     ChangeType changeType = getChangeType(changes, comment.getLine());
                     if (changeType.equals(ChangeType.NONE) && commentOnlyChangedLines) {
                         log.info("Not posting out of context warning: {}", comment.getMessage());
@@ -104,14 +108,13 @@ public class StashFacade implements ConnectorFacade {
         }
     }
 
-    private boolean noCommentExists(SingleFileChanges changes, CrcMessage lineComment) {
-        return !changes.getChangesMap().containsKey(lineComment.getLine())
-                || !changes.getCommentsCrcSet().contains(lineComment.getMessage());
+    private boolean noCommentExists(SingleFileChanges changes, pl.touk.sputnik.review.Comment comment) {
+        return !changes.containsComment(comment.getLine(), comment.getMessage());
     }
 
     private ChangeType getChangeType(SingleFileChanges changes, Integer line) {
-        if (changes.getChangesMap().containsKey(line)) {
-            return changes.getChangesMap().get(line);
+        if (changes.containsChange(line)) {
+            return changes.getChangeType(line);
         }
         return ChangeType.NONE;
     }
@@ -145,19 +148,31 @@ public class StashFacade implements ConnectorFacade {
         try {
             String response = stashConnector.getDiffByLine(filename);
             List<JSONObject> diffJsonList = JsonPath.read(response, "$.diffs[*].hunks[*].segments[*]");
-            List<String> lineList = JsonPath.read(response, "$.diffs[*].lineComments[*].text");
+            List<JSONObject> lineCommentJsonList = JsonPath.read(response, "$.diffs[*].lineComments[*]['text', 'id']");
             List<DiffSegment> segments = transform(diffJsonList, DiffSegment.class);
+            List<LineComment> lineComments = transform(lineCommentJsonList, LineComment.class);
             SingleFileChanges changes = SingleFileChanges.builder().filename(filename).build();
-            changes.setComments(lineList);
             for (DiffSegment segment : segments) {
                 for (LineSegment line : segment.lines) {
-                    changes.addChange(line.destination, ChangeType.valueOf(segment.type));
+                    changes.addChange(line.destination, ChangeType.valueOf(segment.type), getComment(lineComments, line.commentIds));
                 }
             }
             return changes;
         } catch (URISyntaxException | IOException e) {
             throw new StashException("Error parsing json strings to objects", e);
         }
+    }
+
+    private List<String> getComment(List<LineComment> lineComments, List<Integer> commentIds) {
+        List<String> comments = new ArrayList<>();
+        if (commentIds != null) {
+            for (LineComment lineComment : lineComments) {
+                if (commentIds.contains(lineComment.id)) {
+                    comments.add(lineComment.text);
+                }
+            }
+        }
+        return comments;
     }
 
     @Override
