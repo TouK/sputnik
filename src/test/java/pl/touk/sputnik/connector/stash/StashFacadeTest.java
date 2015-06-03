@@ -107,6 +107,17 @@ public class StashFacadeTest {
                 FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID))));
     }
 
+    @Test
+    public void shouldSkipDeletedFiles() throws Exception {
+        stubGet(urlEqualTo(String.format(
+                "%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/changes",
+                FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)), "/json/stash-changes-deleted-file.json");
+
+        List<ReviewFile> files = stashFacade.listFiles();
+
+        assertThat(files).extracting("reviewFilename").containsOnly("src/main/java/example/App2.java");
+    }
+
     private void stubGet(UrlMatchingStrategy url, String responseFile) throws Exception {
         stubFor(get(url)
                 .withHeader("Authorization", equalTo("Basic dXNlcjpwYXNz"))

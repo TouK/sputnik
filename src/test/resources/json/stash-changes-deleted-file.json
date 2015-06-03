@@ -1,0 +1,51 @@
+{
+  "fromHash": "a4b4d58e462c3ab246397a4c7881803558c25cba",
+  "toHash": "760b1b3c3a6c858af22b8059fc2ee08aa25a05f2",
+  "values": [
+    {
+      "contentId": "5f0c0040a18dab7dd68c54fc31843a388dceae8a",
+      "path": {
+        "components": [
+          "src",
+          "main",
+          "java",
+          "example",
+          "App.java"
+        ],
+        "parent": "src/main/java/example",
+        "name": "App.java",
+        "extension": "java",
+        "toString": "src/main/java/example/App.java"
+      },
+      "percentUnchanged": -1,
+      "type": "DELETE",
+      "nodeType": "FILE",
+      "srcExecutable": false
+    },
+    {
+      "contentId": "9572c96156cd71d10d4aa36f50500aed31e9f097",
+      "path": {
+        "components": [
+          "src",
+          "main",
+          "java",
+          "example",
+          "App2.java"
+        ],
+        "parent": "src/main/java/example",
+        "name": "App2.java",
+        "extension": "java",
+        "toString": "src/main/java/example/App2.java"
+      },
+      "executable": false,
+      "percentUnchanged": -1,
+      "type": "ADD",
+      "nodeType": "FILE"
+    }
+  ],
+  "size": 2,
+  "isLastPage": true,
+  "start": 0,
+  "limit": 25,
+  "nextPageStart": null
+}
