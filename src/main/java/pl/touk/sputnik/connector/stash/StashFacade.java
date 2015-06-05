@@ -47,7 +47,7 @@ public class StashFacade implements ConnectorFacade {
     public List<ReviewFile> listFiles() {
         try {
             String response = stashConnector.listFiles();
-            List<JSONObject> jsonList = JsonPath.read(response, "$.values[*].path");
+            List<JSONObject> jsonList = JsonPath.read(response, "$.values[?(@.type != 'DELETE')].path");
             List<ReviewElement> containers = transform(jsonList, ReviewElement.class);
 
             List<ReviewFile> files = new ArrayList<>();
@@ -177,6 +177,6 @@ public class StashFacade implements ConnectorFacade {
 
     @Override
     public void validate(Configuration configuration) throws GeneralOptionNotSupportedException {
-        // all features are suppored by Stash
+        // all features are supported by Stash
     }
 }
