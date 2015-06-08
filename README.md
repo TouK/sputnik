@@ -1,6 +1,6 @@
 ![sputnik](http://touk.github.io/sputnik/images/sputnik.png)
 
-> Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD, FindBugs, Scalastyle, CodeNarc, JSLint and Sonar for you!
+> Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD, FindBugs, Scalastyle, CodeNarc, JSLint, JSHint, TSLint and Sonar for you!
 
 [![Build Status](https://img.shields.io/travis/TouK/sputnik/master.svg?style=flat)](https://travis-ci.org/TouK/sputnik)
 [![Coverage Status](https://img.shields.io/codecov/c/github/TouK/sputnik/master.svg?style=flat)](https://codecov.io/github/TouK/sputnik)
@@ -15,7 +15,7 @@ Three parameters are required: your configuration file (details below), Gerrit's
 sputnik -conf /home/spoonman/sputnik/conf.properties -changeId I0a2afb7ae4a94ab1ab473ba00e2ec7de381799a0 -revisionId 3f37692af2290e8e3fd16d2f43701c24346197f0
 ```
 
-Sputnik runs Checkstyle, PMD, FindBugs, CodeNarc, JSHint (or JSLint) and Sonar only on files affected by Gerrit's patchset. It collects all violations and report them back to Gerrit or Stash.
+Sputnik runs Checkstyle, PMD, FindBugs, CodeNarc, JSHint (or JSLint), TSLint and Sonar only on files affected by Gerrit's patchset. It collects all violations and report them back to Gerrit or Stash.
 
 Typical configuration file looks like this:
 
@@ -41,6 +41,9 @@ codenarc.excludes=**/*.java
 jslint.enabled=false
 jshint.enabled=true
 jshint.configurationFile=jshint.json
+tslint.enabled=true
+tslint.script=/usr/bin/tslint
+tslint.configurationFile=tslint.json
 sonar.enabled=true
 sonar.configurationFiles=sonar-project.properties, sonar-runner.properties
 sonar.verbose=false
@@ -136,6 +139,7 @@ gradle run -Dexec.args="--conf example.properties --changeId 1234 --revisionId 4
 - Karol Lassak
 - Henning Hoefer
 - Dominik Przybysz
+- Damian Szczepanik
 
 ## License
 
