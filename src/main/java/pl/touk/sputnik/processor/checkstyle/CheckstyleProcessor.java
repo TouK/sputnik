@@ -1,19 +1,26 @@
 package pl.touk.sputnik.processor.checkstyle;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import com.puppycrawl.tools.checkstyle.Checker;
 import com.puppycrawl.tools.checkstyle.ConfigurationLoader;
 import com.puppycrawl.tools.checkstyle.PropertiesExpander;
 import com.puppycrawl.tools.checkstyle.api.AuditListener;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
 import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
+import pl.touk.sputnik.review.filter.FileExtensionFilter;
 import pl.touk.sputnik.review.filter.JavaFilter;
 import pl.touk.sputnik.review.transformer.IOFileTransformer;
 
@@ -40,7 +47,7 @@ public class CheckstyleProcessor implements ReviewProcessor {
     }
 
     private void innerProcess(@NotNull Review review, @NotNull AuditListener auditListener) {
-        List<File> files = review.getFiles(new JavaFilter(), new IOFileTransformer());
+        List<File> files = review.getFiles(new FileExtensionFilter(getSupportedFileExtensions()), new IOFileTransformer());
         Checker checker = createChecker(auditListener);
         checker.process(files);
         checker.destroy();
@@ -60,6 +67,14 @@ public class CheckstyleProcessor implements ReviewProcessor {
         } catch (CheckstyleException e) {
             throw new ReviewException("Unable to create Checkstyle checker", e);
         }
+    }
+
+    @NotNull
+    private List<String> getSupportedFileExtensions(){
+        String commaSeparatedExtensions = ConfigurationHolder.instance().getProperty(GeneralOption.CHECKSTYLE_FILE_EXTENSIONS);
+        Iterable<String> fileExtensions = Splitter.on(",").omitEmptyStrings().trimResults().split(commaSeparatedExtensions);
+        Builder<String> listBuilder = ImmutableList.builder();
+        return listBuilder.addAll(fileExtensions).build();
     }
 
     @Nullable

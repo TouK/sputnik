@@ -36,6 +36,7 @@ public enum GeneralOption implements ConfigurationOption {
 
     CHECKSTYLE_ENABLED("checkstyle.enabled", "Checkstyle enabled", "false"),
     CHECKSTYLE_CONFIGURATION_FILE("checkstyle.configurationFile", "Checkstyle configuration file", "sun_checks.xml"),
+    CHECKSTYLE_FILE_EXTENSIONS("checkstyle.file.extensions","Comma separated file extensions processed by checkstyle","java"),
 
     PMD_ENABLED("pmd.enabled", "PMD enabled", "false"),
     PMD_RULESETS("pmd.ruleSets", "PMD rule sets", "rulesets/java/basic.xml"),
