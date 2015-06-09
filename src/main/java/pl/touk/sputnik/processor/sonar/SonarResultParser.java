@@ -120,7 +120,9 @@ class SonarResultParser {
         String file = comp.path;
         if (!Strings.isNullOrEmpty(comp.moduleKey)) {
             Component moduleComp = components.get(comp.moduleKey);
-            file = moduleComp.path + '/' + file;
+            if (!Strings.isNullOrEmpty(moduleComp.path)) {
+                file = moduleComp.path + '/' + file;
+            }
         }
         return file;
     }
