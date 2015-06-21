@@ -9,7 +9,7 @@ import net.sourceforge.pmd.renderers.AbstractRenderer;
 import net.sourceforge.pmd.util.datasource.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.Severity;
@@ -21,12 +21,14 @@ import java.io.IOException;
 public class CollectorRenderer extends AbstractRenderer {
     private static final String SPUTNIK_PMD_COLLECT_RENDERER = "Sputnik PMD Collect Renderer";
     private static final char LINE_SEPARATOR = '\n';
+    private final Configuration configuration;
 
     @Getter
     private final ReviewResult reviewResult = new ReviewResult();
 
-    public CollectorRenderer() {
+    public CollectorRenderer(Configuration configuration) {
         super(SPUTNIK_PMD_COLLECT_RENDERER, SPUTNIK_PMD_COLLECT_RENDERER);
+        this.configuration = configuration;
     }
 
     @Override
@@ -41,7 +43,7 @@ public class CollectorRenderer extends AbstractRenderer {
 
     @Override
     public void renderFileReport(Report report) throws IOException {
-        boolean showDetails = Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.PMD_SHOW_VIOLATION_DETAILS));
+        boolean showDetails = Boolean.valueOf(configuration.getProperty(GeneralOption.PMD_SHOW_VIOLATION_DETAILS));
 
         for (RuleViolation ruleViolation : report) {
             String violationDescription = showDetails ? renderViolationDetails(ruleViolation) :ruleViolation.getDescription();

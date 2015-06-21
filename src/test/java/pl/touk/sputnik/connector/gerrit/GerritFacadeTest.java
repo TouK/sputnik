@@ -23,7 +23,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.ConfigurationBuilder;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
 import pl.touk.sputnik.connector.ConnectorFacade;
@@ -61,7 +61,7 @@ public class GerritFacadeTest {
 
         // when
         ConnectorFacade gerritFacade = connectionFacade.build(ConnectorType.GERRIT);
-        catchException(gerritFacade).validate(ConfigurationHolder.instance());
+        catchException(gerritFacade).validate(ConfigurationBuilder.instance());
 
         // then
         assertThat(caughtException()).isInstanceOf(GeneralOptionNotSupportedException.class).hasMessage(

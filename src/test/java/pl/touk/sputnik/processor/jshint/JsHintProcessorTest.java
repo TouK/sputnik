@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.ConfigurationBuilder;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewResult;
@@ -20,12 +20,12 @@ public class JsHintProcessorTest {
 
     @Before
     public void setUp() throws Exception {
-        ConfigurationHolder.initFromResource("jshint/sputnik/noConfigurationFile.properties");
+        ConfigurationBuilder.initFromResource("jshint/sputnik/noConfigurationFile.properties");
     }
 
     @After
     public void tearDown() throws Exception {
-        ConfigurationHolder.reset();
+        ConfigurationBuilder.reset();
     }
 
 
@@ -58,7 +58,7 @@ public class JsHintProcessorTest {
     @Test
     public void shouldReturnOneViolationWithConfigurationOnSimpleFunction() {
         // given
-        ConfigurationHolder.initFromResource("jshint/sputnik/withConfigurationFile.properties");
+        ConfigurationBuilder.initFromResource("jshint/sputnik/withConfigurationFile.properties");
         Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("js/test.js").getFile())));
 
         // when

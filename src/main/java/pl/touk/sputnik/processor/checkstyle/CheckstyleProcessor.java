@@ -8,7 +8,7 @@ import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
@@ -28,8 +28,8 @@ public class CheckstyleProcessor implements ReviewProcessor {
 
     @Nullable
     @Override
-    public ReviewResult process(@NotNull Review review) {
-        innerProcess(review, collectorListener);
+    public ReviewResult process(@NotNull Review review, @NotNull Configuration configuration) {
+        innerProcess(review, collectorListener, configuration);
         return collectorListener.getReviewResult();
     }
 
@@ -39,19 +39,19 @@ public class CheckstyleProcessor implements ReviewProcessor {
         return SOURCE_NAME;
     }
 
-    private void innerProcess(@NotNull Review review, @NotNull AuditListener auditListener) {
+    private void innerProcess(@NotNull Review review, @NotNull AuditListener auditListener, @NotNull Configuration configuration) {
         List<File> files = review.getFiles(new JavaFilter(), new IOFileTransformer());
-        Checker checker = createChecker(auditListener);
+        Checker checker = createChecker(auditListener, configuration);
         checker.process(files);
         checker.destroy();
     }
 
     @NotNull
-    private Checker createChecker(@NotNull AuditListener auditListener) {
+    private Checker createChecker(@NotNull AuditListener auditListener, @NotNull Configuration configuration) {
         try {
             Checker checker = new Checker();
             ClassLoader moduleClassLoader = Checker.class.getClassLoader();
-            String configurationFile = getConfigurationFilename();
+            String configurationFile = getConfigurationFilename(configuration);
             Properties properties = System.getProperties();// loadProperties(new File(System.getProperty(CHECKSTYLE_PROPERTIES_FILE)));
             checker.setModuleClassLoader(moduleClassLoader);
             checker.configure(ConfigurationLoader.loadConfiguration(configurationFile, new PropertiesExpander(properties)));
@@ -63,8 +63,8 @@ public class CheckstyleProcessor implements ReviewProcessor {
     }
 
     @Nullable
-    private String getConfigurationFilename() {
-        String configurationFile = ConfigurationHolder.instance().getProperty(GeneralOption.CHECKSTYLE_CONFIGURATION_FILE);
+    private String getConfigurationFilename(@NotNull Configuration configuration) {
+        String configurationFile = configuration.getProperty(GeneralOption.CHECKSTYLE_CONFIGURATION_FILE);
         log.info("Using Checkstyle configuration file {}", configurationFile);
         return configurationFile;
     }

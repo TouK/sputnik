@@ -15,7 +15,7 @@ import net.sourceforge.pmd.util.datasource.DataSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
@@ -38,7 +38,7 @@ public class PmdProcessor implements ReviewProcessor {
 
     @Nullable
     @Override
-    public ReviewResult process(@NotNull Review review) {
+    public ReviewResult process(@NotNull Review review, @NotNull Configuration config) {
         List<String> filesToReview = review.getFiles(new PmdFilter(), new FileNameTransformer());
         if (filesToReview.isEmpty()) {
             return null;
@@ -47,7 +47,7 @@ public class PmdProcessor implements ReviewProcessor {
         try {
             PMDConfiguration configuration = new PMDConfiguration();
             configuration.setReportFormat(CollectorRenderer.class.getCanonicalName());
-            configuration.setRuleSets(getRulesets());
+            configuration.setRuleSets(getRulesets(config));
             configuration.setInputPaths(Joiner.on(PMD_INPUT_PATH_SEPARATOR).join(filesToReview));
             doPMD(configuration);
         } catch (RuntimeException e) {
@@ -64,8 +64,8 @@ public class PmdProcessor implements ReviewProcessor {
     }
 
     @Nullable
-    private String getRulesets() {
-        String ruleSets = ConfigurationHolder.instance().getProperty(GeneralOption.PMD_RULESETS);
+    private String getRulesets(@NotNull Configuration config) {
+        String ruleSets = config.getProperty(GeneralOption.PMD_RULESETS);
         log.info("Using PMD rulesets {}", ruleSets);
         return ruleSets;
     }

@@ -7,8 +7,6 @@ import static org.mockito.Mockito.verify;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -21,7 +19,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.sonar.runner.api.EmbeddedRunner;
 
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.ConfigurationBuilder;
 
 import com.google.common.collect.ImmutableList;
 
@@ -38,12 +36,12 @@ public class SonarRunnerTest {
 
     @Before
     public void setUp() throws FileNotFoundException {
-        ConfigurationHolder.initFromResource("test-sonar.properties");
+        ConfigurationBuilder.initFromResource("test-sonar.properties");
     }
 
     @After
     public void tearDown() {
-        ConfigurationHolder.reset();
+        ConfigurationBuilder.reset();
         new File(PROPERTY_1).delete();
         new File(PROPERTY_2).delete();
     }

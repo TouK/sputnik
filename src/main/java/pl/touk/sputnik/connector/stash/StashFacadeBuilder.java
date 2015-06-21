@@ -6,7 +6,7 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.CliOption;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.connector.ConnectorDetails;
 import pl.touk.sputnik.connector.http.HttpConnector;
@@ -19,22 +19,22 @@ public class StashFacadeBuilder {
     private HttpHelper httpHelper = new HttpHelper();
 
     @NotNull
-    public StashFacade build() {
-        ConnectorDetails connectorDetails = new ConnectorDetails();
-        StashPatchset stashPatchset = buildStashPatchset();
+    public StashFacade build(Configuration configuration) {
+        ConnectorDetails connectorDetails = new ConnectorDetails(configuration);
+        StashPatchset stashPatchset = buildStashPatchset(configuration);
 
         HttpHost httpHost = httpHelper.buildHttpHost(connectorDetails);
         HttpClientContext httpClientContext = httpHelper.buildClientContext(httpHost, new BasicScheme());
         CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, connectorDetails);
 
-        return new StashFacade(new StashConnector(new HttpConnector(closeableHttpClient, httpClientContext, connectorDetails.getPath()), stashPatchset));
+        return new StashFacade(new StashConnector(new HttpConnector(closeableHttpClient, httpClientContext, connectorDetails.getPath()), stashPatchset), configuration);
     }
 
     @NotNull
-    public StashPatchset buildStashPatchset() {
-        String pullRequestId = ConfigurationHolder.instance().getProperty(CliOption.PULL_REQUEST_ID);
-        String repositorySlug = ConfigurationHolder.instance().getProperty(GeneralOption.REPOSITORY_SLUG);
-        String projectKey = ConfigurationHolder.instance().getProperty(GeneralOption.PROJECT_KEY);
+    public StashPatchset buildStashPatchset(Configuration configuration) {
+        String pullRequestId = configuration.getProperty(CliOption.PULL_REQUEST_ID);
+        String repositorySlug = configuration.getProperty(GeneralOption.REPOSITORY_SLUG);
+        String projectKey = configuration.getProperty(GeneralOption.PROJECT_KEY);
 
         notBlank(pullRequestId, "You must provide non blank Stash pull request id");
         notBlank(repositorySlug, "You must provide non blank Stash repository slug");

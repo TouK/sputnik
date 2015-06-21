@@ -1,7 +1,5 @@
 package pl.touk.sputnik.processor.findbugs;
 
-import java.util.List;
-
 import edu.umd.cs.findbugs.ClassScreener;
 import edu.umd.cs.findbugs.DetectorFactoryCollection;
 import edu.umd.cs.findbugs.FindBugs2;
@@ -15,14 +13,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
 import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.filter.JavaFilter;
-import pl.touk.sputnik.review.locator.BuildDirLocator;
 import pl.touk.sputnik.review.locator.BuildDirLocatorFactory;
 import pl.touk.sputnik.review.transformer.ClassNameTransformer;
 
@@ -30,17 +27,15 @@ import pl.touk.sputnik.review.transformer.ClassNameTransformer;
 public class FindBugsProcessor implements ReviewProcessor {
     private static final String SOURCE_NAME = "FindBugs";
     private final CollectorBugReporter collectorBugReporter;
-    private final BuildDirLocator buildDirLocator;
 
     public FindBugsProcessor() {
         collectorBugReporter = createBugReporter();
-        buildDirLocator = BuildDirLocatorFactory.create();
     }
 
     @Nullable
     @Override
-    public ReviewResult process(@NotNull Review review) {
-        FindBugs2 findBugs = createFindBugs2(review);
+    public ReviewResult process(@NotNull Review review, @NotNull Configuration config) {
+        FindBugs2 findBugs = createFindBugs2(review, config);
         try {
             findBugs.execute();
         } catch (Exception e) {
@@ -56,24 +51,24 @@ public class FindBugsProcessor implements ReviewProcessor {
         return SOURCE_NAME;
     }
 
-    public FindBugs2 createFindBugs2(Review review) {
+    public FindBugs2 createFindBugs2(Review review, @NotNull Configuration config) {
         FindBugs2 findBugs = new FindBugs2();
-        findBugs.setProject(createProject(review));
+        findBugs.setProject(createProject(review, config));
         findBugs.setBugReporter(collectorBugReporter);
         findBugs.setDetectorFactoryCollection(DetectorFactoryCollection.instance());
         findBugs.setClassScreener(createClassScreener(review));
-        findBugs.setUserPreferences(createUserPreferences());
+        findBugs.setUserPreferences(createUserPreferences(config));
         findBugs.setNoClassOk(true);
         return findBugs;
     }
 
-    private UserPreferences createUserPreferences() {
+    private UserPreferences createUserPreferences(@NotNull Configuration config) {
         UserPreferences userPreferences = UserPreferences.createDefaultUserPreferences();
-        String includeFilterFilename = getIncludeFilterFilename();
+        String includeFilterFilename = getIncludeFilterFilename(config);
         if (StringUtils.isNotBlank(includeFilterFilename)) {
             userPreferences.getIncludeFilterFiles().put(includeFilterFilename, true);
         }
-        String excludeFilterFilename = getExcludeFilterFilename();
+        String excludeFilterFilename = getExcludeFilterFilename(config);
         if (StringUtils.isNotBlank(excludeFilterFilename)) {
             userPreferences.getExcludeFilterFiles().put(excludeFilterFilename, true);
         }
@@ -88,9 +83,9 @@ public class FindBugsProcessor implements ReviewProcessor {
     }
 
     @NotNull
-    private Project createProject(@NotNull Review review) {
+    private Project createProject(@NotNull Review review, @NotNull Configuration config) {
         Project project = new Project();
-        for (String buildDir : buildDirLocator.getBuildDirs(review)) {
+        for (String buildDir : BuildDirLocatorFactory.create(config).getBuildDirs(review)) {
             project.addFile(buildDir);
         }
         for (String sourceDir : review.getSourceDirs()) {
@@ -109,15 +104,15 @@ public class FindBugsProcessor implements ReviewProcessor {
     }
 
     @Nullable
-    private String getIncludeFilterFilename() {
-        String includeFilterFilename = ConfigurationHolder.instance().getProperty(GeneralOption.FINDBUGS_INCLUDE_FILTER);
+    private String getIncludeFilterFilename(@NotNull Configuration config) {
+        String includeFilterFilename = config.getProperty(GeneralOption.FINDBUGS_INCLUDE_FILTER);
         log.info("Using FindBugs include filter file {}", includeFilterFilename);
         return includeFilterFilename;
     }
 
     @Nullable
-    private String getExcludeFilterFilename() {
-        String excludeFilterFilename = ConfigurationHolder.instance().getProperty(GeneralOption.FINDBUGS_EXCLUDE_FILTER);
+    private String getExcludeFilterFilename(@NotNull Configuration config) {
+        String excludeFilterFilename = config.getProperty(GeneralOption.FINDBUGS_EXCLUDE_FILTER);
         log.info("Using FindBugs exclude filter file {}", excludeFilterFilename);
         return excludeFilterFilename;
     }

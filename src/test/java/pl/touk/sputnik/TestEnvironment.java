@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.io.Resources;
 import org.junit.After;
 import org.junit.Before;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.ConfigurationBuilder;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 
@@ -16,12 +16,12 @@ public abstract class TestEnvironment {
 
     @Before
     public void setUp() throws Exception {
-        ConfigurationHolder.initFromResource("test.properties");
+        ConfigurationBuilder.initFromResource("test.properties");
     }
 
     @After
     public void tearDown() throws Exception {
-        ConfigurationHolder.reset();
+        ConfigurationBuilder.reset();
     }
 
     protected Review review() {

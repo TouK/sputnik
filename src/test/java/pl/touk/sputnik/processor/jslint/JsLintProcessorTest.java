@@ -1,7 +1,7 @@
 package pl.touk.sputnik.processor.jslint;
 
 import pl.touk.sputnik.TestEnvironment;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.ConfigurationBuilder;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewResult;
@@ -22,12 +22,12 @@ public class JsLintProcessorTest extends TestEnvironment {
 
     @Before
     public void setUp() throws Exception {
-        ConfigurationHolder.initFromResource("jslint/sputnik/noConfigurationFile.properties");
+        ConfigurationBuilder.initFromResource("jslint/sputnik/noConfigurationFile.properties");
     }
 
     @After
     public void tearDown() throws Exception {
-        ConfigurationHolder.reset();
+        ConfigurationBuilder.reset();
     }
 
     @Test
@@ -64,7 +64,7 @@ public class JsLintProcessorTest extends TestEnvironment {
     @Test
     public void shouldReturnOneViolationWithConfigurationOnSimpleFunction() {
         // given
-        ConfigurationHolder.initFromResource("jslint/sputnik/withConfigurationFile.properties");
+        ConfigurationBuilder.initFromResource("jslint/sputnik/withConfigurationFile.properties");
         Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("js/test.js").getFile())));
 
         // when

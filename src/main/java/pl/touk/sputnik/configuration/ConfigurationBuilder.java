@@ -15,25 +15,23 @@ import com.google.common.io.CharSource;
 import com.google.common.io.Resources;
 
 @Slf4j
-public class ConfigurationHolder {
+public class ConfigurationBuilder {
 
-    private static Configuration INSTANCE;
-
-    public static void initFromFile(String configurationFilename) {
+    public static Configuration initFromFile(String configurationFilename) {
         notBlank(configurationFilename, "You need to provide filename with configuration properties");
         log.info("Initializing configuration properties from file {}", configurationFilename);
 
         try (FileReader resourceReader = new FileReader(configurationFilename)){
             Properties properties = new Properties();
             properties.load(resourceReader);
-            initFromProperties(properties);
+            return initFromProperties(properties);
         } catch (IOException e) {
             log.error("Configuration initialization failed", e);
             throw new RuntimeException("Configuration file " + configurationFilename + " cannot be loaded");
         }
     }
 
-    public static void initFromResource(String configurationResource) {
+    public static Configuration initFromResource(String configurationResource) {
         notBlank(configurationResource, "You need to provide url with configuration properties");
         log.info("Initializing configuration properties from url {}", configurationResource);
 
@@ -41,27 +39,16 @@ public class ConfigurationHolder {
         try (Reader resourceStream = charSource.openStream()) {
             Properties properties = new Properties();
             properties.load(resourceStream);
-            initFromProperties(properties);
+            return initFromProperties(properties);
         } catch (IOException e) {
             log.error("Configuration initialization failed", e);
             throw new RuntimeException(e);
         }
     }
 
-    public static void initFromProperties(Properties properties) {
-        setInstance(new Configuration(properties));
+    public static Configuration initFromProperties(Properties properties) {
+        return new Configuration(properties);
     }
 
-    public static void reset() {
-        INSTANCE = null;
-    }
-
-    public static Configuration instance() {
-        return INSTANCE;
-    }
-
-    private static void setInstance(Configuration instance) {
-        INSTANCE = instance;
-    }
 
 }

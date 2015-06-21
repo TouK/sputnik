@@ -1,7 +1,8 @@
 package pl.touk.sputnik.processor.jslint;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import org.jetbrains.annotations.NotNull;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
@@ -32,8 +33,8 @@ public class JsLintProcessor implements ReviewProcessor {
     private static final String SOURCE_NAME = "JSLint";
 
     @Override
-    public ReviewResult process(Review review) {
-        final Properties configProperties = loadConfigurationProperties();
+    public ReviewResult process(Review review, @NotNull Configuration config) {
+        final Properties configProperties = loadConfigurationProperties(config);
         return toReviewResult(lint(review, configProperties));
     }
 
@@ -87,8 +88,8 @@ public class JsLintProcessor implements ReviewProcessor {
      *
      * @return a Properties instance
      */
-    private Properties loadConfigurationProperties() {
-        String configurationFileName = getConfigurationFileName();
+    private Properties loadConfigurationProperties(@NotNull Configuration config) {
+        String configurationFileName = getConfigurationFileName(config);
         if (Strings.isNullOrEmpty(configurationFileName)) {
             log.info("JSLint property file not specified. Using default configuration.");
             return null;
@@ -108,8 +109,8 @@ public class JsLintProcessor implements ReviewProcessor {
         return props;
     }
 
-    private String getConfigurationFileName() {
-        String configurationFile = ConfigurationHolder.instance().getProperty(GeneralOption.JSLINT_CONFIGURATION_FILE);
+    private String getConfigurationFileName(@NotNull Configuration config) {
+        String configurationFile = config.getProperty(GeneralOption.JSLINT_CONFIGURATION_FILE);
         log.info("Using JSLint configuration file {}", configurationFile);
         return configurationFile;
     }

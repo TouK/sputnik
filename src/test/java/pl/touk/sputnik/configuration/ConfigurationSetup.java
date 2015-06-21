@@ -14,7 +14,7 @@ public class ConfigurationSetup {
             }
         }
 
-        ConfigurationHolder.initFromProperties(properties);
+        ConfigurationBuilder.initFromProperties(properties);
     }
 
 }
