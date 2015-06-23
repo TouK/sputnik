@@ -1,6 +1,8 @@
 package pl.touk.sputnik.engine.visitor.score;
 
 import org.junit.Test;
+import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 
@@ -12,7 +14,8 @@ public class NoScoreTest {
 
     @Test
     public void shouldAddNoScoreToReview() {
-        Review review = new Review(Collections.<ReviewFile>emptyList());
+        Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
+        Review review = new Review(Collections.<ReviewFile>emptyList(), config);
 
         new NoScore().afterReview(review);
 

@@ -23,6 +23,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationBuilder;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
@@ -52,7 +53,7 @@ public class GerritFacadeTest {
     @Test
     public void shouldNotAllowCommentOnlyChangedLines() {
         // given
-        new ConfigurationSetup().setUp(ImmutableMap.of(
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 "cli.changeId", "abc",
                 "cli.revisionId", "def",
                 "global.commentOnlyChangedLines", Boolean.toString(true)));
@@ -60,8 +61,8 @@ public class GerritFacadeTest {
         ConnectorFacadeFactory connectionFacade = new ConnectorFacadeFactory();
 
         // when
-        ConnectorFacade gerritFacade = connectionFacade.build(ConnectorType.GERRIT);
-        catchException(gerritFacade).validate(ConfigurationBuilder.instance());
+        ConnectorFacade gerritFacade = connectionFacade.build(ConnectorType.GERRIT, config);
+        catchException(gerritFacade).validate(config);
 
         // then
         assertThat(caughtException()).isInstanceOf(GeneralOptionNotSupportedException.class).hasMessage(

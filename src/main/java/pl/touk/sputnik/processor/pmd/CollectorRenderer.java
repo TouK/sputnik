@@ -10,12 +10,14 @@ import net.sourceforge.pmd.util.datasource.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.ConfigurationBuilder;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;
 
 import java.io.IOException;
+import java.util.Properties;
 
 @Slf4j
 public class CollectorRenderer extends AbstractRenderer {
@@ -25,6 +27,10 @@ public class CollectorRenderer extends AbstractRenderer {
 
     @Getter
     private final ReviewResult reviewResult = new ReviewResult();
+
+    public CollectorRenderer(Properties properties) {
+        this(ConfigurationBuilder.initFromProperties(properties));
+    }
 
     public CollectorRenderer(Configuration configuration) {
         super(SPUTNIK_PMD_COLLECT_RENDERER, SPUTNIK_PMD_COLLECT_RENDERER);

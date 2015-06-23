@@ -6,6 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationBuilder;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
@@ -17,25 +18,21 @@ import com.google.common.io.Resources;
 public class JsHintProcessorTest {
 
     private final JsHintProcessor fixture = new JsHintProcessor();
+    private Configuration config;
 
     @Before
     public void setUp() throws Exception {
-        ConfigurationBuilder.initFromResource("jshint/sputnik/noConfigurationFile.properties");
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        ConfigurationBuilder.reset();
+        config = ConfigurationBuilder.initFromResource("jshint/sputnik/noConfigurationFile.properties");
     }
 
 
     @Test
     public void shouldReturnEmptyResultWhenNoFilesToReview() {
         // given
-        Review review = new Review(ImmutableList.of(new ReviewFile("test")));
+        Review review = new Review(ImmutableList.of(new ReviewFile("test")), config);
 
         // when
-        ReviewResult reviewResult = fixture.process(review);
+        ReviewResult reviewResult = fixture.process(review, config);
 
         // then
         assertThat(reviewResult).isNotNull();
@@ -45,10 +42,10 @@ public class JsHintProcessorTest {
     @Test
     public void shouldReturnNoViolationsOnSimpleFunction() {
         // given
-        Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("js/test.js").getFile())));
+        Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("js/test.js").getFile())), config);
 
         // when
-        ReviewResult reviewResult = fixture.process(review);
+        ReviewResult reviewResult = fixture.process(review, config);
 
         // then
         assertThat(reviewResult).isNotNull();
@@ -58,11 +55,11 @@ public class JsHintProcessorTest {
     @Test
     public void shouldReturnOneViolationWithConfigurationOnSimpleFunction() {
         // given
-        ConfigurationBuilder.initFromResource("jshint/sputnik/withConfigurationFile.properties");
-        Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("js/test.js").getFile())));
+        config = ConfigurationBuilder.initFromResource("jshint/sputnik/withConfigurationFile.properties");
+        Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("js/test.js").getFile())), config);
 
         // when
-        ReviewResult reviewResult = fixture.process(review);
+        ReviewResult reviewResult = fixture.process(review, config);
 
         // then
         assertThat(reviewResult).isNotNull();

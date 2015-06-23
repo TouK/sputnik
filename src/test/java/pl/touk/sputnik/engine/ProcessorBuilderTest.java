@@ -2,6 +2,7 @@ package pl.touk.sputnik.engine;
 
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.configuration.GeneralOption;
 
@@ -13,14 +14,14 @@ public class ProcessorBuilderTest {
 
     @Test
     public void shouldNotBuildAnyProcessor() {
-        new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
+        Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
 
-        assertThat(new ProcessorBuilder().buildProcessors()).isEmpty();
+        assertThat(new ProcessorBuilder().buildProcessors(config)).isEmpty();
     }
 
     @Test
     public void shouldBuildDisabledProcessors() {
-        new ConfigurationSetup().setUp(ImmutableMap.of(
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.CHECKSTYLE_ENABLED.getKey(), "false",
                 GeneralOption.FINDBUGS_ENABLED.getKey(), "false",
                 GeneralOption.PMD_ENABLED.getKey(), "false",
@@ -28,12 +29,12 @@ public class ProcessorBuilderTest {
                 GeneralOption.CODE_NARC_ENABLED.getKey(), "false"
         ));
 
-        assertThat(new ProcessorBuilder().buildProcessors()).isEmpty();
+        assertThat(new ProcessorBuilder().buildProcessors(config)).isEmpty();
     }
 
     @Test
     public void shouldBuildAllProcessors() {
-        new ConfigurationSetup().setUp(ImmutableMap.of(
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.CHECKSTYLE_ENABLED.getKey(), "true",
                 GeneralOption.FINDBUGS_ENABLED.getKey(), "true",
                 GeneralOption.PMD_ENABLED.getKey(), "true",
@@ -41,6 +42,6 @@ public class ProcessorBuilderTest {
                 GeneralOption.CODE_NARC_ENABLED.getKey(), "true"
         ));
 
-        assertThat(new ProcessorBuilder().buildProcessors()).hasSize(5);
+        assertThat(new ProcessorBuilder().buildProcessors(config)).hasSize(5);
     }
 }

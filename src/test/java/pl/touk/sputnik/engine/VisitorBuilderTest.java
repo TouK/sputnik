@@ -2,6 +2,7 @@ package pl.touk.sputnik.engine;
 
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.engine.visitor.AfterReviewVisitor;
@@ -23,27 +24,27 @@ public class VisitorBuilderTest {
 
     @Test
     public void shouldNotBuildBeforeVisitors() {
-        new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
+        Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
 
-        assertThat(new VisitorBuilder().buildBeforeReviewVisitors()).isEmpty();
+        assertThat(new VisitorBuilder().buildBeforeReviewVisitors(config)).isEmpty();
     }
 
     @Test
     public void shouldNotBuildDisabledBeforeVisitors() {
-        new ConfigurationSetup().setUp(ImmutableMap.of(
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.PROCESS_TEST_FILES.getKey(), "true"
         ));
 
-        assertThat(new VisitorBuilder().buildBeforeReviewVisitors()).isEmpty();
+        assertThat(new VisitorBuilder().buildBeforeReviewVisitors(config)).isEmpty();
     }
 
     @Test
     public void shouldBuildBeforeVisitors() {
-        new ConfigurationSetup().setUp(ImmutableMap.of(
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.PROCESS_TEST_FILES.getKey(), "false"
         ));
 
-        assertThat(new VisitorBuilder().buildBeforeReviewVisitors())
+        assertThat(new VisitorBuilder().buildBeforeReviewVisitors(config))
                 .hasSize(1)
                 .extracting("class")
                 .containsExactly(FilterOutTestFilesVisitor.class);
@@ -51,9 +52,9 @@ public class VisitorBuilderTest {
 
     @Test
     public void shouldBuildAfterVisitors() {
-        new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
+        Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
 
-        assertThat(new VisitorBuilder().buildAfterReviewVisitors())
+        assertThat(new VisitorBuilder().buildAfterReviewVisitors(config))
                 .hasSize(2)
                 .extracting("class")
                 .containsExactly(SummaryMessageVisitor.class, ScoreAlwaysPass.class);
@@ -61,11 +62,11 @@ public class VisitorBuilderTest {
 
     @Test
     public void shouldNotBuildDisabledAfterVisitors() {
-        new ConfigurationSetup().setUp(ImmutableMap.of(
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.MAX_NUMBER_OF_COMMENTS.getKey(), "0"
         ));
 
-        assertThat(new VisitorBuilder().buildAfterReviewVisitors())
+        assertThat(new VisitorBuilder().buildAfterReviewVisitors(config))
                 .hasSize(2)
                 .extracting("class")
                 .containsExactly(SummaryMessageVisitor.class, ScoreAlwaysPass.class);
@@ -73,11 +74,11 @@ public class VisitorBuilderTest {
 
     @Test
     public void shouldBuildFilterOutCommentVisitor() {
-        new ConfigurationSetup().setUp(ImmutableMap.of(
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.MAX_NUMBER_OF_COMMENTS.getKey(), "50"
         ));
 
-        assertThat(new VisitorBuilder().buildAfterReviewVisitors())
+        assertThat(new VisitorBuilder().buildAfterReviewVisitors(config))
                 .hasSize(3)
                 .extracting("class")
                 .containsExactly(SummaryMessageVisitor.class, LimitCommentVisitor.class, ScoreAlwaysPass.class);
@@ -85,11 +86,11 @@ public class VisitorBuilderTest {
 
     @Test
     public void shouldBuildNoScoreVisitor() {
-        new ConfigurationSetup().setUp(ImmutableMap.of(
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.SCORE_STRATEGY.getKey(), "NOscore"
         ));
 
-        assertThat(new VisitorBuilder().buildAfterReviewVisitors())
+        assertThat(new VisitorBuilder().buildAfterReviewVisitors(config))
                 .hasSize(2)
                 .extracting("class")
                 .containsExactly(SummaryMessageVisitor.class, NoScore.class);
@@ -97,13 +98,13 @@ public class VisitorBuilderTest {
 
     @Test
     public void shouldBuildScoreAlwaysPassVisitor() {
-        new ConfigurationSetup().setUp(ImmutableMap.of(
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.SCORE_STRATEGY.getKey(), "scoreAlwaysPass",
                 GeneralOption.SCORE_PASSING_KEY.getKey(), "Verified",
                 GeneralOption.SCORE_PASSING_VALUE.getKey(), "2"
         ));
 
-        List<AfterReviewVisitor> afterReviewVisitors = new VisitorBuilder().buildAfterReviewVisitors();
+        List<AfterReviewVisitor> afterReviewVisitors = new VisitorBuilder().buildAfterReviewVisitors(config);
 
         assertThat(afterReviewVisitors)
                 .hasSize(2)
@@ -114,7 +115,7 @@ public class VisitorBuilderTest {
 
     @Test
     public void shouldBuildScorePassIfEmptyVisitor() {
-        new ConfigurationSetup().setUp(ImmutableMap.of(
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.SCORE_STRATEGY.getKey(), "SCOREPASSIFEMPTY",
                 GeneralOption.SCORE_PASSING_KEY.getKey(), "Verified",
                 GeneralOption.SCORE_PASSING_VALUE.getKey(), "3",
@@ -122,7 +123,7 @@ public class VisitorBuilderTest {
                 GeneralOption.SCORE_FAILING_VALUE.getKey(), "-3"
         ));
 
-        List<AfterReviewVisitor> afterReviewVisitors = new VisitorBuilder().buildAfterReviewVisitors();
+        List<AfterReviewVisitor> afterReviewVisitors = new VisitorBuilder().buildAfterReviewVisitors(config);
 
         assertThat(afterReviewVisitors)
                 .hasSize(2)
@@ -134,7 +135,7 @@ public class VisitorBuilderTest {
 
     @Test
     public void shouldBuildScorePassIfNoErrorsVisitor() {
-        new ConfigurationSetup().setUp(ImmutableMap.of(
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.SCORE_STRATEGY.getKey(), "SCOREPassIfNoErrors",
                 GeneralOption.SCORE_PASSING_KEY.getKey(), "Code-Review",
                 GeneralOption.SCORE_PASSING_VALUE.getKey(), "1",
@@ -142,7 +143,7 @@ public class VisitorBuilderTest {
                 GeneralOption.SCORE_FAILING_VALUE.getKey(), "-2"
         ));
 
-        List<AfterReviewVisitor> afterReviewVisitors = new VisitorBuilder().buildAfterReviewVisitors();
+        List<AfterReviewVisitor> afterReviewVisitors = new VisitorBuilder().buildAfterReviewVisitors(config);
 
         assertThat(afterReviewVisitors)
                 .hasSize(2)
@@ -154,11 +155,11 @@ public class VisitorBuilderTest {
 
     @Test
     public void shouldBuildDefaultScoreAlwaysPassIfStrategyIsUnknown() {
-        new ConfigurationSetup().setUp(ImmutableMap.of(
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.SCORE_STRATEGY.getKey(), "mySimpleStrategy"
         ));
 
-        List<AfterReviewVisitor> afterReviewVisitors = new VisitorBuilder().buildAfterReviewVisitors();
+        List<AfterReviewVisitor> afterReviewVisitors = new VisitorBuilder().buildAfterReviewVisitors(config);
 
         assertThat(afterReviewVisitors)
                 .hasSize(2)

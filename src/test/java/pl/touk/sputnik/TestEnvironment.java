@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.io.Resources;
 import org.junit.After;
 import org.junit.Before;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationBuilder;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
@@ -14,14 +15,11 @@ import static com.google.common.io.Resources.getResource;
 
 public abstract class TestEnvironment {
 
+    protected Configuration config;
+
     @Before
     public void setUp() throws Exception {
-        ConfigurationBuilder.initFromResource("test.properties");
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        ConfigurationBuilder.reset();
+        config = ConfigurationBuilder.initFromResource("test.properties");
     }
 
     protected Review review() {
@@ -29,15 +27,15 @@ public abstract class TestEnvironment {
     }
 
     protected Review review(String filename) {
-        return new Review(ImmutableList.of(new ReviewFile(Resources.getResource(filename).getFile())));
+        return new Review(ImmutableList.of(new ReviewFile(Resources.getResource(filename).getFile())), config);
     }
 
     protected Review nonexistantReview() {
-        return new Review(ImmutableList.of(new ReviewFile("test")));
+        return new Review(ImmutableList.of(new ReviewFile("test")), config);
     }
 
     protected Review nonexistantReview(String filename){
-        return new Review(ImmutableList.of(new ReviewFile(filename)));
+        return new Review(ImmutableList.of(new ReviewFile(filename)), config);
     }
 
     protected File getResourceAsFile(String resourceName) {

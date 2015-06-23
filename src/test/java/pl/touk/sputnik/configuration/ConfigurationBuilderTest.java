@@ -22,35 +22,35 @@ public class ConfigurationBuilderTest {
 
     @Test
     public void shouldReadPropertiesFromFile() {
-        ConfigurationBuilder.initFromResource("sample-test.properties");
+        Configuration config = ConfigurationBuilder.initFromResource("sample-test.properties");
 
-        assertThat(ConfigurationBuilder.instance().getProperty(GeneralOption.PORT)).isEqualTo("9999");
+        assertThat(config.getProperty(GeneralOption.PORT)).isEqualTo("9999");
     }
 
     @Test
     public void shouldOverrideSystemProperties() {
         System.setProperty(GeneralOption.USERNAME.getKey(), "userala");
-        ConfigurationBuilder.initFromResource("sample-test.properties");
+        Configuration config = ConfigurationBuilder.initFromResource("sample-test.properties");
 
-        assertThat(ConfigurationBuilder.instance().getProperty(GeneralOption.USERNAME)).isEqualTo("userala");
+        assertThat(config.getProperty(GeneralOption.USERNAME)).isEqualTo("userala");
     }
 
     @Test
     public void shouldReturnNotOverridedSystemProperties() {
         System.setProperty("some.system.property", "1234");
-        ConfigurationBuilder.initFromResource("sample-test.properties");
+        Configuration config = ConfigurationBuilder.initFromResource("sample-test.properties");
 
-        assertThat(ConfigurationBuilder.instance().getProperty(GeneralOption.PORT)).isEqualTo("9999");
+        assertThat(config.getProperty(GeneralOption.PORT)).isEqualTo("9999");
     }
 
     @Test
     public void shouldUpdateWithCliOptions() {
-        ConfigurationBuilder.initFromResource("sample-test.properties");
+        Configuration config = ConfigurationBuilder.initFromResource("sample-test.properties");
         CommandLine commandLineMock = buildCommandLine();
 
-        ConfigurationBuilder.instance().updateWithCliOptions(commandLineMock);
+        config.updateWithCliOptions(commandLineMock);
 
-        assertThat(ConfigurationBuilder.instance().getProperty(CliOption.CHANGE_ID)).isEqualTo("99999");
+        assertThat(config.getProperty(CliOption.CHANGE_ID)).isEqualTo("99999");
     }
 
     private CommandLine buildCommandLine() {
