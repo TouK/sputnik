@@ -6,9 +6,10 @@ import java.io.IOException;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import pl.gildur.jshint4j.Error;
 import pl.gildur.jshint4j.JsHint;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
@@ -28,8 +29,8 @@ public class JsHintProcessor implements ReviewProcessor {
     private static final String SOURCE_NAME = "JSHint";
 
     @Override
-    public ReviewResult process(Review review) {
-        String configuration = readConfiguration();
+    public ReviewResult process(Review review, @NotNull Configuration config) {
+        String configuration = readConfiguration(config);
         ReviewResult result = new ReviewResult();
         List<File> files = review.getFiles(new JavaScriptFilter(), new IOFileTransformer());
         for (File file : files) {
@@ -53,8 +54,8 @@ public class JsHintProcessor implements ReviewProcessor {
         }
     }
 
-    private String readConfiguration() {
-        String configurationFileName = getConfigurationFileName();
+    private String readConfiguration(@NotNull Configuration config) {
+        String configurationFileName = getConfigurationFileName(config);
         if (Strings.isNullOrEmpty(configurationFileName)) {
             return null;
         }
@@ -65,8 +66,8 @@ public class JsHintProcessor implements ReviewProcessor {
         }
     }
     
-    private String getConfigurationFileName() {
-        String configurationFile = ConfigurationHolder.instance().getProperty(GeneralOption.JSHINT_CONFIGURATION_FILE);
+    private String getConfigurationFileName(@NotNull Configuration config) {
+        String configurationFile = config.getProperty(GeneralOption.JSHINT_CONFIGURATION_FILE);
         log.info("Using JSHint configuration file {}", configurationFile);
         return configurationFile;
     }

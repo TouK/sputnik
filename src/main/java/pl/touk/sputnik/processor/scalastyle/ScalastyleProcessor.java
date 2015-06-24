@@ -14,7 +14,7 @@ import org.scalastyle.ScalastyleChecker;
 import org.scalastyle.ScalastyleConfiguration;
 import org.scalastyle.StartFile;
 import org.scalastyle.StyleError;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewProcessor;
@@ -38,8 +38,8 @@ public class ScalastyleProcessor implements ReviewProcessor {
     @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public ReviewResult process(@NotNull Review review) {
-        String scalastyleConfigFile = ConfigurationHolder.instance().getProperty(GeneralOption.SCALASTYLE_CONFIGURATION_FILE);
+    public ReviewResult process(@NotNull Review review, @NotNull Configuration config) {
+        String scalastyleConfigFile = config.getProperty(GeneralOption.SCALASTYLE_CONFIGURATION_FILE);
         ScalastyleConfiguration configuration = ScalastyleConfiguration.readFromXml(scalastyleConfigFile);
         List<Message> messages = new ScalastyleChecker().checkFilesAsJava(configuration, toFileSpec(review.getFiles(new ScalaFilter(), new IOFileTransformer())));
         return toReviewResult(messages);

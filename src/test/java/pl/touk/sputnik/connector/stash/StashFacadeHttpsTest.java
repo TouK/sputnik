@@ -6,6 +6,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.connector.FacadeConfigUtil;
 import pl.touk.sputnik.review.ReviewFile;
@@ -34,8 +35,8 @@ public class StashFacadeHttpsTest {
 
     @Before
     public void setUp() {
-        new ConfigurationSetup().setUp(FacadeConfigUtil.getHttpsConfig("stash"), STASH_PATCHSET_MAP);
-        stashFacade = new StashFacadeBuilder().build();
+        Configuration config = new ConfigurationSetup().setUp(FacadeConfigUtil.getHttpsConfig("stash"), STASH_PATCHSET_MAP);
+        stashFacade = new StashFacadeBuilder().build(config);
     }
 
     @Test

@@ -1,10 +1,13 @@
 package pl.touk.sputnik.engine.visitor;
 
 import org.junit.Test;
+import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -14,7 +17,8 @@ public class FilterOutTestFilesVisitorTest {
 
     @Test
     public void shouldFilterOutTestFiles() {
-        Review review = new Review(Arrays.asList(createReviewFile(true), createReviewFile(false)));
+        Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
+        Review review = new Review(Arrays.asList(createReviewFile(true), createReviewFile(false)),config);
 
         new FilterOutTestFilesVisitor().beforeReview(review);
 

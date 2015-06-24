@@ -3,8 +3,12 @@ package pl.touk.sputnik.processor.checkstyle;
 import org.junit.Test;
 import org.mockito.Mock;
 import pl.touk.sputnik.TestEnvironment;
+import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewResult;
+
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,7 +22,7 @@ public class CheckstyleProcessorTest extends TestEnvironment {
     @Test
     public void shouldReturnBasicSunViolationsOnSimpleClass() {
         //when
-        ReviewResult reviewResult = fixture.process(review());
+        ReviewResult reviewResult = fixture.process(review(), config);
 
         //then
         assertThat(reviewResult).isNotNull();

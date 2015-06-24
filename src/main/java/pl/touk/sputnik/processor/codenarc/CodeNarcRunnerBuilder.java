@@ -3,24 +3,25 @@ package pl.touk.sputnik.processor.codenarc;
 import org.codenarc.CodeNarcRunner;
 import org.codenarc.analyzer.FilesystemSourceAnalyzer;
 import org.codenarc.analyzer.SourceAnalyzer;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import org.jetbrains.annotations.NotNull;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 
 import java.util.List;
 
 class CodeNarcRunnerBuilder {
-    public CodeNarcRunner prepareCodeNarcRunner(List<String> reviewFiles) {
+    public CodeNarcRunner prepareCodeNarcRunner(List<String> reviewFiles, @NotNull Configuration configuration) {
         CodeNarcRunner codeNarcRunner = new CodeNarcRunner();
-        codeNarcRunner.setRuleSetFiles(ConfigurationHolder.instance().getProperty(GeneralOption.CODE_NARC_RULESET));
-        codeNarcRunner.setSourceAnalyzer(createSourceAnalyzer(reviewFiles));
+        codeNarcRunner.setRuleSetFiles(configuration.getProperty(GeneralOption.CODE_NARC_RULESET));
+        codeNarcRunner.setSourceAnalyzer(createSourceAnalyzer(reviewFiles, configuration));
         return codeNarcRunner;
     }
 
-    private SourceAnalyzer createSourceAnalyzer(List<String> reviewFiles) {
+    private SourceAnalyzer createSourceAnalyzer(List<String> reviewFiles, @NotNull Configuration configuration) {
         FilesystemSourceAnalyzer sourceAnalyzer = new FilesystemSourceAnalyzer();
         sourceAnalyzer.setBaseDirectory(".");
         sourceAnalyzer.setIncludes(createFileList(reviewFiles));
-        sourceAnalyzer.setExcludes(ConfigurationHolder.instance().getProperty(GeneralOption.CODE_NARC_EXCLUDES));
+        sourceAnalyzer.setExcludes(configuration.getProperty(GeneralOption.CODE_NARC_EXCLUDES));
         return sourceAnalyzer;
     }
 

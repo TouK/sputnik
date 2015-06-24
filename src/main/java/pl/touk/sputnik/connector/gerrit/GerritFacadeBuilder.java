@@ -8,7 +8,7 @@ import com.urswolfer.gerrit.client.rest.http.HttpClientBuilderExtension;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.CliOption;
 import pl.touk.sputnik.connector.ConnectorDetails;
 import pl.touk.sputnik.connector.http.HttpHelper;
@@ -21,9 +21,9 @@ public class GerritFacadeBuilder {
     private HttpHelper httpHelper = new HttpHelper();
 
     @NotNull
-    public GerritFacade build() {
-        ConnectorDetails connectorDetails = new ConnectorDetails();
-        GerritPatchset gerritPatchset = buildGerritPatchset();
+    public GerritFacade build(Configuration configuration) {
+        ConnectorDetails connectorDetails = new ConnectorDetails(configuration);
+        GerritPatchset gerritPatchset = buildGerritPatchset(configuration);
 
         GerritRestApiFactory gerritRestApiFactory = new GerritRestApiFactory();
         String hostUri = httpHelper.buildHttpHostUri(connectorDetails);
@@ -46,9 +46,9 @@ public class GerritFacadeBuilder {
     }
 
     @NotNull
-    private GerritPatchset buildGerritPatchset() {
-        String changeId = ConfigurationHolder.instance().getProperty(CliOption.CHANGE_ID);
-        String revisionId = ConfigurationHolder.instance().getProperty(CliOption.REVISION_ID);
+    private GerritPatchset buildGerritPatchset(Configuration configuration) {
+        String changeId = configuration.getProperty(CliOption.CHANGE_ID);
+        String revisionId = configuration.getProperty(CliOption.REVISION_ID);
 
         notBlank(changeId, "You must provide non blank Gerrit change Id");
         notBlank(revisionId, "You must provide non blank Gerrit revision Id");

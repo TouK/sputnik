@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.NotNull;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
 import pl.touk.sputnik.review.ReviewProcessor;
@@ -15,13 +16,13 @@ public class ReviewRunner {
     private static final long THOUSAND = 1000L;
     @NotNull private final Review review;
 
-    public void review(@NotNull ReviewProcessor processor) {
+    public void review(@NotNull ReviewProcessor processor, @NotNull Configuration configuration) {
         log.info("Review started for processor {}", processor.getName());
         long start = System.currentTimeMillis();
         ReviewResult reviewResult = null;
 
         try {
-            reviewResult = processor.process(review);
+            reviewResult = processor.process(review, configuration);
         } catch (ReviewException e) {
             log.error("Processor {} error", processor.getName(), e);
             review.addProblem(processor.getName(), ExceptionUtils.getRootCauseMessage(e));

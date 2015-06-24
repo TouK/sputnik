@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.Configuration;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
 import pl.touk.sputnik.connector.ConnectorFacade;
@@ -32,9 +31,11 @@ import java.util.List;
 public class StashFacade implements ConnectorFacade {
     private StashConnector stashConnector;
     private ObjectMapper objectMapper = new ObjectMapper();
+    private final Configuration configuration;
 
-    public StashFacade(@NotNull StashConnector stashConnector) {
+    public StashFacade(@NotNull StashConnector stashConnector, Configuration configuration) {
         this.stashConnector = stashConnector;
+        this.configuration = configuration;
     }
 
     @Override
@@ -84,7 +85,7 @@ public class StashFacade implements ConnectorFacade {
     }
 
     private void sendFileComments(Review review) {
-        boolean commentOnlyChangedLines = Boolean.parseBoolean(ConfigurationHolder.instance().getProperty(GeneralOption.COMMENT_ONLY_CHANGED_LINES));
+        boolean commentOnlyChangedLines = Boolean.parseBoolean(configuration.getProperty(GeneralOption.COMMENT_ONLY_CHANGED_LINES));
 
         for (ReviewFile reviewFile : review.getFiles()) {
             SingleFileChanges changes = changesForSingleFile(reviewFile.getReviewFilename());

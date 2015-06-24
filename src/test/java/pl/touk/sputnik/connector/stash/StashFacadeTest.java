@@ -19,6 +19,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.connector.FacadeConfigUtil;
 import pl.touk.sputnik.review.Review;
@@ -42,14 +43,15 @@ public class StashFacadeTest {
     );
 
     private StashFacade stashFacade;
+    private Configuration config;
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(FacadeConfigUtil.HTTP_PORT);
 
     @Before
     public void setUp() {
-        new ConfigurationSetup().setUp(FacadeConfigUtil.getHttpConfig("stash"), STASH_PATCHSET_MAP);
-        stashFacade = new StashFacadeBuilder().build();
+        config = new ConfigurationSetup().setUp(FacadeConfigUtil.getHttpConfig("stash"), STASH_PATCHSET_MAP);
+        stashFacade = new StashFacadeBuilder().build(config);
     }
 
     @Test
@@ -89,7 +91,7 @@ public class StashFacadeTest {
                 "%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/comments",
                 FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)), "/json/stash-diff-empty.json");
 
-        Review review = new Review(ImmutableList.of(new ReviewFile(filename)));
+        Review review = new Review(ImmutableList.of(new ReviewFile(filename)), config);
         review.addError("scalastyle", new Violation(filename, 1, "error message", Severity.ERROR));
         review.getMessages().add("Total 1 violations found");
 

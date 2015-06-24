@@ -1,11 +1,11 @@
 package pl.touk.sputnik.review;
 
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.Configuration;
 
 
 public class ReviewFormatterFactory {
 
-    static ReviewFormatter get() {
-        return new ReviewFormatter(ConfigurationHolder.instance());
+    static ReviewFormatter get(Configuration configuration) {
+        return new ReviewFormatter(configuration);
     }
 }

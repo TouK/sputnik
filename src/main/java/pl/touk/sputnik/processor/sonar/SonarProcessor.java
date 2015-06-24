@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.google.common.annotations.VisibleForTesting;
 
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
 import pl.touk.sputnik.review.ReviewFile;
@@ -36,13 +37,13 @@ public class SonarProcessor implements ReviewProcessor {
 
     @Nullable
     @Override
-    public ReviewResult process(@NotNull Review review) {
+    public ReviewResult process(@NotNull Review review, @NotNull Configuration configuration) {
         if (review.getFiles().isEmpty()) {
             return new ReviewResult();
         }
 
         try {
-            SonarRunner runner = sonarRunnerBuilder.prepareRunner(review);
+            SonarRunner runner = sonarRunnerBuilder.prepareRunner(review, configuration);
             File resultFile = runner.run();
             SonarResultParser parser = new SonarResultParser(resultFile);
             return filterResults(parser.parseResults(), review);

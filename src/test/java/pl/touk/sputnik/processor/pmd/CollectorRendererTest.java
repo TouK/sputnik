@@ -9,6 +9,7 @@ import net.sourceforge.pmd.RuleViolation;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import pl.touk.sputnik.TestEnvironment;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Severity;
@@ -16,6 +17,7 @@ import pl.touk.sputnik.review.Violation;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +26,7 @@ import static org.mockito.Mockito.when;
 
 public class CollectorRendererTest extends TestEnvironment {
 
-    private CollectorRenderer renderer = new CollectorRenderer();
+    private CollectorRenderer renderer;
 
     private static final String VIOLATION_DESCRIPTION = "this is bug!";
     private static final String RULE_DESCRIPTION = "...and should be fixed";
@@ -33,9 +35,9 @@ public class CollectorRendererTest extends TestEnvironment {
 
     @Test
     public void shouldReportViolationWithDetails() throws IOException {
-        new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.PMD_SHOW_VIOLATION_DETAILS.getKey(), "true"));
-        Rule rule = createRule(RULE_DESCRIPTION, EXTERNAL_INFO_URL, RulePriority.HIGH);
-        Report report = createReportWithVolation(createRuleViolation(rule, VIOLATION_DESCRIPTION));
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.PMD_SHOW_VIOLATION_DETAILS.getKey(), "true"));
+        Rule rule = createRule(RULE_DESCRIPTION, EXTERNAL_INFO_URL, RulePriority.HIGH, config);
+        Report report = createReportWithVolation(createRuleViolation(rule, VIOLATION_DESCRIPTION, config), config);
 
         renderer.renderFileReport(report);
 
@@ -46,9 +48,9 @@ public class CollectorRendererTest extends TestEnvironment {
 
     @Test
     public void shouldReportViolationWithoutDetails() throws IOException {
-        new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.PMD_SHOW_VIOLATION_DETAILS.getKey(), "false"));
-        Rule rule = createRule(RULE_DESCRIPTION, EXTERNAL_INFO_URL, RulePriority.MEDIUM);
-        Report report = createReportWithVolation(createRuleViolation(rule, VIOLATION_DESCRIPTION));
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.PMD_SHOW_VIOLATION_DETAILS.getKey(), "false"));
+        Rule rule = createRule(RULE_DESCRIPTION, EXTERNAL_INFO_URL, RulePriority.MEDIUM, config);
+        Report report = createReportWithVolation(createRuleViolation(rule, VIOLATION_DESCRIPTION, config), config);
 
         renderer.renderFileReport(report);
 
@@ -57,7 +59,8 @@ public class CollectorRendererTest extends TestEnvironment {
     }
 
     @NotNull
-    private Rule createRule(String ruleDescription, String externalInfoUrl, RulePriority priority) {
+    private Rule createRule(String ruleDescription, String externalInfoUrl, RulePriority priority, @NotNull Configuration config) {
+        renderer = new CollectorRenderer(config);
         Rule rule = mock(Rule.class);
         when(rule.getDescription()).thenReturn(ruleDescription);
         when(rule.getExternalInfoUrl()).thenReturn(externalInfoUrl);
@@ -67,7 +70,8 @@ public class CollectorRendererTest extends TestEnvironment {
     }
 
     @NotNull
-    private RuleViolation createRuleViolation(@NotNull Rule rule, String violationDescription) {
+    private RuleViolation createRuleViolation(@NotNull Rule rule, String violationDescription, @NotNull Configuration config) {
+        renderer = new CollectorRenderer(config);
         RuleViolation violation = mock(RuleViolation.class);
         when(violation.getRule()).thenReturn(rule);
         when(violation.getDescription()).thenReturn(violationDescription);
@@ -76,7 +80,8 @@ public class CollectorRendererTest extends TestEnvironment {
     }
 
     @NotNull
-    private Report createReportWithVolation(@NotNull RuleViolation violation) {
+    private Report createReportWithVolation(@NotNull RuleViolation violation, @NotNull Configuration config) {
+        renderer = new CollectorRenderer(config);
         Report report = mock(Report.class);
         List<RuleViolation> list = new ArrayList<RuleViolation>();
         list.add(violation);

@@ -3,19 +3,24 @@ package pl.touk.sputnik.review.locator;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.ImmutableList;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.ConfigurationBuilder;
+import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
+
+import java.util.Collections;
 
 public class MavenBuildDirLocatorTest {
 
     private MavenBuildDirLocator locator = new MavenBuildDirLocator();
+    private Configuration config;
 
-    @BeforeClass
-    public static void setUp() {
-        ConfigurationHolder.initFromResource("test.properties");
+    @Before
+    public void setUp() {
+        config = ConfigurationBuilder.initFromResource("test.properties");
     }
 
     @Test
@@ -38,7 +43,7 @@ public class MavenBuildDirLocatorTest {
 
 
     private Review review(String file) {
-        return new Review(ImmutableList.of(new ReviewFile(file)));
+        return new Review(ImmutableList.of(new ReviewFile(file)), config);
     }
 
 }

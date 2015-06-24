@@ -9,6 +9,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.review.filter.FileFilter;
 import pl.touk.sputnik.review.transformer.FileTransformer;
 
@@ -36,11 +37,11 @@ public class Review {
     private List<String> messages = new ArrayList<>();
     private Map<String, Short> scores = new HashMap<>();
 
-    private ReviewFormatter formatter;
+    private final ReviewFormatter formatter;
 
-    public Review(@NotNull List<ReviewFile> files) {
+    public Review(@NotNull List<ReviewFile> files, Configuration configuration) {
         this.files = files;
-        this.formatter = ReviewFormatterFactory.get();
+        this.formatter = ReviewFormatterFactory.get(configuration);
     }
 
     @NotNull

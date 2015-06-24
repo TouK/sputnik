@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.runner.api.EmbeddedRunner;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 
 import java.io.File;
@@ -20,6 +20,7 @@ public class SonarRunner {
 
     private final List<String> files;
     private final EmbeddedRunner sonarEmbeddedRunner;
+    private final Configuration configuration;
 
     @VisibleForTesting
     static final String OUTPUT_DIR = ".sonar";
@@ -36,7 +37,7 @@ public class SonarRunner {
     @VisibleForTesting
     Properties loadBaseProperties() throws IOException {
         final Properties props = new Properties();
-        for (final String property: StringUtils.split(ConfigurationHolder.instance().getProperty(GeneralOption.SONAR_PROPERTIES), ',')){
+        for (final String property: StringUtils.split(configuration.getProperty(GeneralOption.SONAR_PROPERTIES), ',')){
             final File propertyFile = new File(StringUtils.strip(property));
             log.info("Loading {}", propertyFile.getAbsolutePath());
             props.load(new FileInputStream(propertyFile));
@@ -71,7 +72,7 @@ public class SonarRunner {
         props.put(SonarProperties.SCM_STAT_ENABLED, "false");
         props.put(SonarProperties.ISSUEASSIGN_PLUGIN, "false");
         props.put(SonarProperties.EXPORT_PATH, OUTPUT_FILE);
-        props.put(SonarProperties.VERBOSE, ConfigurationHolder.instance().getProperty(GeneralOption.SONAR_VERBOSE));
+        props.put(SonarProperties.VERBOSE, configuration.getProperty(GeneralOption.SONAR_VERBOSE));
         props.put(SonarProperties.WORKDIR, OUTPUT_DIR);
         props.put(SonarProperties.PROJECT_BASEDIR, ".");
     }
