@@ -36,9 +36,16 @@ public class PmdProcessor implements ReviewProcessor {
     private static final char PMD_INPUT_PATH_SEPARATOR = ',';
     private Renderer renderer;
 
+    @NotNull
+    private final Configuration config;
+
+    public PmdProcessor(Configuration configuration) {
+        config = configuration;
+    }
+
     @Nullable
     @Override
-    public ReviewResult process(@NotNull Review review, @NotNull Configuration config) {
+    public ReviewResult process(@NotNull Review review) {
         List<String> filesToReview = review.getFiles(new PmdFilter(), new FileNameTransformer());
         if (filesToReview.isEmpty()) {
             return null;
@@ -47,7 +54,7 @@ public class PmdProcessor implements ReviewProcessor {
         try {
             PMDConfiguration configuration = new PMDConfiguration();
             configuration.setReportFormat(CollectorRenderer.class.getCanonicalName());
-            configuration.setRuleSets(getRulesets(config));
+            configuration.setRuleSets(getRulesets());
             configuration.setInputPaths(Joiner.on(PMD_INPUT_PATH_SEPARATOR).join(filesToReview));
             doPMD(configuration);
         } catch (RuntimeException e) {
@@ -64,7 +71,7 @@ public class PmdProcessor implements ReviewProcessor {
     }
 
     @Nullable
-    private String getRulesets(@NotNull Configuration config) {
+    private String getRulesets() {
         String ruleSets = config.getProperty(GeneralOption.PMD_RULESETS);
         log.info("Using PMD rulesets {}", ruleSets);
         return ruleSets;

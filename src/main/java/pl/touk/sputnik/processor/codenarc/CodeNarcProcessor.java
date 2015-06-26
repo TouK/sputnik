@@ -1,5 +1,6 @@
 package pl.touk.sputnik.processor.codenarc;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.codenarc.CodeNarcRunner;
 import org.codenarc.results.Results;
@@ -15,16 +16,18 @@ import pl.touk.sputnik.review.transformer.FileNameTransformer;
 import java.util.List;
 
 @Slf4j
+@AllArgsConstructor
 public class CodeNarcProcessor implements ReviewProcessor {
 
     private static final String PROCESSOR_NAME = "CodeNarc";
 
     private final CodeNarcRunnerBuilder codeNarcRunnerBuilder = new CodeNarcRunnerBuilder();
     private final ResultParser resultParser = new ResultParser();
+    private final Configuration configuration;
 
     @Nullable
     @Override
-    public ReviewResult process(@NotNull Review review, @NotNull Configuration configuration) {
+    public ReviewResult process(@NotNull Review review) {
         List<String> reviewFiles = review.getFiles(new GroovyFilter(), new FileNameTransformer());
         if (noFilesToReview(reviewFiles)) {
             return new ReviewResult();

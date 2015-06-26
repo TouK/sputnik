@@ -16,7 +16,7 @@ public class ProcessorBuilderTest {
     public void shouldNotBuildAnyProcessor() {
         Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
 
-        assertThat(new ProcessorBuilder().buildProcessors(config)).isEmpty();
+        assertThat(ProcessorBuilder.buildProcessors(config)).isEmpty();
     }
 
     @Test
@@ -29,7 +29,7 @@ public class ProcessorBuilderTest {
                 GeneralOption.CODE_NARC_ENABLED.getKey(), "false"
         ));
 
-        assertThat(new ProcessorBuilder().buildProcessors(config)).isEmpty();
+        assertThat(ProcessorBuilder.buildProcessors(config)).isEmpty();
     }
 
     @Test
@@ -42,6 +42,6 @@ public class ProcessorBuilderTest {
                 GeneralOption.CODE_NARC_ENABLED.getKey(), "true"
         ));
 
-        assertThat(new ProcessorBuilder().buildProcessors(config)).hasSize(5);
+        assertThat(ProcessorBuilder.buildProcessors(config)).hasSize(5);
     }
 }

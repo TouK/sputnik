@@ -8,6 +8,7 @@ import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationBuilder;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewFormatter;
 
 import java.io.File;
 
@@ -27,15 +28,15 @@ public abstract class TestEnvironment {
     }
 
     protected Review review(String filename) {
-        return new Review(ImmutableList.of(new ReviewFile(Resources.getResource(filename).getFile())), config);
+        return new Review(ImmutableList.of(new ReviewFile(Resources.getResource(filename).getFile())), new ReviewFormatter(config));
     }
 
     protected Review nonexistantReview() {
-        return new Review(ImmutableList.of(new ReviewFile("test")), config);
+        return new Review(ImmutableList.of(new ReviewFile("test")), new ReviewFormatter(config));
     }
 
     protected Review nonexistantReview(String filename){
-        return new Review(ImmutableList.of(new ReviewFile(filename)), config);
+        return new Review(ImmutableList.of(new ReviewFile(filename)), new ReviewFormatter(config));
     }
 
     protected File getResourceAsFile(String resourceName) {

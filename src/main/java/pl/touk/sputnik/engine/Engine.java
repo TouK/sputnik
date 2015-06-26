@@ -8,6 +8,7 @@ import pl.touk.sputnik.engine.visitor.AfterReviewVisitor;
 import pl.touk.sputnik.engine.visitor.BeforeReviewVisitor;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewFormatter;
 import pl.touk.sputnik.review.ReviewProcessor;
 
 import java.util.List;
@@ -25,16 +26,16 @@ public class Engine {
 
     public void run() {
         List<ReviewFile> reviewFiles = facade.listFiles();
-        Review review = new Review(reviewFiles, config);
+        Review review = new Review(reviewFiles, new ReviewFormatter(config));
 
         for (BeforeReviewVisitor beforeReviewVisitor : new VisitorBuilder().buildBeforeReviewVisitors(config)) {
             beforeReviewVisitor.beforeReview(review);
         }
 
-        List<ReviewProcessor> processors = new ProcessorBuilder().buildProcessors(config);
+        List<ReviewProcessor> processors = ProcessorBuilder.buildProcessors(config);
         ReviewRunner reviewRunner = new ReviewRunner(review);
         for (ReviewProcessor processor : processors) {
-            reviewRunner.review(processor, config);
+            reviewRunner.review(processor);
         }
 
         for (AfterReviewVisitor afterReviewVisitor : new VisitorBuilder().buildAfterReviewVisitors(config)) {

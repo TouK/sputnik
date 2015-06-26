@@ -5,6 +5,7 @@ import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewFormatter;
 
 import java.util.Collections;
 
@@ -15,7 +16,7 @@ public class NoScoreTest {
     @Test
     public void shouldAddNoScoreToReview() {
         Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
-        Review review = new Review(Collections.<ReviewFile>emptyList(), config);
+        Review review = new Review(Collections.<ReviewFile>emptyList(), new ReviewFormatter(config));
 
         new NoScore().afterReview(review);
 

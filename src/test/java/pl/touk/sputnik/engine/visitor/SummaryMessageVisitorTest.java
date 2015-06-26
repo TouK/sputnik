@@ -5,6 +5,7 @@ import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewFormatter;
 
 import java.util.Collections;
 
@@ -20,7 +21,7 @@ public class SummaryMessageVisitorTest {
     @Test
     public void shouldAddSummaryMessage() {
         Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
-        Review review = new Review(Collections.<ReviewFile>emptyList(), config);
+        Review review = new Review(Collections.<ReviewFile>emptyList(), new ReviewFormatter(config));
         review.setTotalViolationCount(8);
 
         new SummaryMessageVisitor("Perfect").afterReview(review);
@@ -31,7 +32,7 @@ public class SummaryMessageVisitorTest {
     @Test
     public void shouldAddPerfectMessageIfThereAreNoViolationsFound() {
         Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
-        Review review = new Review(Collections.<ReviewFile>emptyList(), config);
+        Review review = new Review(Collections.<ReviewFile>emptyList(), new ReviewFormatter(config));
         review.setTotalViolationCount(0);
 
         new SummaryMessageVisitor("Perfect").afterReview(review);
@@ -42,7 +43,7 @@ public class SummaryMessageVisitorTest {
     @Test
     public void shouldAddProblemMessagesPerfectMessageIfThereAreNoViolationsFound() {
         Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
-        Review review = new Review(Collections.<ReviewFile>emptyList(), config);
+        Review review = new Review(Collections.<ReviewFile>emptyList(), new ReviewFormatter(config));
         review.setTotalViolationCount(8);
         review.addProblem(PROBLEM_SOURCE, PROBLEM_MESSAGE);
 

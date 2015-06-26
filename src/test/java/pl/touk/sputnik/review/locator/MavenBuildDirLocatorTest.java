@@ -10,6 +10,7 @@ import pl.touk.sputnik.configuration.ConfigurationBuilder;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewFormatter;
 
 import java.util.Collections;
 
@@ -43,7 +44,7 @@ public class MavenBuildDirLocatorTest {
 
 
     private Review review(String file) {
-        return new Review(ImmutableList.of(new ReviewFile(file)), config);
+        return new Review(ImmutableList.of(new ReviewFile(file)), new ReviewFormatter(config));
     }
 
 }

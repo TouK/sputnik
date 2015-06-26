@@ -10,10 +10,7 @@ import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.configuration.GeneralOption;
-import pl.touk.sputnik.review.Review;
-import pl.touk.sputnik.review.ReviewException;
-import pl.touk.sputnik.review.ReviewFile;
-import pl.touk.sputnik.review.ReviewResult;
+import pl.touk.sputnik.review.*;
 
 import java.util.List;
 
@@ -29,17 +26,17 @@ public class FindBugsProcessorTest extends TestEnvironment {
     @Before
     public void setUp() throws Exception {
         config = new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.BUILD_TOOL.getKey(), "gradle"));
-        findBugsProcessor = new FindBugsProcessor();
+        findBugsProcessor = new FindBugsProcessor(config);
     }
 
     @Test
     public void shouldReturnBasicViolationsOnEmptyClass() {
         //given
         List<ReviewFile> files = ImmutableList.of(new ReviewFile("src/test/java/toreview/TestClass.java"));
-        Review review = new Review(files, config);
+        Review review = new Review(files, new ReviewFormatter(config));
 
         //when
-        ReviewResult reviewResult = findBugsProcessor.process(review, config);
+        ReviewResult reviewResult = findBugsProcessor.process(review);
 
         //then
         assertThat(reviewResult).isNotNull();
@@ -56,7 +53,7 @@ public class FindBugsProcessorTest extends TestEnvironment {
     @Test
     public void shouldReturnEmptyWhenNoFilesToReview() {
         //when
-        ReviewResult reviewResult = findBugsProcessor.process(nonexistantReview(), config);
+        ReviewResult reviewResult = findBugsProcessor.process(nonexistantReview());
 
         //then
         assertThat(reviewResult).isNotNull();

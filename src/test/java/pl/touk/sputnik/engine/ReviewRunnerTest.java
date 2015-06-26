@@ -44,27 +44,27 @@ public class ReviewRunnerTest {
 
     @Test
     public void shouldAddReviewResult() {
-        when(reviewProcessorMock.process(reviewMock, config)).thenReturn(reviewResultMock);
+        when(reviewProcessorMock.process(reviewMock)).thenReturn(reviewResultMock);
 
-        reviewRunner.review(reviewProcessorMock, config);
+        reviewRunner.review(reviewProcessorMock);
 
         verify(reviewMock).add(PROCESSOR_SOURCE_NAME, reviewResultMock);
     }
 
     @Test
     public void shouldNotAddNullReview() {
-        when(reviewProcessorMock.process(reviewMock, config)).thenReturn(null);
+        when(reviewProcessorMock.process(reviewMock)).thenReturn(null);
 
-        reviewRunner.review(reviewProcessorMock, config);
+        reviewRunner.review(reviewProcessorMock);
 
         verify(reviewMock, never()).add(eq(PROCESSOR_SOURCE_NAME), any(ReviewResult.class));
     }
 
     @Test
     public void shouldAddReviewExceptionMessageAsAProblem() {
-        when(reviewProcessorMock.process(reviewMock, config)).thenThrow(new ReviewException("Exception message"));
+        when(reviewProcessorMock.process(reviewMock)).thenThrow(new ReviewException("Exception message"));
 
-        reviewRunner.review(reviewProcessorMock, config);
+        reviewRunner.review(reviewProcessorMock);
 
         verify(reviewMock).addProblem(PROCESSOR_SOURCE_NAME, "ReviewException: Exception message");
     }
@@ -72,9 +72,9 @@ public class ReviewRunnerTest {
     @Test
     public void shouldReviewExceptionCauseMessageAsAProblem() {
         IOException cause = new IOException("File not found exception");
-        when(reviewProcessorMock.process(reviewMock, config)).thenThrow(new ReviewException("Exception message", cause));
+        when(reviewProcessorMock.process(reviewMock)).thenThrow(new ReviewException("Exception message", cause));
 
-        reviewRunner.review(reviewProcessorMock, config);
+        reviewRunner.review(reviewProcessorMock);
 
         verify(reviewMock).addProblem(PROCESSOR_SOURCE_NAME, "IOException: File not found exception");
     }

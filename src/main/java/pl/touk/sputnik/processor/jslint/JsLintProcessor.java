@@ -1,5 +1,6 @@
 package pl.touk.sputnik.processor.jslint;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.Configuration;
@@ -28,13 +29,16 @@ import com.googlecode.jslint4java.JSLintResult;
 import com.googlecode.jslint4java.Option;
 
 @Slf4j
+@AllArgsConstructor
 public class JsLintProcessor implements ReviewProcessor {
 
     private static final String SOURCE_NAME = "JSLint";
+    @NotNull
+    private final Configuration config;
 
     @Override
-    public ReviewResult process(Review review, @NotNull Configuration config) {
-        final Properties configProperties = loadConfigurationProperties(config);
+    public ReviewResult process(Review review) {
+        final Properties configProperties = loadConfigurationProperties();
         return toReviewResult(lint(review, configProperties));
     }
 
@@ -88,8 +92,8 @@ public class JsLintProcessor implements ReviewProcessor {
      *
      * @return a Properties instance
      */
-    private Properties loadConfigurationProperties(@NotNull Configuration config) {
-        String configurationFileName = getConfigurationFileName(config);
+    private Properties loadConfigurationProperties() {
+        String configurationFileName = getConfigurationFileName();
         if (Strings.isNullOrEmpty(configurationFileName)) {
             log.info("JSLint property file not specified. Using default configuration.");
             return null;
@@ -109,7 +113,7 @@ public class JsLintProcessor implements ReviewProcessor {
         return props;
     }
 
-    private String getConfigurationFileName(@NotNull Configuration config) {
+    private String getConfigurationFileName() {
         String configurationFile = config.getProperty(GeneralOption.JSLINT_CONFIGURATION_FILE);
         log.info("Using JSLint configuration file {}", configurationFile);
         return configurationFile;

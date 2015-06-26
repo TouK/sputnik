@@ -9,7 +9,6 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.review.filter.FileFilter;
 import pl.touk.sputnik.review.transformer.FileTransformer;
 
@@ -39,9 +38,9 @@ public class Review {
 
     private final ReviewFormatter formatter;
 
-    public Review(@NotNull List<ReviewFile> files, Configuration configuration) {
+    public Review(@NotNull List<ReviewFile> files, ReviewFormatter reviewFormatter) {
         this.files = files;
-        this.formatter = ReviewFormatterFactory.get(configuration);
+        this.formatter = reviewFormatter;
     }
 
     @NotNull

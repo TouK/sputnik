@@ -22,10 +22,7 @@ import org.junit.Test;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.connector.FacadeConfigUtil;
-import pl.touk.sputnik.review.Review;
-import pl.touk.sputnik.review.ReviewFile;
-import pl.touk.sputnik.review.Severity;
-import pl.touk.sputnik.review.Violation;
+import pl.touk.sputnik.review.*;
 
 import java.util.List;
 import java.util.Map;
@@ -91,7 +88,7 @@ public class StashFacadeTest {
                 "%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/comments",
                 FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)), "/json/stash-diff-empty.json");
 
-        Review review = new Review(ImmutableList.of(new ReviewFile(filename)), config);
+        Review review = new Review(ImmutableList.of(new ReviewFile(filename)), new ReviewFormatter(config));
         review.addError("scalastyle", new Violation(filename, 1, "error message", Severity.ERROR));
         review.getMessages().add("Total 1 violations found");
 

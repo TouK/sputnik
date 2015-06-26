@@ -16,13 +16,13 @@ public class ReviewRunner {
     private static final long THOUSAND = 1000L;
     @NotNull private final Review review;
 
-    public void review(@NotNull ReviewProcessor processor, @NotNull Configuration configuration) {
+    public void review(@NotNull ReviewProcessor processor) {
         log.info("Review started for processor {}", processor.getName());
         long start = System.currentTimeMillis();
         ReviewResult reviewResult = null;
 
         try {
-            reviewResult = processor.process(review, configuration);
+            reviewResult = processor.process(review);
         } catch (ReviewException e) {
             log.error("Processor {} error", processor.getName(), e);
             review.addProblem(processor.getName(), ExceptionUtils.getRootCauseMessage(e));
