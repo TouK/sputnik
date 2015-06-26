@@ -1,17 +1,15 @@
 package pl.touk.sputnik.review.locator;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.google.common.collect.ImmutableList;
 import org.junit.Before;
 import org.junit.Test;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationBuilder;
-import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewFormatterFactory;
 
-import java.util.Collections;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class MavenBuildDirLocatorTest {
 
@@ -43,7 +41,7 @@ public class MavenBuildDirLocatorTest {
 
 
     private Review review(String file) {
-        return new Review(ImmutableList.of(new ReviewFile(file)), config);
+        return new Review(ImmutableList.of(new ReviewFile(file)), ReviewFormatterFactory.get(config));
     }
 
 }

@@ -1,25 +1,20 @@
 package pl.touk.sputnik.processor.sonar;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-
-import com.google.common.collect.ImmutableMap;
-import org.junit.Test;
-
 import com.google.common.collect.ImmutableList;
-import com.google.common.io.Resources;
-
+import org.junit.Test;
 import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.configuration.Configuration;
-import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewFormatterFactory;
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;
+
+import java.io.File;
+import java.io.IOException;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class SonarProcessorTest extends TestEnvironment {
 
@@ -33,7 +28,7 @@ public class SonarProcessorTest extends TestEnvironment {
 
         ReviewFile r1 = new ReviewFile("src/t/f.cs");
         ReviewFile r2 = new ReviewFile("src/t/f2.cs");
-        Review review = new Review(ImmutableList.of(r1, r2), config);
+        Review review = new Review(ImmutableList.of(r1, r2), ReviewFormatterFactory.get(config));
 
         ReviewResult filteredResults = new SonarProcessor().filterResults(results, review);
         assertThat(filteredResults.getViolations())
@@ -44,7 +39,6 @@ public class SonarProcessorTest extends TestEnvironment {
     @Test
     public void shouldReportViolations() {
         SonarProcessor processor = new SonarProcessor(new SonarRunnerBuilder() {
-            final Configuration configCopy = config;
             public SonarRunner prepareRunner(Review review, Configuration configuration) {
                 return new SonarRunner(null, null, null) {
                     public File run() throws IOException {
