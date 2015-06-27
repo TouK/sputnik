@@ -7,15 +7,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import pl.touk.sputnik.TestEnvironment;
-import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.configuration.GeneralOption;
-import pl.touk.sputnik.review.*;
+import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewFormatterFactory;
+import pl.touk.sputnik.review.ReviewResult;
 
 import java.util.List;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,7 +33,7 @@ public class FindBugsProcessorTest extends TestEnvironment {
     public void shouldReturnBasicViolationsOnEmptyClass() {
         //given
         List<ReviewFile> files = ImmutableList.of(new ReviewFile("src/test/java/toreview/TestClass.java"));
-        Review review = new Review(files, new ReviewFormatter(config));
+        Review review = new Review(files, ReviewFormatterFactory.get(config));
 
         //when
         ReviewResult reviewResult = findBugsProcessor.process(review);

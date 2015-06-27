@@ -1,6 +1,5 @@
 package pl.touk.sputnik.engine;
 
-import jdk.nashorn.internal.runtime.regexp.joni.Config;
 import lombok.extern.slf4j.Slf4j;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.connector.ConnectorFacade;
@@ -8,7 +7,7 @@ import pl.touk.sputnik.engine.visitor.AfterReviewVisitor;
 import pl.touk.sputnik.engine.visitor.BeforeReviewVisitor;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
-import pl.touk.sputnik.review.ReviewFormatter;
+import pl.touk.sputnik.review.ReviewFormatterFactory;
 import pl.touk.sputnik.review.ReviewProcessor;
 
 import java.util.List;
@@ -26,7 +25,7 @@ public class Engine {
 
     public void run() {
         List<ReviewFile> reviewFiles = facade.listFiles();
-        Review review = new Review(reviewFiles, new ReviewFormatter(config));
+        Review review = new Review(reviewFiles, ReviewFormatterFactory.get(config));
 
         for (BeforeReviewVisitor beforeReviewVisitor : new VisitorBuilder().buildBeforeReviewVisitors(config)) {
             beforeReviewVisitor.beforeReview(review);

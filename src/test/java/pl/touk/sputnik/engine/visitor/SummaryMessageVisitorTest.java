@@ -1,17 +1,12 @@
 package pl.touk.sputnik.engine.visitor;
 
 import org.junit.Test;
-import pl.touk.sputnik.configuration.Configuration;
-import pl.touk.sputnik.configuration.ConfigurationSetup;
+import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.review.Review;
-import pl.touk.sputnik.review.ReviewFile;
-import pl.touk.sputnik.review.ReviewFormatter;
-
-import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SummaryMessageVisitorTest {
+public class SummaryMessageVisitorTest extends TestEnvironment {
 
     private static final String TOTAL_8_VIOLATIONS_FOUND = "Total 8 violations found";
     private static final String PROBLEM_SOURCE = "PMD";
@@ -20,8 +15,7 @@ public class SummaryMessageVisitorTest {
 
     @Test
     public void shouldAddSummaryMessage() {
-        Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
-        Review review = new Review(Collections.<ReviewFile>emptyList(), new ReviewFormatter(config));
+        Review review = review();
         review.setTotalViolationCount(8);
 
         new SummaryMessageVisitor("Perfect").afterReview(review);
@@ -31,8 +25,7 @@ public class SummaryMessageVisitorTest {
 
     @Test
     public void shouldAddPerfectMessageIfThereAreNoViolationsFound() {
-        Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
-        Review review = new Review(Collections.<ReviewFile>emptyList(), new ReviewFormatter(config));
+        Review review = review();
         review.setTotalViolationCount(0);
 
         new SummaryMessageVisitor("Perfect").afterReview(review);
@@ -42,8 +35,7 @@ public class SummaryMessageVisitorTest {
 
     @Test
     public void shouldAddProblemMessagesPerfectMessageIfThereAreNoViolationsFound() {
-        Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
-        Review review = new Review(Collections.<ReviewFile>emptyList(), new ReviewFormatter(config));
+        Review review = review();
         review.setTotalViolationCount(8);
         review.addProblem(PROBLEM_SOURCE, PROBLEM_MESSAGE);
 

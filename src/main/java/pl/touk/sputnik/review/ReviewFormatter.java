@@ -7,7 +7,6 @@ import pl.touk.sputnik.configuration.GeneralOption;
 
 import java.text.MessageFormat;
 
-
 public class ReviewFormatter {
 
     private String commentFormat;

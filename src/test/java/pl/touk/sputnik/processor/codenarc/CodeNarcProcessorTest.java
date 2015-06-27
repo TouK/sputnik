@@ -1,11 +1,15 @@
 package pl.touk.sputnik.processor.codenarc;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationBuilder;
-import pl.touk.sputnik.review.*;
+import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewFormatterFactory;
+import pl.touk.sputnik.review.ReviewResult;
+import pl.touk.sputnik.review.Severity;
+import pl.touk.sputnik.review.Violation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -195,6 +199,6 @@ public class CodeNarcProcessorTest {
         for (String filePath : filePaths) {
             files.add(new ReviewFile(filePath));
         }
-        return new Review(files, new ReviewFormatter(config));
+        return new Review(files, ReviewFormatterFactory.get(config));
     }
 }

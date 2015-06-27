@@ -5,7 +5,7 @@ import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
-import pl.touk.sputnik.review.ReviewFormatter;
+import pl.touk.sputnik.review.ReviewFormatterFactory;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,7 +19,7 @@ public class FilterOutTestFilesVisitorTest {
     @Test
     public void shouldFilterOutTestFiles() {
         Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
-        Review review = new Review(Arrays.asList(createReviewFile(true), createReviewFile(false)), new ReviewFormatter(config));
+        Review review = new Review(Arrays.asList(createReviewFile(true), createReviewFile(false)), ReviewFormatterFactory.get(config));
 
         new FilterOutTestFilesVisitor().beforeReview(review);
 
