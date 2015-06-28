@@ -30,7 +30,7 @@ public class SonarProcessorTest extends TestEnvironment {
         ReviewFile r2 = new ReviewFile("src/t/f2.cs");
         Review review = new Review(ImmutableList.of(r1, r2), ReviewFormatterFactory.get(config));
 
-        ReviewResult filteredResults = new SonarProcessor().filterResults(results, review);
+        ReviewResult filteredResults = new SonarProcessor(config).filterResults(results, review);
         assertThat(filteredResults.getViolations())
             .extracting("filenameOrJavaClassName")
             .containsExactly("src/t/f.cs", "src/t/f2.cs");
@@ -46,8 +46,8 @@ public class SonarProcessorTest extends TestEnvironment {
                     }
                 };
             }
-        });
-        ReviewResult result = processor.process(nonexistantReview("src/module2/dir/file2.cs"), config);
+        }, config);
+        ReviewResult result = processor.process(nonexistantReview("src/module2/dir/file2.cs"));
         assertThat(result.getViolations()).hasSize(3);
     }
 }

@@ -2,11 +2,7 @@ package pl.touk.sputnik.engine.visitor;
 
 import org.junit.Test;
 import pl.touk.sputnik.TestEnvironment;
-import pl.touk.sputnik.configuration.Configuration;
-import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.review.Review;
-
-import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

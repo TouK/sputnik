@@ -15,12 +15,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class JsHintProcessorTest {
 
-    private final JsHintProcessor fixture = new JsHintProcessor();
+    private JsHintProcessor fixture;
     private Configuration config;
 
     @Before
     public void setUp() throws Exception {
         config = ConfigurationBuilder.initFromResource("jshint/sputnik/noConfigurationFile.properties");
+        fixture = new JsHintProcessor(config);
     }
 
 
@@ -30,7 +31,7 @@ public class JsHintProcessorTest {
         Review review = new Review(ImmutableList.of(new ReviewFile("test")), ReviewFormatterFactory.get(config));
 
         // when
-        ReviewResult reviewResult = fixture.process(review, config);
+        ReviewResult reviewResult = fixture.process(review);
 
         // then
         assertThat(reviewResult).isNotNull();
@@ -43,7 +44,7 @@ public class JsHintProcessorTest {
         Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("js/test.js").getFile())), ReviewFormatterFactory.get(config));
 
         // when
-        ReviewResult reviewResult = fixture.process(review, config);
+        ReviewResult reviewResult = fixture.process(review);
 
         // then
         assertThat(reviewResult).isNotNull();
@@ -54,10 +55,11 @@ public class JsHintProcessorTest {
     public void shouldReturnOneViolationWithConfigurationOnSimpleFunction() {
         // given
         config = ConfigurationBuilder.initFromResource("jshint/sputnik/withConfigurationFile.properties");
+        fixture = new JsHintProcessor(config);
         Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("js/test.js").getFile())), ReviewFormatterFactory.get(config));
 
         // when
-        ReviewResult reviewResult = fixture.process(review, config);
+        ReviewResult reviewResult = fixture.process(review);
 
         // then
         assertThat(reviewResult).isNotNull();

@@ -26,18 +26,20 @@ public class SonarProcessor implements ReviewProcessor {
     private static final String PROCESSOR_NAME = "Sonar";
 
     private SonarRunnerBuilder sonarRunnerBuilder;
+    private final Configuration configuration;
 
-    public SonarProcessor() {
-        this(new SonarRunnerBuilder());
+    public SonarProcessor(@NotNull final Configuration configuration) {
+        this(new SonarRunnerBuilder(), configuration);
     }
 
-    public SonarProcessor(SonarRunnerBuilder sonarRunnerBuilder) {
+    public SonarProcessor(SonarRunnerBuilder sonarRunnerBuilder, @NotNull final Configuration configuration) {
         this.sonarRunnerBuilder = sonarRunnerBuilder;
+        this.configuration = configuration;
     }
 
     @Nullable
     @Override
-    public ReviewResult process(@NotNull Review review, @NotNull Configuration configuration) {
+    public ReviewResult process(@NotNull Review review) {
         if (review.getFiles().isEmpty()) {
             return new ReviewResult();
         }

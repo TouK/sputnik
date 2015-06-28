@@ -7,7 +7,7 @@ import pl.touk.sputnik.configuration.Configuration;
 public interface ReviewProcessor {
 
     @Nullable
-    ReviewResult process(@NotNull Review review, @NotNull Configuration configuration);
+    ReviewResult process(@NotNull Review review);
 
     @NotNull
     String getName();

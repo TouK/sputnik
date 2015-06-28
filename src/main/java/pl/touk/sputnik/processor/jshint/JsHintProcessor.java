@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import pl.gildur.jshint4j.Error;
@@ -24,13 +25,17 @@ import com.google.common.base.Strings;
 import com.google.common.io.CharStreams;
 
 @Slf4j
+@AllArgsConstructor
 public class JsHintProcessor implements ReviewProcessor {
 
     private static final String SOURCE_NAME = "JSHint";
 
+    @NotNull
+    private final Configuration config;
+
     @Override
-    public ReviewResult process(Review review, @NotNull Configuration config) {
-        String configuration = readConfiguration(config);
+    public ReviewResult process(Review review) {
+        String configuration = readConfiguration();
         ReviewResult result = new ReviewResult();
         List<File> files = review.getFiles(new JavaScriptFilter(), new IOFileTransformer());
         for (File file : files) {
@@ -54,8 +59,8 @@ public class JsHintProcessor implements ReviewProcessor {
         }
     }
 
-    private String readConfiguration(@NotNull Configuration config) {
-        String configurationFileName = getConfigurationFileName(config);
+    private String readConfiguration() {
+        String configurationFileName = getConfigurationFileName();
         if (Strings.isNullOrEmpty(configurationFileName)) {
             return null;
         }
@@ -66,7 +71,7 @@ public class JsHintProcessor implements ReviewProcessor {
         }
     }
     
-    private String getConfigurationFileName(@NotNull Configuration config) {
+    private String getConfigurationFileName() {
         String configurationFile = config.getProperty(GeneralOption.JSHINT_CONFIGURATION_FILE);
         log.info("Using JSHint configuration file {}", configurationFile);
         return configurationFile;

@@ -31,10 +31,10 @@ public class Engine {
             beforeReviewVisitor.beforeReview(review);
         }
 
-        List<ReviewProcessor> processors = new ProcessorBuilder().buildProcessors(config);
+        List<ReviewProcessor> processors = ProcessorBuilder.buildProcessors(config);
         ReviewRunner reviewRunner = new ReviewRunner(review);
         for (ReviewProcessor processor : processors) {
-            reviewRunner.review(processor, config);
+            reviewRunner.review(processor);
         }
 
         for (AfterReviewVisitor afterReviewVisitor : new VisitorBuilder().buildAfterReviewVisitors(config)) {

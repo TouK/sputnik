@@ -27,15 +27,17 @@ import pl.touk.sputnik.review.transformer.ClassNameTransformer;
 public class FindBugsProcessor implements ReviewProcessor {
     private static final String SOURCE_NAME = "FindBugs";
     private final CollectorBugReporter collectorBugReporter;
+    private final Configuration config;
 
-    public FindBugsProcessor() {
+    public FindBugsProcessor(@NotNull Configuration configuration) {
         collectorBugReporter = createBugReporter();
+        config = configuration;
     }
 
     @Nullable
     @Override
-    public ReviewResult process(@NotNull Review review, @NotNull Configuration config) {
-        FindBugs2 findBugs = createFindBugs2(review, config);
+    public ReviewResult process(@NotNull Review review) {
+        FindBugs2 findBugs = createFindBugs2(review);
         try {
             findBugs.execute();
         } catch (Exception e) {
@@ -51,24 +53,24 @@ public class FindBugsProcessor implements ReviewProcessor {
         return SOURCE_NAME;
     }
 
-    public FindBugs2 createFindBugs2(Review review, @NotNull Configuration config) {
+    public FindBugs2 createFindBugs2(Review review) {
         FindBugs2 findBugs = new FindBugs2();
-        findBugs.setProject(createProject(review, config));
+        findBugs.setProject(createProject(review));
         findBugs.setBugReporter(collectorBugReporter);
         findBugs.setDetectorFactoryCollection(DetectorFactoryCollection.instance());
         findBugs.setClassScreener(createClassScreener(review));
-        findBugs.setUserPreferences(createUserPreferences(config));
+        findBugs.setUserPreferences(createUserPreferences());
         findBugs.setNoClassOk(true);
         return findBugs;
     }
 
-    private UserPreferences createUserPreferences(@NotNull Configuration config) {
+    private UserPreferences createUserPreferences() {
         UserPreferences userPreferences = UserPreferences.createDefaultUserPreferences();
-        String includeFilterFilename = getIncludeFilterFilename(config);
+        String includeFilterFilename = getIncludeFilterFilename();
         if (StringUtils.isNotBlank(includeFilterFilename)) {
             userPreferences.getIncludeFilterFiles().put(includeFilterFilename, true);
         }
-        String excludeFilterFilename = getExcludeFilterFilename(config);
+        String excludeFilterFilename = getExcludeFilterFilename();
         if (StringUtils.isNotBlank(excludeFilterFilename)) {
             userPreferences.getExcludeFilterFiles().put(excludeFilterFilename, true);
         }
@@ -83,7 +85,7 @@ public class FindBugsProcessor implements ReviewProcessor {
     }
 
     @NotNull
-    private Project createProject(@NotNull Review review, @NotNull Configuration config) {
+    private Project createProject(@NotNull Review review) {
         Project project = new Project();
         for (String buildDir : BuildDirLocatorFactory.create(config).getBuildDirs(review)) {
             project.addFile(buildDir);
@@ -104,14 +106,14 @@ public class FindBugsProcessor implements ReviewProcessor {
     }
 
     @Nullable
-    private String getIncludeFilterFilename(@NotNull Configuration config) {
+    private String getIncludeFilterFilename() {
         String includeFilterFilename = config.getProperty(GeneralOption.FINDBUGS_INCLUDE_FILTER);
         log.info("Using FindBugs include filter file {}", includeFilterFilename);
         return includeFilterFilename;
     }
 
     @Nullable
-    private String getExcludeFilterFilename(@NotNull Configuration config) {
+    private String getExcludeFilterFilename() {
         String excludeFilterFilename = config.getProperty(GeneralOption.FINDBUGS_EXCLUDE_FILTER);
         log.info("Using FindBugs exclude filter file {}", excludeFilterFilename);
         return excludeFilterFilename;

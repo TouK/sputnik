@@ -26,7 +26,7 @@ public class FindBugsProcessorTest extends TestEnvironment {
     @Before
     public void setUp() throws Exception {
         config = new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.BUILD_TOOL.getKey(), "gradle"));
-        findBugsProcessor = new FindBugsProcessor();
+        findBugsProcessor = new FindBugsProcessor(config);
     }
 
     @Test
@@ -36,7 +36,7 @@ public class FindBugsProcessorTest extends TestEnvironment {
         Review review = new Review(files, ReviewFormatterFactory.get(config));
 
         //when
-        ReviewResult reviewResult = findBugsProcessor.process(review, config);
+        ReviewResult reviewResult = findBugsProcessor.process(review);
 
         //then
         assertThat(reviewResult).isNotNull();
@@ -53,7 +53,7 @@ public class FindBugsProcessorTest extends TestEnvironment {
     @Test
     public void shouldReturnEmptyWhenNoFilesToReview() {
         //when
-        ReviewResult reviewResult = findBugsProcessor.process(nonexistantReview(), config);
+        ReviewResult reviewResult = findBugsProcessor.process(nonexistantReview());
 
         //then
         assertThat(reviewResult).isNotNull();

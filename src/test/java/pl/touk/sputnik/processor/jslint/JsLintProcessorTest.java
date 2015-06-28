@@ -15,11 +15,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class JsLintProcessorTest extends TestEnvironment {
 
-    private final JsLintProcessor fixture = new JsLintProcessor();
+    private JsLintProcessor fixture;
 
     @Before
     public void setUp() throws Exception {
         config = ConfigurationBuilder.initFromResource("jslint/sputnik/noConfigurationFile.properties");
+        fixture = new JsLintProcessor(config);
     }
 
     @Test
@@ -28,7 +29,7 @@ public class JsLintProcessorTest extends TestEnvironment {
         Review review = new Review(ImmutableList.of(new ReviewFile("test")), ReviewFormatterFactory.get(config));
 
         // when
-        ReviewResult reviewResult = fixture.process(review, config);
+        ReviewResult reviewResult = fixture.process(review);
 
         // then
         assertThat(reviewResult).isNotNull();
@@ -41,7 +42,7 @@ public class JsLintProcessorTest extends TestEnvironment {
         Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("js/test.js").getFile())), ReviewFormatterFactory.get(config));
 
         // when
-        ReviewResult reviewResult = fixture.process(review, config);
+        ReviewResult reviewResult = fixture.process(review);
 
         // then
         assertThat(reviewResult).isNotNull();
@@ -60,7 +61,7 @@ public class JsLintProcessorTest extends TestEnvironment {
         Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("js/test.js").getFile())), ReviewFormatterFactory.get(config));
 
         // when
-        ReviewResult reviewResult = fixture.process(review, config);
+        ReviewResult reviewResult = fixture.process(review);
 
         // then
         assertThat(reviewResult).isNotNull();

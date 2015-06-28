@@ -17,7 +17,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CodeNarcProcessorTest {
-    private final CodeNarcProcessor sut = new CodeNarcProcessor();
+    private CodeNarcProcessor sut;
 
     private static final String CONFIGURATION_WITH_BASIC_AND_IMPORT_RULE_SET_AND_EXCLUDE = "codeNarc/configuration/configurationWithBasicAndImportRuleSetAndExclude.properties";
     private static final String CONFIGURATION_WITH_BASIC_RULE_SET = "codeNarc/configuration/configurationWithBasicRuleSet.properties";
@@ -36,13 +36,14 @@ public class CodeNarcProcessorTest {
     @Before
     public void setUp() throws Exception {
         config = ConfigurationBuilder.initFromResource(CONFIGURATION_WITH_BASIC_RULE_SET);
+        sut = new CodeNarcProcessor(config);
     }
 
     @Test
     public void shouldReturnSomeViolationsForFile() {
         Review review = getReview(REVIEW_FILE_WITH_ONE_VIOLATION);
 
-        ReviewResult result = sut.process(review, config);
+        ReviewResult result = sut.process(review);
 
         assertThat(result).isNotNull();
         assertThat(result.getViolations())
@@ -54,7 +55,7 @@ public class CodeNarcProcessorTest {
     public void shouldReturnViolationsOfEachLevelForFile() {
         Review review = getReview(REVIEW_FILE_WITH_ONE_VIOLATION_PER_EACH_SEVERITY);
 
-        ReviewResult result = sut.process(review, config);
+        ReviewResult result = sut.process(review);
 
         assertThat(result).isNotNull();
         assertThat(result.getViolations())
@@ -70,7 +71,7 @@ public class CodeNarcProcessorTest {
     public void shouldReturnNoViolationsForPerfectFile() {
         Review review = getReview(REVIEW_FILE_WITHOUT_VIOLATIONS);
 
-        ReviewResult result = sut.process(review, config);
+        ReviewResult result = sut.process(review);
 
         assertThat(result).isNotNull();
         assertThat(result.getViolations()).isEmpty();
@@ -80,7 +81,7 @@ public class CodeNarcProcessorTest {
     public void shouldReturnNoViolationsWhenNoFiles() {
         Review review = getReview();
 
-        ReviewResult result = sut.process(review, config);
+        ReviewResult result = sut.process(review);
 
         assertThat(result).isNotNull();
         assertThat(result.getViolations()).isEmpty();
@@ -90,7 +91,7 @@ public class CodeNarcProcessorTest {
     public void shouldReturnViolationsFromManyFiles() {
         Review review = getReview(REVIEW_FILE_WITH_ONE_VIOLATION, REVIEW_FILE_WITHOUT_VIOLATIONS, REVIEW_FILE_WITH_ONE_VIOLATION_PER_EACH_SEVERITY);
 
-        ReviewResult result = sut.process(review, config);
+        ReviewResult result = sut.process(review);
 
         assertThat(result).isNotNull();
         assertThat(result.getViolations())
@@ -106,9 +107,10 @@ public class CodeNarcProcessorTest {
     @Test
     public void shouldReturnViolationsUsingImportRuleSet() {
         config = ConfigurationBuilder.initFromResource(CONFIGURATION_WITH_IMPORT_RULE_SET);
+        sut = new CodeNarcProcessor(config);
         Review review = getReview(REVIEW_FILE_WITH_IMPORT_VIOLATION, REVIEW_FILE_WITH_ONE_VIOLATION);
 
-        ReviewResult result = sut.process(review, config);
+        ReviewResult result = sut.process(review);
 
         assertThat(result).isNotNull();
         assertThat(result.getViolations())
@@ -122,9 +124,10 @@ public class CodeNarcProcessorTest {
     @Test
     public void shouldReturnViolationsUsingDefaultRuleSetFromResources() {
         config = ConfigurationBuilder.initFromResource(CONFIGURATION_WITHOUT_RULE_SET);
+        sut = new CodeNarcProcessor(config);
         Review review = getReview(REVIEW_FILE_WITH_ONE_VIOLATION_PER_EACH_SEVERITY);
 
-        ReviewResult result = sut.process(review, config);
+        ReviewResult result = sut.process(review);
 
         assertThat(result).isNotNull();
         assertThat(result.getViolations())
@@ -139,9 +142,10 @@ public class CodeNarcProcessorTest {
     @Test
     public void shouldReturnViolationsUsingImportAndBasicRuleSets() {
         config = ConfigurationBuilder.initFromResource(CONFIGURATION_WITH_BASIC_AND_IMPORT_RULE_SET);
+        sut = new CodeNarcProcessor(config);
         Review review = getReview(REVIEW_FILE_WITH_ONE_VIOLATION, REVIEW_FILE_WITH_IMPORT_VIOLATION);
 
-        ReviewResult result = sut.process(review, config);
+        ReviewResult result = sut.process(review);
 
         assertThat(result).isNotNull();
         assertThat(result.getViolations())
@@ -157,9 +161,10 @@ public class CodeNarcProcessorTest {
     @Test
     public void shouldNotReturnViolationsFromExcudedFiles() {
         config = ConfigurationBuilder.initFromResource(CONFIGURATION_WITH_BASIC_AND_IMPORT_RULE_SET_AND_EXCLUDE);
+        sut = new CodeNarcProcessor(config);
         Review review = getReview(REVIEW_FILE_WITH_ONE_VIOLATION, REVIEW_FILE_WITHOUT_VIOLATIONS, REVIEW_FILE_WITH_ONE_VIOLATION_PER_EACH_SEVERITY);
 
-        ReviewResult result = sut.process(review, config);
+        ReviewResult result = sut.process(review);
 
         assertThat(result).isNotNull();
         assertThat(result.getViolations())
@@ -173,7 +178,7 @@ public class CodeNarcProcessorTest {
     public void shouldReturnNoViolationsForFileWithNotGroovyExtension() {
         Review review = getReview(REVIEW_FILE_WITH_NOT_GROOVY_EXTENSION);
 
-        ReviewResult result = sut.process(review, config);
+        ReviewResult result = sut.process(review);
 
         assertThat(result).isNotNull();
         assertThat(result.getViolations()).isEmpty();
@@ -183,7 +188,7 @@ public class CodeNarcProcessorTest {
     public void shouldReturnNoViolationsForFileWithoutExtension() {
         Review review = getReview(REVIEW_FILE_WITH_NOT_GROOVY_EXTENSION);
 
-        ReviewResult result = sut.process(review, config);
+        ReviewResult result = sut.process(review);
 
         assertThat(result).isNotNull();
         assertThat(result.getViolations()).isEmpty();

@@ -6,6 +6,8 @@ import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewFormatter;
 
 import java.util.Collections;
 
