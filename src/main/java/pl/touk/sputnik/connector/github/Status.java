@@ -23,22 +23,26 @@ public class Status {
 
     public void update() {
         try {
-            String sha = getLastComitSha(pull.commits());
+            Commit commit = getLastComit(pull.commits());
 
-            Statuses statuses = pull.repo().git().commits().statuses(sha);
+            Statuses statuses = pull.repo().git().commits().statuses(commit.sha());
             statuses.create(createStatus(review, issueId));
         } catch (IOException ex) {
             log.error("Got error adding status info", ex);
         }
     }
 
-    private RtStatus createStatus(Review review, Optional<Integer> issueId) {
+    private Statuses.StatusCreate createStatus(Review review, Optional<Integer> issueId) {
         if (review.getFiles().size() != 0) {
-            return new RtStatus(com.jcabi.github.Status.State.Failure, createIssueLink(issueId),
-                    "Sputnik says you have code smells in this branch", CONTEXT);
+            return new Statuses.StatusCreate(com.jcabi.github.Status.State.FAILURE)
+                    .withContext(Optional.of(CONTEXT))
+                    .withDescription("Sputnik says you have code smells in this branch")
+                    .withTargetUrl(Optional.of(createIssueLink(issueId)));
         } else {
-            return new RtStatus(com.jcabi.github.Status.State.Success, createIssueLink(issueId),
-                    "Looks good to me", CONTEXT);
+            return new Statuses.StatusCreate(com.jcabi.github.Status.State.SUCCESS)
+                    .withContext(Optional.of(CONTEXT))
+                    .withDescription("Looks good to me")
+                    .withTargetUrl(Optional.of(createIssueLink(issueId)));
         }
     }
 
@@ -53,12 +57,12 @@ public class Status {
         }
     }
 
-    private String getLastComitSha(Iterable<Commit> commits) {
+    private Commit getLastComit(Iterable<Commit> commits) {
         Iterator<Commit> iterator = commits.iterator();
         Commit commit = iterator.next();
         while (iterator.hasNext()) {
             commit = iterator.next();
         }
-        return commit.sha();
+        return commit;
     }
 }
