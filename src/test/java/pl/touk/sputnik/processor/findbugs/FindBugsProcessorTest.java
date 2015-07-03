@@ -10,14 +10,12 @@ import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
-import pl.touk.sputnik.review.ReviewException;
 import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewFormatterFactory;
 import pl.touk.sputnik.review.ReviewResult;
 
 import java.util.List;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -27,15 +25,15 @@ public class FindBugsProcessorTest extends TestEnvironment {
 
     @Before
     public void setUp() throws Exception {
-        new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.BUILD_TOOL.getKey(), "gradle"));
-        findBugsProcessor = new FindBugsProcessor();
+        config = new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.BUILD_TOOL.getKey(), "gradle"));
+        findBugsProcessor = new FindBugsProcessor(config);
     }
 
     @Test
     public void shouldReturnBasicViolationsOnEmptyClass() {
         //given
         List<ReviewFile> files = ImmutableList.of(new ReviewFile("src/test/java/toreview/TestClass.java"));
-        Review review = new Review(files);
+        Review review = new Review(files, ReviewFormatterFactory.get(config));
 
         //when
         ReviewResult reviewResult = findBugsProcessor.process(review);

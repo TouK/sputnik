@@ -1,7 +1,9 @@
 package pl.touk.sputnik.processor.jslint;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import org.jetbrains.annotations.NotNull;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
@@ -27,9 +29,12 @@ import com.googlecode.jslint4java.JSLintResult;
 import com.googlecode.jslint4java.Option;
 
 @Slf4j
+@AllArgsConstructor
 public class JsLintProcessor implements ReviewProcessor {
 
     private static final String SOURCE_NAME = "JSLint";
+    @NotNull
+    private final Configuration config;
 
     @Override
     public ReviewResult process(Review review) {
@@ -109,7 +114,7 @@ public class JsLintProcessor implements ReviewProcessor {
     }
 
     private String getConfigurationFileName() {
-        String configurationFile = ConfigurationHolder.instance().getProperty(GeneralOption.JSLINT_CONFIGURATION_FILE);
+        String configurationFile = config.getProperty(GeneralOption.JSLINT_CONFIGURATION_FILE);
         log.info("Using JSLint configuration file {}", configurationFile);
         return configurationFile;
     }

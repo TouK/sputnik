@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
 import pl.touk.sputnik.review.ReviewProcessor;
@@ -29,6 +30,9 @@ public class ReviewRunnerTest {
 
     @Mock
     private ReviewProcessor reviewProcessorMock;
+
+    @Mock
+    private Configuration config;
 
     @InjectMocks
     private ReviewRunner reviewRunner;

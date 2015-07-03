@@ -1,10 +1,15 @@
 package pl.touk.sputnik.processor.codenarc;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
-import pl.touk.sputnik.review.*;
+import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.ConfigurationBuilder;
+import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewFormatterFactory;
+import pl.touk.sputnik.review.ReviewResult;
+import pl.touk.sputnik.review.Severity;
+import pl.touk.sputnik.review.Violation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +17,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CodeNarcProcessorTest {
-    private final CodeNarcProcessor sut = new CodeNarcProcessor();
+    private CodeNarcProcessor sut;
 
     private static final String CONFIGURATION_WITH_BASIC_AND_IMPORT_RULE_SET_AND_EXCLUDE = "codeNarc/configuration/configurationWithBasicAndImportRuleSetAndExclude.properties";
     private static final String CONFIGURATION_WITH_BASIC_RULE_SET = "codeNarc/configuration/configurationWithBasicRuleSet.properties";
@@ -25,16 +30,13 @@ public class CodeNarcProcessorTest {
     private final String REVIEW_FILE_WITHOUT_VIOLATIONS = "src/test/resources/codeNarc/testFiles/FileWithoutViolations.groovy";
     private final String REVIEW_FILE_WITH_IMPORT_VIOLATION = "src/test/resources/codeNarc/testFiles/FileWithImportViolation.groovy";
     private final String REVIEW_FILE_WITH_NOT_GROOVY_EXTENSION = "src/test/resources/wrongExtension.java";
-    private final String REVIEW_FILE_WITHOUT_EXTENSION = "src/test/resources/withoutExtension";
+
+    private Configuration config;
 
     @Before
     public void setUp() throws Exception {
-        ConfigurationHolder.initFromResource(CONFIGURATION_WITH_BASIC_RULE_SET);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        ConfigurationHolder.reset();
+        config = ConfigurationBuilder.initFromResource(CONFIGURATION_WITH_BASIC_RULE_SET);
+        sut = new CodeNarcProcessor(config);
     }
 
     @Test
@@ -104,7 +106,8 @@ public class CodeNarcProcessorTest {
 
     @Test
     public void shouldReturnViolationsUsingImportRuleSet() {
-        ConfigurationHolder.initFromResource(CONFIGURATION_WITH_IMPORT_RULE_SET);
+        config = ConfigurationBuilder.initFromResource(CONFIGURATION_WITH_IMPORT_RULE_SET);
+        sut = new CodeNarcProcessor(config);
         Review review = getReview(REVIEW_FILE_WITH_IMPORT_VIOLATION, REVIEW_FILE_WITH_ONE_VIOLATION);
 
         ReviewResult result = sut.process(review);
@@ -120,7 +123,8 @@ public class CodeNarcProcessorTest {
 
     @Test
     public void shouldReturnViolationsUsingDefaultRuleSetFromResources() {
-        ConfigurationHolder.initFromResource(CONFIGURATION_WITHOUT_RULE_SET);
+        config = ConfigurationBuilder.initFromResource(CONFIGURATION_WITHOUT_RULE_SET);
+        sut = new CodeNarcProcessor(config);
         Review review = getReview(REVIEW_FILE_WITH_ONE_VIOLATION_PER_EACH_SEVERITY);
 
         ReviewResult result = sut.process(review);
@@ -137,7 +141,8 @@ public class CodeNarcProcessorTest {
 
     @Test
     public void shouldReturnViolationsUsingImportAndBasicRuleSets() {
-        ConfigurationHolder.initFromResource(CONFIGURATION_WITH_BASIC_AND_IMPORT_RULE_SET);
+        config = ConfigurationBuilder.initFromResource(CONFIGURATION_WITH_BASIC_AND_IMPORT_RULE_SET);
+        sut = new CodeNarcProcessor(config);
         Review review = getReview(REVIEW_FILE_WITH_ONE_VIOLATION, REVIEW_FILE_WITH_IMPORT_VIOLATION);
 
         ReviewResult result = sut.process(review);
@@ -155,7 +160,8 @@ public class CodeNarcProcessorTest {
 
     @Test
     public void shouldNotReturnViolationsFromExcudedFiles() {
-        ConfigurationHolder.initFromResource(CONFIGURATION_WITH_BASIC_AND_IMPORT_RULE_SET_AND_EXCLUDE);
+        config = ConfigurationBuilder.initFromResource(CONFIGURATION_WITH_BASIC_AND_IMPORT_RULE_SET_AND_EXCLUDE);
+        sut = new CodeNarcProcessor(config);
         Review review = getReview(REVIEW_FILE_WITH_ONE_VIOLATION, REVIEW_FILE_WITHOUT_VIOLATIONS, REVIEW_FILE_WITH_ONE_VIOLATION_PER_EACH_SEVERITY);
 
         ReviewResult result = sut.process(review);
@@ -193,6 +199,6 @@ public class CodeNarcProcessorTest {
         for (String filePath : filePaths) {
             files.add(new ReviewFile(filePath));
         }
-        return new Review(files);
+        return new Review(files, ReviewFormatterFactory.get(config));
     }
 }

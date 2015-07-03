@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.engine.visitor.*;
 import pl.touk.sputnik.engine.visitor.score.NoScore;
@@ -27,42 +27,42 @@ public class VisitorBuilder {
     private static final String SCOREPASSIFNOERRORS = "SCOREPASSIFNOERRORS";
 
     @NotNull
-    public List<BeforeReviewVisitor> buildBeforeReviewVisitors() {
+    public List<BeforeReviewVisitor> buildBeforeReviewVisitors(Configuration configuration) {
         List<BeforeReviewVisitor> beforeReviewVisitors = new ArrayList<>();
-        if (!BooleanUtils.toBoolean(ConfigurationHolder.instance().getProperty(GeneralOption.PROCESS_TEST_FILES))) {
+        if (!BooleanUtils.toBoolean(configuration.getProperty(GeneralOption.PROCESS_TEST_FILES))) {
             beforeReviewVisitors.add(new FilterOutTestFilesVisitor());
         }
         return beforeReviewVisitors;
     }
 
     @NotNull
-    public List<AfterReviewVisitor> buildAfterReviewVisitors() {
+    public List<AfterReviewVisitor> buildAfterReviewVisitors(Configuration configuration) {
         List<AfterReviewVisitor> afterReviewVisitors = new ArrayList<>();
 
-        String passingComment = ConfigurationHolder.instance().getProperty(GeneralOption.MESSAGE_SCORE_PASSING_COMMENT);
+        String passingComment = configuration.getProperty(GeneralOption.MESSAGE_SCORE_PASSING_COMMENT);
         afterReviewVisitors.add(new SummaryMessageVisitor(passingComment));
 
-        int maxNumberOfComments = NumberUtils.toInt(ConfigurationHolder.instance().getProperty(GeneralOption.MAX_NUMBER_OF_COMMENTS), 0);
+        int maxNumberOfComments = NumberUtils.toInt(configuration.getProperty(GeneralOption.MAX_NUMBER_OF_COMMENTS), 0);
         if (maxNumberOfComments > 0) {
             afterReviewVisitors.add(new LimitCommentVisitor(maxNumberOfComments));
         }
 
-        afterReviewVisitors.add(buildScoreAfterReviewVisitor());
+        afterReviewVisitors.add(buildScoreAfterReviewVisitor(configuration));
 
         return afterReviewVisitors;
     }
 
     @NotNull
-    private AfterReviewVisitor buildScoreAfterReviewVisitor() {
+    private AfterReviewVisitor buildScoreAfterReviewVisitor(Configuration configuration) {
         Map<String, Short> passingScore = ImmutableMap.<String, Short>of(
-                ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_PASSING_KEY),
-                Short.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_PASSING_VALUE))
+                configuration.getProperty(GeneralOption.SCORE_PASSING_KEY),
+                Short.valueOf(configuration.getProperty(GeneralOption.SCORE_PASSING_VALUE))
         );
         Map<String, Short> failingScore = ImmutableMap.<String, Short>of(
-                ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_FAILING_KEY),
-                Short.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_FAILING_VALUE))
+                configuration.getProperty(GeneralOption.SCORE_FAILING_KEY),
+                Short.valueOf(configuration.getProperty(GeneralOption.SCORE_FAILING_VALUE))
         );
-        String scoreStrategy = ConfigurationHolder.instance().getProperty(GeneralOption.SCORE_STRATEGY);
+        String scoreStrategy = configuration.getProperty(GeneralOption.SCORE_STRATEGY);
         notBlank(scoreStrategy);
 
         switch(scoreStrategy.toUpperCase()) {

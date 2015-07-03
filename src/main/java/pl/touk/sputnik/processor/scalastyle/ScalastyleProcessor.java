@@ -1,6 +1,7 @@
 package pl.touk.sputnik.processor.scalastyle;
 
 import com.google.common.collect.Lists;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +15,7 @@ import org.scalastyle.ScalastyleChecker;
 import org.scalastyle.ScalastyleConfiguration;
 import org.scalastyle.StartFile;
 import org.scalastyle.StyleError;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewProcessor;
@@ -30,16 +31,20 @@ import java.io.File;
 import java.util.List;
 
 @Slf4j
+@AllArgsConstructor
 public class ScalastyleProcessor implements ReviewProcessor {
     private static final String SOURCE_NAME = "Scalastyle";
 
     private final MessageHelper messageHelper = new MessageHelper(ClassLoader.getSystemClassLoader());
 
+    @NotNull
+    private final Configuration config;
+
     @Nullable
     @Override
     @SuppressWarnings("unchecked")
     public ReviewResult process(@NotNull Review review) {
-        String scalastyleConfigFile = ConfigurationHolder.instance().getProperty(GeneralOption.SCALASTYLE_CONFIGURATION_FILE);
+        String scalastyleConfigFile = config.getProperty(GeneralOption.SCALASTYLE_CONFIGURATION_FILE);
         ScalastyleConfiguration configuration = ScalastyleConfiguration.readFromXml(scalastyleConfigFile);
         List<Message> messages = new ScalastyleChecker().checkFilesAsJava(configuration, toFileSpec(review.getFiles(new ScalaFilter(), new IOFileTransformer())));
         return toReviewResult(messages);

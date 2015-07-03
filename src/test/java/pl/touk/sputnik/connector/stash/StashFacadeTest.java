@@ -1,16 +1,5 @@
 package pl.touk.sputnik.connector.stash;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
-import static com.github.tomakehurst.wiremock.client.WireMock.verify;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.github.tomakehurst.wiremock.client.UrlMatchingStrategy;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.collect.ImmutableList;
@@ -19,15 +8,20 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.connector.FacadeConfigUtil;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewFormatterFactory;
 import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;
 
 import java.util.List;
 import java.util.Map;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class StashFacadeTest {
 
@@ -42,14 +36,15 @@ public class StashFacadeTest {
     );
 
     private StashFacade stashFacade;
+    private Configuration config;
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(FacadeConfigUtil.HTTP_PORT);
 
     @Before
     public void setUp() {
-        new ConfigurationSetup().setUp(FacadeConfigUtil.getHttpConfig("stash"), STASH_PATCHSET_MAP);
-        stashFacade = new StashFacadeBuilder().build();
+        config = new ConfigurationSetup().setUp(FacadeConfigUtil.getHttpConfig("stash"), STASH_PATCHSET_MAP);
+        stashFacade = new StashFacadeBuilder().build(config);
     }
 
     @Test
@@ -89,7 +84,7 @@ public class StashFacadeTest {
                 "%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/comments",
                 FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)), "/json/stash-diff-empty.json");
 
-        Review review = new Review(ImmutableList.of(new ReviewFile(filename)));
+        Review review = new Review(ImmutableList.of(new ReviewFile(filename)), ReviewFormatterFactory.get(config));
         review.addError("scalastyle", new Violation(filename, 1, "error message", Severity.ERROR));
         review.getMessages().add("Total 1 violations found");
 

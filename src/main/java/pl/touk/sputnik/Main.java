@@ -29,20 +29,19 @@ public final class Main {
             System.exit(1);
         }
 
-        ConfigurationHolder.initFromFile(commandLine.getOptionValue(CliOption.CONF.getCommandLineParam()));
-        Configuration configuration = ConfigurationHolder.instance();
+        Configuration configuration = ConfigurationBuilder.initFromFile(commandLine.getOptionValue(CliOption.CONF.getCommandLineParam()));
         configuration.updateWithCliOptions(commandLine);
 
         ConnectorFacade facade = getConnectorFacade(configuration);
-        new Engine(facade).run();
+        new Engine(facade, configuration).run();
     }
 
     private static ConnectorFacade getConnectorFacade(Configuration configuration) {
         ConnectorType connectorType = ConnectorType.getValidConnectorType(configuration.getProperty(GeneralOption.CONNECTOR_TYPE));
         ConnectorFacade facade = null;
         try {
-            facade = ConnectorFacadeFactory.INSTANCE.build(connectorType);
-            facade.validate(ConfigurationHolder.instance());
+            facade = ConnectorFacadeFactory.INSTANCE.build(connectorType, configuration);
+            facade.validate(configuration);
         } catch (GeneralOptionNotSupportedException e) {
             System.out.println(e.getMessage());
             System.exit(2);
