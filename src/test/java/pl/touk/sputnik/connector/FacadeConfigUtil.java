@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class FacadeConfigUtil {
-    public static Integer HTTP_PORT = 8089;
-    public static Integer HTTPS_PORT = 8443;
-    public static String PATH = "/review";
+    public static final Integer HTTP_PORT = 8089;
+    public static final Integer HTTPS_PORT = 8443;
+    public static final String PATH = "/review";
 
     public static Map<String, String> getHttpConfig(final String connectorType) {
         return new HashMap<String, String>() {{

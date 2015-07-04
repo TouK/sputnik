@@ -5,10 +5,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import pl.gildur.jshint4j.Error;
 import pl.gildur.jshint4j.JsHint;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
@@ -23,9 +25,13 @@ import com.google.common.base.Strings;
 import com.google.common.io.CharStreams;
 
 @Slf4j
+@AllArgsConstructor
 public class JsHintProcessor implements ReviewProcessor {
 
     private static final String SOURCE_NAME = "JSHint";
+
+    @NotNull
+    private final Configuration config;
 
     @Override
     public ReviewResult process(Review review) {
@@ -66,7 +72,7 @@ public class JsHintProcessor implements ReviewProcessor {
     }
     
     private String getConfigurationFileName() {
-        String configurationFile = ConfigurationHolder.instance().getProperty(GeneralOption.JSHINT_CONFIGURATION_FILE);
+        String configurationFile = config.getProperty(GeneralOption.JSHINT_CONFIGURATION_FILE);
         log.info("Using JSHint configuration file {}", configurationFile);
         return configurationFile;
     }

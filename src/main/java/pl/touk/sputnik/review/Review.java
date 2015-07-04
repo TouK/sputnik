@@ -12,7 +12,11 @@ import org.jetbrains.annotations.Nullable;
 import pl.touk.sputnik.review.filter.FileFilter;
 import pl.touk.sputnik.review.transformer.FileTransformer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Getter
@@ -36,11 +40,11 @@ public class Review {
     private List<String> messages = new ArrayList<>();
     private Map<String, Short> scores = new HashMap<>();
 
-    private ReviewFormatter formatter;
+    private final ReviewFormatter formatter;
 
-    public Review(@NotNull List<ReviewFile> files) {
+    public Review(@NotNull List<ReviewFile> files, ReviewFormatter reviewFormatter) {
         this.files = files;
-        this.formatter = ReviewFormatterFactory.get();
+        this.formatter = reviewFormatter;
     }
 
     @NotNull

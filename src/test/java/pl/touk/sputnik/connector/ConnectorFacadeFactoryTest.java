@@ -3,6 +3,7 @@ package pl.touk.sputnik.connector;
 import org.junit.Before;
 import org.junit.Test;
 
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.connector.gerrit.GerritFacade;
 import pl.touk.sputnik.connector.gerrit.GerritFacadeBuilder;
 
@@ -24,11 +25,12 @@ public class ConnectorFacadeFactoryTest {
         // given
         GerritFacadeBuilder gerritFacadeBuilderMock = mock(GerritFacadeBuilder.class);
         GerritFacade gerritFacadeMock = mock(GerritFacade.class);
-        when(gerritFacadeBuilderMock.build()).thenReturn(gerritFacadeMock);
+        Configuration config = mock(Configuration.class);
+        when(gerritFacadeBuilderMock.build(config)).thenReturn(gerritFacadeMock);
         connectorFacadeFactory.gerritFacadeBuilder = gerritFacadeBuilderMock;
 
         // when
-        ConnectorFacade facade = connectorFacadeFactory.build(ConnectorType.GERRIT);
+        ConnectorFacade facade = connectorFacadeFactory.build(ConnectorType.GERRIT, config);
 
         // then
         assertThat(facade).isEqualTo(gerritFacadeMock);

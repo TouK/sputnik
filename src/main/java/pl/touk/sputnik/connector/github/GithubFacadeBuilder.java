@@ -1,15 +1,15 @@
 package pl.touk.sputnik.connector.github;
 
-import lombok.extern.slf4j.Slf4j;
 import com.jcabi.github.Coordinates;
 import com.jcabi.github.Github;
 import com.jcabi.github.Repo;
 import com.jcabi.github.RtGithub;
 import com.jcabi.http.wire.RetryWire;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.CliOption;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 
 import static org.apache.commons.lang3.Validate.isTrue;
@@ -19,11 +19,11 @@ import static org.apache.commons.lang3.Validate.notBlank;
 public class GithubFacadeBuilder {
 
     @NotNull
-    public GithubFacade build() {
+    public GithubFacade build(Configuration configuration) {
 
-        GithubPatchset githubPatchset = buildGithubPatchset();
+        GithubPatchset githubPatchset = buildGithubPatchset(configuration);
 
-        String oAuthKey = ConfigurationHolder.instance().getProperty(GeneralOption.GITHUB_API_KEY);
+        String oAuthKey = configuration.getProperty(GeneralOption.GITHUB_API_KEY);
         Github github = new RtGithub(
                 new RtGithub(oAuthKey)
                         .entry()
@@ -35,10 +35,10 @@ public class GithubFacadeBuilder {
     }
 
     @NotNull
-    public GithubPatchset buildGithubPatchset() {
-        String pullRequestId = ConfigurationHolder.instance().getProperty(CliOption.PULL_REQUEST_ID);
-        String repositorySlug = ConfigurationHolder.instance().getProperty(GeneralOption.REPOSITORY_SLUG);
-        String projectKey = ConfigurationHolder.instance().getProperty(GeneralOption.PROJECT_KEY);
+    public GithubPatchset buildGithubPatchset(Configuration configuration) {
+        String pullRequestId = configuration.getProperty(CliOption.PULL_REQUEST_ID);
+        String repositorySlug = configuration.getProperty(GeneralOption.REPOSITORY_SLUG);
+        String projectKey = configuration.getProperty(GeneralOption.PROJECT_KEY);
 
         notBlank(pullRequestId, "You must provide non blank Github pull request id");
         isTrue(NumberUtils.isNumber(pullRequestId), "Integer value as pull request id required");

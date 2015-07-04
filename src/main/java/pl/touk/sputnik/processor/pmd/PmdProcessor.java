@@ -15,7 +15,7 @@ import net.sourceforge.pmd.util.datasource.DataSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
@@ -35,6 +35,13 @@ public class PmdProcessor implements ReviewProcessor {
     private static final String SOURCE_NAME = "PMD";
     private static final char PMD_INPUT_PATH_SEPARATOR = ',';
     private Renderer renderer;
+
+    @NotNull
+    private final Configuration config;
+
+    public PmdProcessor(Configuration configuration) {
+        config = configuration;
+    }
 
     @Nullable
     @Override
@@ -65,7 +72,7 @@ public class PmdProcessor implements ReviewProcessor {
 
     @Nullable
     private String getRulesets() {
-        String ruleSets = ConfigurationHolder.instance().getProperty(GeneralOption.PMD_RULESETS);
+        String ruleSets = config.getProperty(GeneralOption.PMD_RULESETS);
         log.info("Using PMD rulesets {}", ruleSets);
         return ruleSets;
     }

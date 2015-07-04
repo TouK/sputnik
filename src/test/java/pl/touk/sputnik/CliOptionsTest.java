@@ -25,9 +25,9 @@ public class CliOptionsTest {
         CommandLine commandLine = fixture.parse(args);
 
         // then
-        cli(commandLine).hasOption(CliOption.CONF.getCommandLineParam()).withValue(SAMPLE_CONFIG);
-        cli(commandLine).hasOption(CliOption.CHANGE_ID.getCommandLineParam()).withValue(SAMPLE_CHANGE_ID);
-        cli(commandLine).hasOption(CliOption.REVISION_ID.getCommandLineParam()).withValue(SAMPLE_REVISION_ID);
+        cliAssert(commandLine).hasOption(CliOption.CONF.getCommandLineParam()).withValue(SAMPLE_CONFIG);
+        cliAssert(commandLine).hasOption(CliOption.CHANGE_ID.getCommandLineParam()).withValue(SAMPLE_CHANGE_ID);
+        cliAssert(commandLine).hasOption(CliOption.REVISION_ID.getCommandLineParam()).withValue(SAMPLE_REVISION_ID);
     }
 
     @Test
@@ -39,14 +39,14 @@ public class CliOptionsTest {
         CommandLine commandLine = fixture.parse(args);
 
         // then
-        cli(commandLine).hasOption(CliOption.PULL_REQUEST_ID.getCommandLineParam()).withValue(SAMPLE_PULL_REQUEST_ID);
+        cliAssert(commandLine).hasOption(CliOption.PULL_REQUEST_ID.getCommandLineParam()).withValue(SAMPLE_PULL_REQUEST_ID);
     }
 
     private String[] toArgs(String argsFormat, String... substitutions) {
         return String.format(argsFormat, (Object[]) substitutions).split(" ");
     }
 
-    public CliAssert cli(CommandLine cli) {
+    private CliAssert cliAssert(CommandLine cli) {
         return new CliAssert(cli);
     }
 

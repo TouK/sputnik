@@ -2,7 +2,11 @@ package pl.touk.sputnik.engine.visitor;
 
 import org.junit.Test;
 import pl.touk.sputnik.ReviewBuilder;
+import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.review.Review;
+
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -10,7 +14,8 @@ public class LimitCommentVisitorTest {
 
     @Test
     public void shouldNotLimitCommentsIfCountIsBelowMaximumCount() {
-        Review review = ReviewBuilder.buildReview();
+        Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
+        Review review = ReviewBuilder.buildReview(config);
 
         new LimitCommentVisitor(10).afterReview(review);
 
@@ -24,7 +29,8 @@ public class LimitCommentVisitorTest {
 
     @Test
     public void shouldLimitCommentsIfCountIsHigherMaximumCount() {
-        Review review = ReviewBuilder.buildReview();
+        Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
+        Review review = ReviewBuilder.buildReview(config);
 
         new LimitCommentVisitor(3).afterReview(review);
 

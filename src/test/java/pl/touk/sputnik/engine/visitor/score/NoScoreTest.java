@@ -1,18 +1,16 @@
 package pl.touk.sputnik.engine.visitor.score;
 
 import org.junit.Test;
+import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.review.Review;
-import pl.touk.sputnik.review.ReviewFile;
-
-import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NoScoreTest {
+public class NoScoreTest extends TestEnvironment {
 
     @Test
     public void shouldAddNoScoreToReview() {
-        Review review = new Review(Collections.<ReviewFile>emptyList());
+        Review review = review();
 
         new NoScore().afterReview(review);
 

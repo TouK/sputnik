@@ -5,10 +5,11 @@ import com.puppycrawl.tools.checkstyle.ConfigurationLoader;
 import com.puppycrawl.tools.checkstyle.PropertiesExpander;
 import com.puppycrawl.tools.checkstyle.api.AuditListener;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
@@ -22,9 +23,11 @@ import java.util.List;
 import java.util.Properties;
 
 @Slf4j
+@AllArgsConstructor
 public class CheckstyleProcessor implements ReviewProcessor {
     private static final String SOURCE_NAME = "Checkstyle";
     private final CollectorListener collectorListener = new CollectorListener();
+    private final Configuration configuration;
 
     @Nullable
     @Override
@@ -64,7 +67,7 @@ public class CheckstyleProcessor implements ReviewProcessor {
 
     @Nullable
     private String getConfigurationFilename() {
-        String configurationFile = ConfigurationHolder.instance().getProperty(GeneralOption.CHECKSTYLE_CONFIGURATION_FILE);
+        String configurationFile = configuration.getProperty(GeneralOption.CHECKSTYLE_CONFIGURATION_FILE);
         log.info("Using Checkstyle configuration file {}", configurationFile);
         return configurationFile;
     }
