@@ -170,9 +170,11 @@ uploadArchives {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                if (new File("sputnik-gradle-test").exists()) {
+                // This line prevented me from correct authentication.
+                // I don't know if it's still useful to someone?
+//                if (new File("sputnik-gradle-test").exists()) {
                     authentication(userName: sonatypeUsername, password: sonatypePassword)
-                }
+//                }
             }
 
             pom.project {
