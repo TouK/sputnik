@@ -214,6 +214,14 @@ uploadArchives {
                         id 'karol_lassak'
                         name 'Karol Lassak'
                     }
+                    developer {
+                        id 'dominik_przybysz'
+                        name 'Dominik Przybysz'
+                    }
+                    developer {
+                        id 'henning_hoefer'
+                        name 'Henning Hoefer'
+                    }
                 }
             }
         }
