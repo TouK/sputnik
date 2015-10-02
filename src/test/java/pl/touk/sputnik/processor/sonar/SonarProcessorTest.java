@@ -37,17 +37,32 @@ public class SonarProcessorTest extends TestEnvironment {
     }
 
     @Test
-    public void shouldReportViolations() {
+    public void shouldReportViolationsForMultiModulesProject() {
         SonarProcessor processor = new SonarProcessor(new SonarRunnerBuilder() {
             public SonarRunner prepareRunner(Review review, Configuration configuration) {
                 return new SonarRunner(null, null, null) {
                     public File run() throws IOException {
-                        return getResourceAsFile("json/sonar-result.json");
+                        return getResourceAsFile("json/sonar-result-mutli-module.json");
                     }
                 };
             }
         }, config);
         ReviewResult result = processor.process(nonexistantReview("src/module2/dir/file2.cs"));
+        assertThat(result.getViolations()).hasSize(3);
+    }
+
+    @Test
+    public void shouldReportViolationsForSingleModulesProject() {
+        SonarProcessor processor = new SonarProcessor(new SonarRunnerBuilder() {
+            public SonarRunner prepareRunner(Review review, Configuration configuration) {
+                return new SonarRunner(null, null, null) {
+                    public File run() throws IOException {
+                        return getResourceAsFile("json/sonar-result-single-module.json");
+                    }
+                };
+            }
+        }, config);
+        ReviewResult result = processor.process(nonexistantReview("src/dir/file2.cs"));
         assertThat(result.getViolations()).hasSize(3);
     }
 }

@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;
@@ -120,7 +119,9 @@ class SonarResultParser {
         String file = comp.path;
         if (!Strings.isNullOrEmpty(comp.moduleKey)) {
             Component moduleComp = components.get(comp.moduleKey);
-            file = moduleComp.path + '/' + file;
+            if (!Strings.isNullOrEmpty(moduleComp.path)) {
+                file = moduleComp.path + '/' + file;
+            }
         }
         return file;
     }

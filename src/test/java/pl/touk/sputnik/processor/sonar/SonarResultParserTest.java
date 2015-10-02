@@ -6,18 +6,15 @@ import java.io.File;
 import java.io.IOException;
 
 import org.junit.Test;
-
 import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.Severity;
 
-import com.google.common.io.Resources;
-
 public class SonarResultParserTest extends TestEnvironment {
 
     @Test
-    public void shouldParseSonarJsonFile() throws IOException {
-        File resultFile = getResourceAsFile("json/sonar-result.json");
+    public void shouldParseSonarJsonMultiModuleFile() throws IOException {
+        File resultFile = getResourceAsFile("json/sonar-result-mutli-module.json");
 
         SonarResultParser parser = new SonarResultParser(resultFile);
         ReviewResult reviewResult = parser.parseResults();
@@ -40,6 +37,33 @@ public class SonarResultParserTest extends TestEnvironment {
                 Severity.ERROR,
                 Severity.ERROR
         );
+    }
+
+    @Test
+    public void shouldParseSonarJsonSingleModuleFile() throws IOException {
+        File resultFile = getResourceAsFile("json/sonar-result-single-module.json");
+
+        SonarResultParser parser = new SonarResultParser(resultFile);
+        ReviewResult reviewResult = parser.parseResults();
+
+        assertThat(reviewResult).isNotNull();
+        assertThat(reviewResult.getViolations()).hasSize(4);
+        assertThat(reviewResult.getViolations())
+                .extracting("filenameOrJavaClassName")
+                .containsExactly(
+                        "src/dir/file.cs",
+                        "src/dir/file2.cs",
+                        "src/dir/file2.cs",
+                        "src/dir/file2.cs"
+                );
+        assertThat(reviewResult.getViolations())
+                .extracting("severity")
+                .containsExactly(
+                        Severity.WARNING,
+                        Severity.ERROR,
+                        Severity.ERROR,
+                        Severity.ERROR
+                );
     }
 
     @Test(expected=IOException.class)
