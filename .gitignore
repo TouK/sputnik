@@ -9,6 +9,4 @@
 bin/
 build/
 classes
-gradle/
-gradlew*
 out
