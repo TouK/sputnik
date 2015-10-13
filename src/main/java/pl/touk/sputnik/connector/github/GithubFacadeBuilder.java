@@ -30,15 +30,15 @@ public class GithubFacadeBuilder {
                         .through(RetryWire.class)
         );
 
-        Repo repo = github.repos().get(new Coordinates.Simple(githubPatchset.projectPath));
+        Repo repo = github.repos().get(new Coordinates.Simple(githubPatchset.getProjectPath()));
         return new GithubFacade(repo, githubPatchset);
     }
 
     @NotNull
     public GithubPatchset buildGithubPatchset(Configuration configuration) {
         String pullRequestId = configuration.getProperty(CliOption.PULL_REQUEST_ID);
-        String repositorySlug = configuration.getProperty(GeneralOption.REPOSITORY_SLUG);
-        String projectKey = configuration.getProperty(GeneralOption.PROJECT_KEY);
+        String repositorySlug = configuration.getProperty(GeneralOption.REPOSITORY);
+        String projectKey = configuration.getProperty(GeneralOption.OWNER);
 
         notBlank(pullRequestId, "You must provide non blank Github pull request id");
         isTrue(NumberUtils.isNumber(pullRequestId), "Integer value as pull request id required");

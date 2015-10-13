@@ -22,8 +22,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GithubFacade implements ConnectorFacade {
 
-
-
     private final Repo repo;
 
     private final GithubPatchset githubPatchset;
@@ -62,22 +60,8 @@ public class GithubFacade implements ConnectorFacade {
         new Status(getPull(), review, issueId).update();
     }
 
-    /**
-     * post comment for github pull request
-     */
-    private void postComment(Pull pull, int lineNo, String comment, String commitSha, String filename) {
-        try {
-            pull.comments().post(comment,
-                    commitSha,
-                    filename, lineNo);
-        } catch (IOException e) {
-            log.error("Error adding comment to file " + filename, e);
-        }
-    }
-
     private Pull getPull() {
-        return repo.pulls().get(githubPatchset.pullRequestId);
+        return repo.pulls().get(githubPatchset.getPullRequestId());
     }
-
 
 }

@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 
-public class ContentRenderer {
+class ContentRenderer {
 
     public static final String TEMPLATE_MUSTACHE = "issue.mustache";
 

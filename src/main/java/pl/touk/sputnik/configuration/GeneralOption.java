@@ -25,8 +25,8 @@ public enum GeneralOption implements ConfigurationOption {
     USE_HTTPS("connector.useHttps", "Connector use https?", "false"),
     USERNAME("connector.username", "Connector server username", "user"),
     PASSWORD("connector.password", "Connector server password", "password"),
-    PROJECT_KEY("connector.projectKey", "Connector server projectKey", null),
-    REPOSITORY_SLUG("connector.repositorySlug", "Connector server repositorySlug", null),
+    OWNER("connector.owner", "Connector server owner", null),
+    REPOSITORY("connector.repository", "Connector server repository", null),
 
     SCORE_STRATEGY("score.strategy", "Score strategy: <NoScore|ScoreAlwaysPass|ScorePassIfEmpty|ScorePassIfNoErrors>", "ScoreAlwaysPass"),
     SCORE_PASSING_KEY("score.passingKey", "Score passing key", "Code-Review"),

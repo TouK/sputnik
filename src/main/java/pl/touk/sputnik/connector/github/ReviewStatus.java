@@ -6,7 +6,7 @@ import pl.touk.sputnik.review.Review;
 import java.io.IOException;
 
 @Slf4j
-public class ReviewStatus {
+class ReviewStatus {
 
     private static final String OK_STATUS = "All's well. Great job!";
     private static final String NOK_STATUS = "There are some issues with your code. See the linked issue.";

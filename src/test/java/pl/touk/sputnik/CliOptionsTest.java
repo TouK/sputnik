@@ -55,8 +55,6 @@ public class CliOptionsTest {
         CommandLine object;
         private String optionName;
 
-
-
         public CliAssert(CommandLine object) {
             this.object = object;
         }

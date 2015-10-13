@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class GithubPatchset {
-    public final Integer pullRequestId;
-    public final String projectPath;
+    private final Integer pullRequestId;
+    private final String projectPath;
 }

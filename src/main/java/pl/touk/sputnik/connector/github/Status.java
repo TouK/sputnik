@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 @Slf4j
-public class Status {
+class Status {
     public static final String CONTEXT = "Sputnik";
     private final Pull pull;
     private final Review review;

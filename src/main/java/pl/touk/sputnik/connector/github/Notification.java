@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 
 @Slf4j
-public class Notification {
+class Notification {
 
     public static final String SPUTNIK_PREFIX = "[Sputnik]";
     public static final String ISSUE_TITLE = " Detected some code smells";
