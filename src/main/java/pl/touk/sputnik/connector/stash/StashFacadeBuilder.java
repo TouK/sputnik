@@ -27,14 +27,15 @@ public class StashFacadeBuilder {
         HttpClientContext httpClientContext = httpHelper.buildClientContext(httpHost, new BasicScheme());
         CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, connectorDetails);
 
-        return new StashFacade(new StashConnector(new HttpConnector(closeableHttpClient, httpClientContext, connectorDetails.getPath()), stashPatchset), configuration);
+        return new StashFacade(new StashConnector(
+                new HttpConnector(closeableHttpClient, httpClientContext, connectorDetails.getPath()), stashPatchset), configuration);
     }
 
     @NotNull
     public StashPatchset buildStashPatchset(Configuration configuration) {
         String pullRequestId = configuration.getProperty(CliOption.PULL_REQUEST_ID);
-        String repositorySlug = configuration.getProperty(GeneralOption.REPOSITORY_SLUG);
-        String projectKey = configuration.getProperty(GeneralOption.PROJECT_KEY);
+        String repositorySlug = configuration.getProperty(GeneralOption.REPOSITORY);
+        String projectKey = configuration.getProperty(GeneralOption.OWNER);
 
         notBlank(pullRequestId, "You must provide non blank Stash pull request id");
         notBlank(repositorySlug, "You must provide non blank Stash repository slug");

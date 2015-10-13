@@ -31,8 +31,8 @@ public class StashFacadeTest {
 
     private static final Map<String, String> STASH_PATCHSET_MAP = ImmutableMap.of(
             "cli.pullRequestId", SOME_PULL_REQUEST_ID,
-            "connector.repositorySlug", SOME_REPOSITORY,
-            "connector.projectKey", SOME_PROJECT_KEY
+            "connector.repository", SOME_REPOSITORY,
+            "connector.owner", SOME_PROJECT_KEY
     );
 
     private StashFacade stashFacade;

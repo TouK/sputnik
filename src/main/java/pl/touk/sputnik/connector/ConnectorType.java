@@ -12,7 +12,8 @@ import org.jetbrains.annotations.Nullable;
 @Slf4j
 public enum ConnectorType {
     GERRIT("gerrit"),
-    STASH("stash");
+    STASH("stash"),
+    GITHUB("github");
 
     /** Name used in configuration file. */
     @Getter
