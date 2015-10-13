@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
 import pl.touk.sputnik.connector.gerrit.GerritFacadeBuilder;
+import pl.touk.sputnik.connector.github.GithubFacadeBuilder;
 import pl.touk.sputnik.connector.stash.StashFacadeBuilder;
 
 public class ConnectorFacadeFactory {
@@ -12,6 +13,7 @@ public class ConnectorFacadeFactory {
 
     GerritFacadeBuilder gerritFacadeBuilder = new GerritFacadeBuilder();
     StashFacadeBuilder stashFacadeBuilder = new StashFacadeBuilder();
+    GithubFacadeBuilder githubFacadeBuilder = new GithubFacadeBuilder();
 
     @NotNull
     public ConnectorFacade build(@NotNull ConnectorType type, Configuration configuration) {
@@ -20,6 +22,8 @@ public class ConnectorFacadeFactory {
                 return stashFacadeBuilder.build(configuration);
             case GERRIT:
                 return gerritFacadeBuilder.build(configuration);
+            case GITHUB:
+                return githubFacadeBuilder.build(configuration);
             default:
                 throw new GeneralOptionNotSupportedException("Connector " + type.getName() + " is not supported");
         }

@@ -1,0 +1,26 @@
+[
+  {
+    "sha": "d8bb2fc90f4d8b15d5fcfc9869df04aea5124813",
+    "filename": "src/main/java/TestFile.java",
+    "status": "modified",
+    "additions": 2,
+    "deletions": 1,
+    "changes": 3,
+    "blob_url": "https://github.com/pjagielski/sputnik-test/blob/ce66cc07c1dabf4f8b76a3181e39a1bb339244ae/src/main/java/TestFile.java",
+    "raw_url": "https://github.com/pjagielski/sputnik-test/raw/ce66cc07c1dabf4f8b76a3181e39a1bb339244ae/src/main/java/TestFile.java",
+    "contents_url": "https://api.github.com/repos/pjagielski/sputnik-test/contents/src/main/java/TestFile.java?ref=ce66cc07c1dabf4f8b76a3181e39a1bb339244ae",
+    "patch": "@@ -7,8 +7,9 @@ private static void incorrectAssignmentInIfCondition() {\n         boolean value = false;\n         if (value = true) {\n             //do Something\n+            value = false;\n         } else {\n-            //else Do Something\n+            //else Do Something 123\n         }\n     }\n }"
+  },
+  {
+    "sha": "dc7ca1de3414e87ca773d62d54287fe8c414316e",
+    "filename": "src/main/java/TestFile2.java",
+    "status": "added",
+    "additions": 13,
+    "deletions": 0,
+    "changes": 13,
+    "blob_url": "https://github.com/pjagielski/sputnik-test/blob/ce66cc07c1dabf4f8b76a3181e39a1bb339244ae/src/main/java/TestFile2.java",
+    "raw_url": "https://github.com/pjagielski/sputnik-test/raw/ce66cc07c1dabf4f8b76a3181e39a1bb339244ae/src/main/java/TestFile2.java",
+    "contents_url": "https://api.github.com/repos/pjagielski/sputnik-test/contents/src/main/java/TestFile2.java?ref=ce66cc07c1dabf4f8b76a3181e39a1bb339244ae",
+    "patch": "@@ -0,0 +1,13 @@\n+class TestFile2 {\n+    public String foo() {\n+        return \"bar\";\n+    }\n+\n+    private static void incorrectAssignmentInIfCondition() {\n+        boolean value = false;\n+        if (value = true) {\n+            //do Something\n+            value = false;\n+        }\n+    }\n+}"
+  }
+]
