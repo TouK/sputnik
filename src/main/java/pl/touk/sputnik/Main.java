@@ -33,7 +33,7 @@ public final class Main {
         configuration.updateWithCliOptions(commandLine);
 
         ConnectorFacade facade = getConnectorFacade(configuration);
-        new Engine(facade, configuration).run();
+        new Engine(facade, facade, configuration).run();
     }
 
     private static ConnectorFacade getConnectorFacade(Configuration configuration) {

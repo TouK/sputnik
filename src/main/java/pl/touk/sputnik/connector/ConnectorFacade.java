@@ -9,7 +9,7 @@ import pl.touk.sputnik.review.ReviewFile;
 
 import java.util.List;
 
-public interface ConnectorFacade {
+public interface ConnectorFacade extends ReviewPublisher {
     Connectors name();
 
     @NotNull
@@ -23,5 +23,6 @@ public interface ConnectorFacade {
      */
     void validate(Configuration configuration) throws GeneralOptionNotSupportedException;
 
+    @Deprecated
     void setReview(@NotNull Review review);
 }

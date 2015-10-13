@@ -180,4 +180,9 @@ public class StashFacade implements ConnectorFacade {
     public void validate(Configuration configuration) throws GeneralOptionNotSupportedException {
         // all features are supported by Stash
     }
+
+    @Override
+    public void publish(Review review) {
+        setReview(review);
+    }
 }
