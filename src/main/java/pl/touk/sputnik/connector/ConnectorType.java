@@ -13,7 +13,8 @@ import org.jetbrains.annotations.Nullable;
 public enum ConnectorType {
     GERRIT("gerrit"),
     STASH("stash"),
-    GITHUB("github");
+    GITHUB("github"),
+    SAAS("saas");
 
     /** Name used in configuration file. */
     @Getter

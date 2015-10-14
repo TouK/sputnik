@@ -61,7 +61,7 @@ public class GerritFacade implements ConnectorFacade, ConnectorValidator, Review
     }
 
     @Override
-    public void setReview(@NotNull Review review) {
+    public void publish(@NotNull Review review) {
         try {
             log.debug("Set review in Gerrit: {}", review);
             ReviewInput reviewInput = new ReviewInputBuilder().toReviewInput(review);
@@ -89,7 +89,7 @@ public class GerritFacade implements ConnectorFacade, ConnectorValidator, Review
     }
 
     @Override
-    public void publish(Review review) {
-        setReview(review);
+    public void setReview(@NotNull Review review) {
+        publish(review);
     }
 }

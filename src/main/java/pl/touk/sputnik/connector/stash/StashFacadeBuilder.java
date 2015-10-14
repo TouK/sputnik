@@ -35,7 +35,7 @@ public class StashFacadeBuilder {
     public StashPatchset buildStashPatchset(Configuration configuration) {
         String pullRequestId = configuration.getProperty(CliOption.PULL_REQUEST_ID);
         String repositorySlug = configuration.getProperty(GeneralOption.REPOSITORY);
-        String projectKey = configuration.getProperty(GeneralOption.OWNER);
+        String projectKey = configuration.getProperty(GeneralOption.PROJECT);
 
         notBlank(pullRequestId, "You must provide non blank Stash pull request id");
         notBlank(repositorySlug, "You must provide non blank Stash repository slug");

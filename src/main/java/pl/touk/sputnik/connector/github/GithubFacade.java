@@ -54,6 +54,11 @@ public class GithubFacade implements ConnectorFacade {
 
     @Override
     public void setReview(@NotNull Review review) {
+        publish(review);
+    }
+
+    @Override
+    public void publish(Review review) {
         ReviewStatus reviewStatus = new ReviewStatus(review);
         Optional<Integer> issueId = new Notification(repo.issues(), new ContentRenderer())
                 .upsertComment(reviewStatus);
@@ -63,5 +68,4 @@ public class GithubFacade implements ConnectorFacade {
     private Pull getPull() {
         return repo.pulls().get(githubPatchset.getPullRequestId());
     }
-
 }

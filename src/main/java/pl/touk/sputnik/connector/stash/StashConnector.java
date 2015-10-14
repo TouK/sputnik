@@ -37,8 +37,7 @@ public class StashConnector implements Connector {
     @Override
     public String listFiles() throws URISyntaxException, IOException {
         URI uri = httpConnector.buildUri(createUrl(stashPatchset, CHANGES_URL_FORMAT));
-        HttpGet httpGet = new HttpGet(uri);
-        CloseableHttpResponse httpResponse = httpConnector.logAndExecute(httpGet);
+        CloseableHttpResponse httpResponse = httpConnector.logAndExecute(new HttpGet(uri));
         return httpConnector.consumeAndLogEntity(httpResponse);
     }
 
