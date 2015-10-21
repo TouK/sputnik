@@ -147,9 +147,9 @@ task copyToLib(type: Copy) {
     from configurations.runtime
 }
 
-
 artifacts {
     archives jar
+    archives shadowJar
 
     archives javadocJar
     archives sourcesJar
@@ -175,11 +175,10 @@ uploadArchives {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                // This line prevented me from correct authentication.
-                // I don't know if it's still useful to someone?
-//                if (new File("sputnik-gradle-test").exists()) {
-                    authentication(userName: sonatypeUsername, password: sonatypePassword)
-//                }
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+            snapshotRepository(url: "https://philanthropist.touk.pl/nexus/content/repositories/snapshots//") {
+                authentication(userName: snapshotUsername, password: snapshotPassword)
             }
 
             pom.project {
