@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [ "$CI" = "true" ] && [ "$TRAVIS" = "true" ];
 then
   echo "Running on Travis CI"
