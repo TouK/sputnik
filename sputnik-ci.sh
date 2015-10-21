@@ -9,6 +9,6 @@ fi
 if [ ! -z "$PR" ];
 then
   echo "Running on pull request $PR"
-  wget "https://philanthropist.touk.pl/nexus/service/local/artifact/maven/redirect?r=Snapshots&g=pl.touk&a=sputnik&classifier=all&v=LATEST" -O sputnik.jar && java -jar sputnik.jar --conf sputnik.properties --pullRequestId $PR
+  wget "https://philanthropist.touk.pl/nexus/service/local/artifact/maven/redirect?r=snapshots&g=pl.touk&a=sputnik&classifier=all&v=LATEST" -O sputnik.jar && java -jar sputnik.jar --conf sputnik.properties --pullRequestId $PR
 fi
 
