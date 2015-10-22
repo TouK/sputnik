@@ -55,6 +55,7 @@ pyexec() {
 
 pullRequestId() {
     pyexec <<END
+# -*- coding: utf-8 -*-
 import json
 from pprint import pprint
 json_data=open('$tmp_output')
@@ -63,7 +64,7 @@ data = json.load(json_data)
 json_data.close()
 
 for pr in data["values"]:
-    if pr["fromRef"]["displayId"] == "$current_branch":
+    if pr["fromRef"]["displayId"] == u"$current_branch":
         print pr["id"]
 END
 }
