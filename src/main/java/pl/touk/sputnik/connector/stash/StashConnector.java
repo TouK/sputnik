@@ -67,8 +67,4 @@ public class StashConnector implements Connector {
                 stashPatchset.getProjectKey(), stashPatchset.getRepositorySlug(), stashPatchset.getPullRequestId());
     }
 
-    protected void addBasicAuthHeader(HttpRequest request) {
-        String encoding = Base64.encode("username:password".getBytes());
-        request.setHeader("Authorization", "Basic " + encoding);
-    }
 }
