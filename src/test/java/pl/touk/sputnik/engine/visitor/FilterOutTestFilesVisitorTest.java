@@ -1,8 +1,10 @@
 package pl.touk.sputnik.engine.visitor;
 
 import org.junit.Test;
+
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
+import pl.touk.sputnik.review.Paths;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewFormatterFactory;
@@ -21,13 +23,13 @@ public class FilterOutTestFilesVisitorTest {
         Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
         Review review = new Review(Arrays.asList(createReviewFile(true), createReviewFile(false)), ReviewFormatterFactory.get(config));
 
-        new FilterOutTestFilesVisitor().beforeReview(review);
+        new FilterOutTestFilesVisitor(Paths.SRC_TEST).beforeReview(review);
 
         assertThat(review.getFiles()).hasSize(1);
     }
 
     private ReviewFile createReviewFile(boolean isTestFile) {
-        return when(mock(ReviewFile.class).isTestFile()).thenReturn(isTestFile).getMock();
+        return when(mock(ReviewFile.class).getReviewFilename()).thenReturn(isTestFile?Paths.SRC_TEST+"/somefile":"somefile").getMock();
     }
 
 }

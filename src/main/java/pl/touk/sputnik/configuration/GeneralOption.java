@@ -3,6 +3,7 @@ package pl.touk.sputnik.configuration;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import pl.touk.sputnik.connector.ConnectorType;
+import pl.touk.sputnik.review.Paths;
 
 @AllArgsConstructor
 @Getter
@@ -61,7 +62,10 @@ public enum GeneralOption implements ConfigurationOption {
     SONAR_ENABLED("sonar.enabled", "Sonar enabled", "false"),
     SONAR_PROPERTIES("sonar.configurationFiles", "Sonar base configuration", "sonar-project.properties"),
     SONAR_VERBOSE("sonar.verbose", "Run sonar in verbose mode", "false"),
-    GITHUB_API_KEY("github.api.key", "Personal access tokens for Github", ""),;
+    GITHUB_API_KEY("github.api.key", "Personal access tokens for Github", ""),
+
+    JAVA_SRC_DIR("java.src.dir", "Java root source directory", Paths.SRC_MAIN),
+    JAVA_TEST_DIR("java.test.dir", "Java root test directory", Paths.SRC_TEST);
 
     private final String key;
     private final String description;

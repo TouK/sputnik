@@ -30,7 +30,7 @@ public class VisitorBuilder {
     public List<BeforeReviewVisitor> buildBeforeReviewVisitors(Configuration configuration) {
         List<BeforeReviewVisitor> beforeReviewVisitors = new ArrayList<>();
         if (!BooleanUtils.toBoolean(configuration.getProperty(GeneralOption.PROCESS_TEST_FILES))) {
-            beforeReviewVisitors.add(new FilterOutTestFilesVisitor());
+            beforeReviewVisitors.add(new FilterOutTestFilesVisitor(configuration.getProperty(GeneralOption.JAVA_TEST_DIR)));
         }
         return beforeReviewVisitors;
     }
