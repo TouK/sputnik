@@ -1,19 +1,21 @@
 package pl.touk.sputnik.review.locator;
 
 import com.google.common.collect.ImmutableList;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationBuilder;
+import pl.touk.sputnik.review.Paths;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewFormatterFactory;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MavenBuildDirLocatorTest {
 
-    private MavenBuildDirLocator locator = new MavenBuildDirLocator();
+    private MavenBuildDirLocator locator = new MavenBuildDirLocator(Paths.SRC_MAIN,Paths.SRC_TEST);
     private Configuration config;
 
     @Before

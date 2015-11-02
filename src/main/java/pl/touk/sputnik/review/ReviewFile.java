@@ -39,13 +39,4 @@ public class ReviewFile {
         return StringUtils.substringBeforeLast(ENTRY_PATTERN.matcher(reviewFilename).replaceFirst(""), DOT).replace('/', '.');
     }
 
-    @NotNull
-    public Boolean isSourceFile() {
-        return StringUtils.contains(reviewFilename, SRC_MAIN);
-    }
-
-    @NotNull
-    public Boolean isTestFile() {
-        return StringUtils.contains(reviewFilename, SRC_TEST);
-    }
 }
