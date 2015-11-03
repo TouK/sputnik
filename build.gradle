@@ -61,6 +61,7 @@ dependencies {
     compile 'org.codehaus.sonar.runner:sonar-runner-api:2.4'
     compile 'org.codehaus.sonar-plugins:sonar-issues-report-plugin:1.3'
     compile 'com.jayway.jsonpath:json-path:0.9.1'
+    compile 'org.eclipse.jgit:org.eclipse.jgit:4.1.0.201509280440-r'
 
     compile 'com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:0.8.5'
 

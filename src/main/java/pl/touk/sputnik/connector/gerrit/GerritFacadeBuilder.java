@@ -42,7 +42,7 @@ public class GerritFacadeBuilder {
             }
         });
 
-        return new GerritFacade(gerritApi, gerritPatchset);
+        return new GerritFacade(gerritApi, gerritPatchset, configuration);
     }
 
     @NotNull

@@ -3,11 +3,13 @@ package pl.touk.sputnik.connector.gerrit;
 import com.google.gerrit.extensions.api.GerritApi;
 import com.google.gerrit.extensions.api.changes.Changes;
 import com.google.gerrit.extensions.restapi.RestApiException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import pl.touk.sputnik.configuration.ConfigurationBuilder;
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,7 +28,7 @@ public class GerritFacadeExceptionTest {
         Changes changes = mock(Changes.class);
         when(gerritApi.changes()).thenReturn(changes);
         when(changes.id("foo")).thenThrow(new RestApiException("Connection refused"));
-        GerritFacade gerritFacade = new GerritFacade(gerritApi, new GerritPatchset("foo", "bar"));
+        GerritFacade gerritFacade = new GerritFacade(gerritApi, new GerritPatchset("foo", "bar"), ConfigurationBuilder.initFromResource("test.properties"));
 
         //when
         catchException(gerritFacade).listFiles();
