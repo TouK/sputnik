@@ -31,8 +31,8 @@ public class ReviewInputBuilder {
         for (ReviewFile file : review.getFiles()) {
             List<ReviewInput.CommentInput> comments = new ArrayList<>();
             for (Comment comment : file.getComments()) {
-                if(commentFilter.filter(file.getReviewFilename(), comment.getLine())){
-                    log.debug("Filter comment in file {} line {}", file.getReviewFilename(), comment.getLine());
+                if (commentFilter.filter(file.getReviewFilename(), comment.getLine())) {
+                    log.debug("Comment excluded in file {} line {}", file.getReviewFilename(), comment.getLine());
                     continue;
                 }
                 ReviewInput.CommentInput commentInput = new ReviewInput.CommentInput();

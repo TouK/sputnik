@@ -26,7 +26,7 @@ public class ReviewInputBuilderTest {
         Configuration config = ConfigurationBuilder.initFromResource("test.properties");
         Review review = ReviewBuilder.buildReview(config);
 
-        ReviewInput reviewInput = new ReviewInputBuilder(CommentFilter.EMPTY_FILTER).toReviewInput(review);
+        ReviewInput reviewInput = new ReviewInputBuilder(commentFilter).toReviewInput(review);
 
         assertThat(reviewInput.message).isEqualTo("Total 8 violations found");
         assertThat(reviewInput.comments).hasSize(4);
