@@ -1,5 +1,6 @@
 package pl.touk.sputnik.connector.gerrit;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gerrit.extensions.api.GerritApi;
@@ -29,14 +30,17 @@ public class GerritCommentFilter implements CommentFilter {
     }
 
     public GerritCommentFilter init() {
+        modifiedLines = new HashMap<>();
         try {
             RevisionApi revision = gerritApi.changes().id(patchset.getChangeId()).revision(patchset.getRevisionId());
             for (Map.Entry<String, FileInfo> file : revision.files().entrySet()) {
                 FileDiff fileDiff = new FileDiff(file.getKey());
                 FileApi fileApi = revision.file(file.getKey());
-                int currentLine = 0;
+                int currentLine = 1;
                 for (ContentEntry diffHunk : fileApi.diff().content) {
-                    currentLine += diffHunk.skip;
+                    if (diffHunk.skip != null) {
+                        currentLine += diffHunk.skip;
+                    }
                     if (diffHunk.ab != null) {
                         currentLine += diffHunk.ab.size();
                     }
