@@ -30,7 +30,7 @@ public class GerritFacade implements ConnectorFacade {
 
     private final GerritPatchset gerritPatchset;
 
-    private final boolean commentOnlyChangedLines;
+    private final CommentFilter commentFilter;
 
     @NotNull
     @Override
@@ -64,9 +64,7 @@ public class GerritFacade implements ConnectorFacade {
     public void setReview(@NotNull Review review) {
         try {
             log.debug("Set review in Gerrit: {}", review);
-            CommentFilter commentFilter = commentOnlyChangedLines ? new GerritCommentFilter(gerritApi, gerritPatchset).init()
-                    : CommentFilter.EMPTY_FILTER;
-            ReviewInput reviewInput = new ReviewInputBuilder(commentFilter).toReviewInput(review);
+            ReviewInput reviewInput = new ReviewInputBuilder(commentFilter.init()).toReviewInput(review);
             gerritApi.changes().id(gerritPatchset.getChangeId()).revision(gerritPatchset.getRevisionId()).review(reviewInput);
         } catch (RestApiException e) {
             throw new GerritException("Error when setting review", e);

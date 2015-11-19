@@ -27,7 +27,7 @@ public class GerritFacadeExceptionTest {
         Changes changes = mock(Changes.class);
         when(gerritApi.changes()).thenReturn(changes);
         when(changes.id("foo")).thenThrow(new RestApiException("Connection refused"));
-        GerritFacade gerritFacade = new GerritFacade(gerritApi, new GerritPatchset("foo", "bar"), false);
+        GerritFacade gerritFacade = new GerritFacade(gerritApi, new GerritPatchset("foo", "bar"), mock(CommentFilter.class));
 
         //when
         catchException(gerritFacade).listFiles();

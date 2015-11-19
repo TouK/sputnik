@@ -79,7 +79,7 @@ public class GerritFacadeTest {
         RevisionApi revisionApi = mock(RevisionApi.class);
         when(changeApi.revision("revisionId")).thenReturn(revisionApi);
         when(revisionApi.files()).thenReturn(fileInfoMap);
-        return new GerritFacade(gerritApi, new GerritPatchset("changeId", "revisionId"), false);
+        return new GerritFacade(gerritApi, new GerritPatchset("changeId", "revisionId"), mock(CommentFilter.class));
     }
 
 }

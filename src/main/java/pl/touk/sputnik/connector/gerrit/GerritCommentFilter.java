@@ -29,6 +29,7 @@ public class GerritCommentFilter implements CommentFilter {
         return diff != null && !diff.getModifiedLines().contains(line);
     }
 
+    @Override
     public GerritCommentFilter init() {
         modifiedLines = new HashMap<>();
         try {

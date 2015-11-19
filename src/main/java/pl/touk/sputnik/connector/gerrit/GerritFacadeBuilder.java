@@ -47,7 +47,8 @@ public class GerritFacadeBuilder {
         });
 
         boolean commentOnlyChangedLines = parseBoolean(configuration.getProperty(GeneralOption.COMMENT_ONLY_CHANGED_LINES));
-        return new GerritFacade(gerritApi, gerritPatchset, commentOnlyChangedLines);
+        return new GerritFacade(gerritApi, gerritPatchset, commentOnlyChangedLines ? new GerritCommentFilter(gerritApi, gerritPatchset)
+                : CommentFilter.EMPTY_FILTER);
     }
 
     @NotNull
