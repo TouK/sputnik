@@ -25,13 +25,13 @@ public class SaasFacade implements ConnectorFacade {
     private Gson gson;
 
     @Override
-	public Connectors name() {
-		return Connectors.SAAS;
-	}
+    public Connectors name() {
+        return Connectors.SAAS;
+    }
 
-	@NotNull
-	@Override
-	public List<ReviewFile> listFiles() {
+    @NotNull
+    @Override
+    public List<ReviewFile> listFiles() {
         try {
             String response = saasConnector.listFiles();
             String[] files = gson.fromJson(response, String[].class);
@@ -63,13 +63,13 @@ public class SaasFacade implements ConnectorFacade {
         }
     }
 
-	@Override
-	public void validate(Configuration configuration) throws GeneralOptionNotSupportedException {
-	}
+    @Override
+    public void validate(Configuration configuration) throws GeneralOptionNotSupportedException {
+    }
 
-	@Override
-	public void setReview(@NotNull Review review) {
+    @Override
+    public void setReview(@NotNull Review review) {
         publish(review);
-	}
+    }
 
 }
