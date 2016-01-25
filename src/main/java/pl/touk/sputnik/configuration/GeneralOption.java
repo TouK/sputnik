@@ -19,14 +19,14 @@ public enum GeneralOption implements ConfigurationOption {
     MESSAGE_PROBLEM_FORMAT("message.problemFormat", "Sputnik problem format. {0}: reporter, {1}: message", "There is a problem with {0}: {1}"),
     MESSAGE_SCORE_PASSING_COMMENT("message.scorePassingComment", "Comment when no errors are found", "Perfect!"),
 
-    CONNECTOR_TYPE("connector.type", "Connector: <stash|gerrit|github>", ConnectorType.GERRIT.getName()),
+    CONNECTOR_TYPE("connector.type", "Connector: <stash|gerrit|github|saas>", ConnectorType.GERRIT.getName()),
     HOST("connector.host", "Connector server host", "localhost"),
     PORT("connector.port", "Connector server port", "80"),
     PATH("connector.path", "Connector server path", ""),
     USE_HTTPS("connector.useHttps", "Connector use https?", "false"),
     USERNAME("connector.username", "Connector server username", "user"),
     PASSWORD("connector.password", "Connector server password", "password"),
-    OWNER("connector.owner", "Connector server owner", null),
+    PROJECT("connector.project", "Connector server project", null),
     REPOSITORY("connector.repository", "Connector server repository", null),
 
     SCORE_STRATEGY("score.strategy", "Score strategy: <NoScore|ScoreAlwaysPass|ScorePassIfEmpty|ScorePassIfNoErrors>", "ScoreAlwaysPass"),

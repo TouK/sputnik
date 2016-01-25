@@ -3,6 +3,7 @@ package pl.touk.sputnik.engine;
 import lombok.extern.slf4j.Slf4j;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.connector.ConnectorFacade;
+import pl.touk.sputnik.connector.ReviewPublisher;
 import pl.touk.sputnik.engine.visitor.AfterReviewVisitor;
 import pl.touk.sputnik.engine.visitor.BeforeReviewVisitor;
 import pl.touk.sputnik.review.Review;
@@ -16,10 +17,12 @@ import java.util.List;
 public class Engine {
 
     private final ConnectorFacade facade;
+    private final ReviewPublisher reviewPublisher;
     private final Configuration config;
 
-    public Engine(ConnectorFacade facade, Configuration configuration) {
+    public Engine(ConnectorFacade facade, ReviewPublisher reviewPublisher, Configuration configuration) {
         this.facade = facade;
+        this.reviewPublisher = reviewPublisher;
         this.config = configuration;
     }
 
@@ -41,6 +44,6 @@ public class Engine {
             afterReviewVisitor.afterReview(review);
         }
 
-        facade.setReview(review);
+        reviewPublisher.publish(review);
     }
 }

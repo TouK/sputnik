@@ -4,14 +4,15 @@ import com.google.gerrit.extensions.api.GerritApi;
 import com.google.gerrit.extensions.api.changes.ReviewInput;
 import com.google.gerrit.extensions.common.FileInfo;
 import com.google.gerrit.extensions.restapi.RestApiException;
-
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.Connectors;
+import pl.touk.sputnik.connector.ReviewPublisher;
+import pl.touk.sputnik.connector.ConnectorValidator;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 
@@ -19,10 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
-public class GerritFacade implements ConnectorFacade {
+public class GerritFacade implements ConnectorFacade, ConnectorValidator, ReviewPublisher {
     private static final String COMMIT_MSG = "/COMMIT_MSG";
 
     private final GerritApi gerritApi;
@@ -62,7 +61,7 @@ public class GerritFacade implements ConnectorFacade {
     }
 
     @Override
-    public void setReview(@NotNull Review review) {
+    public void publish(@NotNull Review review) {
         try {
             log.debug("Set review in Gerrit: {}", review);
             ReviewInput reviewInput = new ReviewInputBuilder().toReviewInput(review);
@@ -87,5 +86,10 @@ public class GerritFacade implements ConnectorFacade {
             throw new GeneralOptionNotSupportedException("This connector does not support "
                     + GeneralOption.COMMENT_ONLY_CHANGED_LINES.getKey());
         }
+    }
+
+    @Override
+    public void setReview(@NotNull Review review) {
+        publish(review);
     }
 }

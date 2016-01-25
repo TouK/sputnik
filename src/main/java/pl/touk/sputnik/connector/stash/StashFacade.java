@@ -73,14 +73,14 @@ public class StashFacade implements ConnectorFacade {
     }
 
     @Override
-    public void setReview(@NotNull Review review) {
+    public void publish(@NotNull Review review) {
         sendFileComments(review);
 
         try {
             String json = objectMapper.writeValueAsString(new Comment(Joiner.on(". ").join(review.getMessages())));
             stashConnector.sendReview(json);
         } catch (URISyntaxException | IOException e) {
-            throw new StashException("Error setting review", e);
+            throw new StashException("Error while publishing review", e);
         }
     }
 
@@ -179,5 +179,10 @@ public class StashFacade implements ConnectorFacade {
     @Override
     public void validate(Configuration configuration) throws GeneralOptionNotSupportedException {
         // all features are supported by Stash
+    }
+
+    @Override
+    public void setReview(@NotNull Review review) {
+        publish(review);
     }
 }

@@ -25,7 +25,7 @@ public class StashFacadeHttpsTest {
     private static final ImmutableMap<String, String> STASH_PATCHSET_MAP = ImmutableMap.of(
             "cli.pullRequestId", SOME_PULL_REQUEST_ID,
             "connector.repository", SOME_REPOSITORY,
-            "connector.owner", SOME_PROJECT_KEY
+            "connector.project", SOME_PROJECT_KEY
     );
 
     private StashFacade stashFacade;
@@ -51,6 +51,7 @@ public class StashFacadeHttpsTest {
                         .withBody(IOUtils.toString(getClass().getResourceAsStream("/json/stash-changes.json")))));
 
         List<ReviewFile> files = stashFacade.listFiles();
+
         assertThat(files).hasSize(4);
     }
 }

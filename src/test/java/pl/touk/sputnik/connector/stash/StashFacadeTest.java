@@ -1,21 +1,16 @@
 package pl.touk.sputnik.connector.stash;
 
-import com.github.tomakehurst.wiremock.client.UrlMatchingStrategy;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import pl.touk.sputnik.HttpConnectorEnv;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.connector.FacadeConfigUtil;
-import pl.touk.sputnik.review.Review;
-import pl.touk.sputnik.review.ReviewFile;
-import pl.touk.sputnik.review.ReviewFormatterFactory;
-import pl.touk.sputnik.review.Severity;
-import pl.touk.sputnik.review.Violation;
+import pl.touk.sputnik.review.*;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +18,7 @@ import java.util.Map;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class StashFacadeTest {
+public class StashFacadeTest extends HttpConnectorEnv {
 
     private static String SOME_PULL_REQUEST_ID = "12314";
     private static String SOME_REPOSITORY = "repo";
@@ -32,7 +27,7 @@ public class StashFacadeTest {
     private static final Map<String, String> STASH_PATCHSET_MAP = ImmutableMap.of(
             "cli.pullRequestId", SOME_PULL_REQUEST_ID,
             "connector.repository", SOME_REPOSITORY,
-            "connector.owner", SOME_PROJECT_KEY
+            "connector.project", SOME_PROJECT_KEY
     );
 
     private StashFacade stashFacade;
@@ -113,21 +108,4 @@ public class StashFacadeTest {
         assertThat(files).extracting("reviewFilename").containsOnly("src/main/java/example/App2.java");
     }
 
-    private void stubGet(UrlMatchingStrategy url, String responseFile) throws Exception {
-        stubFor(get(url)
-                .withHeader("Authorization", equalTo("Basic dXNlcjpwYXNz"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(IOUtils.toString(getClass().getResourceAsStream(responseFile)))));
-    }
-
-    private void stubPost(UrlMatchingStrategy url, String responseFile) throws Exception {
-        stubFor(post(url)
-                .withHeader("Authorization", equalTo("Basic dXNlcjpwYXNz"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(IOUtils.toString(getClass().getResourceAsStream(responseFile)))));
-    }
 }
