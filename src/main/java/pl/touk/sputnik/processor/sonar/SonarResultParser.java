@@ -123,7 +123,7 @@ class SonarResultParser {
                 Component theChildComp = components.get(theKey);
 
                 int p = theKey.lastIndexOf(":");
-                if (p>0) {
+                if (p > 0) {
                     theKey = theKey.substring(0, p);
                 } else {
                     theKey = "";
