@@ -47,7 +47,7 @@ public class CheckstyleProcessor implements ReviewProcessor {
         Checker checker = createChecker(auditListener);
         try {
             checker.process(files);
-        } catch(CheckstyleException e) {
+        } catch (CheckstyleException e) {
             throw new ReviewException("Unable to process files with Checkstyle", e);
         }
         checker.destroy();
