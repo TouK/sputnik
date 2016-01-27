@@ -45,7 +45,11 @@ public class CheckstyleProcessor implements ReviewProcessor {
     private void innerProcess(@NotNull Review review, @NotNull AuditListener auditListener) {
         List<File> files = review.getFiles(new JavaFilter(), new IOFileTransformer());
         Checker checker = createChecker(auditListener);
-        checker.process(files);
+        try {
+            checker.process(files);
+        } catch (CheckstyleException e) {
+            throw new ReviewException("Unable to process files with Checkstyle", e);
+        }
         checker.destroy();
     }
 
