@@ -16,12 +16,12 @@ public class ProcessorBuilder {
     public static List<ReviewProcessor> buildProcessors(Configuration configuration) {
         List<ReviewProcessor> processors = new ArrayList<>();
 
-        ServiceLoader<ReviewProcessorFactory> theLoader = ServiceLoader.load(ReviewProcessorFactory.class);
-        Iterator<ReviewProcessorFactory> theIterator = theLoader.iterator();
-        while (theIterator.hasNext()) {
-            ReviewProcessorFactory theFactory = theIterator.next();
-            if (theFactory.isEnabled(configuration)) {
-                processors.add(theFactory.create(configuration));
+        ServiceLoader<ReviewProcessorFactory> loader = ServiceLoader.load(ReviewProcessorFactory.class);
+        Iterator<ReviewProcessorFactory> iterator = loader.iterator();
+        while (iterator.hasNext()) {
+            ReviewProcessorFactory factory = iterator.next();
+            if (factory.isEnabled(configuration)) {
+                processors.add(factory.create(configuration));
             }
         }
         return processors;

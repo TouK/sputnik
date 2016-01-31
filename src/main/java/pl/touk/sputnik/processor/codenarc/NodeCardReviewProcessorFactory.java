@@ -7,12 +7,12 @@ import pl.touk.sputnik.processor.ReviewProcessorFactory;
 public class NodeCardReviewProcessorFactory implements ReviewProcessorFactory<CodeNarcProcessor> {
 
     @Override
-    public boolean isEnabled(Configuration aConfiguration) {
-        return Boolean.valueOf(aConfiguration.getProperty(GeneralOption.CODE_NARC_ENABLED));
+    public boolean isEnabled(Configuration configuration) {
+        return Boolean.valueOf(configuration.getProperty(GeneralOption.CODE_NARC_ENABLED));
     }
 
     @Override
-    public CodeNarcProcessor create(Configuration aConfiguration) {
-        return new CodeNarcProcessor(aConfiguration);
+    public CodeNarcProcessor create(Configuration configuration) {
+        return new CodeNarcProcessor(configuration);
     }
 }

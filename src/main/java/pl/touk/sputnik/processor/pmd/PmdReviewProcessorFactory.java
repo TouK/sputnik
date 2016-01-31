@@ -7,12 +7,12 @@ import pl.touk.sputnik.processor.ReviewProcessorFactory;
 public class PmdReviewProcessorFactory implements ReviewProcessorFactory<PmdProcessor> {
 
     @Override
-    public boolean isEnabled(Configuration aConfiguration) {
-        return Boolean.valueOf(aConfiguration.getProperty(GeneralOption.PMD_ENABLED));
+    public boolean isEnabled(Configuration configuration) {
+        return Boolean.valueOf(configuration.getProperty(GeneralOption.PMD_ENABLED));
     }
 
     @Override
-    public PmdProcessor create(Configuration aConfiguration) {
-        return new PmdProcessor(aConfiguration);
+    public PmdProcessor create(Configuration configuration) {
+        return new PmdProcessor(configuration);
     }
 }

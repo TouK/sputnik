@@ -7,12 +7,12 @@ import pl.touk.sputnik.processor.ReviewProcessorFactory;
 public class JsLintReviewProcessorFactory implements ReviewProcessorFactory<JsLintProcessor> {
 
     @Override
-    public boolean isEnabled(Configuration aConfiguration) {
-        return Boolean.valueOf(aConfiguration.getProperty(GeneralOption.JSLINT_ENABLED));
+    public boolean isEnabled(Configuration configuration) {
+        return Boolean.valueOf(configuration.getProperty(GeneralOption.JSLINT_ENABLED));
     }
 
     @Override
-    public JsLintProcessor create(Configuration aConfiguration) {
-        return new JsLintProcessor(aConfiguration);
+    public JsLintProcessor create(Configuration configuration) {
+        return new JsLintProcessor(configuration);
     }
 }

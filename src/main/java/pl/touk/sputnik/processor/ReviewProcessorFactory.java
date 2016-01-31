@@ -5,7 +5,7 @@ import pl.touk.sputnik.review.ReviewProcessor;
 
 public interface ReviewProcessorFactory<T extends ReviewProcessor> {
 
-    boolean isEnabled(Configuration aConfiguration);
+    boolean isEnabled(Configuration configuration);
 
-    T create(Configuration aConfiguration);
+    T create(Configuration configuration);
 }

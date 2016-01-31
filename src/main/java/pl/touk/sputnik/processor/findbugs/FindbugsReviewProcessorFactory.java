@@ -7,12 +7,12 @@ import pl.touk.sputnik.processor.ReviewProcessorFactory;
 public class FindbugsReviewProcessorFactory implements ReviewProcessorFactory<FindBugsProcessor> {
 
     @Override
-    public boolean isEnabled(Configuration aConfiguration) {
-        return Boolean.valueOf(aConfiguration.getProperty(GeneralOption.FINDBUGS_ENABLED));
+    public boolean isEnabled(Configuration configuration) {
+        return Boolean.valueOf(configuration.getProperty(GeneralOption.FINDBUGS_ENABLED));
     }
 
     @Override
-    public FindBugsProcessor create(Configuration aConfiguration) {
-        return new FindBugsProcessor(aConfiguration);
+    public FindBugsProcessor create(Configuration configuration) {
+        return new FindBugsProcessor(configuration);
     }
 }

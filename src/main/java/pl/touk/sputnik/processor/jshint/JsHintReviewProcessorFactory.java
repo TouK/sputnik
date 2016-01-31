@@ -7,12 +7,12 @@ import pl.touk.sputnik.processor.ReviewProcessorFactory;
 public class JsHintReviewProcessorFactory implements ReviewProcessorFactory<JsHintProcessor> {
 
     @Override
-    public boolean isEnabled(Configuration aConfiguration) {
-        return Boolean.valueOf(aConfiguration.getProperty(GeneralOption.JSHINT_ENABLED));
+    public boolean isEnabled(Configuration configuration) {
+        return Boolean.valueOf(configuration.getProperty(GeneralOption.JSHINT_ENABLED));
     }
 
     @Override
-    public JsHintProcessor create(Configuration aConfiguration) {
-        return new JsHintProcessor(aConfiguration);
+    public JsHintProcessor create(Configuration configuration) {
+        return new JsHintProcessor(configuration);
     }
 }

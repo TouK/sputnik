@@ -7,12 +7,12 @@ import pl.touk.sputnik.processor.ReviewProcessorFactory;
 public class ScalastyleReviewProcessorFactory implements ReviewProcessorFactory<ScalastyleProcessor> {
 
     @Override
-    public boolean isEnabled(Configuration aConfiguration) {
-        return Boolean.valueOf(aConfiguration.getProperty(GeneralOption.SCALASTYLE_ENABLED));
+    public boolean isEnabled(Configuration configuration) {
+        return Boolean.valueOf(configuration.getProperty(GeneralOption.SCALASTYLE_ENABLED));
     }
 
     @Override
-    public ScalastyleProcessor create(Configuration aConfiguration) {
-        return new ScalastyleProcessor(aConfiguration);
+    public ScalastyleProcessor create(Configuration configuration) {
+        return new ScalastyleProcessor(configuration);
     }
 }
