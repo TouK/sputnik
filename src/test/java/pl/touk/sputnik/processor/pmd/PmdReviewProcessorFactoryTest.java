@@ -3,7 +3,6 @@ package pl.touk.sputnik.processor.pmd;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.processor.ReviewProcessorFactory;
-import pl.touk.sputnik.processor.findbugs.FindbugsReviewProcessorFactory;
 
 import org.junit.Test;
 
