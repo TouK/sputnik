@@ -8,6 +8,8 @@
 
 ## Usage
 
+[![Join the chat at https://gitter.im/TouK/sputnik](https://badges.gitter.im/TouK/sputnik.svg)](https://gitter.im/TouK/sputnik?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Sputnik is intended to run just after your Jenkins/CI server build. It should be executed in the root directory of the analyzed project to find files to analyze.
 
 Three parameters are required: your configuration file (details below), Gerrit's changeId and revisionId:
