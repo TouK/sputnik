@@ -2,7 +2,7 @@ package pl.touk.sputnik.processor.sonar;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,9 +24,6 @@ import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationBuilder;
 
 import com.google.common.collect.ImmutableList;
-
-import freemarker.template.utility.StringUtil;
-
 
 @RunWith(MockitoJUnitRunner.class)
 public class SonarRunnerTest {
@@ -40,6 +38,7 @@ public class SonarRunnerTest {
     @Before
     public void setUp() throws FileNotFoundException {
         config = ConfigurationBuilder.initFromResource("test-sonar.properties");
+        when(sonarRunner.globalProperties()).thenReturn(new Properties());
     }
 
     @After
@@ -59,7 +58,7 @@ public class SonarRunnerTest {
         List<String> files = ImmutableList.of("file");
         SonarRunner runner = new SonarRunner(files, sonarRunner, config);
         runner.run();
-        verify(sonarRunner).addProperties(any(Properties.class));
+        verify(sonarRunner, times(1)).globalProperties();
         verify(sonarRunner).execute();
     }
 
@@ -82,7 +81,7 @@ public class SonarRunnerTest {
         runner.setAdditionalProperties(props);
         assertThat(props.getProperty(SonarProperties.INCLUDE_FILES)).contains("first");
         assertThat(props.getProperty(SonarProperties.INCLUDE_FILES)).contains("second");
-        assertThat(StringUtil.split(props.getProperty(SonarProperties.INCLUDE_FILES), ',')).hasSize(2);
+        assertThat(StringUtils.split(props.getProperty(SonarProperties.INCLUDE_FILES), ',')).hasSize(2);
         assertThat(props.getProperty(SonarProperties.ANALISYS_MODE)).isEqualTo("incremental");
         assertThat(props.getProperty(SonarProperties.SCM_ENABLED)).isEqualTo("false");
         assertThat(props.getProperty(SonarProperties.SCM_STAT_ENABLED)).isEqualTo("false");
