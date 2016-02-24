@@ -4,8 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.configuration.GeneralOption;
@@ -18,7 +16,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(MockitoJUnitRunner.class)
 public class FindBugsProcessorTest extends TestEnvironment {
 
     private FindBugsProcessor findBugsProcessor;

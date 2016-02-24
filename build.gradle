@@ -117,7 +117,7 @@ dependencies {
     testCompile 'org.mockito:mockito-core:1.9.5'
     testCompile 'org.assertj:assertj-core:1.5.0'
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
-    testCompile('com.github.tomakehurst:wiremock:1.46') {
+    testCompile('com.github.tomakehurst:wiremock:1.57') {
         exclude group: 'log4j'
     }
 }

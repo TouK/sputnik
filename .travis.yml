@@ -6,6 +6,7 @@ jdk:
 
 before_install:
   - sudo pip install codecov
+
 after_success:
   - codecov
-  - bash <(curl -s https://raw.githubusercontent.com/TouK/sputnik/saas/sputnik-ci.sh)
+  - python <(curl -s https://raw.githubusercontent.com/TouK/sputnik-ci/master/sputnik-ci.py)
