@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.sonar.runner.api.EmbeddedRunner;
 
+import org.sonar.runner.api.StdOutLogOutput;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
@@ -31,7 +32,7 @@ class SonarRunnerBuilder {
         for (ReviewFile file : review.getFiles()) {
             files.add("**/" + new File(file.getReviewFilename()).getName());
         }
-        SonarRunner sonarRunner = new SonarRunner(files, EmbeddedRunner.create(), configuration);
+        SonarRunner sonarRunner = new SonarRunner(files, EmbeddedRunner.create(new StdOutLogOutput()), configuration);
         return sonarRunner;
     }
 }

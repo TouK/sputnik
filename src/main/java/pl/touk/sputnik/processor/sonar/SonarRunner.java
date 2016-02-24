@@ -54,8 +54,11 @@ public class SonarRunner {
     public File run() throws IOException {
         Properties props = loadBaseProperties();
         setAdditionalProperties(props);
+
+        sonarEmbeddedRunner.globalProperties().putAll(props);
+
         log.info("Sonar configuration: {}", props.toString());
-        sonarEmbeddedRunner.addProperties(props);
+
         sonarEmbeddedRunner.execute();
         return new File(OUTPUT_DIR, OUTPUT_FILE);
     }
