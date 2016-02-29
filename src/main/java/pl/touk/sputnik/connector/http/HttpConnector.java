@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -51,6 +52,9 @@ public class HttpConnector {
 
     @NotNull
     public String consumeAndLogEntity(@NotNull CloseableHttpResponse response) throws IOException {
+        if (!isSuccessful(response)) {
+            throw new HttpException(response);
+        }
         if (response.getEntity() == null) {
             log.debug("Entity {}: no entity", REQUEST_COUNTER);
             return StringUtils.EMPTY;
@@ -58,5 +62,9 @@ public class HttpConnector {
         String content = EntityUtils.toString(response.getEntity());
         log.info("Entity {}: {}", REQUEST_COUNTER, content);
         return content;
+    }
+
+    private boolean isSuccessful(HttpResponse response) {
+        return response.getStatusLine().getStatusCode() / 100 == 2;
     }
 }

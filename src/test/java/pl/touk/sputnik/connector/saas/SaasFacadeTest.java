@@ -71,4 +71,9 @@ public class SaasFacadeTest extends HttpConnectorEnv {
         verify(1, postRequestedFor(urlMatching(String.format("%s/api/github/%s/%s/pulls/%s/violations\\?key=%s",
                 FacadeConfigUtil.PATH, SOME_PROJECT, SOME_REPOSITORY, SOME_PULL_REQUEST_ID, SOME_API_KEY))));
     }
+
+    @Test(expected = SaasException.class)
+    public void shouldHandleWrongApiKey() throws Exception {
+        List<ReviewFile> files = saasFacade.listFiles();
+    }
 }

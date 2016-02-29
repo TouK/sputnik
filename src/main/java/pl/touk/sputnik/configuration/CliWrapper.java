@@ -23,6 +23,7 @@ public class CliWrapper {
         localOptions.addOption(buildOption(CliOption.REVISION_ID, true, false));
 
         localOptions.addOption(buildOption(CliOption.PULL_REQUEST_ID, true, false));
+        localOptions.addOption(buildOption(CliOption.API_KEY, true, false));
 
         return localOptions;
     }

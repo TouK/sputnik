@@ -1,6 +1,7 @@
 package pl.touk.sputnik.connector.saas;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -19,6 +20,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 @AllArgsConstructor
+@Slf4j
 public class SaasConnector implements Connector {
 
     private HttpConnector httpConnector;
@@ -45,6 +47,7 @@ public class SaasConnector implements Connector {
     @NotNull
     @Override
     public String sendReview(String violationsAsJson) throws URISyntaxException, IOException {
+        log.info("Sending violations: {}", violationsAsJson);
         URI uri = httpConnector.buildUri(createUrl(githubPatchset, VIOLATIONS_URL_FORMAT), apiKeyParam());
         HttpPost httpPost = new HttpPost(uri);
         httpPost.setEntity(new StringEntity(violationsAsJson, ContentType.APPLICATION_JSON));
