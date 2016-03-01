@@ -20,10 +20,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class SaasFacadeTest extends HttpConnectorEnv {
 
-    private final static Integer SOME_PULL_REQUEST_ID = 12314;
-    private final static String SOME_REPOSITORY = "repo";
-    private final static String SOME_PROJECT = "proj";
-    private final static String SOME_API_KEY = "my_api_key";
+    private static final Integer SOME_PULL_REQUEST_ID = 12314;
+    private static final String SOME_REPOSITORY = "repo";
+    private static final String SOME_PROJECT = "proj";
+    private static final String SOME_API_KEY = "my_api_key";
 
     private static final Map<String, String> GITHUB_PATCHSET_MAP = ImmutableMap.of(
             "cli.pullRequestId", SOME_PULL_REQUEST_ID.toString(),
