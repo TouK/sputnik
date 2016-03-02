@@ -74,6 +74,6 @@ public class SaasFacadeTest extends HttpConnectorEnv {
 
     @Test(expected = SaasException.class)
     public void shouldHandleWrongApiKey() throws Exception {
-        List<ReviewFile> files = saasFacade.listFiles();
+        saasFacade.listFiles();
     }
 }
