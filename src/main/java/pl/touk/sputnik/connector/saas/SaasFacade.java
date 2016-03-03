@@ -7,6 +7,7 @@ import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.Connectors;
+import pl.touk.sputnik.connector.http.HttpException;
 import pl.touk.sputnik.connector.saas.json.FileViolation;
 import pl.touk.sputnik.connector.saas.json.Violation;
 import pl.touk.sputnik.review.Comment;
@@ -40,6 +41,8 @@ public class SaasFacade implements ConnectorFacade {
                 reviewFiles.add(new ReviewFile(filename));
             }
             return reviewFiles;
+        } catch (HttpException ex) {
+            throw new SaasException("Error when listing files, check your api key", ex);
         } catch (URISyntaxException | IOException ex) {
             throw new SaasException("Error when listing files", ex);
         }
@@ -58,6 +61,8 @@ public class SaasFacade implements ConnectorFacade {
         String request = gson.toJson(fileViolations);
         try {
             saasConnector.sendReview(request);
+        } catch (HttpException ex) {
+            throw new SaasException("Error when listing files, check your api key", ex);
         } catch (URISyntaxException | IOException ex) {
             throw new SaasException("Error while publishing review", ex);
         }
