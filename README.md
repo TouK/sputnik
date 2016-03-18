@@ -2,9 +2,10 @@
 
 > Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD, FindBugs, Scalastyle, CodeNarc, JSLint and Sonar for you!
 
-[![Build Status](https://img.shields.io/travis/TouK/sputnik/master.svg?style=flat)](https://travis-ci.org/TouK/sputnik)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/pl.touk/sputnik/badge.svg?style=plastic)](https://maven-badges.herokuapp.com/maven-central/pl.touk/sputnik)
-[![Coverage Status](https://img.shields.io/codecov/c/github/TouK/sputnik/master.svg?style=flat)](https://codecov.io/github/TouK/sputnik)
+[![Build Status](https://img.shields.io/travis/TouK/sputnik/master.svg?style=flat-square)](https://travis-ci.org/TouK/sputnik)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/pl.touk/sputnik/badge.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/pl.touk/sputnik)
+[![Coverage Status](https://img.shields.io/codecov/c/github/TouK/sputnik/master.svg?style=flat-square)](https://codecov.io/github/TouK/sputnik)
+[![Sputnik](https://sputnik.touk.pl/conf/badge)](https://sputnik.touk.pl/app#/builds/TouK/sputnik)
 [![Join the chat at https://gitter.im/TouK/sputnik](https://badges.gitter.im/TouK/sputnik.svg)](https://gitter.im/TouK/sputnik?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Usage
