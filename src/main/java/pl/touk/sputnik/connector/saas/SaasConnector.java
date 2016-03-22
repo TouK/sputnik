@@ -17,7 +17,6 @@ import pl.touk.sputnik.connector.http.HttpConnector;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 
 @AllArgsConstructor
 @Slf4j
@@ -27,13 +26,13 @@ public class SaasConnector implements Connector {
     private GithubPatchset githubPatchset;
     private String apiKey;
 
+    public SaasConnector(HttpConnector httpConnector, GithubPatchset githubPatchset) {
+        this(httpConnector, githubPatchset, null);
+    }
+
     private static final String API_KEY_PARAM = "key";
     private static final String FILES_URL_FORMAT = "/api/github/%s/pulls/%d/files";
     private static final String VIOLATIONS_URL_FORMAT = "/api/github/%s/pulls/%d/violations";
-
-    public List<String> getReviewFiles() {
-        return null;
-    }
 
     @NotNull
     @Override
@@ -60,7 +59,11 @@ public class SaasConnector implements Connector {
     }
 
     @NotNull
-    private NameValuePair apiKeyParam() {
-        return new BasicNameValuePair(API_KEY_PARAM, apiKey);
+    private NameValuePair[] apiKeyParam() {
+        if (apiKey != null) {
+            return new BasicNameValuePair[]{new BasicNameValuePair(API_KEY_PARAM, apiKey)};
+        } else {
+            return new BasicNameValuePair[]{};
+        }
     }
 }
