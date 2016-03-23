@@ -10,7 +10,8 @@ public enum CliOption implements ConfigurationOption {
     CHANGE_ID("cli.changeId", "Gerrit change id", null),
     REVISION_ID("cli.revisionId", "Gerrit revision id", null),
     PULL_REQUEST_ID("cli.pullRequestId", "Stash pull request id", null),
-    API_KEY("cli.apiKey", "Optional API key for using Sputnik for Github", null);
+    API_KEY("cli.apiKey", "Optional API key for using Sputnik for Github", null),
+    BUILD_ID("cli.buildId", "Optional build id for using Sputnik for Github", null);
 
     private String key;
     private String description;

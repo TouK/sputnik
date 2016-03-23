@@ -73,7 +73,59 @@ public class SaasFacadeTest extends HttpConnectorEnv {
     }
 
     @Test(expected = SaasException.class)
-    public void shouldHandleWrongApiKey() throws Exception {
+    public void shouldThrowOnWrongApiKey() throws Exception {
+        SaasFacade saasFacade = buildFacade(ImmutableMap.of(
+                "cli.pullRequestId", SOME_PULL_REQUEST_ID.toString(),
+                "cli.apiKey", "WRONG_API_KEY",
+                "connector.repository", SOME_REPOSITORY,
+                "connector.project", SOME_PROJECT
+        ));
+        stubGet(urlEqualTo(String.format(
+                "%s/api/github/%s/%s/pulls/%s/files?key=%s",
+                FacadeConfigUtil.PATH, SOME_PROJECT, SOME_REPOSITORY, SOME_PULL_REQUEST_ID, "WRONG_API_KEY")),
+                aResponse().withStatus(403));
+
         saasFacade.listFiles();
     }
+
+    @Test
+    public void shouldHandleEmptyApiKey() throws Exception {
+        SaasFacade saasFacade = buildFacade(ImmutableMap.of(
+                "cli.pullRequestId", SOME_PULL_REQUEST_ID.toString(),
+                "connector.repository", SOME_REPOSITORY,
+                "connector.project", SOME_PROJECT
+        ));
+
+        stubGet(urlEqualTo(String.format(
+                "%s/api/github/%s/%s/pulls/%s/files",
+                FacadeConfigUtil.PATH, SOME_PROJECT, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)), "/json/saas-files.json");
+
+        List<ReviewFile> files = saasFacade.listFiles();
+
+        assertThat(files).extracting("reviewFilename").containsOnly("src/main/java/TestFile.java", "src/main/java/TestFile2.java");
+    }
+
+    @Test
+    public void shouldSendBuildIdIfProvided() throws Exception {
+        SaasFacade saasFacade = buildFacade(ImmutableMap.of(
+                "cli.pullRequestId", SOME_PULL_REQUEST_ID.toString(),
+                "cli.buildId", "11223344",
+                "connector.repository", SOME_REPOSITORY,
+                "connector.project", SOME_PROJECT
+        ));
+
+        stubGet(urlEqualTo(String.format(
+                "%s/api/github/%s/%s/pulls/%s/files?build_id=%s",
+                FacadeConfigUtil.PATH, SOME_PROJECT, SOME_REPOSITORY, SOME_PULL_REQUEST_ID, "11223344")), "/json/saas-files.json");
+
+        List<ReviewFile> files = saasFacade.listFiles();
+
+        assertThat(files).extracting("reviewFilename").containsOnly("src/main/java/TestFile.java", "src/main/java/TestFile2.java");
+    }
+
+    protected SaasFacade buildFacade(Map<String, String> configMap) {
+        Configuration config = new ConfigurationSetup().setUp(FacadeConfigUtil.getHttpConfig("saas"), configMap);
+        return new SaasFacadeBuilder().build(config);
+    }
+
 }
