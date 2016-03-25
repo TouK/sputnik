@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
  * Used with JSON unmarshaller only.
  */
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class FileInfo {
     private Status status = Status.MODIFIED;

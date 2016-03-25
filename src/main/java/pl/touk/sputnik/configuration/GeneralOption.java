@@ -38,7 +38,7 @@ public enum GeneralOption implements ConfigurationOption {
     CODE_NARC_EXCLUDES("codenarc.excludes", "CodeNarc exclude filter", "");
 
 
-    private String key;
-    private String description;
-    private String defaultValue;
+    private final String key;
+    private final String description;
+    private final String defaultValue;
 }

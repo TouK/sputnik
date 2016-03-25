@@ -19,14 +19,14 @@ public class FileExtensionFilter implements FileFilter {
         log.info("Filtering out review files with allowed extensions {}", allowedExtensions);
         List<ReviewFile> filtered = new ArrayList<>();
 
-        for (ReviewFile file : files) {
+        files.forEach(file -> {
             String extension = StringUtils.substringAfterLast(file.getReviewFilename(), ".");
             if (allowedExtensions.contains(extension)) {
                 filtered.add(file);
             } else {
                 log.info("File {} was filtered out due to not allowed extension {}", file.getReviewFilename(), extension);
             }
-        }
+        });
 
         log.info("Total {} of {} files had allowed extensions {}", filtered.size(), files.size(), allowedExtensions);
         return filtered;

@@ -13,26 +13,38 @@ import pl.touk.sputnik.review.ReviewProcessor;
 import java.util.ArrayList;
 import java.util.List;
 
+import static pl.touk.sputnik.configuration.GeneralOption.*;
+
 public class ProcessorBuilder {
 
     @NotNull
     public List<ReviewProcessor> buildProcessors() {
-        List<ReviewProcessor> processors = new ArrayList<>();
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.CHECKSTYLE_ENABLED))) {
+        final List<ReviewProcessor> processors = new ArrayList<>();
+
+        if (is(CHECKSTYLE_ENABLED)) {
             processors.add(new CheckstyleProcessor());
         }
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.PMD_ENABLED))) {
+
+        if (is(PMD_ENABLED)) {
             processors.add(new PmdProcessor());
         }
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.FINDBUGS_ENABLED))) {
+
+        if (is(FINDBUGS_ENABLED)) {
             processors.add(new FindBugsProcessor());
         }
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.SCALASTYLE_ENABLED))) {
+
+        if (is(SCALASTYLE_ENABLED)) {
             processors.add(new ScalastyleProcessor());
         }
-        if (Boolean.valueOf(ConfigurationHolder.instance().getProperty(GeneralOption.CODE_NARC_ENABLED))) {
+
+        if (is(CODE_NARC_ENABLED)) {
             processors.add(new CodeNarcProcessor());
         }
+
         return processors;
+    }
+
+    private static Boolean is(GeneralOption option) {
+        return Boolean.valueOf(ConfigurationHolder.instance().getProperty(option));
     }
 }

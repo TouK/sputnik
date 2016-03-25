@@ -1,20 +1,14 @@
 package pl.touk.sputnik.engine;
 
-import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.math.NumberUtils;
 import org.jetbrains.annotations.NotNull;
-import pl.touk.sputnik.configuration.ConfigurationHolder;
 import pl.touk.sputnik.connector.ConnectorFacade;
-
-import java.util.ArrayList;
-import java.util.List;
-import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
-import pl.touk.sputnik.engine.visitor.*;
+
+import java.util.List;
 
 @Slf4j
 public class Engine {
@@ -26,23 +20,19 @@ public class Engine {
     }
 
     public void run() {
-        List<ReviewFile> reviewFiles = facade.listFiles();
-        Review review = new Review(reviewFiles);
+        final List<ReviewFile> reviewFiles = facade.listFiles();
+        final Review toReview = new Review(reviewFiles);
 
-        for (BeforeReviewVisitor beforeReviewVisitor : new VisitorBuilder().buildBeforeReviewVisitors()) {
-            beforeReviewVisitor.beforeReview(review);
-        }
+        new VisitorBuilder().buildBeforeReviewVisitors()
+                .forEach(brv -> brv.beforeReview(toReview));
 
-        List<ReviewProcessor> processors = new ProcessorBuilder().buildProcessors();
-        for (ReviewProcessor processor : processors) {
-            review(review, processor);
-        }
+        new ProcessorBuilder().buildProcessors()
+                .forEach(p -> review(toReview, p));
 
-        for (AfterReviewVisitor afterReviewVisitor : new VisitorBuilder().buildAfterReviewVisitors()) {
-            afterReviewVisitor.afterReview(review);
-        }
+        new VisitorBuilder().buildAfterReviewVisitors()
+                .forEach(arv -> arv.afterReview(toReview));
 
-        facade.setReview(review);
+        facade.setReview(toReview);
     }
 
     private void review(@NotNull Review review, @NotNull ReviewProcessor processor) {

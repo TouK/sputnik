@@ -115,6 +115,7 @@ If you prefere running Sputnik from Maven, there is a plugin developed by Karol 
 - Karol Lassak
 - Henning Hoefer
 - Dominik Przybysz
+- Grzegorz Piwowarek
 
 ## License
 

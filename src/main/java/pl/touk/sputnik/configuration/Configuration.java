@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.Properties;
 
 @Slf4j
@@ -26,20 +27,16 @@ public class Configuration {
     
     @Nullable
     private String getPropertyByKey(@NotNull String key) {
-        String value = properties.getProperty(key);
-        if (StringUtils.isBlank(value)) {
-            value = System.getProperty(key);
-        }
-        return value;
+        return Optional.ofNullable(properties.getProperty(key))
+                .filter(StringUtils::isNotBlank)
+                .orElseGet(() -> System.getProperty(key));
     }
 
     @Nullable
     public String getProperty(@NotNull ConfigurationOption confOption) {
-        String value = getPropertyByKey(confOption.getKey());
-        if (StringUtils.isBlank(value)) {
-            value = confOption.getDefaultValue();
-        }
-        return value;
+        return Optional.ofNullable(getPropertyByKey(confOption.getKey()))
+                .filter(StringUtils::isNotBlank)
+                .orElseGet(confOption::getDefaultValue);
     }
 
     public void updateWithCliOptions(CommandLine commandLine) {

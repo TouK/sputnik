@@ -14,7 +14,6 @@ public class CliWrapper {
     }
 
     @NotNull
-    @SuppressWarnings("unchecked")
     private Options createOptions() {
         Options localOptions = new Options();
         localOptions.addOption(buildOption(CliOption.CONF, true, true));
@@ -34,7 +33,7 @@ public class CliWrapper {
     }
 
     @NotNull
-    @SuppressWarnings("all")
+    @SuppressWarnings("static-access")
     private Option buildOption(@NotNull CliOption name, boolean hasArgs, boolean isRequired) {
         return OptionBuilder.withArgName(name.getCommandLineParam())
             .withLongOpt(name.getCommandLineParam())

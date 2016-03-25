@@ -1,14 +1,8 @@
 package pl.touk.sputnik.review;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
-@AllArgsConstructor
-@Getter
-@ToString
-@EqualsAndHashCode
+@Data
 public class Violation {
     private final String filenameOrJavaClassName;
     private final int line;

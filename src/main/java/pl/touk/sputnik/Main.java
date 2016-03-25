@@ -1,5 +1,6 @@
 package pl.touk.sputnik;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.ParseException;
@@ -12,6 +13,7 @@ import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.ConnectorFacadeFactory;
 import pl.touk.sputnik.engine.Engine;
 
+@Slf4j
 public final class Main {
     private static final String SPUTNIK = "sputnik";
     private static final String HEADER = "Sputnik - review your Gerrit patchset with Checkstyle, PMD and FindBugs";
@@ -26,7 +28,7 @@ public final class Main {
             commandLine = cliWrapper.parse(args);
         } catch (ParseException e) {
             printUsage(cliWrapper);
-            System.out.println(e.getMessage());
+            log.info(e.getMessage());
             System.exit(1);
         }
 
@@ -38,7 +40,8 @@ public final class Main {
     }
 
     private static void printUsage(@NotNull CliWrapper cliOptions) {
-        System.out.println(HEADER);
+        log.info(HEADER);
+
         HelpFormatter helpFormatter = new HelpFormatter();
         helpFormatter.setWidth(WIDTH);
         helpFormatter.printHelp(SPUTNIK, cliOptions.getOptions(), true);
