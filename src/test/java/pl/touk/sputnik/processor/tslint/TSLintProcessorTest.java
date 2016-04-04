@@ -1,32 +1,31 @@
 package pl.touk.sputnik.processor.tslint;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.io.IOException;
-
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
-
 import pl.touk.sputnik.TestEnvironment;
+import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;
 
-import com.google.common.collect.ImmutableMap;
+import java.io.IOException;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TSLintProcessorTest extends TestEnvironment {
 
-    private TSLintProcessor processor;
+    private TSLintProcessor fixture;
 
     @Before
     public void setUp() {
-        new ConfigurationSetup().setUp(ImmutableMap.of(
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.TSLINT_SCRIPT.getKey(), "tslint",
                 GeneralOption.TSLINT_CONFIGURATION_FILE.getKey(), "src/main/resources/tslint.json"));
-        processor = new TSLintProcessor();
+        fixture = new TSLintProcessor(config);
     }
 
     @Test
@@ -36,7 +35,7 @@ public class TSLintProcessorTest extends TestEnvironment {
         ReviewResult result = new ReviewResult();
 
         // when
-        processor.addToReview(jsonResponse, result);
+        fixture.addToReview(jsonResponse, result);
 
         // then
         assertThat(result.getViolations()).hasSize(1);
@@ -50,7 +49,7 @@ public class TSLintProcessorTest extends TestEnvironment {
     @Test
     public void shouldReturnEmptyResultWhenNoFilesToReview() {
         // when
-        ReviewResult reviewResult = processor.process(nonexistantReview());
+        ReviewResult reviewResult = fixture.process(nonexistantReview());
 
         // then
         assertThat(reviewResult).isNotNull();
@@ -64,7 +63,7 @@ public class TSLintProcessorTest extends TestEnvironment {
         String jsonViolations = "";
 
         // when
-        processor.addToReview(jsonViolations, reviewResult);
+        fixture.addToReview(jsonViolations, reviewResult);
 
         // then
         assertThat(reviewResult.getViolations().isEmpty()).isTrue();
