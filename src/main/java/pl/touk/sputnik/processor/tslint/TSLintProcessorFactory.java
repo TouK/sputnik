@@ -4,7 +4,7 @@ import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.processor.ReviewProcessorFactory;
 
-public class TSLinkProcessorFactory implements ReviewProcessorFactory<TSLintProcessor> {
+public class TSLintProcessorFactory implements ReviewProcessorFactory<TSLintProcessor> {
 
     @Override
     public boolean isEnabled(Configuration configuration) {

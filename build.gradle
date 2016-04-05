@@ -117,6 +117,9 @@ dependencies {
     compile 'com.jcabi:jcabi-github:0.24'
     compile 'com.github.spullara.mustache.java:compiler:0.8.17'
 
+    // external processes
+    compile 'org.zeroturnaround:zt-exec:1.8'
+
     // Test dependencies
     testCompile 'junit:junit:4.11'
     testCompile 'org.mockito:mockito-core:1.9.5'
