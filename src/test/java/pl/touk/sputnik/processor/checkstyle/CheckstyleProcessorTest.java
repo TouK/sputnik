@@ -4,13 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import pl.touk.sputnik.TestEnvironment;
-import pl.touk.sputnik.configuration.Configuration;
-import pl.touk.sputnik.configuration.ConfigurationSetup;
-import pl.touk.sputnik.processor.scalastyle.ScalastyleProcessor;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewResult;
-
-import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,6 +15,7 @@ public class CheckstyleProcessorTest extends TestEnvironment {
 
     @Mock
     private Review review;
+
     @Before
     public void setUp() throws Exception {
         super.setUp();

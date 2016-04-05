@@ -5,4 +5,5 @@ pl.touk.sputnik.processor.scalastyle.ScalastyleReviewProcessorFactory
 pl.touk.sputnik.processor.codenarc.NodeCardReviewProcessorFactory
 pl.touk.sputnik.processor.jslint.JsLintReviewProcessorFactory
 pl.touk.sputnik.processor.jshint.JsHintReviewProcessorFactory
+pl.touk.sputnik.processor.tslint.TSLintProcessorFactory
 pl.touk.sputnik.processor.sonar.SonarReviewProcessorFactory

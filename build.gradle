@@ -43,6 +43,12 @@ run {
         // Need to split the space-delimited value in the exec.args
         args arguments.split()
     }
+
+    // change working directory and run sputnk from workspace
+    def newWorkingDir = System.getProperty("exec.workingDir")
+    if (newWorkingDir) {
+        workingDir = newWorkingDir
+    }
 }
 
 repositories {
@@ -110,6 +116,9 @@ dependencies {
     // github connector
     compile 'com.jcabi:jcabi-github:0.24'
     compile 'com.github.spullara.mustache.java:compiler:0.8.17'
+
+    // external processes
+    compile 'org.zeroturnaround:zt-exec:1.8'
 
     // Test dependencies
     testCompile 'junit:junit:4.11'
