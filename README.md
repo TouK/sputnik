@@ -1,4 +1,4 @@
-![sputnik](http://touk.github.io/sputnik/images/sputnik.png)
+![sputnik](http://touk.github.io/sputnik/images/logo-color-bgtransparent.png)
 
 > Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD, FindBugs, Scalastyle, CodeNarc, JSLint, JSHint, TSLint and Sonar for you!
 
