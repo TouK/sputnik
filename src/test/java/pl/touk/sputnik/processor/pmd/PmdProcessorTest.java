@@ -2,17 +2,10 @@ package pl.touk.sputnik.processor.pmd;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import pl.touk.sputnik.TestEnvironment;
-import pl.touk.sputnik.configuration.Configuration;
-import pl.touk.sputnik.configuration.ConfigurationBuilder;
-import pl.touk.sputnik.configuration.ConfigurationSetup;
-import pl.touk.sputnik.processor.jslint.JsLintProcessor;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
 import pl.touk.sputnik.review.ReviewResult;
-
-import java.util.Collections;
 
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
@@ -43,6 +36,7 @@ public class PmdProcessorTest extends TestEnvironment {
     }
 
     @Test
+
     public void shouldThrowReviewExceptionOnNotFoundFile() {
         // when
         catchException(fixture).process(nonexistantReview("NotExistingFile.java"));
