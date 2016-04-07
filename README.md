@@ -10,14 +10,6 @@
 
 ## Usage
 
-Sputnik is intended to run just after your Jenkins/CI server build. It should be executed in the root directory of the analyzed project to find files to analyze.
-
-Three parameters are required: your configuration file (details below), Gerrit's changeId and revisionId:
-
-```
-sputnik -conf /home/spoonman/sputnik/conf.properties -changeId I0a2afb7ae4a94ab1ab473ba00e2ec7de381799a0 -revisionId 3f37692af2290e8e3fd16d2f43701c24346197f0
-```
-
 Sputnik runs Checkstyle, PMD, FindBugs, CodeNarc, JSHint (or JSLint), TSLint and Sonar only on files affected by Gerrit's patchset. It collects all violations and report them back to Gerrit or Stash.
 
 Typical configuration file looks like this:
@@ -67,8 +59,37 @@ If you want sputnik to use your SonarQube rules just download them from your Son
 
 ### Build tool
 
+Sputnik is intended to run just after your Jenkins/CI server build. It should be executed in the root directory of the analyzed project to find files to analyze.
+
 Sputnik currently supports Maven (default) and Gradle. Some processors (e.g. FindBugs) analyze compiled classes, so it's important to set
 the build tool property correctly. To change it to Gradle just set `project.build.tool=gradle` in your `sputnik.properties` file.
+
+### Gerrit support
+
+Three parameters are required: your configuration file (details below), Gerrit's changeId and revisionId:
+
+```
+sputnik --conf /path/to/conf.properties --changeId I0a2afb7ae4a94ab1ab473ba00e2ec7de381799a0 --revisionId 3f37692af2290e8e3fd16d2f43701c24346197f0
+```
+
+There's a bug/feature in Gerrit when you push same change set identified by particular changeId into two branches, for example your working branch and review branch.
+You can recognize it by the following error message
+
+```
+Request not successful. Message: Not Found. Status-Code: 404. Content: Not found: yours_change_id
+```
+
+Then it's necessary to add repository and target branch name to distinguish which change set you're addressing. Target branch would be typically master but actually it's the one
+ you're using making
+```
+git push origin HEAD:refs/for/BRANCH_NAME
+```
+So add REPO_NAME~BRANCH_NAME~ to changeId Sputnik's param, for example:
+
+```
+sputnik --conf /path/to/conf.properties --changeId myProject~master~I0a2afb7ae4a94ab1ab473ba00e2ec7de381799a0 --revisionId 3f37692af2290e8e3fd16d2f43701c24346197f0
+```
+
 
 ### Stash support
 
@@ -97,11 +118,11 @@ echo "exit 0 workaround"
 ### Add Post-Build step to Bamboo
 
 When stash is build on Bamboo there is no direct way to check which pull
-request id it matches. This is a simple way to find required id. 
+request id it matches. This is a simple way to find required id.
 
 Assumptions:
 - there is sputnik's config file named `sputnik.properties` in project's root directory
-- user and password are configured in bamboo plan as variables (e.g. 
+- user and password are configured in bamboo plan as variables (e.g.
   _ecosystem.username_ and _ecosystem.password_)
 - config file has placeholders for user and password:
 ```properties
@@ -110,7 +131,7 @@ stash.password=<password>
 ```
 
 With those steps in place you can use a step from
-`contrib/stash-execute.sh`: 
+`contrib/stash-execute.sh`:
 
 ```
 current_branch=${bamboo.repository.branch.name} sputnik_distribution_url=https://github.com/TouK/sputnik/releases/download/sputnik-1.4.0/sputnik-1.4.0.zip stash_password=${bamboo_ecosystem_password} stash_user=${bamboo_ecosystem_username} ./stash-execute.sh
@@ -125,7 +146,7 @@ If you prefer running Sputnik from Maven, there is a plugin developed by Karol L
 If you prefer running Sputnik from Gradle all you need is to have Gradle installed.
 Put build.gradle file in your repository, add config file and run:
 ```
-gradle run -Dexec.args="--conf example.properties --changeId 1234 --revisionId 4321" 
+gradle run -Dexec.args="--conf example.properties --changeId 1234 --revisionId 4321"
 ```
 
 ## Requirements
