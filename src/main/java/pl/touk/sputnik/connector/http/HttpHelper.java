@@ -9,14 +9,20 @@ import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.impl.client.*;
+import org.apache.http.impl.client.BasicAuthCache;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.touk.sputnik.connector.ConnectorDetails;
 
+import javax.net.ssl.SSLContext;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -27,6 +33,12 @@ import java.security.cert.X509Certificate;
 public class HttpHelper {
     private static final String HTTP_SCHEME = "http";
     private static final String HTTPS_SCHEME = "https";
+    private static final TrustStrategy TRUST_ALL_STRATEGY = new TrustStrategy() {
+        @Override
+        public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            return true;
+        }
+    };
 
     @NotNull
     public HttpHost buildHttpHost(@NotNull ConnectorDetails connectorDetails) {
@@ -43,7 +55,7 @@ public class HttpHelper {
         HttpClientBuilder httpClientBuilder = HttpClients.custom();
         httpClientBuilder.setDefaultCredentialsProvider(buildBasicCredentialsProvider(httpHost, connectorDetails.getUsername(), connectorDetails.getPassword()));
         if (connectorDetails.isHttps()) {
-            httpClientBuilder.setSSLSocketFactory(buildSSLSocketFactory());
+            httpClientBuilder.setSSLSocketFactory(buildSSLSocketFactory(connectorDetails));
         }
         return httpClientBuilder.build();
     }
@@ -68,19 +80,17 @@ public class HttpHelper {
     }
 
     @Nullable
-    public LayeredConnectionSocketFactory buildSSLSocketFactory() {
-        try {
-            return new SSLConnectionSocketFactory(
-                    SSLContexts.custom().loadTrustMaterial(null, new TrustStrategy() {
-                        @Override
-                        public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                            return true;
-                        }
-                    }).build(),
-                    SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-        } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
-            log.error("Error building SSL socket factory", e);
+    public LayeredConnectionSocketFactory buildSSLSocketFactory(ConnectorDetails connectorDetails) {
+        if (connectorDetails.isVerifySsl()) {
+            return SSLConnectionSocketFactory.getSocketFactory();
+        } else {
+            try {
+                SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(null, TRUST_ALL_STRATEGY).build();
+                return new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
+            } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
+                log.error("Error building SSL socket factory", e);
+                throw new IllegalStateException(e);
+            }
         }
-        return null;
     }
 }

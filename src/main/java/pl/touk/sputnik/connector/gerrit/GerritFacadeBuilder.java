@@ -22,7 +22,7 @@ public class GerritFacadeBuilder {
 
     @NotNull
     public GerritFacade build(Configuration configuration) {
-        ConnectorDetails connectorDetails = new ConnectorDetails(configuration);
+        final ConnectorDetails connectorDetails = new ConnectorDetails(configuration);
         GerritPatchset gerritPatchset = buildGerritPatchset(configuration);
 
         GerritRestApiFactory gerritRestApiFactory = new GerritRestApiFactory();
@@ -37,7 +37,7 @@ public class GerritFacadeBuilder {
             @Override
             public HttpClientBuilder extend(HttpClientBuilder httpClientBuilder, GerritAuthData authData) {
                 HttpClientBuilder clientBuilder = super.extend(httpClientBuilder, authData);
-                clientBuilder.setSSLSocketFactory(httpHelper.buildSSLSocketFactory());
+                clientBuilder.setSSLSocketFactory(httpHelper.buildSSLSocketFactory(connectorDetails));
                 return clientBuilder;
             }
         });

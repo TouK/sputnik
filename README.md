@@ -81,6 +81,9 @@ If you choose to run sputnik with Stash instead of Gerrit, you'll need to run it
 It is convenient to add sputnik's configuration file (`myconf.properties` in the above example) to your
 project's repo. This way, it will be easier to run it from CI server.
 
+### SSL verification
+SSL trust verification and hostname verification is disabled by default. You can enable it by setting `connector.verifySsl=true` property. 
+
 ### Add Post-Build step to Jenkins/CI server
 
 If you have Jenkins job that uses Gerrit Trigger plugin it's very easy to integrate it as Post-Build step:
