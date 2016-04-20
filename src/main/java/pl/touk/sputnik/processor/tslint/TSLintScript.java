@@ -41,7 +41,7 @@ public class TSLintScript {
     public void validateConfiguration() throws ReviewException {
         // check if config file exist
         if (!new File(configFile).exists()) {
-            throw new ReviewException("Could not find tslint configuration file: " + configFile);
+            throw new TSLintException("Could not find tslint configuration file: " + configFile);
         }
     }
 
