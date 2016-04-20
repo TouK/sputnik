@@ -63,6 +63,9 @@ public enum GeneralOption implements ConfigurationOption {
     TSLINT_CONFIGURATION_FILE("tslint.configurationFile", "TSLint configuration file", "tslint.json"),
     TSLINT_SCRIPT("tslint.script", "TSLint script for validating files", "/usr/bin/tslint"),
 
+    PYLINT_ENABLED("pylint.enabled", "Pylint enabled", "false"),
+    PYLINT_RCFILE("pylint.rcfile", "Pylint rcfile", null),
+
     SONAR_ENABLED("sonar.enabled", "Sonar enabled", "false"),
     SONAR_PROPERTIES("sonar.configurationFiles", "Sonar base configuration", "sonar-project.properties"),
     SONAR_VERBOSE("sonar.verbose", "Run sonar in verbose mode", "false"),
