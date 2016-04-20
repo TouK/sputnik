@@ -2,6 +2,7 @@ package pl.touk.sputnik.processor.pylint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
+import pl.touk.sputnik.processor.tools.externalprocess.ExternalProcessResultParser;
 import pl.touk.sputnik.processor.pylint.json.PylintMessage;
 import pl.touk.sputnik.processor.pylint.json.PylintMessages;
 import pl.touk.sputnik.review.Severity;
@@ -12,10 +13,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PylintResultParser {
+public class PylintResultParser implements ExternalProcessResultParser {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    @Override
     public List<Violation> parse(String pylintOutput) {
         if (StringUtils.isEmpty(pylintOutput)) {
             return Collections.emptyList();

@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.configuration.GeneralOption;
-import pl.touk.sputnik.review.ReviewException;
 
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
@@ -25,7 +24,7 @@ public class TSLintScriptTest {
         catchException(tsLint).validateConfiguration();
 
         // then
-        assertThat(caughtException()).isInstanceOf(ReviewException.class).hasMessageContaining(
+        assertThat(caughtException()).isInstanceOf(TSLintException.class).hasMessageContaining(
                 "Could not find tslint configuration file: " + configFile);
     }
 
