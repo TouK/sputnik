@@ -4,18 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
-import pl.touk.sputnik.review.Review;
-import pl.touk.sputnik.review.ReviewProcessor;
-import pl.touk.sputnik.review.ReviewResult;
-import pl.touk.sputnik.review.Violation;
+import pl.touk.sputnik.processor.tools.externalprocess.ExternalProcessResultParser;
+import pl.touk.sputnik.processor.tools.externalprocess.ProcessorRunningExternalProcess;
+import pl.touk.sputnik.review.filter.FileFilter;
 import pl.touk.sputnik.review.filter.TypeScriptFilter;
-import pl.touk.sputnik.review.transformer.IOFileTransformer;
 
 import java.io.File;
-import java.util.List;
 
 @Slf4j
-public class TSLintProcessor implements ReviewProcessor {
+public class TSLintProcessor extends ProcessorRunningExternalProcess {
 
     private static final String SOURCE_NAME = "TSLint";
 
@@ -31,23 +28,24 @@ public class TSLintProcessor implements ReviewProcessor {
         resultParser = new TSLintResultParser();
     }
 
+    @NotNull
     @Override
     public String getName() {
         return SOURCE_NAME;
     }
 
     @Override
-    @NotNull
-    public ReviewResult process(Review review) {
-        ReviewResult result = new ReviewResult();
-
-        List<File> files = review.getFiles(new TypeScriptFilter(), new IOFileTransformer());
-        for (File file : files) {
-            for (Violation violation : resultParser.parse(tsLintScript.reviewFile(file.getAbsolutePath()))) {
-                result.add(violation);
-            }
-        }
-        return result;
+    public FileFilter getReviewFileFilter() {
+        return new TypeScriptFilter();
     }
 
+    @Override
+    public ExternalProcessResultParser getParser() {
+        return resultParser;
+    }
+
+    @Override
+    public String getOutputFromExternalProcess(File fileToReview) {
+        return tsLintScript.reviewFile(fileToReview.getAbsolutePath());
+    }
 }

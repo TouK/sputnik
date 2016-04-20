@@ -49,7 +49,7 @@ public class PylintProcessorTest extends TestEnvironment {
     }
 
     @Test
-    public void shouldUseRcfileWithConfiguration() {
+    public void shouldUseRcfileWithConfigurationAndReviewWithItsRules() {
         // given
         initProcessorWithConfig("pylint/sputnik/withConfigurationFile.properties");
         Review review = createReviewForFile("pylint/PythonTest.py");
