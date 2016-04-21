@@ -3,7 +3,7 @@ package pl.touk.sputnik.processor.tslint;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import pl.touk.sputnik.connector.gerrit.GerritException;
+import pl.touk.sputnik.processor.tools.externalprocess.ExternalProcessResultParser;
 import pl.touk.sputnik.processor.tslint.json.ListViolationsResponse;
 import pl.touk.sputnik.processor.tslint.json.TSLintFileInfo;
 import pl.touk.sputnik.review.Severity;
@@ -15,10 +15,11 @@ import java.util.Collections;
 import java.util.List;
 
 @Slf4j
-public class TSLintResultParser {
+public class TSLintResultParser implements ExternalProcessResultParser {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    @Override
     public List<Violation> parse(String jsonViolations) {
         if (StringUtils.isEmpty(jsonViolations)) {
             return Collections.emptyList();
@@ -35,7 +36,7 @@ public class TSLintResultParser {
             }
             return result;
         } catch (IOException e) {
-            throw new GerritException("Error when converting from json format", e);
+            throw new TSLintException("Error when converting from json format", e);
         }
     }
 }

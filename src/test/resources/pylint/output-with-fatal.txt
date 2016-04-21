@@ -1,0 +1,42 @@
+[
+    {
+        "message": "Missing module docstring",
+        "obj": "",
+        "column": 0,
+        "path": "PythonTest.py",
+        "line": 1,
+        "type": "convention",
+        "symbol": "missing-docstring",
+        "module": "PythonTest"
+    },
+    {
+        "message": "Do refactor",
+        "obj": "foo",
+        "column": 0,
+        "path": "PythonTest.py",
+        "line": 1,
+        "type": "refactor",
+        "symbol": "blacklisted-name",
+        "module": "PythonTest"
+    },
+    {
+        "message": "Fatal error - total destruction",
+        "obj": "foo",
+        "column": 0,
+        "path": "PythonTest.py",
+        "line": 1,
+        "type": "fatal",
+        "symbol": "invalid-name",
+        "module": "PythonTest"
+    },
+    {
+        "message": "Something bad",
+        "obj": "foo",
+        "column": 0,
+        "path": "PythonTest.py",
+        "line": 1,
+        "type": "error",
+        "symbol": "missing-docstring",
+        "module": "PythonTest"
+    }
+]

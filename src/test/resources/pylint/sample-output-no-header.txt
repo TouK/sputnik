@@ -1,0 +1,82 @@
+[
+    {
+        "message": "Missing module docstring",
+        "obj": "",
+        "column": 0,
+        "path": "PythonTest.py",
+        "line": 1,
+        "type": "convention",
+        "symbol": "missing-docstring",
+        "module": "PythonTest"
+    },
+    {
+        "message": "Black listed name \"foo\"",
+        "obj": "foo",
+        "column": 0,
+        "path": "PythonTest.py",
+        "line": 1,
+        "type": "convention",
+        "symbol": "blacklisted-name",
+        "module": "PythonTest"
+    },
+    {
+        "message": "Invalid argument name \"a\"",
+        "obj": "foo",
+        "column": 0,
+        "path": "PythonTest.py",
+        "line": 1,
+        "type": "convention",
+        "symbol": "invalid-name",
+        "module": "PythonTest"
+    },
+    {
+        "message": "Missing function docstring",
+        "obj": "foo",
+        "column": 0,
+        "path": "PythonTest.py",
+        "line": 1,
+        "type": "convention",
+        "symbol": "missing-docstring",
+        "module": "PythonTest"
+    },
+    {
+        "message": "Black listed name \"bar\"",
+        "obj": "bar",
+        "column": 0,
+        "path": "PythonTest.py",
+        "line": 4,
+        "type": "convention",
+        "symbol": "blacklisted-name",
+        "module": "PythonTest"
+    },
+    {
+        "message": "Invalid argument name \"n\"",
+        "obj": "bar",
+        "column": 0,
+        "path": "PythonTest.py",
+        "line": 4,
+        "type": "convention",
+        "symbol": "invalid-name",
+        "module": "PythonTest"
+    },
+    {
+        "message": "Missing function docstring",
+        "obj": "bar",
+        "column": 0,
+        "path": "PythonTest.py",
+        "line": 4,
+        "type": "convention",
+        "symbol": "missing-docstring",
+        "module": "PythonTest"
+    },
+    {
+        "message": "Unused argument 'n'",
+        "obj": "bar",
+        "column": 8,
+        "path": "PythonTest.py",
+        "line": 4,
+        "type": "warning",
+        "symbol": "unused-argument",
+        "module": "PythonTest"
+    }
+]
