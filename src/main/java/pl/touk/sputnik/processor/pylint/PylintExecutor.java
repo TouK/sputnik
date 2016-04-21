@@ -12,9 +12,9 @@ import java.util.List;
 
 @Slf4j
 public class PylintExecutor {
-    private static final String pylintExecutable = "pylint";
-    private static final String pylintOutputFormat = "--output-format=json";
-    private static final String pylintRcfileName = "--rcfile=";
+    private static final String PYLINT_EXECUTABLE = "pylint";
+    private static final String PYLINT_OUTPUT_FORMAT = "--output-format=json";
+    private static final String PYLINT_RCFILE_NAME = "--rcfile=";
 
     private String rcfileName;
 
@@ -30,8 +30,8 @@ public class PylintExecutor {
     @NotNull
     private String[] buildParams(String filePath) {
         List<String> basicPylintArgs = ImmutableList.of(
-                pylintExecutable,
-                pylintOutputFormat);
+                PYLINT_EXECUTABLE,
+                PYLINT_OUTPUT_FORMAT);
         List<String> rcfileNameArg = getRcfileNameAsList();
         List<String> filePathArg = ImmutableList.of(filePath);
         List<String> allArgs = Lists.newArrayList(Iterables.concat(basicPylintArgs, rcfileNameArg, filePathArg));
@@ -39,10 +39,9 @@ public class PylintExecutor {
     }
 
     private List<String> getRcfileNameAsList() {
-        if (rcfileName != null) {
-            return ImmutableList.of(pylintRcfileName + rcfileName);
-        } else {
+        if (rcfileName == null) {
             return ImmutableList.of();
         }
+        return ImmutableList.of(PYLINT_RCFILE_NAME + rcfileName);
     }
 }
