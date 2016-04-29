@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.CliOption;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.connector.ConnectorDetails;
-import pl.touk.sputnik.connector.github.GithubPatchsetBuilder;
+import pl.touk.sputnik.connector.PatchsetBuilder;
 import pl.touk.sputnik.connector.http.HttpConnector;
 import pl.touk.sputnik.connector.http.HttpHelper;
 
@@ -28,7 +28,7 @@ public class SaasFacadeBuilder {
 
         return new SaasFacade(new SaasConnector(
                 new HttpConnector(closeableHttpClient, httpClientContext, connectorDetails.getPath()),
-                GithubPatchsetBuilder.build(configuration), apiKey, buildId), new Gson());
+                PatchsetBuilder.build(configuration), apiKey, buildId), new Gson());
     }
 
 }

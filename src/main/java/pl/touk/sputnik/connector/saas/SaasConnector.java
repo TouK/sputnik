@@ -12,7 +12,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.connector.Connector;
-import pl.touk.sputnik.connector.github.GithubPatchset;
+import pl.touk.sputnik.connector.Patchset;
 import pl.touk.sputnik.connector.http.HttpConnector;
 
 import java.io.IOException;
@@ -26,19 +26,19 @@ import java.util.List;
 public class SaasConnector implements Connector {
 
     private HttpConnector httpConnector;
-    private GithubPatchset githubPatchset;
+    private Patchset patchset;
     private String apiKey;
     private String buildId;
 
     private static final String API_KEY_PARAM = "key";
     private static final String BUILD_ID_PARAM = "build_id";
-    private static final String FILES_URL_FORMAT = "/api/github/%s/pulls/%d/files";
-    private static final String VIOLATIONS_URL_FORMAT = "/api/github/%s/pulls/%d/violations";
+    private static final String FILES_URL_FORMAT = "/api/%s/%s/pulls/%d/files";
+    private static final String VIOLATIONS_URL_FORMAT = "/api/%s/%s/pulls/%d/violations";
 
     @NotNull
     @Override
     public String listFiles() throws URISyntaxException, IOException {
-        URI uri = httpConnector.buildUri(createUrl(githubPatchset, FILES_URL_FORMAT), params());
+        URI uri = httpConnector.buildUri(createUrl(patchset, FILES_URL_FORMAT), params());
         HttpGet request = new HttpGet(uri);
         CloseableHttpResponse httpResponse = httpConnector.logAndExecute(request);
         return httpConnector.consumeAndLogEntity(httpResponse);
@@ -48,15 +48,15 @@ public class SaasConnector implements Connector {
     @Override
     public String sendReview(String violationsAsJson) throws URISyntaxException, IOException {
         log.info("Sending violations: {}", violationsAsJson);
-        URI uri = httpConnector.buildUri(createUrl(githubPatchset, VIOLATIONS_URL_FORMAT), params());
+        URI uri = httpConnector.buildUri(createUrl(patchset, VIOLATIONS_URL_FORMAT), params());
         HttpPost httpPost = new HttpPost(uri);
         httpPost.setEntity(new StringEntity(violationsAsJson, ContentType.APPLICATION_JSON));
         CloseableHttpResponse httpResponse = httpConnector.logAndExecute(httpPost);
         return httpConnector.consumeAndLogEntity(httpResponse);
     }
 
-    private String createUrl(GithubPatchset patchset, String formatUrl) {
-        return String.format(formatUrl, patchset.getProjectPath(), patchset.getPullRequestId());
+    private String createUrl(Patchset patchset, String formatUrl) {
+        return String.format(formatUrl, patchset.getProvider().getName(), patchset.getProjectPath(), patchset.getPullRequestId());
     }
 
     @NotNull
