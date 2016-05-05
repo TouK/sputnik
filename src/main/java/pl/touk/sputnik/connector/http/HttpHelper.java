@@ -83,14 +83,13 @@ public class HttpHelper {
     public LayeredConnectionSocketFactory buildSSLSocketFactory(ConnectorDetails connectorDetails) {
         if (connectorDetails.isVerifySsl()) {
             return SSLConnectionSocketFactory.getSocketFactory();
-        } else {
-            try {
-                SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(null, TRUST_ALL_STRATEGY).build();
-                return new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
-            } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
-                log.error("Error building SSL socket factory", e);
-                throw new IllegalStateException(e);
-            }
+        }
+        try {
+            SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(null, TRUST_ALL_STRATEGY).build();
+            return new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
+        } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
+            log.error("Error building SSL socket factory", e);
+            throw new IllegalStateException(e);
         }
     }
 }
