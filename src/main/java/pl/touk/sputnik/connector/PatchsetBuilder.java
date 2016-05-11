@@ -11,7 +11,9 @@ import static org.apache.commons.lang3.Validate.isTrue;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
-public class PatchsetBuilder {
+public final class PatchsetBuilder {
+
+    private PatchsetBuilder() { }
 
     @NotNull
     public static Patchset build(Configuration configuration) {
