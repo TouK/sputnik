@@ -16,6 +16,7 @@ public class ConnectorDetails {
     private String password;
     private String useHttps;
     private boolean isHttps;
+    private boolean verifySsl;
 
     public ConnectorDetails(Configuration configuration) {
         buildFromConfiguration(configuration);
@@ -30,6 +31,7 @@ public class ConnectorDetails {
         password = configuration.getProperty(GeneralOption.PASSWORD);
         useHttps = configuration.getProperty(GeneralOption.USE_HTTPS);
         isHttps = Boolean.parseBoolean(useHttps);
+        verifySsl = Boolean.parseBoolean(configuration.getProperty(GeneralOption.VERIFY_SSL));
     }
 
     private void validate() {

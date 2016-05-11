@@ -28,6 +28,7 @@ public enum GeneralOption implements ConfigurationOption {
     PASSWORD("connector.password", "Connector server password", "password"),
     PROJECT("connector.project", "Connector server project", null),
     REPOSITORY("connector.repository", "Connector server repository", null),
+    VERIFY_SSL("connector.verifySsl", "Verify SSL trust and hostname?", "false"),
 
     SCORE_STRATEGY("score.strategy", "Score strategy: <NoScore|ScoreAlwaysPass|ScorePassIfEmpty|ScorePassIfNoErrors>", "ScoreAlwaysPass"),
     SCORE_PASSING_KEY("score.passingKey", "Score passing key", "Code-Review"),
