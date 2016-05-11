@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
+import pl.touk.sputnik.connector.Patchset;
+import pl.touk.sputnik.connector.PatchsetBuilder;
 
 @Slf4j
 public class GithubFacadeBuilder {
@@ -16,7 +18,7 @@ public class GithubFacadeBuilder {
     @NotNull
     public GithubFacade build(Configuration configuration) {
 
-        GithubPatchset githubPatchset = GithubPatchsetBuilder.build(configuration);
+        Patchset patchset = PatchsetBuilder.build(configuration);
 
         String oAuthKey = configuration.getProperty(GeneralOption.GITHUB_API_KEY);
         Github github = new RtGithub(
@@ -25,7 +27,7 @@ public class GithubFacadeBuilder {
                         .through(RetryWire.class)
         );
 
-        Repo repo = github.repos().get(new Coordinates.Simple(githubPatchset.getProjectPath()));
-        return new GithubFacade(repo, githubPatchset);
+        Repo repo = github.repos().get(new Coordinates.Simple(patchset.getProjectPath()));
+        return new GithubFacade(repo, patchset);
     }
 }

@@ -11,6 +11,7 @@ import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.Connectors;
+import pl.touk.sputnik.connector.Patchset;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 
@@ -24,7 +25,7 @@ public class GithubFacade implements ConnectorFacade {
 
     private final Repo repo;
 
-    private final GithubPatchset githubPatchset;
+    private final Patchset patchset;
 
     @Override
     public Connectors name() {
@@ -66,6 +67,6 @@ public class GithubFacade implements ConnectorFacade {
     }
 
     private Pull getPull() {
-        return repo.pulls().get(githubPatchset.getPullRequestId());
+        return repo.pulls().get(patchset.getPullRequestId());
     }
 }

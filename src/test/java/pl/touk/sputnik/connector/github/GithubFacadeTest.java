@@ -12,7 +12,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
+import pl.touk.sputnik.configuration.Provider;
 import pl.touk.sputnik.connector.FacadeConfigUtil;
+import pl.touk.sputnik.connector.Patchset;
 import pl.touk.sputnik.review.*;
 
 import javax.json.Json;
@@ -64,7 +66,7 @@ public class GithubFacadeTest {
         when(pull.repo().git().commits()).thenReturn(commits);
 
         config = new ConfigurationSetup().setUp(FacadeConfigUtil.getHttpConfig("github"), GITHUB_PATCHSET_MAP);
-        githubFacade = new GithubFacade(repo, new GithubPatchset(SOME_PULL_REQUEST_ID, projectPath()));
+        githubFacade = new GithubFacade(repo, new Patchset(SOME_PULL_REQUEST_ID, projectPath(), Provider.GITHUB));
     }
 
     @Test

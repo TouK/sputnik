@@ -17,6 +17,7 @@ import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static pl.touk.sputnik.configuration.Provider.GITHUB;
 
 public class SaasFacadeTest extends HttpConnectorEnv {
 
@@ -28,6 +29,7 @@ public class SaasFacadeTest extends HttpConnectorEnv {
     private static final Map<String, String> GITHUB_PATCHSET_MAP = ImmutableMap.of(
             "cli.pullRequestId", SOME_PULL_REQUEST_ID.toString(),
             "cli.apiKey", SOME_API_KEY,
+            "cli.provider", GITHUB.getName(),
             "connector.repository", SOME_REPOSITORY,
             "connector.project", SOME_PROJECT
     );
@@ -77,6 +79,7 @@ public class SaasFacadeTest extends HttpConnectorEnv {
         SaasFacade saasFacade = buildFacade(ImmutableMap.of(
                 "cli.pullRequestId", SOME_PULL_REQUEST_ID.toString(),
                 "cli.apiKey", "WRONG_API_KEY",
+                "cli.provider", GITHUB.getName(),
                 "connector.repository", SOME_REPOSITORY,
                 "connector.project", SOME_PROJECT
         ));
@@ -92,6 +95,7 @@ public class SaasFacadeTest extends HttpConnectorEnv {
     public void shouldHandleEmptyApiKey() throws Exception {
         SaasFacade saasFacade = buildFacade(ImmutableMap.of(
                 "cli.pullRequestId", SOME_PULL_REQUEST_ID.toString(),
+                "cli.provider", GITHUB.getName(),
                 "connector.repository", SOME_REPOSITORY,
                 "connector.project", SOME_PROJECT
         ));
@@ -110,6 +114,7 @@ public class SaasFacadeTest extends HttpConnectorEnv {
         SaasFacade saasFacade = buildFacade(ImmutableMap.of(
                 "cli.pullRequestId", SOME_PULL_REQUEST_ID.toString(),
                 "cli.buildId", "11223344",
+                "cli.provider", GITHUB.getName(),
                 "connector.repository", SOME_REPOSITORY,
                 "connector.project", SOME_PROJECT
         ));
