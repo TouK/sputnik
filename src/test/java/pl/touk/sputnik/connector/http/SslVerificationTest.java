@@ -44,12 +44,7 @@ public class SslVerificationTest {
     @Test
     public void doNotVerifySslTrustWhenVerificationIsOff() throws Exception {
         // given
-        Properties properties = new Properties();
-        properties.setProperty(GeneralOption.HOST.getKey(), "localhost");
-        properties.setProperty(GeneralOption.PORT.getKey(), Integer.toString(untrustedService.httpsPort()));
-        properties.setProperty(GeneralOption.USE_HTTPS.getKey(), "true");
-        properties.setProperty(GeneralOption.VERIFY_SSL.getKey(), "false");
-        ConnectorDetails connectorDetails = new ConnectorDetails(ConfigurationBuilder.initFromProperties(properties));
+        ConnectorDetails connectorDetails = buildConnectorDetails("localhost", untrustedService.httpsPort(), "true", "false");
         HttpHelper httpHelper = new HttpHelper();
         HttpHost httpHost = httpHelper.buildHttpHost(connectorDetails);
         CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, connectorDetails);
@@ -64,12 +59,7 @@ public class SslVerificationTest {
     @Test
     public void doNotVerifyHostnameWhenVerificationIsOff() throws Exception {
         // given
-        Properties properties = new Properties();
-        properties.setProperty(GeneralOption.HOST.getKey(), "127.0.0.1");
-        properties.setProperty(GeneralOption.PORT.getKey(), Integer.toString(trustedService.httpsPort()));
-        properties.setProperty(GeneralOption.USE_HTTPS.getKey(), "true");
-        properties.setProperty(GeneralOption.VERIFY_SSL.getKey(), "false");
-        ConnectorDetails connectorDetails = new ConnectorDetails(ConfigurationBuilder.initFromProperties(properties));
+        ConnectorDetails connectorDetails = buildConnectorDetails("127.0.0.1", trustedService.httpsPort(), "true", "false");
         HttpHelper httpHelper = new HttpHelper();
         HttpHost httpHost = httpHelper.buildHttpHost(connectorDetails);
         CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, connectorDetails);
@@ -84,14 +74,8 @@ public class SslVerificationTest {
     @Test
     public void verifySslTrust() throws Exception {
         // given
-        System.setProperty("javax.net.ssl.trustStore", this.getClass().getResource("/ssl/trusted/cacerts.jks").getPath());
-        System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
-        Properties properties = new Properties();
-        properties.setProperty(GeneralOption.HOST.getKey(), "localhost");
-        properties.setProperty(GeneralOption.PORT.getKey(), Integer.toString(trustedService.httpsPort()));
-        properties.setProperty(GeneralOption.USE_HTTPS.getKey(), "true");
-        properties.setProperty(GeneralOption.VERIFY_SSL.getKey(), "true");
-        ConnectorDetails connectorDetails = new ConnectorDetails(ConfigurationBuilder.initFromProperties(properties));
+        setSystemTrustStore();
+        ConnectorDetails connectorDetails = buildConnectorDetails("localhost", trustedService.httpsPort(), "true", "true");
         HttpHelper httpHelper = new HttpHelper();
         HttpHost httpHost = httpHelper.buildHttpHost(connectorDetails);
         CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, connectorDetails);
@@ -106,12 +90,7 @@ public class SslVerificationTest {
     @Test
     public void verifySslTrustThrowsSSLHandshakeException() throws Exception {
         // given
-        Properties properties = new Properties();
-        properties.setProperty(GeneralOption.HOST.getKey(), "localhost");
-        properties.setProperty(GeneralOption.PORT.getKey(), Integer.toString(untrustedService.httpsPort()));
-        properties.setProperty(GeneralOption.USE_HTTPS.getKey(), "true");
-        properties.setProperty(GeneralOption.VERIFY_SSL.getKey(), "true");
-        ConnectorDetails connectorDetails = new ConnectorDetails(ConfigurationBuilder.initFromProperties(properties));
+        ConnectorDetails connectorDetails = buildConnectorDetails("localhost", untrustedService.httpsPort(), "true", "true");
         HttpHelper httpHelper = new HttpHelper();
         HttpHost httpHost = httpHelper.buildHttpHost(connectorDetails);
         CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, connectorDetails);
@@ -126,12 +105,7 @@ public class SslVerificationTest {
     @Test
     public void useDefaultTrustStoreToVerifySslTrust() throws Exception {
         // given
-        Properties properties = new Properties();
-        properties.setProperty(GeneralOption.HOST.getKey(), "localhost");
-        properties.setProperty(GeneralOption.PORT.getKey(), Integer.toString(untrustedService.httpsPort()));
-        properties.setProperty(GeneralOption.USE_HTTPS.getKey(), "true");
-        properties.setProperty(GeneralOption.VERIFY_SSL.getKey(), "true");
-        ConnectorDetails connectorDetails = new ConnectorDetails(ConfigurationBuilder.initFromProperties(properties));
+        ConnectorDetails connectorDetails = buildConnectorDetails("localhost", untrustedService.httpsPort(), "true", "true");
         HttpHelper httpHelper = new HttpHelper();
         HttpHost httpHost = httpHelper.buildHttpHost(connectorDetails);
         CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, connectorDetails);
@@ -146,14 +120,8 @@ public class SslVerificationTest {
     @Test
     public void verifyHostnameThrowsSSLPeerUnverifiedExceptionWhenHostDoesNotMatch() throws Exception {
         // given
-        System.setProperty("javax.net.ssl.trustStore", this.getClass().getResource("/ssl/trusted/cacerts.jks").getPath());
-        System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
-        Properties properties = new Properties();
-        properties.setProperty(GeneralOption.HOST.getKey(), "127.0.0.1");
-        properties.setProperty(GeneralOption.PORT.getKey(), Integer.toString(trustedService.httpsPort()));
-        properties.setProperty(GeneralOption.USE_HTTPS.getKey(), "true");
-        properties.setProperty(GeneralOption.VERIFY_SSL.getKey(), "true");
-        ConnectorDetails connectorDetails = new ConnectorDetails(ConfigurationBuilder.initFromProperties(properties));
+        setSystemTrustStore();
+        ConnectorDetails connectorDetails = buildConnectorDetails("127.0.0.1", trustedService.httpsPort(), "true", "true");
         HttpHelper httpHelper = new HttpHelper();
         HttpHost httpHost = httpHelper.buildHttpHost(connectorDetails);
         CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, connectorDetails);
@@ -163,6 +131,20 @@ public class SslVerificationTest {
 
         // then
         then(caughtException()).isInstanceOf(SSLPeerUnverifiedException.class);
+    }
+
+    private void setSystemTrustStore() {
+        System.setProperty("javax.net.ssl.trustStore", this.getClass().getResource("/ssl/trusted/cacerts.jks").getPath());
+        System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
+    }
+
+    private ConnectorDetails buildConnectorDetails(String host, int port, String useHttps, String verifySsl) {
+        Properties properties = new Properties();
+        properties.setProperty(GeneralOption.HOST.getKey(), host);
+        properties.setProperty(GeneralOption.PORT.getKey(), Integer.toString(port));
+        properties.setProperty(GeneralOption.USE_HTTPS.getKey(), useHttps);
+        properties.setProperty(GeneralOption.VERIFY_SSL.getKey(), verifySsl);
+        return new ConnectorDetails(ConfigurationBuilder.initFromProperties(properties));
     }
 
 }
