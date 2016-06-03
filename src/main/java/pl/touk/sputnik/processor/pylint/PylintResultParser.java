@@ -1,10 +1,10 @@
 package pl.touk.sputnik.processor.pylint;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
-import pl.touk.sputnik.processor.tools.externalprocess.ExternalProcessResultParser;
 import pl.touk.sputnik.processor.pylint.json.PylintMessage;
-import pl.touk.sputnik.processor.pylint.json.PylintMessages;
+import pl.touk.sputnik.processor.tools.externalprocess.ExternalProcessResultParser;
 import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;
 
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PylintResultParser implements ExternalProcessResultParser {
+class PylintResultParser implements ExternalProcessResultParser {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -30,7 +30,8 @@ public class PylintResultParser implements ExternalProcessResultParser {
         }
         try {
             List<Violation> violations = new ArrayList<>();
-            PylintMessages messages = objectMapper.readValue(removeHeaderFromPylintOutput(pylintOutput), PylintMessages.class);
+            List<PylintMessage> messages = objectMapper.readValue(removeHeaderFromPylintOutput(pylintOutput),
+                    new TypeReference<List<PylintMessage>>() { });
             for (PylintMessage message : messages) {
                 Violation violation = new Violation(message.getPath(),
                         message.getLine(),

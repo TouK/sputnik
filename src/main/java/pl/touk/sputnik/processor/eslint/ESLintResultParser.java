@@ -21,7 +21,7 @@ class ESLintResultParser implements ExternalProcessResultParser {
         List<Violation> result = new ArrayList<>();
         try {
             List<FileViolations> fileViolations =
-                    objectMapper.readValue(output, new TypeReference<List<FileViolations>>(){});
+                    objectMapper.readValue(output, new TypeReference<List<FileViolations>>() { });
             for (FileViolations violation : fileViolations) {
                 for (Message message : violation.getMessages()) {
                     result.add(new Violation(violation.getFilePath(), message.getLine(), message.getMessage(),
