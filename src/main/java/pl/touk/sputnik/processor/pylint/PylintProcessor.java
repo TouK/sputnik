@@ -39,7 +39,7 @@ public class PylintProcessor extends ProcessorRunningExternalProcess {
     }
 
     @Override
-    public String getOutputFromExternalProcess(File fileToReview) {
+    public String processFileAndDumpOutput(File fileToReview) {
         return pylintExecutor.runOnFile(fileToReview.getAbsolutePath());
     }
 }

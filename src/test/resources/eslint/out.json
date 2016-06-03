@@ -1,0 +1,88 @@
+[
+  {
+    "filePath": "examples/horrible.js",
+    "messages": [
+      {
+        "ruleId": "no-unused-vars",
+        "severity": 2,
+        "message": "'unused' is defined but never used",
+        "line": 1,
+        "column": 5,
+        "nodeType": "Identifier",
+        "source": "var unused;"
+      },
+      {
+        "ruleId": "no-unused-vars",
+        "severity": 2,
+        "message": "'a' is defined but never used",
+        "line": 2,
+        "column": 5,
+        "nodeType": "Identifier",
+        "source": "var a = 1+2;"
+      },
+      {
+        "ruleId": "no-redeclare",
+        "severity": 2,
+        "message": "'a' is already defined",
+        "line": 3,
+        "column": 5,
+        "nodeType": "Identifier",
+        "source": "var a = 3;"
+      },
+      {
+        "ruleId": "no-unused-vars",
+        "severity": 2,
+        "message": "'eh' is defined but never used",
+        "line": 5,
+        "column": 10,
+        "nodeType": "Identifier",
+        "source": "function eh(b,c){return b}"
+      },
+      {
+        "ruleId": "no-unused-vars",
+        "severity": 2,
+        "message": "'c' is defined but never used",
+        "line": 5,
+        "column": 15,
+        "nodeType": "Identifier",
+        "source": "function eh(b,c){return b}"
+      },
+      {
+        "ruleId": "key-spacing",
+        "severity": 2,
+        "message": "Missing space before value for key 'i'.",
+        "line": 9,
+        "column": 5,
+        "nodeType": "Literal",
+        "source": "  i:'j'};",
+        "fix": {
+          "range": [
+            95,
+            95
+          ],
+          "text": " "
+        }
+      },
+      {
+        "ruleId": "no-console",
+        "severity": 2,
+        "message": "Unexpected console statement.",
+        "line": 13,
+        "column": 41,
+        "nodeType": "MemberExpression",
+        "source": "if (\"hello\" == underscore_name_hello) { console.log('equal!' ) ; }"
+      },
+      {
+        "ruleId": "no-console",
+        "severity": 2,
+        "message": "Unexpected console statement.",
+        "line": 15,
+        "column": 1,
+        "nodeType": "MemberExpression",
+        "source": "console['log']( underscore_name_hello );"
+      }
+    ],
+    "errorCount": 8,
+    "warningCount": 0
+  }
+]
