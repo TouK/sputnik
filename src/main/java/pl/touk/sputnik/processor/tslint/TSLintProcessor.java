@@ -45,7 +45,7 @@ public class TSLintProcessor extends ProcessorRunningExternalProcess {
     }
 
     @Override
-    public String getOutputFromExternalProcess(File fileToReview) {
+    public String processFileAndDumpOutput(File fileToReview) {
         return tsLintScript.reviewFile(fileToReview.getAbsolutePath());
     }
 }

@@ -12,12 +12,12 @@ import pl.touk.sputnik.review.filter.PythonFilter;
 import java.io.File;
 
 @Slf4j
-public class PylintProcessor extends ProcessorRunningExternalProcess {
+class PylintProcessor extends ProcessorRunningExternalProcess {
 
     private PylintExecutor pylintExecutor;
     private PylintResultParser pylintResultParser;
 
-    public PylintProcessor(Configuration configuration) {
+    PylintProcessor(Configuration configuration) {
         pylintExecutor = new PylintExecutor(configuration.getProperty(GeneralOption.PYLINT_RCFILE));
         pylintResultParser = new PylintResultParser();
     }
@@ -39,7 +39,7 @@ public class PylintProcessor extends ProcessorRunningExternalProcess {
     }
 
     @Override
-    public String getOutputFromExternalProcess(File fileToReview) {
+    public String processFileAndDumpOutput(File fileToReview) {
         return pylintExecutor.runOnFile(fileToReview.getAbsolutePath());
     }
 }

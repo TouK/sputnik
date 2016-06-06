@@ -8,3 +8,4 @@ pl.touk.sputnik.processor.jshint.JsHintReviewProcessorFactory
 pl.touk.sputnik.processor.tslint.TSLintProcessorFactory
 pl.touk.sputnik.processor.sonar.SonarReviewProcessorFactory
 pl.touk.sputnik.processor.pylint.PylintProcessorFactory
+pl.touk.sputnik.processor.eslint.ESLintProcessorFactory

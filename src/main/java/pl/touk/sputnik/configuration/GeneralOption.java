@@ -64,6 +64,9 @@ public enum GeneralOption implements ConfigurationOption {
     TSLINT_CONFIGURATION_FILE("tslint.configurationFile", "TSLint configuration file", "tslint.json"),
     TSLINT_SCRIPT("tslint.script", "TSLint script for validating files", "/usr/bin/tslint"),
 
+    ESLINT_ENABLED("eslint.enabled", "ESLint enabled", "false"),
+    ESLINT_RCFILE("eslint.rcfile", "ESLint rcfile", null),
+
     PYLINT_ENABLED("pylint.enabled", "Pylint enabled", "false"),
     PYLINT_RCFILE("pylint.rcfile", "Pylint rcfile", null),
 

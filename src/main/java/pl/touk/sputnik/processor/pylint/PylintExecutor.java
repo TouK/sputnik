@@ -11,18 +11,18 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 @Slf4j
-public class PylintExecutor {
+class PylintExecutor {
     private static final String PYLINT_EXECUTABLE = "pylint";
     private static final String PYLINT_OUTPUT_FORMAT = "--output-format=json";
     private static final String PYLINT_RCFILE_NAME = "--rcfile=";
 
     private String rcfileName;
 
-    public PylintExecutor(@Nullable String rcfileName) {
+    PylintExecutor(@Nullable String rcfileName) {
         this.rcfileName = rcfileName;
     }
 
-    public String runOnFile(String filePath) {
+    String runOnFile(String filePath) {
         log.info("Review on file: " + filePath);
         return new ExternalProcess().executeCommand(buildParams(filePath));
     }

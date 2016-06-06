@@ -19,7 +19,7 @@ public abstract class ProcessorRunningExternalProcess implements ReviewProcessor
         ReviewResult result = new ReviewResult();
         List<File> files = review.getFiles(getReviewFileFilter(), new IOFileTransformer());
         for (File file : files) {
-            for (Violation violation : getParser().parse(getOutputFromExternalProcess(file))) {
+            for (Violation violation : getParser().parse(processFileAndDumpOutput(file))) {
                 result.add(violation);
             }
         }
@@ -30,5 +30,5 @@ public abstract class ProcessorRunningExternalProcess implements ReviewProcessor
 
     public abstract ExternalProcessResultParser getParser();
 
-    public abstract String getOutputFromExternalProcess(File fileToReview);
+    public abstract String processFileAndDumpOutput(File fileToReview);
 }
