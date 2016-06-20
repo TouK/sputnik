@@ -26,6 +26,7 @@ public class CliWrapper {
         localOptions.addOption(buildOption(CliOption.API_KEY, true, false));
         localOptions.addOption(buildOption(CliOption.BUILD_ID, true, false));
         localOptions.addOption(buildOption(CliOption.PROVIDER, true, false));
+        localOptions.addOption(buildOption(CliOption.FILE_REGEX, true, false));
 
         return localOptions;
     }
