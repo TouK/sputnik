@@ -12,7 +12,8 @@ public enum CliOption implements ConfigurationOption {
     PULL_REQUEST_ID("cli.pullRequestId", "Stash pull request id", null),
     API_KEY("cli.apiKey", "Optional API key for using Sputnik as a service", null),
     BUILD_ID("cli.buildId", "Optional build id for using Sputnik as a service", null),
-    PROVIDER("cli.provider", "Optional SCM provider (GitHub, GitLab) for using Sputnik as a service", null);
+    PROVIDER("cli.provider", "Optional SCM provider (GitHub, GitLab) for using Sputnik as a service", null),
+    FILE_REGEX("cli.fileRegex", "Review only file paths that fulfill provided regex", null);
 
     private String key;
     private String description;

@@ -2,12 +2,14 @@ package pl.touk.sputnik.engine;
 
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
+import pl.touk.sputnik.configuration.CliOption;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.engine.visitor.AfterReviewVisitor;
 import pl.touk.sputnik.engine.visitor.FilterOutTestFilesVisitor;
 import pl.touk.sputnik.engine.visitor.LimitCommentVisitor;
+import pl.touk.sputnik.engine.visitor.RegexFilterFilesVisitor;
 import pl.touk.sputnik.engine.visitor.SummaryMessageVisitor;
 import pl.touk.sputnik.engine.visitor.score.NoScore;
 import pl.touk.sputnik.engine.visitor.score.ScoreAlwaysPass;
@@ -48,6 +50,18 @@ public class VisitorBuilderTest {
                 .hasSize(1)
                 .extracting("class")
                 .containsExactly(FilterOutTestFilesVisitor.class);
+    }
+
+    @Test
+    public void shouldAddRegexFilterToBeforeVisitorsWhenConfigured() {
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
+            CliOption.FILE_REGEX.getKey(), "^myModule/.+"
+        ));
+
+        assertThat(new VisitorBuilder().buildBeforeReviewVisitors(config))
+            .hasSize(1)
+            .extracting("class")
+            .containsExactly(RegexFilterFilesVisitor.class);
     }
 
     @Test

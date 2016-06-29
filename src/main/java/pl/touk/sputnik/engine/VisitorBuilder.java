@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.jetbrains.annotations.NotNull;
+import pl.touk.sputnik.configuration.CliOption;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.engine.visitor.*;
@@ -29,10 +30,22 @@ public class VisitorBuilder {
     @NotNull
     public List<BeforeReviewVisitor> buildBeforeReviewVisitors(Configuration configuration) {
         List<BeforeReviewVisitor> beforeReviewVisitors = new ArrayList<>();
+        addTestFilesFilterIfConfigured(configuration, beforeReviewVisitors);
+        addRegexFilterIfConfigured(configuration, beforeReviewVisitors);
+        return beforeReviewVisitors;
+    }
+
+    private void addTestFilesFilterIfConfigured(Configuration configuration, List<BeforeReviewVisitor> beforeReviewVisitors) {
         if (!BooleanUtils.toBoolean(configuration.getProperty(GeneralOption.PROCESS_TEST_FILES))) {
             beforeReviewVisitors.add(new FilterOutTestFilesVisitor(configuration.getProperty(GeneralOption.JAVA_TEST_DIR)));
         }
-        return beforeReviewVisitors;
+    }
+
+    private void addRegexFilterIfConfigured(Configuration configuration, List<BeforeReviewVisitor> beforeReviewVisitors) {
+        String fileRegex = configuration.getProperty(CliOption.FILE_REGEX);
+        if (fileRegex != null) {
+            beforeReviewVisitors.add(new RegexFilterFilesVisitor(fileRegex));
+        }
     }
 
     @NotNull
