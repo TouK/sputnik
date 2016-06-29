@@ -38,7 +38,6 @@ public class SonarRunnerTest {
     @Before
     public void setUp() throws FileNotFoundException {
         config = ConfigurationBuilder.initFromResource("test-sonar.properties");
-        when(sonarRunner.globalProperties()).thenReturn(new Properties());
     }
 
     @After
@@ -58,7 +57,7 @@ public class SonarRunnerTest {
         List<String> files = ImmutableList.of("file");
         SonarRunner runner = new SonarRunner(files, sonarRunner, config);
         runner.run();
-        verify(sonarRunner, times(1)).globalProperties();
+        verify(sonarRunner, times(1)).addGlobalProperties(any(Properties.class));
         verify(sonarRunner).execute();
     }
 
