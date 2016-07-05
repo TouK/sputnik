@@ -55,7 +55,7 @@ public class SonarRunner {
         Properties props = loadBaseProperties();
         setAdditionalProperties(props);
 
-        sonarEmbeddedRunner.globalProperties().putAll(props);
+        sonarEmbeddedRunner.addGlobalProperties(props);
 
         log.info("Sonar configuration: {}", props.toString());
 
