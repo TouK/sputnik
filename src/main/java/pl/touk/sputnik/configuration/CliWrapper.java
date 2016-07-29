@@ -27,13 +27,15 @@ public class CliWrapper {
         localOptions.addOption(buildOption(CliOption.BUILD_ID, true, false));
         localOptions.addOption(buildOption(CliOption.PROVIDER, true, false));
         localOptions.addOption(buildOption(CliOption.FILE_REGEX, true, false));
+        localOptions.addOption(buildOption(CliOption.USERNAME, true, false));
+        localOptions.addOption(buildOption(CliOption.PASSWORD, true, false));
 
         return localOptions;
     }
 
     @NotNull
     public CommandLine parse(@NotNull String[] args) throws ParseException {
-        CommandLineParser parser = new BasicParser();
+        CommandLineParser parser = new DefaultParser();
         return parser.parse(options, args);
     }
 
