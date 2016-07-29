@@ -1,6 +1,7 @@
 package pl.touk.sputnik.connector;
 
 import lombok.Getter;
+import pl.touk.sputnik.configuration.CliOption;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 
@@ -27,11 +28,21 @@ public class ConnectorDetails {
         host = configuration.getProperty(GeneralOption.HOST);
         port = Integer.valueOf(configuration.getProperty(GeneralOption.PORT));
         path = configuration.getProperty(GeneralOption.PATH);
-        username = configuration.getProperty(GeneralOption.USERNAME);
-        password = configuration.getProperty(GeneralOption.PASSWORD);
+        username = getUsername(configuration);
+        password = getPassword(configuration);
         useHttps = configuration.getProperty(GeneralOption.USE_HTTPS);
         isHttps = Boolean.parseBoolean(useHttps);
         verifySsl = Boolean.parseBoolean(configuration.getProperty(GeneralOption.VERIFY_SSL));
+    }
+
+    private String getUsername(Configuration configuration) {
+        return configuration.getProperty(CliOption.USERNAME) != null ? configuration.getProperty(
+                CliOption.USERNAME) : configuration.getProperty(GeneralOption.USERNAME);
+    }
+
+    private String getPassword(Configuration configuration) {
+        return configuration.getProperty(CliOption.PASSWORD) != null ? configuration.getProperty(
+                CliOption.PASSWORD) : configuration.getProperty(GeneralOption.PASSWORD);
     }
 
     private void validate() {
