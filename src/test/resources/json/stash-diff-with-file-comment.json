@@ -1,0 +1,131 @@
+{
+  "fromHash": "f18cca8d4070ad89c4d65bbcee1d74875113819f",
+  "toHash": "646afa05e6c3487eeceb91efb1adde1d568a0256",
+  "contextLines": 10,
+  "whitespace": "SHOW",
+  "diffs": [
+    {
+      "source": {
+        "components": [
+          "src",
+          "main",
+          "java",
+          "com",
+          "example",
+          "app",
+          "Runner.java"
+        ],
+        "parent": "src/main/java/com/example/app",
+        "name": "Runner.java",
+        "extension": "java",
+        "toString": "src/main/java/com/example/app/Runner.java"
+      },
+      "destination": {
+        "components": [
+          "src",
+          "main",
+          "java",
+          "com",
+          "example",
+          "app",
+          "Runner.java"
+        ],
+        "parent": "src/main/java/com/example/app",
+        "name": "Runner.java",
+        "extension": "java",
+        "toString": "src/main/java/com/example/app/Runner.java"
+      },
+      "hunks": [
+        {
+          "sourceLine": 1,
+          "sourceSpan": 5,
+          "destinationLine": 1,
+          "destinationSpan": 5,
+          "segments": [
+            {
+              "type": "CONTEXT",
+              "lines": [
+                {
+                  "source": 1,
+                  "destination": 1,
+                  "line": "package com.example.app;",
+                  "truncated": false
+                },
+                {
+                  "source": 2,
+                  "destination": 2,
+                  "line": "",
+                  "truncated": false
+                },
+                {
+                  "source": 3,
+                  "destination": 3,
+                  "line": "public interface Runner {",
+                  "truncated": false
+                },
+                {
+                  "source": 4,
+                  "destination": 4,
+                  "line": "    void run();",
+                  "truncated": false
+                }
+              ],
+              "truncated": false
+            },
+            {
+              "type": "REMOVED",
+              "lines": [
+                {
+                  "source": 5,
+                  "destination": 5,
+                  "line": "}",
+                  "truncated": false
+                }
+              ],
+              "truncated": false
+            },
+            {
+              "type": "ADDED",
+              "lines": [
+                {
+                  "source": 6,
+                  "destination": 5,
+                  "line": "}",
+                  "truncated": false
+                }
+              ],
+              "truncated": false
+            }
+          ],
+          "truncated": false
+        }
+      ],
+      "truncated": false,
+      "fileComments": [
+        {
+          "id": 225,
+          "version": 0,
+          "text": "[Checkstyle] WARNING: File does not end with a newline.",
+          "author": {
+            "name": "admin",
+            "emailAddress": "admin@example.com",
+            "id": 1,
+            "displayName": "Administrator",
+            "active": true,
+            "slug": "admin",
+            "type": "NORMAL"
+          },
+          "createdDate": 1476558804537,
+          "updatedDate": 1476558804537,
+          "comments": [],
+          "attributes": {},
+          "tasks": [],
+          "permittedOperations": {
+            "editable": true,
+            "deletable": true
+          }
+        }
+      ]
+    }
+  ]
+}
