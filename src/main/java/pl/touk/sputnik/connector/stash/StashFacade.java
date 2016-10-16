@@ -29,6 +29,7 @@ import java.util.List;
 
 @Slf4j
 public class StashFacade implements ConnectorFacade {
+    private static final int FILE_COMMENT_LINE_POSITION = 0;
     private StashConnector stashConnector;
     private ObjectMapper objectMapper = new ObjectMapper();
     private final Configuration configuration;
@@ -165,7 +166,7 @@ public class StashFacade implements ConnectorFacade {
                 for (LineComment lineComment : fileComments) {
                     comments.add(lineComment.text);
                 }
-                changes.addChange(0, ChangeType.NONE, comments);
+                changes.addChange(FILE_COMMENT_LINE_POSITION, ChangeType.NONE, comments);
             }
             return changes;
         } catch (URISyntaxException | IOException e) {
