@@ -24,6 +24,16 @@ public class SummaryMessageVisitorTest extends TestEnvironment {
     }
 
     @Test
+    public void shouldAddSummaryMessageWithOneViolation() {
+        Review review = review();
+        review.setTotalViolationCount(1);
+
+        new SummaryMessageVisitor("Perfect").afterReview(review);
+
+        assertThat(review.getMessages()).containsOnly("Total 1 violation found");
+    }
+
+    @Test
     public void shouldAddPerfectMessageIfThereAreNoViolationsFound() {
         Review review = review();
         review.setTotalViolationCount(0);

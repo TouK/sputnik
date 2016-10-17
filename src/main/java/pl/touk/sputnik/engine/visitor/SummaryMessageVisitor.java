@@ -30,7 +30,8 @@ public class SummaryMessageVisitor implements AfterReviewVisitor {
         if (review.getTotalViolationCount() == 0) {
             return perfectMessage;
         }
-        return String.format("Total %d violations found", review.getTotalViolationCount());
+        String violationNoun = review.getTotalViolationCount() == 1 ? "violation" : "violations";
+        return String.format("Total %d %s found", review.getTotalViolationCount(), violationNoun);
     }
 
     private void addProblemMessages(@NotNull Review review) {
