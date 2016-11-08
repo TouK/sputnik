@@ -69,7 +69,7 @@ dependencies {
     compile 'org.sonarsource.sonar-runner:sonar-runner-api:2.5.1'
     compile 'com.jayway.jsonpath:json-path:0.9.1'
 
-    compile 'com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:0.8.5'
+    compile 'com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:0.8.8'
 
     // Checkstyle dependencies
     compile 'com.puppycrawl.tools:checkstyle:6.14.1'
