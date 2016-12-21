@@ -72,7 +72,7 @@ dependencies {
     compile 'com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:0.8.8'
 
     // Checkstyle dependencies
-    compile 'com.puppycrawl.tools:checkstyle:6.14.1'
+    compile 'com.puppycrawl.tools:checkstyle:7.3'
 
     // PMD dependencies
     compile('net.sourceforge.pmd:pmd-java:5.4.1') {
