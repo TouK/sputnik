@@ -167,6 +167,7 @@ gradle run -Dexec.args="--conf example.properties --changeId 1234 --revisionId 4
 - Dominik Przybysz
 - Damian Szczepanik
 - Rafał Nowak
+- Filip Majewski
 
 ## License
 
