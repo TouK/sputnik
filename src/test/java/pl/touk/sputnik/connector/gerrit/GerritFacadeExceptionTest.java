@@ -2,7 +2,6 @@ package pl.touk.sputnik.connector.gerrit;
 
 import com.google.gerrit.extensions.api.GerritApi;
 import com.google.gerrit.extensions.api.changes.Changes;
-import com.google.gerrit.extensions.restapi.RestApiException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -25,7 +24,7 @@ public class GerritFacadeExceptionTest {
         //given
         Changes changes = mock(Changes.class);
         when(gerritApi.changes()).thenReturn(changes);
-        when(changes.id("foo")).thenThrow(new RestApiException("Connection refused"));
+        when(changes.id("foo")).thenThrow(new RuntimeException("Connection refused"));
         GerritFacade gerritFacade = new GerritFacade(gerritApi, new GerritPatchset("foo", "bar"));
 
         //when
