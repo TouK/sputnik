@@ -72,7 +72,9 @@ dependencies {
     compile 'com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:0.8.8'
 
     // Checkstyle dependencies
-    compile 'com.puppycrawl.tools:checkstyle:8.1'
+    compile('com.puppycrawl.tools:checkstyle:8.1') {
+        exclude group: 'com.google.guava'
+    }
 
     // PMD dependencies
     compile('net.sourceforge.pmd:pmd-java:5.5.2') {
