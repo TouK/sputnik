@@ -70,6 +70,8 @@ public enum GeneralOption implements ConfigurationOption {
     PYLINT_ENABLED("pylint.enabled", "Pylint enabled", "false"),
     PYLINT_RCFILE("pylint.rcfile", "Pylint rcfile", null),
 
+    KTLINT_ENABLED("ktlint.enabled", "KtLint enabled", "false"),
+
     SONAR_ENABLED("sonar.enabled", "Sonar enabled", "false"),
     SONAR_PROPERTIES("sonar.configurationFiles", "Sonar base configuration", "sonar-project.properties"),
     SONAR_VERBOSE("sonar.verbose", "Run sonar in verbose mode", "false"),

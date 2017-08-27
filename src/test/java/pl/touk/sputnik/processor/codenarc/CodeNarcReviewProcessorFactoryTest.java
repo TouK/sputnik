@@ -11,14 +11,14 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class NodeCardReviewProcessorFactoryTest {
+public class CodeNarcReviewProcessorFactoryTest {
 
     @Test
     public void testIsEnabled() throws Exception {
         Configuration configuration = mock(Configuration.class);
         when(configuration.getProperty(eq(GeneralOption.CODE_NARC_ENABLED))).thenReturn("true");
 
-        ReviewProcessorFactory factory = new NodeCardReviewProcessorFactory();
+        ReviewProcessorFactory factory = new CodeNarcReviewProcessorFactory();
         assertTrue(factory.isEnabled(configuration));
     }
 
@@ -27,7 +27,7 @@ public class NodeCardReviewProcessorFactoryTest {
         Configuration configuration = mock(Configuration.class);
         when(configuration.getProperty(eq(GeneralOption.CODE_NARC_ENABLED))).thenReturn("true");
 
-        ReviewProcessorFactory factory = new NodeCardReviewProcessorFactory();
+        ReviewProcessorFactory factory = new CodeNarcReviewProcessorFactory();
         assertNotNull(factory.create(configuration));
     }
 
