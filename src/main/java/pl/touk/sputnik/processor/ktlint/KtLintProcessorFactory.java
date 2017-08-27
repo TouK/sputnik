@@ -12,6 +12,6 @@ public class KtLintProcessorFactory implements ReviewProcessorFactory<KtlintProc
 
     @Override
     public KtlintProcessor create(Configuration configuration) {
-        return new KtlintProcessor();
+        return new KtlintProcessor(configuration);
     }
 }

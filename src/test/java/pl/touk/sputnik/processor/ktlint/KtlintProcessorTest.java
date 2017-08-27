@@ -18,6 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class KtlintProcessorTest {
     private static final String CONFIGURATION_WITH_KTLINT_ENABLED = "ktlint/configuration/configurationWithEnabledKtlint.properties";
+    private static final String CONFIGURATION_WITH_KTLINT_ENABLED_AND_EXCLUDE = "ktlint/configuration/configurationWithEnabledKtlintAndExclude.properties";
+
     private static final String REVIEW_FILE_WITH_ONE_VIOLATION = "src/test/resources/ktlint/testFiles/OneViolation.kt";
     private static final String REVIEW_FILE_WITH_NO_VIOLATIONS = "src/test/resources/ktlint/testFiles/NoViolations.kt";
     private static final String REVIEW_FILE_WITH_MANY_VIOLATIONS = "src/test/resources/ktlint/testFiles/ManyViolations.kt";
@@ -29,7 +31,7 @@ public class KtlintProcessorTest {
     @Before
     public void setUp() throws Exception {
         config = ConfigurationBuilder.initFromResource(CONFIGURATION_WITH_KTLINT_ENABLED);
-        sut = new KtlintProcessor();
+        sut = new KtlintProcessor(config);
     }
 
     @Test
@@ -84,6 +86,23 @@ public class KtlintProcessorTest {
                 .contains(new Violation(REVIEW_FILE_WITH_MANY_VIOLATIONS, 9, "[indent] Unexpected indentation (2) (it should be multiple of 4) in column 1", Severity.WARNING))
                 .contains(new Violation(REVIEW_FILE_WITH_MANY_VIOLATIONS, 11, "[curly-spacing] Missing spacing before \"{\" in column 14", Severity.WARNING))
                 .contains(new Violation(REVIEW_FILE_WITH_ONE_VIOLATION, 3, "[no-empty-class-body] Unnecessary block (\"{}\") in column 20", Severity.WARNING));
+    }
+
+    @Test
+    public void shouldReturnOnlyNotExcludedViolations() {
+        KtlintProcessor sut = new KtlintProcessor(ConfigurationBuilder.initFromResource(CONFIGURATION_WITH_KTLINT_ENABLED_AND_EXCLUDE));
+        Review review = getReview(REVIEW_FILE_WITH_MANY_VIOLATIONS);
+
+        ReviewResult result = sut.process(review);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getViolations())
+                .hasSize(5)
+                .contains(new Violation(REVIEW_FILE_WITH_MANY_VIOLATIONS, 3, "[no-wildcard-imports] Wildcard import in column 1", Severity.WARNING))
+                .contains(new Violation(REVIEW_FILE_WITH_MANY_VIOLATIONS, 6, "[curly-spacing] Missing spacing before \"{\" in column 21", Severity.WARNING))
+                .contains(new Violation(REVIEW_FILE_WITH_MANY_VIOLATIONS, 8, "[string-template] Redundant curly braces in column 16", Severity.WARNING))
+                .contains(new Violation(REVIEW_FILE_WITH_MANY_VIOLATIONS, 8, "[string-template] Redundant 'toString()' call in string template in column 23", Severity.WARNING))
+                .contains(new Violation(REVIEW_FILE_WITH_MANY_VIOLATIONS, 11, "[curly-spacing] Missing spacing before \"{\" in column 14", Severity.WARNING));
     }
 
     private Review getReview(String... filePaths) {

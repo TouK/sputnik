@@ -9,14 +9,19 @@ import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 class LintErrorConverter implements Function1<LintError, Unit> {
 
     private final ReviewResult result;
     private final String filePath;
+    private final List<String> excludedRules;
 
     public Unit invoke(LintError e) {
-        result.add(fromLintError(e, filePath));
+        if (!excludedRules.contains(e.getRuleId())) {
+            result.add(fromLintError(e, filePath));
+        }
         return Unit.INSTANCE;
     }
 
