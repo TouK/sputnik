@@ -122,6 +122,10 @@ dependencies {
     // external processes
     compile 'org.zeroturnaround:zt-exec:1.8'
 
+    // ktlint https://github.com/shyiko/ktlint
+    compile 'com.github.shyiko.ktlint:ktlint-core:0.9.1'
+    compile 'com.github.shyiko.ktlint:ktlint-ruleset-standard:0.9.1'
+
     // Test dependencies
     testCompile 'junit:junit:4.11'
     testCompile 'pl.pragmatists:JUnitParams:1.0.5'
