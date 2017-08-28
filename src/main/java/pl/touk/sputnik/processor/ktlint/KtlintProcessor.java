@@ -33,7 +33,7 @@ class KtlintProcessor implements ReviewProcessor {
         ruleSets = findRuleSets();
     }
 
-    private static List<RuleSet> findRuleSets() {
+    private List<RuleSet> findRuleSets() {
         List<RuleSet> ruleSets = new ArrayList<>();
         for (RuleSetProvider ruleSetProvider : ServiceLoader.load(RuleSetProvider.class)) {
             ruleSets.add(ruleSetProvider.get());
@@ -42,13 +42,12 @@ class KtlintProcessor implements ReviewProcessor {
     }
 
     @NotNull
-    private static List<String> parseExcludedRules(Configuration configuration) {
+    private List<String> parseExcludedRules(Configuration configuration) {
         String excludeProperty = configuration.getProperty(GeneralOption.KTLINT_EXCLUDE);
         if (excludeProperty == null) {
             return new ArrayList<>();
-        } else {
-            return Arrays.asList(excludeProperty.split(","));
         }
+        return Arrays.asList(excludeProperty.split(","));
     }
 
     @Nullable
