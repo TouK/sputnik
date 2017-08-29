@@ -76,7 +76,7 @@ public class ScalastyleProcessor implements ReviewProcessor {
             if (msg instanceof StyleError) {
                 StyleError styleError = (StyleError) msg;
                 reviewResult.add(new Violation(currentFileName,
-                        option(styleError.lineNumber(), -1),
+                        option(styleError.lineNumber(), 1),
                         messageHelper.message(styleError.clazz().getClassLoader(), styleError.key(), styleError.args()),
                         errorLevel(styleError.level())));
             }
