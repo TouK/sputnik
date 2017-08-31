@@ -10,7 +10,7 @@
 
 ## Usage
 
-Sputnik runs Checkstyle, PMD, FindBugs, CodeNarc, JSHint (or JSLint), TSLint and Sonar only on files affected by Gerrit's patchset. It collects all violations and report them back to Gerrit or Stash.
+Sputnik runs Checkstyle, PMD, FindBugs, CodeNarc, JSHint (or JSLint), TSLint, Ktlint, Detekt and Sonar only on files affected by Gerrit's patchset. It collects all violations and report them back to Gerrit or Stash.
 
 Typical configuration file looks like this:
 
@@ -42,6 +42,10 @@ tslint.configurationFile=tslint.json
 sonar.enabled=true
 sonar.configurationFiles=sonar-project.properties, sonar-runner.properties
 sonar.verbose=false
+ktlint.enabled=true
+ktlint.exclude=no-semi,indent
+detekt.enabled=true
+detekt.config.file=src/test/resources/detekt/config/config.yml
 ```
 
 If you want sputnik to use your SonarQube rules just download them from your SonarQube profile and use these with `checkstyle.configurationFile`, `pmd.ruleSets` and `findbugs.includeFilter` variables.

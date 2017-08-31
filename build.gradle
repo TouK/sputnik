@@ -52,8 +52,9 @@ run {
 }
 
 repositories {
-        mavenCentral()
-        maven { url "http://central.maven.org/maven2" }
+    mavenCentral()
+    maven { url "http://central.maven.org/maven2" }
+    jcenter()
 }
 
 //noinspection GroovyAssignabilityCheck
@@ -126,6 +127,10 @@ dependencies {
     compile 'com.github.shyiko.ktlint:ktlint-core:0.9.1'
     compile 'com.github.shyiko.ktlint:ktlint-ruleset-standard:0.9.1'
 
+    // detekt
+    compile 'io.gitlab.arturbosch.detekt:detekt-core:1.0.0.RC3'
+    compile 'io.gitlab.arturbosch.detekt:detekt-rules:1.0.0.RC3'
+
     // Test dependencies
     testCompile 'junit:junit:4.11'
     testCompile 'pl.pragmatists:JUnitParams:1.0.5'
@@ -173,9 +178,9 @@ artifacts {
 jar {
     manifest {
         attributes("Specification-Title": "Sputnik",
-                   "Specification-Version": scmVersion.rawVersion.version,
-                   "Implementation-Title": "Sputnik",
-                   "Implementation-Version": scmVersion.rawVersion.version)
+                "Specification-Version": scmVersion.rawVersion.version,
+                "Implementation-Title": "Sputnik",
+                "Implementation-Version": scmVersion.rawVersion.version)
     }
 }
 

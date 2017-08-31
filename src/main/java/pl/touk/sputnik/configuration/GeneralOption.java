@@ -79,7 +79,10 @@ public enum GeneralOption implements ConfigurationOption {
     GITHUB_API_KEY("github.api.key", "Personal access tokens for Github", ""),
 
     JAVA_SRC_DIR("java.src.dir", "Java root source directory", Paths.SRC_MAIN),
-    JAVA_TEST_DIR("java.test.dir", "Java root test directory", Paths.SRC_TEST);
+    JAVA_TEST_DIR("java.test.dir", "Java root test directory", Paths.SRC_TEST),
+
+    DETEKT_ENABLED("detekt.enabled", "Detekt enabled", "false"),
+    DETEKT_CONFIG_FILE("detekt.config.file", "Detekt configuration file location", null);
 
     private final String key;
     private final String description;
