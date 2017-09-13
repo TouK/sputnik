@@ -103,7 +103,7 @@ dependencies {
     compile 'org.scalastyle:scalastyle_2.10:0.4.0'
 
     // CodeNarc http://codenarc.sourceforge.net/
-    compile('org.codenarc:CodeNarc:0.27.0') {
+    compile('org.codenarc:CodeNarc:1.0') {
         exclude module: 'groovy'
         exclude group: 'junit'
     }
