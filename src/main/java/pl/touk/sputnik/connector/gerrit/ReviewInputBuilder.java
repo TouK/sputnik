@@ -13,9 +13,12 @@ import java.util.List;
 
 public class ReviewInputBuilder {
 
+    private static final String REVIEW_TAG = "sputnik";
+
     @NotNull
     public ReviewInput toReviewInput(@NotNull Review review) {
         ReviewInput reviewInput = new ReviewInput();
+        reviewInput.tag = REVIEW_TAG;
         reviewInput.message = Joiner.on(". ").join(review.getMessages());
         reviewInput.labels = new HashMap<String, Short>(review.getScores());
         reviewInput.comments = new HashMap<String, List<ReviewInput.CommentInput>>();
