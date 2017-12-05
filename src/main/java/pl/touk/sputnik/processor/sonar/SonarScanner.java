@@ -61,6 +61,7 @@ public class SonarScanner {
 
         log.info("Sonar configuration: {}", props.toString());
 
+        sonarEmbeddedScanner.start();
         sonarEmbeddedScanner.execute(new HashMap<String, String>());
         return new File(OUTPUT_DIR, OUTPUT_FILE);
     }
@@ -72,7 +73,6 @@ public class SonarScanner {
     @VisibleForTesting
     void setAdditionalProperties(Map<String, String> props) {
         props.put(SonarProperties.INCLUDE_FILES, StringUtils.join(files, ", "));
-        props.put(SonarProperties.ANALISYS_MODE, "incremental");
         props.put(SonarProperties.SCM_ENABLED, "false");
         props.put(SonarProperties.SCM_STAT_ENABLED, "false");
         props.put(SonarProperties.ISSUEASSIGN_PLUGIN, "false");
@@ -80,5 +80,6 @@ public class SonarScanner {
         props.put(SonarProperties.VERBOSE, configuration.getProperty(GeneralOption.SONAR_VERBOSE));
         props.put(SonarProperties.WORKDIR, OUTPUT_DIR);
         props.put(SonarProperties.PROJECT_BASEDIR, ".");
+        props.put(SonarProperties.SOURCES, ".");
     }
 }

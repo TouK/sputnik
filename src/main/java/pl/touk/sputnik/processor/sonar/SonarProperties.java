@@ -6,7 +6,6 @@ package pl.touk.sputnik.processor.sonar;
  */
 public class SonarProperties {
 
-    public static final String ANALISYS_MODE = "sonar.analysis.mode";
     public static final String SCM_ENABLED = "sonar.scm.enabled";
     public static final String SCM_STAT_ENABLED = "sonar.scm-stats.enabled";
     public static final String ISSUEASSIGN_PLUGIN = "issueassignplugin.enabled";
@@ -15,4 +14,5 @@ public class SonarProperties {
     public static final String INCLUDE_FILES = "sonar.inclusions";
     public static final String WORKDIR = "sonar.working.directory";
     public static final String PROJECT_BASEDIR = "sonar.projectBaseDir";
+    public static final String SOURCES = "sonar.sources";
 }

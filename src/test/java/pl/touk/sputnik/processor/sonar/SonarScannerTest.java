@@ -31,7 +31,7 @@ public class SonarScannerTest {
     private Configuration config;
 
     @Mock
-    private EmbeddedScanner sonarRunner;
+    private EmbeddedScanner sonarEmbeddedScanner;
 
     @Before
     public void setUp() throws FileNotFoundException {
@@ -53,17 +53,18 @@ public class SonarScannerTest {
     public void shouldRun() throws IOException {
         writeValidConfigFiles();
         List<String> files = ImmutableList.of("file");
-        SonarScanner runner = new SonarScanner(files, sonarRunner, config);
+        SonarScanner runner = new SonarScanner(files, sonarEmbeddedScanner, config);
         runner.run();
-        verify(sonarRunner, times(1)).addGlobalProperties(anyMapOf(String.class, String.class));
-        verify(sonarRunner).execute(anyMapOf(String.class, String.class));
+        verify(sonarEmbeddedScanner, times(1)).addGlobalProperties(anyMapOf(String.class, String.class));
+        verify(sonarEmbeddedScanner).start();
+        verify(sonarEmbeddedScanner).execute(anyMapOf(String.class, String.class));
     }
 
     @Test
     public void shouldLoadBaseProperties() throws IOException{
         writeValidConfigFiles();
         List<String> files = ImmutableList.of("file");
-        SonarScanner runner = new SonarScanner(files, sonarRunner, config);
+        SonarScanner runner = new SonarScanner(files, sonarEmbeddedScanner, config);
         Map<String, String> properties = runner.loadBaseProperties();
         assertThat(properties.get("sonar.foo")).isEqualTo("bar");
         assertThat(properties.get("sonar.bar")).isEqualTo("bazz");
@@ -73,25 +74,25 @@ public class SonarScannerTest {
     public void shouldSetBaseSonarConfig() throws IOException{
         writeValidConfigFiles();
         List<String> files = ImmutableList.of("first", "second");
-        SonarScanner runner = new SonarScanner(files, sonarRunner, config);
+        SonarScanner runner = new SonarScanner(files, sonarEmbeddedScanner, config);
         Map<String, String> props = new HashMap<>();
         runner.setAdditionalProperties(props);
         assertThat(props.get(SonarProperties.INCLUDE_FILES)).contains("first");
         assertThat(props.get(SonarProperties.INCLUDE_FILES)).contains("second");
         assertThat(StringUtils.split(props.get(SonarProperties.INCLUDE_FILES), ',')).hasSize(2);
-        assertThat(props.get(SonarProperties.ANALISYS_MODE)).isEqualTo("incremental");
         assertThat(props.get(SonarProperties.SCM_ENABLED)).isEqualTo("false");
         assertThat(props.get(SonarProperties.SCM_STAT_ENABLED)).isEqualTo("false");
         assertThat(props.get(SonarProperties.ISSUEASSIGN_PLUGIN)).isEqualTo("false");
         assertThat(props.get(SonarProperties.EXPORT_PATH)).isEqualTo(SonarScanner.OUTPUT_FILE);
         assertThat(props.get(SonarProperties.WORKDIR)).isEqualTo(SonarScanner.OUTPUT_DIR);
         assertThat(props.get(SonarProperties.PROJECT_BASEDIR)).isEqualTo(".");
+        assertThat(props.get(SonarProperties.SOURCES)).isEqualTo(".");
     }
 
     @Test(expected=IOException.class)
     public void shouldThrowWhenNoSonarFiles() throws IOException {
         List<String> files = ImmutableList.of("first", "second");
-        SonarScanner runner = new SonarScanner(files, sonarRunner, config);
+        SonarScanner runner = new SonarScanner(files, sonarEmbeddedScanner, config);
         runner.loadBaseProperties();
     }
 }
