@@ -4,22 +4,24 @@ import com.google.common.annotations.VisibleForTesting;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.sonar.runner.api.EmbeddedRunner;
+import org.sonarsource.scanner.api.EmbeddedScanner;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 @Slf4j
 @AllArgsConstructor
-public class SonarRunner {
+public class SonarScanner {
 
     private final List<String> files;
-    private final EmbeddedRunner sonarEmbeddedRunner;
+    private final EmbeddedScanner sonarEmbeddedScanner;
     private final Configuration configuration;
 
     @VisibleForTesting
@@ -35,14 +37,14 @@ public class SonarRunner {
      * @throws IOException
      */
     @VisibleForTesting
-    Properties loadBaseProperties() throws IOException {
+    Map<String, String> loadBaseProperties() throws IOException {
         final Properties props = new Properties();
         for (final String property: StringUtils.split(configuration.getProperty(GeneralOption.SONAR_PROPERTIES), ',')){
             final File propertyFile = new File(StringUtils.strip(property));
             log.info("Loading {}", propertyFile.getAbsolutePath());
             props.load(new FileInputStream(propertyFile));
         }
-        return props;
+        return (Map)props;
     }
 
     /**
@@ -52,14 +54,14 @@ public class SonarRunner {
      * @return the json file containing the results.
      */
     public File run() throws IOException {
-        Properties props = loadBaseProperties();
+        Map<String, String> props = loadBaseProperties();
         setAdditionalProperties(props);
 
-        sonarEmbeddedRunner.addGlobalProperties(props);
+        sonarEmbeddedScanner.addGlobalProperties(props);
 
         log.info("Sonar configuration: {}", props.toString());
 
-        sonarEmbeddedRunner.execute();
+        sonarEmbeddedScanner.execute(new HashMap<String, String>());
         return new File(OUTPUT_DIR, OUTPUT_FILE);
     }
 
@@ -68,7 +70,7 @@ public class SonarRunner {
      * @param props a Properties instance
      */
     @VisibleForTesting
-    void setAdditionalProperties(Properties props) {
+    void setAdditionalProperties(Map<String, String> props) {
         props.put(SonarProperties.INCLUDE_FILES, StringUtils.join(files, ", "));
         props.put(SonarProperties.ANALISYS_MODE, "incremental");
         props.put(SonarProperties.SCM_ENABLED, "false");

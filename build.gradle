@@ -67,7 +67,7 @@ dependencies {
     compile 'ch.qos.logback:logback-classic:1.0.13'
     compile 'org.projectlombok:lombok:1.12.6'
     compile 'commons-cli:commons-cli:1.2'
-    compile 'org.sonarsource.sonar-runner:sonar-runner-api:2.5.1'
+    compile 'org.sonarsource.scanner.api:sonar-scanner-api:2.10.0.1189'
     compile 'com.jayway.jsonpath:json-path:0.9.1'
 
     compile 'com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:0.8.8'

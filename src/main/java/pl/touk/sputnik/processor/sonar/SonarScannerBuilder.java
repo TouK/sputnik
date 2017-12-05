@@ -1,19 +1,17 @@
 package pl.touk.sputnik.processor.sonar;
 
-import java.io.File;
-import java.util.List;
-
-import org.sonar.runner.api.EmbeddedRunner;
-
-import org.sonar.runner.api.StdOutLogOutput;
+import com.google.common.collect.Lists;
+import org.sonarsource.scanner.api.EmbeddedScanner;
+import org.sonarsource.scanner.api.StdOutLogOutput;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 
-import com.google.common.collect.Lists;
+import java.io.File;
+import java.util.List;
 
-class SonarRunnerBuilder {
-    public SonarRunner prepareRunner(Review review, Configuration configuration) {
+class SonarScannerBuilder {
+    public SonarScanner prepareRunner(Review review, Configuration configuration) {
         List<String> files = Lists.newArrayList();
 
         /*
@@ -32,7 +30,6 @@ class SonarRunnerBuilder {
         for (ReviewFile file : review.getFiles()) {
             files.add("**/" + new File(file.getReviewFilename()).getName());
         }
-        SonarRunner sonarRunner = new SonarRunner(files, EmbeddedRunner.create(new StdOutLogOutput()), configuration);
-        return sonarRunner;
+        return new SonarScanner(files, EmbeddedScanner.create("sputnik", "1.8.1", new StdOutLogOutput()), configuration);
     }
 }

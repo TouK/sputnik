@@ -25,14 +25,14 @@ public class SonarProcessor implements ReviewProcessor {
 
     private static final String PROCESSOR_NAME = "Sonar";
 
-    private SonarRunnerBuilder sonarRunnerBuilder;
+    private SonarScannerBuilder sonarRunnerBuilder;
     private final Configuration configuration;
 
     public SonarProcessor(@NotNull final Configuration configuration) {
-        this(new SonarRunnerBuilder(), configuration);
+        this(new SonarScannerBuilder(), configuration);
     }
 
-    public SonarProcessor(SonarRunnerBuilder sonarRunnerBuilder, @NotNull final Configuration configuration) {
+    public SonarProcessor(SonarScannerBuilder sonarRunnerBuilder, @NotNull final Configuration configuration) {
         this.sonarRunnerBuilder = sonarRunnerBuilder;
         this.configuration = configuration;
     }
@@ -45,7 +45,7 @@ public class SonarProcessor implements ReviewProcessor {
         }
 
         try {
-            SonarRunner runner = sonarRunnerBuilder.prepareRunner(review, configuration);
+            SonarScanner runner = sonarRunnerBuilder.prepareRunner(review, configuration);
             File resultFile = runner.run();
             SonarResultParser parser = new SonarResultParser(resultFile);
             return filterResults(parser.parseResults(), review);
