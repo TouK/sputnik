@@ -38,9 +38,9 @@ public class SonarProcessorTest extends TestEnvironment {
 
     @Test
     public void shouldReportViolationsForMultiModulesProject() {
-        SonarProcessor processor = new SonarProcessor(new SonarRunnerBuilder() {
-            public SonarRunner prepareRunner(Review review, Configuration configuration) {
-                return new SonarRunner(null, null, null) {
+        SonarProcessor processor = new SonarProcessor(new SonarScannerBuilder() {
+            public SonarScanner prepareRunner(Review review, Configuration configuration) {
+                return new SonarScanner(null, null, null) {
                     public File run() throws IOException {
                         return getResourceAsFile("json/sonar-result-mutli-module.json");
                     }
@@ -53,9 +53,9 @@ public class SonarProcessorTest extends TestEnvironment {
 
     @Test
     public void shouldReportViolationsForSingleModulesProject() {
-        SonarProcessor processor = new SonarProcessor(new SonarRunnerBuilder() {
-            public SonarRunner prepareRunner(Review review, Configuration configuration) {
-                return new SonarRunner(null, null, null) {
+        SonarProcessor processor = new SonarProcessor(new SonarScannerBuilder() {
+            public SonarScanner prepareRunner(Review review, Configuration configuration) {
+                return new SonarScanner(null, null, null) {
                     public File run() throws IOException {
                         return getResourceAsFile("json/sonar-result-single-module.json");
                     }
