@@ -27,7 +27,7 @@ app.use(require('webpack-hot-middleware')(compiler));
 app.get('*', function(req, res) {
   //https://github.com/jantimon/html-webpack-plugin/issues/3#issuecomment-271804797
   //Here is it! Get the index.html from the fileSystem
-  const htmlBuffer = devMiddleware.fileSystem.readFileSync(`${config.output.path}/index.html`)
+  const htmlBuffer = devMiddleware.fileSystem.readFileSync(`${config.output.path}/index.html`);
   res.send(htmlBuffer.toString())
 });
 
