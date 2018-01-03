@@ -78,7 +78,7 @@ dependencies {
     }
 
     // PMD dependencies
-    compile('net.sourceforge.pmd:pmd-java:5.5.2') {
+    compile('net.sourceforge.pmd:pmd-java:6.0.0') {
         exclude group: 'jaxen'
         exclude group: 'xerces'
         exclude group: 'junit'
