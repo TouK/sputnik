@@ -1,7 +1,6 @@
 package pl.touk.sputnik.processor.pmd;
 
 import com.google.common.base.Joiner;
-
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.pmd.*;
 import net.sourceforge.pmd.benchmark.Benchmark;
@@ -10,11 +9,10 @@ import net.sourceforge.pmd.lang.Language;
 import net.sourceforge.pmd.lang.LanguageVersion;
 import net.sourceforge.pmd.lang.LanguageVersionDiscoverer;
 import net.sourceforge.pmd.renderers.Renderer;
+import net.sourceforge.pmd.util.ResourceLoader;
 import net.sourceforge.pmd.util.datasource.DataSource;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
@@ -50,7 +48,7 @@ public class PmdProcessor implements ReviewProcessor {
         if (filesToReview.isEmpty()) {
             return null;
         }
-        
+
         try {
             PMDConfiguration configuration = new PMDConfiguration();
             configuration.setReportFormat(CollectorRenderer.class.getCanonicalName());
@@ -86,7 +84,7 @@ public class PmdProcessor implements ReviewProcessor {
      */
     private void doPMD(@NotNull PMDConfiguration configuration) throws IllegalArgumentException {
         // Load the RuleSets
-        RuleSetFactory ruleSetFactory = RulesetsFactoryUtils.getRulesetFactory(configuration);
+        RuleSetFactory ruleSetFactory = RulesetsFactoryUtils.getRulesetFactory(configuration, new ResourceLoader());
 
         RuleSets ruleSets = RulesetsFactoryUtils.getRuleSets(configuration.getRuleSets(), ruleSetFactory);
         // this is just double check - we don't get null here
