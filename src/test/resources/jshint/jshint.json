@@ -1,4 +1,6 @@
 {
     "undef": true,
+    "unused": true,
+    "devel": true,
     "esversion": 6
 }

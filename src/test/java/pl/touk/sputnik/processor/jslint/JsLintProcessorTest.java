@@ -6,12 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.configuration.ConfigurationBuilder;
-import pl.touk.sputnik.review.Review;
-import pl.touk.sputnik.review.ReviewFile;
-import pl.touk.sputnik.review.ReviewFormatterFactory;
-import pl.touk.sputnik.review.ReviewResult;
+import pl.touk.sputnik.review.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static pl.touk.sputnik.SputnikAssertions.assertThat;
 
 public class JsLintProcessorTest extends TestEnvironment {
 
@@ -46,12 +43,13 @@ public class JsLintProcessorTest extends TestEnvironment {
 
         // then
         assertThat(reviewResult).isNotNull();
-        assertThat(reviewResult.getViolations()).hasSize(1);
-        assertThat(reviewResult.getViolations())
-                .extracting("message")
-                .containsOnly(
-                        "Missing 'use strict' statement."
-                );
+        assertThat(reviewResult.getViolations()).hasSize(2);
+        assertThat(reviewResult.getViolations().get(0)).hasLine(2)
+                .hasMessage("Missing 'use strict' statement.")
+                .hasSeverity(Severity.INFO);
+        assertThat(reviewResult.getViolations().get(1)).hasLine(2)
+                .hasMessage("Expected ';' and instead saw '}'.")
+                .hasSeverity(Severity.INFO);
     }
 
     @Test
@@ -65,11 +63,12 @@ public class JsLintProcessorTest extends TestEnvironment {
 
         // then
         assertThat(reviewResult).isNotNull();
-        assertThat(reviewResult.getViolations()).hasSize(1);
-        assertThat(reviewResult.getViolations())
-                .extracting("message")
-                .containsOnly(
-                        "Missing 'use strict' statement."
-                );
+        assertThat(reviewResult.getViolations()).hasSize(2);
+        assertThat(reviewResult.getViolations().get(0)).hasLine(2)
+                .hasMessage("Missing 'use strict' statement.")
+                .hasSeverity(Severity.INFO);
+        assertThat(reviewResult.getViolations().get(1)).hasLine(2)
+                .hasMessage("Expected ';' and instead saw '}'.")
+                .hasSeverity(Severity.INFO);
     }
 }
