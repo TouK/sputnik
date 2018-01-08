@@ -1,3 +1,3 @@
 function test() {
-    alert('foo bar');
+    alert('foo bar')
 }

@@ -114,7 +114,7 @@ dependencies {
     compile 'com.googlecode.jslint4java:jslint4java:2.0.5'
 
     // JSHint
-    compile 'pl.gildur:jshint4j:1.0.1'
+    compile 'pl.touk:jshint4j:2.9.5'
 
     // github connector
     compile 'com.jcabi:jcabi-github:0.24'

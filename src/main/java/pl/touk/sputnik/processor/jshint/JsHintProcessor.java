@@ -1,28 +1,22 @@
 package pl.touk.sputnik.processor.jshint;
 
+import com.google.common.base.Strings;
+import com.google.common.io.CharStreams;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import pl.touk.jshint4j.Error;
+import pl.touk.jshint4j.JsHint;
+import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.GeneralOption;
+import pl.touk.sputnik.review.*;
+import pl.touk.sputnik.review.filter.JavaScriptFilter;
+import pl.touk.sputnik.review.transformer.IOFileTransformer;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
-
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import pl.gildur.jshint4j.Error;
-import pl.gildur.jshint4j.JsHint;
-import pl.touk.sputnik.configuration.Configuration;
-import pl.touk.sputnik.configuration.GeneralOption;
-import pl.touk.sputnik.review.Review;
-import pl.touk.sputnik.review.ReviewException;
-import pl.touk.sputnik.review.ReviewProcessor;
-import pl.touk.sputnik.review.ReviewResult;
-import pl.touk.sputnik.review.Severity;
-import pl.touk.sputnik.review.Violation;
-import pl.touk.sputnik.review.filter.JavaScriptFilter;
-import pl.touk.sputnik.review.transformer.IOFileTransformer;
-
-import com.google.common.base.Strings;
-import com.google.common.io.CharStreams;
 
 @Slf4j
 @AllArgsConstructor
@@ -70,13 +64,13 @@ public class JsHintProcessor implements ReviewProcessor {
             throw new ReviewException("IO exception when reading JSHint configuration.", e);
         }
     }
-    
+
     private String getConfigurationFileName() {
         String configurationFile = config.getProperty(GeneralOption.JSHINT_CONFIGURATION_FILE);
         log.info("Using JSHint configuration file {}", configurationFile);
         return configurationFile;
     }
-    
+
     @Override
     public String getName() {
         return SOURCE_NAME;
