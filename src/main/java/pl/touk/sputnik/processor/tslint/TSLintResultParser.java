@@ -1,5 +1,6 @@
 package pl.touk.sputnik.processor.tslint;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -17,7 +18,8 @@ import java.util.List;
 @Slf4j
 public class TSLintResultParser implements ExternalProcessResultParser {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+	private final ObjectMapper objectMapper = new ObjectMapper()
+			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     @Override
     public List<Violation> parse(String jsonViolations) {
