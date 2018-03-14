@@ -3,6 +3,7 @@ package pl.touk.sputnik.processor.detekt;
 import io.gitlab.arturbosch.detekt.api.Config;
 import io.gitlab.arturbosch.detekt.api.Detektion;
 import io.gitlab.arturbosch.detekt.api.YamlConfig;
+import io.gitlab.arturbosch.detekt.cli.ClasspathResourceConverter;
 import io.gitlab.arturbosch.detekt.core.DetektFacade;
 import io.gitlab.arturbosch.detekt.core.Detektor;
 import io.gitlab.arturbosch.detekt.core.PathFilter;
@@ -70,11 +71,22 @@ public class DetektProcessor implements ReviewProcessor {
 
     @NotNull
     private Detektor buildDetector(String commonPath) {
-        Path configPath = FileSystems.getDefault().getPath(configuration.getProperty(GeneralOption.DETEKT_CONFIG_FILE));
-        Config config = YamlConfig.Companion.load(configPath);
+        String configFilename = configuration.getProperty(GeneralOption.DETEKT_CONFIG_FILE);
+        Config config;
+        if (configFilename != null) {
+            Path configPath = FileSystems.getDefault().getPath(configFilename);
+            config = YamlConfig.Companion.load(configPath);
+        } else {
+            config = loadDefaultConfig();
+        }
         ProcessingSettings processingSettings = new ProcessingSettings(FileSystems.getDefault().getPath(commonPath), config, new ArrayList<PathFilter>(), false, false, new ArrayList<Path>());
 
         return DetektFacade.INSTANCE.instance(processingSettings, new RuleSetLocator(processingSettings).load(), Arrays.asList(new LoggingFileProcessor()));
+    }
+
+    @NotNull
+    private Config loadDefaultConfig() {
+        return YamlConfig.Companion.loadResource(new ClasspathResourceConverter().convert("default-detekt-config.yml"));
     }
 
     @NotNull
