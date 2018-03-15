@@ -17,7 +17,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DetektProcessorTest {
-    private static final String CONFIGURATION_WITH_KTLINT_ENABLED = "detekt/configuration/configurationWithEnabledDetekt.properties";
+    private static final String CONFIGURATION_WITH_KTLINT_ENABLED_AND_WITH_DETEKT_CONFIG_FILE = "detekt/configuration/configurationWithEnabledDetektAndDetektConfigFile.properties";
+    private static final String CONFIGURATION_WITH_KTLINT_ENABLED_AND_WITHOUT_DETEKT_CONFIG_FILE = "detekt/configuration/configurationWithEnabledDetektAndWithoutDetektConfigFile.properties";
 
     private static final String VIOLATIONS_1 = "src/test/resources/detekt/testFiles/Violations1.kt";
     private static final String VIOLATIONS_2 = "src/test/resources/detekt/testFiles/sub/Violations2.kt";
@@ -29,7 +30,7 @@ public class DetektProcessorTest {
 
     @Before
     public void setUp() throws Exception {
-        config = ConfigurationBuilder.initFromResource(CONFIGURATION_WITH_KTLINT_ENABLED);
+        config = ConfigurationBuilder.initFromResource(CONFIGURATION_WITH_KTLINT_ENABLED_AND_WITH_DETEKT_CONFIG_FILE);
         sut = new DetektProcessor(config);
     }
 
@@ -85,6 +86,18 @@ public class DetektProcessorTest {
 
         assertThat(result).isNotNull();
         assertThat(result.getViolations()).isEmpty();
+    }
+
+    @Test
+    public void shouldProcessReviewsOnDefaultConfig() {
+        Configuration configWithoutDetektConfigFile =
+                ConfigurationBuilder.initFromResource(CONFIGURATION_WITH_KTLINT_ENABLED_AND_WITHOUT_DETEKT_CONFIG_FILE);
+        Review review = getReview(VIOLATIONS_1, VIOLATIONS_2, VIOLATIONS_3, REVIEW_GROOVY_FILE);
+
+        DetektProcessor detektProcessor = new DetektProcessor(configWithoutDetektConfigFile);
+        ReviewResult result = detektProcessor.process(review);
+
+        assertThat(result).isNotNull();
     }
 
     private Review getReview(String... filePaths) {
