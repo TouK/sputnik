@@ -61,8 +61,8 @@ public class SaasFacade implements ConnectorFacade {
         String request = gson.toJson(fileViolations);
         try {
             saasConnector.sendReview(request);
-        } catch (HttpException ex) {
-            throw new SaasException("Error when listing files, check your api key", ex);
+        }catch (HttpException ex ) {
+            throw new SaasException("Error when publishing review", ex);
         } catch (URISyntaxException | IOException ex) {
             throw new SaasException("Error while publishing review", ex);
         }
