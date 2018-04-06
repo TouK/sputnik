@@ -96,7 +96,7 @@ dependencies {
     }
 
     // FindBugs dependencies
-    compile 'com.google.code.findbugs:findbugs:3.0.0'
+    compile 'com.google.code.findbugs:findbugs:3.0.1'
     compile 'xml-apis:xml-apis:1.0.b2' // this version is needed by FindBugs on runtime
 
     // Scalastyle http://www.scalastyle.org/
