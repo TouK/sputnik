@@ -1,0 +1,14 @@
+No config file found, using default configuration
+[
+    {
+        "message": "Missing module docstring",
+        "obj": "",
+        "column": 0,
+        "path": "PythonTest.py",
+        "line": 1,
+        "type": "convention",
+        "symbol": "missing-docstring",
+        "module": "PythonTest",
+        "message-id": "C0111"
+    }
+]
