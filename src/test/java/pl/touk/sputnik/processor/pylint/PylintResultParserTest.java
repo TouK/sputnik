@@ -70,6 +70,24 @@ public class PylintResultParserTest {
     }
 
     @Test
+    public void shouldNotFailOnMessageId() throws IOException, URISyntaxException {
+        // given
+        String response = IOUtils.toString(Resources.getResource("pylint/output-with-message-id.txt").toURI());
+
+        // when
+        List<Violation> violations = pylintResultParser.parse(response);
+
+        // then
+        assertThat(violations).hasSize(1);
+        assertThat(violations)
+                .extracting("severity")
+                .containsExactly(Severity.INFO);
+        assertThat(violations)
+                .extracting("message")
+                .containsExactly("Missing module docstring [C0111: missing-docstring]");
+    }
+
+    @Test
     public void shouldThrowExceptionWhenFatalPylintErrorOccurs() throws IOException, URISyntaxException {
         // given
         String response = IOUtils.toString(Resources.getResource("pylint/output-with-fatal.txt").toURI());

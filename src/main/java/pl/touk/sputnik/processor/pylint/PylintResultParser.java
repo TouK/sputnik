@@ -50,7 +50,11 @@ class PylintResultParser implements ExternalProcessResultParser {
     }
 
     private String formatViolationMessageFromPylint(PylintMessage message) {
-        return message.getMessage() + " [" + message.getSymbol() + "]";
+        if (message.getMessageId() != null) {
+            return message.getMessage() + " [" + message.getMessageId() + ": " + message.getSymbol() + "]";
+        } else {
+            return message.getMessage() + " [" + message.getSymbol() + "]";
+        }
     }
 
     private Severity pylintMessageTypeToSeverity(String message, String messageType) {
