@@ -86,7 +86,9 @@ public enum GeneralOption implements ConfigurationOption {
     JAVA_TEST_DIR("java.test.dir", "Java root test directory", Paths.SRC_TEST),
 
     DETEKT_ENABLED("detekt.enabled", "Detekt enabled", "false"),
-    DETEKT_CONFIG_FILE("detekt.config.file", "Detekt configuration file location", null);
+    DETEKT_CONFIG_FILE("detekt.config.file", "Detekt configuration file location", null),
+
+    SHELLCHECK_ENABLED("shellcheck.enabled", "Shellcheck enabled", "false");
 
     private final String key;
     private final String description;
