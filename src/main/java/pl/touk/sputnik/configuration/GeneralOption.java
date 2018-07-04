@@ -88,7 +88,8 @@ public enum GeneralOption implements ConfigurationOption {
     DETEKT_ENABLED("detekt.enabled", "Detekt enabled", "false"),
     DETEKT_CONFIG_FILE("detekt.config.file", "Detekt configuration file location", null),
 
-    SHELLCHECK_ENABLED("shellcheck.enabled", "Shellcheck enabled", "false");
+    SHELLCHECK_ENABLED("shellcheck.enabled", "Shellcheck enabled", "false"),
+    SHELLCHECK_EXCLUDE("shellcheck.exclude", "Shellcheck exclude rules", null);
 
     private final String key;
     private final String description;

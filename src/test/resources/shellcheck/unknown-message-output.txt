@@ -1,0 +1,10 @@
+[
+  {
+    "file": "myotherscript",
+    "line": 2,
+    "column": 2,
+    "level": "fatal",
+    "code": 1035,
+    "message": "You need a space after the [ and before the ]."
+  }
+]

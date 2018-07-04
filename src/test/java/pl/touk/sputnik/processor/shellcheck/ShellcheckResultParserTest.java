@@ -16,6 +16,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.core.StringStartsWith.startsWith;
 
 @RunWith(JUnitParamsRunner.class)
 public class ShellcheckResultParserTest {
@@ -32,6 +33,7 @@ public class ShellcheckResultParserTest {
 
     @Test
     @Parameters({
+            "shellcheck/empty-file.txt",
             "shellcheck/no-violations.txt"
     })
     public void shouldParseNoViolations(String filePath) throws IOException, URISyntaxException {
@@ -64,5 +66,14 @@ public class ShellcheckResultParserTest {
                 .contains("[Code:1035] Message: You need a space after the [ and before the ].")
                 .contains("[Code:2039] Message: In POSIX sh, echo flags are undefined.")
                 .contains("[Code:2086] Message: Double quote to prevent globbing and word splitting.");
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenViolationWithUnknownMessageType() throws IOException, URISyntaxException {
+        String response = IOUtils.toString(Resources.getResource("shellcheck/unknown-message-output.txt").toURI());
+
+        thrown.expect(ShellcheckException.class);
+        thrown.expectMessage(startsWith("Unknown message type returned by shellcheck (type = fatal)"));
+        shellcheckResultParser.parse(response);
     }
 }

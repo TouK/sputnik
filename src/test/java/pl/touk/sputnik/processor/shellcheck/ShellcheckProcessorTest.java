@@ -22,6 +22,7 @@ public class ShellcheckProcessorTest extends TestEnvironment {
 
     private static final String CONFIGURATION_WITH_SHELLCHECK_ENABLED = "shellcheck/sputnik/noConfigurationFile.properties";
     private static final String REVIEW_FILE_WITH_ONE_VIOLATION = "src/test/resources/shellcheck/testFiles/oneViolation.sh";
+    private static final String REVIEW_FILE_WITH_EXCLUDED_VIOLATION = "src/test/resources/shellcheck/testFiles/excludedViolation.sh";
     private static final String REVIEW_FILE_WITH_MULTIPLE_VIOLATIONS = "src/test/resources/shellcheck/testFiles/multipleViolations.sh";
     private ShellcheckProcessor sut;
 
@@ -78,11 +79,22 @@ public class ShellcheckProcessorTest extends TestEnvironment {
         assertThat(violation2.getMessage()).isEqualTo("[Code:1037] Message: Braces are required for positionals over 9, e.g. ${10}.");
         assertThat(violation2.getSeverity()).isEqualTo(Severity.ERROR);
 
-        Violation violation3= result.getViolations().get(2);
+        Violation violation3 = result.getViolations().get(2);
         assertThat(violation3.getFilenameOrJavaClassName()).contains(REVIEW_FILE_WITH_MULTIPLE_VIOLATIONS);
         assertThat(violation3.getLine()).isEqualTo(7);
         assertThat(violation3.getMessage()).isEqualTo("[Code:2078] Message: This expression is constant. Did you forget a $ somewhere?");
         assertThat(violation3.getSeverity()).isEqualTo(Severity.ERROR);
+    }
+
+    @Test
+    public void shouldReturnNoViolationWhenRuleExcludedInConfig() {
+        Assume.assumeTrue(isShellcheckInstalled());
+        Review review = getReview(REVIEW_FILE_WITH_EXCLUDED_VIOLATION);
+
+        ReviewResult result = sut.process(review);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getViolations()).isEmpty();
     }
 
     private boolean isShellcheckInstalled() {
