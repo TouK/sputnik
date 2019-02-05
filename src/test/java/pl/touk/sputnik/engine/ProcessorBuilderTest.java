@@ -23,7 +23,7 @@ public class ProcessorBuilderTest {
     public void shouldBuildDisabledProcessors() {
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.CHECKSTYLE_ENABLED.getKey(), "false",
-                GeneralOption.FINDBUGS_ENABLED.getKey(), "false",
+                GeneralOption.SPOTBUGS_ENABLED.getKey(), "false",
                 GeneralOption.PMD_ENABLED.getKey(), "false",
                 GeneralOption.SCALASTYLE_ENABLED.getKey(), "false",
                 GeneralOption.CODE_NARC_ENABLED.getKey(), "false"
@@ -36,7 +36,7 @@ public class ProcessorBuilderTest {
     public void shouldBuildAllProcessors() {
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.CHECKSTYLE_ENABLED.getKey(), "true",
-                GeneralOption.FINDBUGS_ENABLED.getKey(), "true",
+                GeneralOption.SPOTBUGS_ENABLED.getKey(), "true",
                 GeneralOption.PMD_ENABLED.getKey(), "true",
                 GeneralOption.SCALASTYLE_ENABLED.getKey(), "true",
                 GeneralOption.CODE_NARC_ENABLED.getKey(), "true"

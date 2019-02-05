@@ -1,4 +1,4 @@
-package pl.touk.sputnik.processor.findbugs;
+package pl.touk.sputnik.processor.spotbugs;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -16,26 +16,25 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class FindBugsProcessorTest extends TestEnvironment {
+public class SpotBugsProcessorTest extends TestEnvironment {
 
-    private FindBugsProcessor findBugsProcessor;
+    private static final String GRADLE = "gradle";
+
+    private SpotBugsProcessor spotBugsProcessor;
 
     @Before
-    public void setUp() throws Exception {
-        config = new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.BUILD_TOOL.getKey(), "gradle"));
-        findBugsProcessor = new FindBugsProcessor(config);
+    public void setUp() {
+        config = new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.BUILD_TOOL.getKey(), GRADLE));
+        spotBugsProcessor = new SpotBugsProcessor(config);
     }
 
     @Test
     public void shouldReturnBasicViolationsOnEmptyClass() {
-        //given
         List<ReviewFile> files = ImmutableList.of(new ReviewFile("src/test/java/toreview/TestClass.java"));
         Review review = new Review(files, ReviewFormatterFactory.get(config));
 
-        //when
-        ReviewResult reviewResult = findBugsProcessor.process(review);
+        ReviewResult reviewResult = spotBugsProcessor.process(review);
 
-        //then
         assertThat(reviewResult).isNotNull();
         assertThat(reviewResult.getViolations())
                 .isNotEmpty()
@@ -49,10 +48,8 @@ public class FindBugsProcessorTest extends TestEnvironment {
 
     @Test
     public void shouldReturnEmptyWhenNoFilesToReview() {
-        //when
-        ReviewResult reviewResult = findBugsProcessor.process(nonexistantReview());
+        ReviewResult reviewResult = spotBugsProcessor.process(nonexistantReview());
 
-        //then
         assertThat(reviewResult).isNotNull();
         assertThat(reviewResult.getViolations()).isEmpty();
     }

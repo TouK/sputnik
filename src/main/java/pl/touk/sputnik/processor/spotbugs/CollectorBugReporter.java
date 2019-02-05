@@ -1,4 +1,4 @@
-package pl.touk.sputnik.processor.findbugs;
+package pl.touk.sputnik.processor.spotbugs;
 
 import edu.umd.cs.findbugs.*;
 import edu.umd.cs.findbugs.classfile.ClassDescriptor;
@@ -42,7 +42,7 @@ public class CollectorBugReporter extends AbstractBugReporter {
 
     @Override
     public void finish() {
-        log.info("FindBugs audit finished");
+        log.info("SpotBugs audit finished");
 
     }
 
