@@ -1,6 +1,6 @@
 ![sputnik](http://touk.github.io/sputnik/images/logo-color-bgtransparent-small.png)
 
-> Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD, SpotBugs, Scalastyle, CodeNarc, JSLint, JSHint, TSLint and Sonar for you!
+> Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD, SpotBugs (formerly known as FindBugs), Scalastyle, CodeNarc, JSLint, JSHint, TSLint and Sonar for you!
 
 [![Build Status](https://img.shields.io/travis/TouK/sputnik/master.svg?style=flat-square)](https://travis-ci.org/TouK/sputnik)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/pl.touk/sputnik/badge.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/pl.touk/sputnik)
@@ -50,6 +50,8 @@ detekt.config.file=src/test/resources/detekt/config/config.yml
 
 If you want sputnik to use your SonarQube rules just download them from your SonarQube profile and use these with `checkstyle.configurationFile`, `pmd.ruleSets` and `spotbugs.includeFilter` variables.
 
+To ease migration from FindBugs to SpotBugs these three configuration properties still work and affect SpotBugs now: `findbugs.enabled`, `findbugs.includeFilter` and `findbugs.excludeFilter`.
+
 ## Installation
 
 - clone this repository and build it: `gradle distZip` or download [distribution](https://github.com/TouK/sputnik/releases/download/sputnik-1.5.1/sputnik-1.5.1.zip)
@@ -93,7 +95,6 @@ So add REPO_NAME~BRANCH_NAME~ to changeId Sputnik's param, for example:
 ```
 sputnik --conf /path/to/conf.properties --changeId myProject~master~I0a2afb7ae4a94ab1ab473ba00e2ec7de381799a0 --revisionId 3f37692af2290e8e3fd16d2f43701c24346197f0
 ```
-
 
 ### Stash support
 
