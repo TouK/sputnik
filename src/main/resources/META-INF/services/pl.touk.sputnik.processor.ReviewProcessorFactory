@@ -1,6 +1,6 @@
 pl.touk.sputnik.processor.checkstyle.CheckstyleReviewProcessorFactory
 pl.touk.sputnik.processor.pmd.PmdReviewProcessorFactory
-pl.touk.sputnik.processor.findbugs.FindbugsReviewProcessorFactory
+pl.touk.sputnik.processor.spotbugs.SpotBugsReviewProcessorFactory
 pl.touk.sputnik.processor.scalastyle.ScalastyleReviewProcessorFactory
 pl.touk.sputnik.processor.codenarc.CodeNarcReviewProcessorFactory
 pl.touk.sputnik.processor.jslint.JsLintReviewProcessorFactory

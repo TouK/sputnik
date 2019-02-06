@@ -69,6 +69,7 @@ dependencies {
     compile 'commons-cli:commons-cli:1.2'
     compile 'org.sonarsource.scanner.api:sonar-scanner-api:2.10.0.1189'
     compile 'com.jayway.jsonpath:json-path:0.9.1'
+    compile 'commons-io:commons-io:2.4'
 
     compile 'com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:0.8.8'
 
@@ -86,7 +87,7 @@ dependencies {
         exclude group: 'org.ow2.asm'
     }
 
-    compile('jaxen:jaxen:1.1.6') { //1.1.6 in FindBugs
+    compile('jaxen:jaxen:1.1.6') { //1.1.6 in SpotBugs
         exclude group: 'xerces'
         exclude group: 'xalan'
         exclude group: 'com.ibm.icu'
@@ -95,9 +96,8 @@ dependencies {
         exclude group: 'xml-apis'
     }
 
-    // FindBugs dependencies
-    compile 'com.google.code.findbugs:findbugs:3.0.1'
-    compile 'xml-apis:xml-apis:1.0.b2' // this version is needed by FindBugs on runtime
+    // SpotBugs dependencies
+    compile 'com.github.spotbugs:spotbugs:3.1.11'
 
     // Scalastyle http://www.scalastyle.org/
     compile 'org.scalastyle:scalastyle_2.10:0.4.0'
@@ -206,7 +206,7 @@ uploadArchives {
             pom.project {
                 name 'Sputnik'
                 packaging 'jar'
-                description 'Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD and FindBugs for you!'
+                description 'Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD and SpotBugs for you!'
                 url 'https://github.com/TouK/sputnik/'
 
                 scm {

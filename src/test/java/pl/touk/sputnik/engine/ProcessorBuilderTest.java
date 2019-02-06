@@ -20,10 +20,10 @@ public class ProcessorBuilderTest {
     }
 
     @Test
-    public void shouldBuildDisabledProcessors() {
+    public void shouldNotBuildDisabledProcessors() {
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.CHECKSTYLE_ENABLED.getKey(), "false",
-                GeneralOption.FINDBUGS_ENABLED.getKey(), "false",
+                GeneralOption.SPOTBUGS_ENABLED.getKey(), "false",
                 GeneralOption.PMD_ENABLED.getKey(), "false",
                 GeneralOption.SCALASTYLE_ENABLED.getKey(), "false",
                 GeneralOption.CODE_NARC_ENABLED.getKey(), "false"
@@ -36,12 +36,50 @@ public class ProcessorBuilderTest {
     public void shouldBuildAllProcessors() {
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.CHECKSTYLE_ENABLED.getKey(), "true",
-                GeneralOption.FINDBUGS_ENABLED.getKey(), "true",
+                GeneralOption.SPOTBUGS_ENABLED.getKey(), "true",
                 GeneralOption.PMD_ENABLED.getKey(), "true",
                 GeneralOption.SCALASTYLE_ENABLED.getKey(), "true",
                 GeneralOption.CODE_NARC_ENABLED.getKey(), "true"
         ));
 
         assertThat(ProcessorBuilder.buildProcessors(config)).hasSize(5);
+    }
+
+    @Test
+    public void shouldBuildSpotBugsProcessor() {
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
+                GeneralOption.SPOTBUGS_ENABLED.getKey(), "true"
+        ));
+
+        assertThat(ProcessorBuilder.buildProcessors(config)).hasSize(1);
+    }
+
+    @Test
+    public void shouldBuildSpotBugsProcessorWithFindBugsProperty() {
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
+                GeneralOption.FINDBUGS_ENABLED.getKey(), "true"
+        ));
+
+        assertThat(ProcessorBuilder.buildProcessors(config)).hasSize(1);
+    }
+
+    @Test
+    public void shouldBuildSpotBugsIfOnlySpotBugsIsEnabled() {
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
+                GeneralOption.SPOTBUGS_ENABLED.getKey(), "true",
+                GeneralOption.FINDBUGS_ENABLED.getKey(), "false"
+        ));
+
+        assertThat(ProcessorBuilder.buildProcessors(config)).hasSize(1);
+    }
+
+    @Test
+    public void shouldBuildSpotBugsIfOnlyFindBugsIsEnabled() {
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
+                GeneralOption.SPOTBUGS_ENABLED.getKey(), "false",
+                GeneralOption.FINDBUGS_ENABLED.getKey(), "true"
+        ));
+
+        assertThat(ProcessorBuilder.buildProcessors(config)).hasSize(1);
     }
 }

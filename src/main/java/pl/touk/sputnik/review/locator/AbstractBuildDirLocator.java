@@ -1,17 +1,15 @@
 package pl.touk.sputnik.review.locator;
 
-import static org.apache.commons.lang3.StringUtils.substringBeforeLast;
-
-import java.util.List;
-
-import javax.annotation.Nullable;
-
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import java.util.List;
+
+import static org.apache.commons.lang3.StringUtils.substringBeforeLast;
 
 @AllArgsConstructor
 public abstract class AbstractBuildDirLocator implements BuildDirLocator {

@@ -1,4 +1,4 @@
-package pl.touk.sputnik.processor.findbugs;
+package pl.touk.sputnik.processor.spotbugs;
 
 import edu.umd.cs.findbugs.ClassScreener;
 import edu.umd.cs.findbugs.DetectorFactoryCollection;
@@ -24,12 +24,12 @@ import pl.touk.sputnik.review.locator.BuildDirLocatorFactory;
 import pl.touk.sputnik.review.transformer.ClassNameTransformer;
 
 @Slf4j
-public class FindBugsProcessor implements ReviewProcessor {
-    private static final String SOURCE_NAME = "FindBugs";
+public class SpotBugsProcessor implements ReviewProcessor {
+    private static final String SOURCE_NAME = "SpotBugs";
     private final CollectorBugReporter collectorBugReporter;
     private final Configuration config;
 
-    public FindBugsProcessor(@NotNull Configuration configuration) {
+    public SpotBugsProcessor(@NotNull Configuration configuration) {
         collectorBugReporter = createBugReporter();
         config = configuration;
     }
@@ -37,12 +37,12 @@ public class FindBugsProcessor implements ReviewProcessor {
     @Nullable
     @Override
     public ReviewResult process(@NotNull Review review) {
-        FindBugs2 findBugs = createFindBugs2(review);
+        FindBugs2 spotBugs = createFindBugs2(review);
         try {
-            findBugs.execute();
+            spotBugs.execute();
         } catch (Exception e) {
-            log.error("FindBugs processing error", e);
-            throw new ReviewException("FindBugs processing error", e);
+            log.error("SpotBugs processing error", e);
+            throw new ReviewException("SpotBugs processing error", e);
         }
         return collectorBugReporter.getReviewResult();
     }
@@ -107,15 +107,21 @@ public class FindBugsProcessor implements ReviewProcessor {
 
     @Nullable
     private String getIncludeFilterFilename() {
-        String includeFilterFilename = config.getProperty(GeneralOption.FINDBUGS_INCLUDE_FILTER);
-        log.info("Using FindBugs include filter file {}", includeFilterFilename);
+        String includeFilterFilename = config.getProperty(GeneralOption.SPOTBUGS_INCLUDE_FILTER);
+        if (StringUtils.isBlank(includeFilterFilename)) {
+            includeFilterFilename = config.getProperty(GeneralOption.FINDBUGS_INCLUDE_FILTER);
+        }
+        log.info("Using SpotBugs include filter file {}", includeFilterFilename);
         return includeFilterFilename;
     }
 
     @Nullable
     private String getExcludeFilterFilename() {
-        String excludeFilterFilename = config.getProperty(GeneralOption.FINDBUGS_EXCLUDE_FILTER);
-        log.info("Using FindBugs exclude filter file {}", excludeFilterFilename);
+        String excludeFilterFilename = config.getProperty(GeneralOption.SPOTBUGS_EXCLUDE_FILTER);
+        if (StringUtils.isBlank(excludeFilterFilename)) {
+            excludeFilterFilename = config.getProperty(GeneralOption.FINDBUGS_EXCLUDE_FILTER);
+        }
+        log.info("Using SpotBugs exclude filter file {}", excludeFilterFilename);
         return excludeFilterFilename;
     }
 }

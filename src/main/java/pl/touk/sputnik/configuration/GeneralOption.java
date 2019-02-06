@@ -47,6 +47,10 @@ public enum GeneralOption implements ConfigurationOption {
     FINDBUGS_INCLUDE_FILTER("findbugs.includeFilter", "FindBugs include filter file", ""),
     FINDBUGS_EXCLUDE_FILTER("findbugs.excludeFilter", "FindBugs exclude filter file", ""),
 
+    SPOTBUGS_ENABLED("spotbugs.enabled", "SpotBugs enabled", "false"),
+    SPOTBUGS_INCLUDE_FILTER("spotbugs.includeFilter", "SpotBugs include filter file", ""),
+    SPOTBUGS_EXCLUDE_FILTER("spotbugs.excludeFilter", "SpotBugs exclude filter file", ""),
+
     SCALASTYLE_ENABLED("scalastyle.enabled", "ScalaStyle enabled", "false"),
     SCALASTYLE_CONFIGURATION_FILE("scalastyle.configurationFile", "ScalaStyle configuration file", ""),
 
