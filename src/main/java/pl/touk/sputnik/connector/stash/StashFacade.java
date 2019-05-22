@@ -29,6 +29,7 @@ import java.util.List;
 
 @Slf4j
 public class StashFacade implements ConnectorFacade {
+    private static final int FILE_COMMENT_LINE_POSITION = 0;
     private StashConnector stashConnector;
     private ObjectMapper objectMapper = new ObjectMapper();
     private final Configuration configuration;
@@ -150,13 +151,22 @@ public class StashFacade implements ConnectorFacade {
             String response = stashConnector.getDiffByLine(filename);
             List<JSONObject> diffJsonList = JsonPath.read(response, "$.diffs[*].hunks[*].segments[*]");
             List<JSONObject> lineCommentJsonList = JsonPath.read(response, "$.diffs[*].lineComments[*]['text', 'id']");
+            List<JSONObject> fileCommentJsonList = JsonPath.read(response, "$.diffs[*].fileComments[*]['text', 'id']");
             List<DiffSegment> segments = transform(diffJsonList, DiffSegment.class);
             List<LineComment> lineComments = transform(lineCommentJsonList, LineComment.class);
+            List<LineComment> fileComments = transform(fileCommentJsonList, LineComment.class);
             SingleFileChanges changes = SingleFileChanges.builder().filename(filename).build();
             for (DiffSegment segment : segments) {
                 for (LineSegment line : segment.lines) {
                     changes.addChange(line.destination, ChangeType.valueOf(segment.type), getComment(lineComments, line.commentIds));
                 }
+            }
+            if (!fileComments.isEmpty()) {
+                List<String> comments = new ArrayList<>();
+                for (LineComment lineComment : fileComments) {
+                    comments.add(lineComment.text);
+                }
+                changes.addChange(FILE_COMMENT_LINE_POSITION, ChangeType.NONE, comments);
             }
             return changes;
         } catch (URISyntaxException | IOException e) {

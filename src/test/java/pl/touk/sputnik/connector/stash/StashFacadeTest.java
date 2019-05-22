@@ -3,9 +3,13 @@ package pl.touk.sputnik.connector.stash;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+import junitparams.naming.TestCaseName;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import pl.touk.sputnik.HttpConnectorEnv;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
@@ -18,6 +22,7 @@ import java.util.Map;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@RunWith(JUnitParamsRunner.class)
 public class StashFacadeTest extends HttpConnectorEnv {
 
     private static String SOME_PULL_REQUEST_ID = "12314";
@@ -108,4 +113,29 @@ public class StashFacadeTest extends HttpConnectorEnv {
         assertThat(files).extracting("reviewFilename").containsOnly("src/main/java/example/App2.java");
     }
 
+    @Parameters({"/json/stash-diff-no-file-comments.json, 1",
+            "/json/stash-diff-with-file-comment.json, 0"})
+    @TestCaseName("file comment should be send {2} time(s)")
+    @Test
+    public void fileComments(String diffFile, int expectedNumberOfCommentsSent) throws Exception {
+        String pullRequestResourceUrl = String.format("%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s",
+                FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID);
+        stubGet(urlMatching(pullRequestResourceUrl + "/diff.*"), diffFile);
+        stubGet(urlEqualTo(pullRequestResourceUrl + "/changes"), "/json/stash-changes-for-file-violation.json");
+        stubFor(post(urlEqualTo(pullRequestResourceUrl + "/comments")).willReturn(aResponse().withStatus(200)));
+        String filename = "src/main/java/com/example/app/Runner.java";
+        Review review = new Review(ImmutableList.of(new ReviewFile(filename)), ReviewFormatterFactory.get(config));
+        review.addError("Checkstyle", new Violation(filename, 0, "File does not end with a newline.", Severity.WARNING));
+        review.getMessages().add("Total 1 violations found");
+
+        stashFacade.publish(review);
+
+        verify(expectedNumberOfCommentsSent, postRequestedFor(urlEqualTo(pullRequestResourceUrl + "/comments"))
+                .withRequestBody(equalToJson("{\"text\":\"[Checkstyle] WARNING: File does not end with a newline.\"," +
+                        "\"anchor\":{\"line\":0," +
+                        "\"lineType\":\"CONTEXT\"," +
+                        "\"fileType\":null," +
+                        "\"path\":\"src/main/java/com/example/app/Runner.java\",\n" +
+                        "\"srcPath\":\"src/main/java/com/example/app/Runner.java\"}}")));
+    }
 }
