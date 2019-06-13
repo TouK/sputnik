@@ -7,7 +7,7 @@ import net.sourceforge.pmd.Rule;
 import net.sourceforge.pmd.RulePriority;
 import net.sourceforge.pmd.RuleViolation;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
@@ -17,14 +17,13 @@ import pl.touk.sputnik.review.Violation;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class CollectorRendererTest extends TestEnvironment {
+class CollectorRendererTest extends TestEnvironment {
 
     private CollectorRenderer renderer;
 
@@ -34,7 +33,7 @@ public class CollectorRendererTest extends TestEnvironment {
     private static final String DESCRIPTION_WITH_DETAILS = Joiner.on('\n').join(VIOLATION_DESCRIPTION, RULE_DESCRIPTION, EXTERNAL_INFO_URL);
 
     @Test
-    public void shouldReportViolationWithDetails() throws IOException {
+    void shouldReportViolationWithDetails() throws IOException {
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.PMD_SHOW_VIOLATION_DETAILS.getKey(), "true"));
         Rule rule = createRule(RULE_DESCRIPTION, EXTERNAL_INFO_URL, RulePriority.HIGH, config);
         Report report = createReportWithVolation(createRuleViolation(rule, VIOLATION_DESCRIPTION, config), config);
@@ -47,7 +46,7 @@ public class CollectorRendererTest extends TestEnvironment {
     }
 
     @Test
-    public void shouldReportViolationWithoutDetails() throws IOException {
+    void shouldReportViolationWithoutDetails() throws IOException {
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.PMD_SHOW_VIOLATION_DETAILS.getKey(), "false"));
         Rule rule = createRule(RULE_DESCRIPTION, EXTERNAL_INFO_URL, RulePriority.MEDIUM, config);
         Report report = createReportWithVolation(createRuleViolation(rule, VIOLATION_DESCRIPTION, config), config);

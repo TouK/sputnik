@@ -1,9 +1,8 @@
 package pl.touk.sputnik.processor.tslint;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Before;
-import org.junit.Test;
-import pl.touk.sputnik.review.ReviewResult;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;
 
@@ -12,17 +11,17 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TSLintResultParserTest {
+class TSLintResultParserTest {
 
     private TSLintResultParser fixture;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         fixture = new TSLintResultParser();
     }
 
     @Test
-    public void shouldReturnBasicViolationsOnSimpleFunction() throws IOException {
+    void shouldReturnBasicViolationsOnSimpleFunction() throws IOException {
         // given
         String jsonResponse = IOUtils.toString(getClass().getResourceAsStream("/json/tslint-results.json"));
 
@@ -39,9 +38,8 @@ public class TSLintResultParserTest {
     }
 
     @Test
-    public void shouldNotModifyReviewResultWhenNoViolation() {
+    void shouldNotModifyReviewResultWhenNoViolation() {
         // given
-        ReviewResult reviewResult = new ReviewResult();
         String jsonViolations = "";
 
         // when

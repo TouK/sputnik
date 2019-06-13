@@ -1,7 +1,7 @@
 package pl.touk.sputnik.engine;
 
 import com.google.common.collect.ImmutableMap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.configuration.CliOption;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
@@ -22,17 +22,17 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.MapEntry.entry;
 
-public class VisitorBuilderTest {
+class VisitorBuilderTest {
 
     @Test
-    public void shouldNotBuildBeforeVisitors() {
+    void shouldNotBuildBeforeVisitors() {
         Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
 
         assertThat(new VisitorBuilder().buildBeforeReviewVisitors(config)).isEmpty();
     }
 
     @Test
-    public void shouldNotBuildDisabledBeforeVisitors() {
+    void shouldNotBuildDisabledBeforeVisitors() {
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.PROCESS_TEST_FILES.getKey(), "true"
         ));
@@ -41,7 +41,7 @@ public class VisitorBuilderTest {
     }
 
     @Test
-    public void shouldBuildBeforeVisitors() {
+    void shouldBuildBeforeVisitors() {
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.PROCESS_TEST_FILES.getKey(), "false"
         ));
@@ -53,7 +53,7 @@ public class VisitorBuilderTest {
     }
 
     @Test
-    public void shouldAddRegexFilterToBeforeVisitorsWhenConfigured() {
+    void shouldAddRegexFilterToBeforeVisitorsWhenConfigured() {
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
             CliOption.FILE_REGEX.getKey(), "^myModule/.+"
         ));
@@ -65,7 +65,7 @@ public class VisitorBuilderTest {
     }
 
     @Test
-    public void shouldBuildAfterVisitors() {
+    void shouldBuildAfterVisitors() {
         Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
 
         assertThat(new VisitorBuilder().buildAfterReviewVisitors(config))
@@ -75,7 +75,7 @@ public class VisitorBuilderTest {
     }
 
     @Test
-    public void shouldNotBuildDisabledAfterVisitors() {
+    void shouldNotBuildDisabledAfterVisitors() {
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.MAX_NUMBER_OF_COMMENTS.getKey(), "0"
         ));
@@ -87,7 +87,7 @@ public class VisitorBuilderTest {
     }
 
     @Test
-    public void shouldBuildFilterOutCommentVisitor() {
+    void shouldBuildFilterOutCommentVisitor() {
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.MAX_NUMBER_OF_COMMENTS.getKey(), "50"
         ));
@@ -99,7 +99,7 @@ public class VisitorBuilderTest {
     }
 
     @Test
-    public void shouldBuildNoScoreVisitor() {
+    void shouldBuildNoScoreVisitor() {
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.SCORE_STRATEGY.getKey(), "NOscore"
         ));
@@ -111,7 +111,7 @@ public class VisitorBuilderTest {
     }
 
     @Test
-    public void shouldBuildScoreAlwaysPassVisitor() {
+    void shouldBuildScoreAlwaysPassVisitor() {
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.SCORE_STRATEGY.getKey(), "scoreAlwaysPass",
                 GeneralOption.SCORE_PASSING_KEY.getKey(), "Verified",
@@ -128,7 +128,7 @@ public class VisitorBuilderTest {
     }
 
     @Test
-    public void shouldBuildScorePassIfEmptyVisitor() {
+    void shouldBuildScorePassIfEmptyVisitor() {
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.SCORE_STRATEGY.getKey(), "SCOREPASSIFEMPTY",
                 GeneralOption.SCORE_PASSING_KEY.getKey(), "Verified",
@@ -148,7 +148,7 @@ public class VisitorBuilderTest {
     }
 
     @Test
-    public void shouldBuildScorePassIfNoErrorsVisitor() {
+    void shouldBuildScorePassIfNoErrorsVisitor() {
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.SCORE_STRATEGY.getKey(), "SCOREPassIfNoErrors",
                 GeneralOption.SCORE_PASSING_KEY.getKey(), "Code-Review",
@@ -168,7 +168,7 @@ public class VisitorBuilderTest {
     }
 
     @Test
-    public void shouldBuildDefaultScoreAlwaysPassIfStrategyIsUnknown() {
+    void shouldBuildDefaultScoreAlwaysPassIfStrategyIsUnknown() {
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.SCORE_STRATEGY.getKey(), "mySimpleStrategy"
         ));

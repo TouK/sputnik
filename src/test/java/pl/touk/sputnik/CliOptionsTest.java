@@ -1,22 +1,23 @@
 package pl.touk.sputnik;
 
 import org.apache.commons.cli.CommandLine;
-import org.junit.Test;
-import org.junit.Assert;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.configuration.CliOption;
 import pl.touk.sputnik.configuration.CliWrapper;
 
-public class CliOptionsTest {
+import static pl.touk.sputnik.SputnikAssertions.assertThat;
+
+class CliOptionsTest {
+
+    private final static String SAMPLE_CONFIG = "/home/spoonman/sputnik/conf.properties";
+    private final static String SAMPLE_CHANGE_ID = "I0a2afb7ae4a94ab1ab473ba00e2ec7de381799a0";
+    private final static String SAMPLE_REVISION_ID = "3f37692af2290e8e3fd16d2f43701c24346197f0";
+    private final static String SAMPLE_PULL_REQUEST_ID = "123";
 
     private CliWrapper fixture = new CliWrapper();
 
-    private static String SAMPLE_CONFIG = "/home/spoonman/sputnik/conf.properties";
-    private static String SAMPLE_CHANGE_ID = "I0a2afb7ae4a94ab1ab473ba00e2ec7de381799a0";
-    private static String SAMPLE_REVISION_ID = "3f37692af2290e8e3fd16d2f43701c24346197f0";
-    private static String SAMPLE_PULL_REQUEST_ID = "123";
-
     @Test
-    public void shouldExecuteGerritReview() throws Exception {
+    void shouldExecuteGerritReview() throws Exception {
         // given
         String[] args = toArgs("-conf %s -changeId %s -revisionId %s",
                 SAMPLE_CONFIG, SAMPLE_CHANGE_ID, SAMPLE_REVISION_ID);
@@ -31,7 +32,7 @@ public class CliOptionsTest {
     }
 
     @Test
-    public void shouldExecuteStashReview() throws Exception {
+    void shouldExecuteStashReview() throws Exception {
         // given
         String[] args = toArgs("-conf %s -pullRequestId %s", SAMPLE_CONFIG, SAMPLE_PULL_REQUEST_ID);
 
@@ -60,14 +61,14 @@ public class CliOptionsTest {
         }
 
         public CliAssert hasOption(String optionName) {
-            Assert.assertTrue(object.hasOption(optionName));
+            assertThat(object.hasOption(optionName)).isTrue();
             this.optionName = optionName;
             return this;
         }
 
         public CliAssert withValue(String value) {
-            Assert.assertNotNull("Call hasOption first!", optionName);
-            Assert.assertEquals(value, object.getOptionValue(optionName));
+            assertThat(optionName).withFailMessage("Call hasOption first!").isNotNull();
+            assertThat(object.getOptionValue(optionName)).isEqualTo(value);
             return this;
         }
     }

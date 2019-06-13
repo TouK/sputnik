@@ -2,33 +2,38 @@ package pl.touk.sputnik.configuration;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ConfigurationBuilderTest {
+class ConfigurationBuilderTest {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldFailWhenConfigFilenameIsEmpty() {
-        ConfigurationBuilder.initFromFile("");
-    }
+    @Test
+    void shouldFailWhenConfigFilenameIsEmpty() {
+        Throwable thrown = catchThrowable(() -> ConfigurationBuilder.initFromFile(""));
 
-    @Test(expected = RuntimeException.class)
-    public void shouldFailWhenConfigFileDoesNotExist() {
-        ConfigurationBuilder.initFromFile("wrong.properties");
+        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void shouldReadPropertiesFromFile() {
+    void shouldFailWhenConfigFileDoesNotExist() {
+        Throwable thrown = catchThrowable(() -> ConfigurationBuilder.initFromFile("wrong.properties"));
+
+        assertThat(thrown).isInstanceOf(RuntimeException.class);
+    }
+
+    @Test
+    void shouldReadPropertiesFromFile() {
         Configuration config = ConfigurationBuilder.initFromResource("sample-test.properties");
 
         assertThat(config.getProperty(GeneralOption.PORT)).isEqualTo("9999");
     }
 
     @Test
-    public void shouldOverrideSystemProperties() {
+    void shouldOverrideSystemProperties() {
         System.setProperty(GeneralOption.USERNAME.getKey(), "userala");
         Configuration config = ConfigurationBuilder.initFromResource("sample-test.properties");
 
@@ -36,7 +41,7 @@ public class ConfigurationBuilderTest {
     }
 
     @Test
-    public void shouldReturnNotOverridedSystemProperties() {
+    void shouldReturnNotOverriddenSystemProperties() {
         System.setProperty("some.system.property", "1234");
         Configuration config = ConfigurationBuilder.initFromResource("sample-test.properties");
 
@@ -44,7 +49,7 @@ public class ConfigurationBuilderTest {
     }
 
     @Test
-    public void shouldUpdateWithCliOptions() {
+    void shouldUpdateWithCliOptions() {
         Configuration config = ConfigurationBuilder.initFromResource("sample-test.properties");
         CommandLine commandLineMock = buildCommandLine();
 

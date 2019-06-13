@@ -1,30 +1,35 @@
 package pl.touk.sputnik;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
-import com.github.tomakehurst.wiremock.client.UrlMatchingStrategy;
+import com.github.tomakehurst.wiremock.matching.UrlPattern;
+import lombok.AllArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 
+@AllArgsConstructor
 public class HttpConnectorEnv {
 
-    protected void stubGet(UrlMatchingStrategy url, ResponseDefinitionBuilder responseDefinitionBuilder) {
-        stubFor(get(url)
+    private WireMockServer wireMockServer;
+
+    public void stubGet(UrlPattern url, ResponseDefinitionBuilder responseDefinitionBuilder) {
+        wireMockServer.stubFor(get(url)
                 .withHeader("Authorization", equalTo("Basic dXNlcjpwYXNz"))
                 .willReturn(responseDefinitionBuilder));
     }
 
-    protected void stubGet(UrlMatchingStrategy url, String responseFile) throws Exception {
-        stubGet(url, aResponse()
+    public void stubGet(UrlPattern url, String responseFile) throws Exception {
+        wireMockServer.stubFor(get(url)
+                .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)
                         .withHeader("Content-Type", "application/json")
-                        .withBody(IOUtils.toString(getClass().getResourceAsStream(responseFile))));
+                        .withBody(IOUtils.toString(getClass().getResourceAsStream(responseFile)))));
     }
 
-    protected void stubPost(UrlMatchingStrategy url, String responseFile) throws Exception {
-        stubFor(post(url)
+    public void stubPost(UrlPattern url, String responseFile) throws Exception {
+        wireMockServer.stubFor(post(url)
                 .withHeader("Authorization", equalTo("Basic dXNlcjpwYXNz"))
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.SC_OK)

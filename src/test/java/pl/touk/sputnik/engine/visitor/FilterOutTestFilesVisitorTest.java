@@ -1,6 +1,6 @@
 package pl.touk.sputnik.engine.visitor;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
@@ -16,10 +16,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class FilterOutTestFilesVisitorTest {
+class FilterOutTestFilesVisitorTest {
 
     @Test
-    public void shouldFilterOutTestFiles() {
+    void shouldFilterOutTestFiles() {
         Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
         Review review = new Review(Arrays.asList(createReviewFile(true), createReviewFile(false)), ReviewFormatterFactory.get(config));
 

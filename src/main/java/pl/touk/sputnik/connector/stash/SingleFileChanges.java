@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
-import lombok.experimental.Builder;
+import lombok.Builder;
 
 import java.util.ArrayList;
 import java.util.HashMap;

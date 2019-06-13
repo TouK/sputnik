@@ -2,7 +2,7 @@ package pl.touk.sputnik;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Resources;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationBuilder;
 import pl.touk.sputnik.review.Review;
@@ -19,8 +19,8 @@ public abstract class TestEnvironment {
     protected Configuration config;
     protected ReviewFormatter formatter;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    public void setUpTestEnvironment() throws Exception {
         config = ConfigurationBuilder.initFromResource("test.properties");
         formatter = ReviewFormatterFactory.get(config);
     }
@@ -33,11 +33,11 @@ public abstract class TestEnvironment {
         return new Review(ImmutableList.of(new ReviewFile(Resources.getResource(filename).getFile())), formatter);
     }
 
-    protected Review nonexistantReview() {
+    protected Review nonExistentReview() {
         return new Review(ImmutableList.of(new ReviewFile("test")), formatter);
     }
 
-    protected Review nonexistantReview(String filename){
+    protected Review nonExistentReview(String filename){
         return new Review(ImmutableList.of(new ReviewFile(filename)), formatter);
     }
 

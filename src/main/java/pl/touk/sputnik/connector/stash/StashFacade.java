@@ -2,23 +2,16 @@ package pl.touk.sputnik.connector.stash;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONObject;
+import net.minidev.json.JSONArray;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.Connectors;
-import pl.touk.sputnik.connector.stash.json.Anchor;
-import pl.touk.sputnik.connector.stash.json.Comment;
-import pl.touk.sputnik.connector.stash.json.DiffSegment;
-import pl.touk.sputnik.connector.stash.json.FileComment;
-import pl.touk.sputnik.connector.stash.json.LineComment;
-import pl.touk.sputnik.connector.stash.json.LineSegment;
-import pl.touk.sputnik.connector.stash.json.ReviewElement;
+import pl.touk.sputnik.connector.stash.json.*;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 
@@ -48,7 +41,7 @@ public class StashFacade implements ConnectorFacade {
     public List<ReviewFile> listFiles() {
         try {
             String response = stashConnector.listFiles();
-            List<JSONObject> jsonList = JsonPath.read(response, "$.values[?(@.type != 'DELETE')].path");
+            JSONArray jsonList = JsonPath.read(response, "$.values[?(@.type != 'DELETE')].path");
             List<ReviewElement> containers = transform(jsonList, ReviewElement.class);
 
             List<ReviewFile> files = new ArrayList<>();
@@ -133,12 +126,10 @@ public class StashFacade implements ConnectorFacade {
         return fileComment;
     }
 
-    private <T> List<T> transform(List<JSONObject> jsonList, Class<T> someClass) {
-        List<T> result = Lists.newArrayList();
+    private <T> List<T> transform(JSONArray jsonList, Class<T> someClass) {
+        List<T> result;
         try {
-            for (JSONObject jsonObject : jsonList) {
-                result.add(objectMapper.readValue(jsonObject.toJSONString(), someClass));
-            }
+            result = objectMapper.readValue(jsonList.toJSONString(), objectMapper.getTypeFactory().constructCollectionType(List.class, someClass));
         } catch (IOException e) {
             throw new StashException("Error parsing json strings to objects", e);
         }
@@ -148,8 +139,8 @@ public class StashFacade implements ConnectorFacade {
     SingleFileChanges changesForSingleFile(String filename) {
         try {
             String response = stashConnector.getDiffByLine(filename);
-            List<JSONObject> diffJsonList = JsonPath.read(response, "$.diffs[*].hunks[*].segments[*]");
-            List<JSONObject> lineCommentJsonList = JsonPath.read(response, "$.diffs[*].lineComments[*]['text', 'id']");
+            JSONArray diffJsonList = JsonPath.read(response, "$.diffs[*].hunks[*].segments[*]");
+            JSONArray lineCommentJsonList = JsonPath.read(response, "$.diffs[*].lineComments[*]['text', 'id']");
             List<DiffSegment> segments = transform(diffJsonList, DiffSegment.class);
             List<LineComment> lineComments = transform(lineCommentJsonList, LineComment.class);
             SingleFileChanges changes = SingleFileChanges.builder().filename(filename).build();

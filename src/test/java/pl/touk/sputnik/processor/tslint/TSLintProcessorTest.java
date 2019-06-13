@@ -1,8 +1,8 @@
 package pl.touk.sputnik.processor.tslint;
 
 import com.google.common.collect.ImmutableMap;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
@@ -11,12 +11,12 @@ import pl.touk.sputnik.review.ReviewResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TSLintProcessorTest extends TestEnvironment {
+class TSLintProcessorTest extends TestEnvironment {
 
     private TSLintProcessor fixture;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 GeneralOption.TSLINT_SCRIPT.getKey(), "tslint",
                 GeneralOption.TSLINT_CONFIGURATION_FILE.getKey(), "src/main/resources/tslint.json"));
@@ -24,9 +24,9 @@ public class TSLintProcessorTest extends TestEnvironment {
     }
 
     @Test
-    public void shouldReturnEmptyResultWhenNoFilesToReview() {
+    void shouldReturnEmptyResultWhenNoFilesToReview() {
         // when
-        ReviewResult reviewResult = fixture.process(nonexistantReview());
+        ReviewResult reviewResult = fixture.process(nonExistentReview());
 
         // then
         assertThat(reviewResult).isNotNull();

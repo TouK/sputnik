@@ -20,12 +20,12 @@ public class BuildDirLocatorFactory {
 
         switch (BuildTool.valueOf(buildTool.toUpperCase())) {
             case MAVEN:
-		return new MavenBuildDirLocator(sourceDir,testDir);
+                return new MavenBuildDirLocator(sourceDir, testDir);
             case GRADLE:
-                return new GradleBuildFileLocator(sourceDir,testDir);
+                return new GradleBuildFileLocator(sourceDir, testDir);
             default:
                 log.warn("Build tool " + buildTool + " not supported, using maven");
-                return new MavenBuildDirLocator(sourceDir,testDir);
+                return new MavenBuildDirLocator(sourceDir, testDir);
         }
     }
 

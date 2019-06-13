@@ -1,22 +1,17 @@
 package pl.touk.sputnik.processor.ktlint;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationBuilder;
-import pl.touk.sputnik.review.Review;
-import pl.touk.sputnik.review.ReviewFile;
-import pl.touk.sputnik.review.ReviewFormatterFactory;
-import pl.touk.sputnik.review.ReviewResult;
-import pl.touk.sputnik.review.Severity;
-import pl.touk.sputnik.review.Violation;
+import pl.touk.sputnik.review.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class KtlintProcessorTest {
+class KtlintProcessorTest {
     private static final String CONFIGURATION_WITH_KTLINT_ENABLED = "ktlint/configuration/configurationWithEnabledKtlint.properties";
     private static final String CONFIGURATION_WITH_KTLINT_ENABLED_AND_EXCLUDE = "ktlint/configuration/configurationWithEnabledKtlintAndExclude.properties";
 
@@ -28,14 +23,14 @@ public class KtlintProcessorTest {
     private KtlintProcessor sut;
     private Configuration config;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         config = ConfigurationBuilder.initFromResource(CONFIGURATION_WITH_KTLINT_ENABLED);
         sut = new KtlintProcessor(config);
     }
 
     @Test
-    public void shouldReturnOneViolationsForFile() {
+    void shouldReturnOneViolationsForFile() {
         Review review = getReview(REVIEW_FILE_WITH_ONE_VIOLATION);
 
         ReviewResult result = sut.process(review);
@@ -47,7 +42,7 @@ public class KtlintProcessorTest {
     }
 
     @Test
-    public void shouldReturnNoViolationsForNotKotlinFiles() {
+    void shouldReturnNoViolationsForNotKotlinFiles() {
         Review review = getReview(REVIEW_GROOVY_FILE);
 
         ReviewResult result = sut.process(review);
@@ -57,7 +52,7 @@ public class KtlintProcessorTest {
     }
 
     @Test
-    public void shouldReturnNoViolationsForEmptyReview() {
+    void shouldReturnNoViolationsForEmptyReview() {
         Review review = getReview();
 
         ReviewResult result = sut.process(review);
@@ -67,7 +62,7 @@ public class KtlintProcessorTest {
     }
 
     @Test
-    public void shouldReturnViolationsFromManyFiles() {
+    void shouldReturnViolationsFromManyFiles() {
         Review review = getReview(REVIEW_FILE_WITH_MANY_VIOLATIONS, REVIEW_FILE_WITH_NO_VIOLATIONS, REVIEW_FILE_WITH_ONE_VIOLATION);
 
         ReviewResult result = sut.process(review);
@@ -89,7 +84,7 @@ public class KtlintProcessorTest {
     }
 
     @Test
-    public void shouldReturnOnlyNotExcludedViolations() {
+    void shouldReturnOnlyNotExcludedViolations() {
         KtlintProcessor sut = new KtlintProcessor(ConfigurationBuilder.initFromResource(CONFIGURATION_WITH_KTLINT_ENABLED_AND_EXCLUDE));
         Review review = getReview(REVIEW_FILE_WITH_MANY_VIOLATIONS);
 

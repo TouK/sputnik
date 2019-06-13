@@ -1,11 +1,11 @@
 package pl.touk.sputnik.connector.saas;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.HttpConnectorEnv;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
@@ -16,10 +16,12 @@ import java.util.List;
 import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static pl.touk.sputnik.configuration.Provider.GITHUB;
 
-public class SaasFacadeTest extends HttpConnectorEnv {
+class SaasFacadeTest {
 
     private static final Integer SOME_PULL_REQUEST_ID = 12314;
     private static final String SOME_REPOSITORY = "repo";
@@ -36,19 +38,28 @@ public class SaasFacadeTest extends HttpConnectorEnv {
 
     private SaasFacade saasFacade;
     private Configuration config;
+    private WireMockServer wireMockServer;
+    private HttpConnectorEnv httpConnectorEnv;
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(FacadeConfigUtil.HTTP_PORT);
+    @BeforeEach
+    void setUp() {
+        wireMockServer = new WireMockServer(wireMockConfig().port(FacadeConfigUtil.HTTP_PORT));
+        wireMockServer.start();
 
-    @Before
-    public void setUp() {
+        httpConnectorEnv = new HttpConnectorEnv(wireMockServer);
+
         config = new ConfigurationSetup().setUp(FacadeConfigUtil.getHttpConfig("saas"), GITHUB_PATCHSET_MAP);
         saasFacade = new SaasFacadeBuilder().build(config);
     }
 
+    @AfterEach
+    void tearDown() {
+        wireMockServer.stop();
+    }
+
     @Test
-    public void shouldListFiles() throws Exception {
-        stubGet(urlEqualTo(String.format(
+    void shouldListFiles() throws Exception {
+        httpConnectorEnv.stubGet(urlEqualTo(String.format(
                 "%s/api/github/%s/%s/pulls/%s/files?key=%s",
                 FacadeConfigUtil.PATH, SOME_PROJECT, SOME_REPOSITORY, SOME_PULL_REQUEST_ID, SOME_API_KEY)), "/json/saas-files.json");
 
@@ -58,8 +69,8 @@ public class SaasFacadeTest extends HttpConnectorEnv {
     }
 
     @Test
-    public void shouldPublishReview() throws Exception {
-        stubPost(urlEqualTo(String.format(
+    void shouldPublishReview() throws Exception {
+        httpConnectorEnv.stubPost(urlEqualTo(String.format(
                 "%s/api/github/%s/%s/pulls/%s/violations?key=%s",
                 FacadeConfigUtil.PATH, SOME_PROJECT, SOME_REPOSITORY, SOME_PULL_REQUEST_ID, SOME_API_KEY)), "/json/saas-files.json");
 
@@ -70,12 +81,12 @@ public class SaasFacadeTest extends HttpConnectorEnv {
 
         saasFacade.publish(review);
 
-        verify(1, postRequestedFor(urlMatching(String.format("%s/api/github/%s/%s/pulls/%s/violations\\?key=%s",
+        wireMockServer.verify(1, postRequestedFor(urlMatching(String.format("%s/api/github/%s/%s/pulls/%s/violations\\?key=%s",
                 FacadeConfigUtil.PATH, SOME_PROJECT, SOME_REPOSITORY, SOME_PULL_REQUEST_ID, SOME_API_KEY))));
     }
 
-    @Test(expected = SaasException.class)
-    public void shouldThrowOnWrongApiKey() throws Exception {
+    @Test
+    void shouldThrowOnWrongApiKey() {
         SaasFacade saasFacade = buildFacade(ImmutableMap.of(
                 "cli.pullRequestId", SOME_PULL_REQUEST_ID.toString(),
                 "cli.apiKey", "WRONG_API_KEY",
@@ -83,16 +94,18 @@ public class SaasFacadeTest extends HttpConnectorEnv {
                 "connector.repository", SOME_REPOSITORY,
                 "connector.project", SOME_PROJECT
         ));
-        stubGet(urlEqualTo(String.format(
+        httpConnectorEnv.stubGet(urlEqualTo(String.format(
                 "%s/api/github/%s/%s/pulls/%s/files?key=%s",
                 FacadeConfigUtil.PATH, SOME_PROJECT, SOME_REPOSITORY, SOME_PULL_REQUEST_ID, "WRONG_API_KEY")),
                 aResponse().withStatus(403));
 
-        saasFacade.listFiles();
+        Throwable thrown = catchThrowable(saasFacade::listFiles);
+
+        assertThat(thrown).isInstanceOf(SaasException.class);
     }
 
     @Test
-    public void shouldHandleEmptyApiKey() throws Exception {
+    void shouldHandleEmptyApiKey() throws Exception {
         SaasFacade saasFacade = buildFacade(ImmutableMap.of(
                 "cli.pullRequestId", SOME_PULL_REQUEST_ID.toString(),
                 "cli.provider", GITHUB.getName(),
@@ -100,7 +113,7 @@ public class SaasFacadeTest extends HttpConnectorEnv {
                 "connector.project", SOME_PROJECT
         ));
 
-        stubGet(urlEqualTo(String.format(
+        httpConnectorEnv.stubGet(urlEqualTo(String.format(
                 "%s/api/github/%s/%s/pulls/%s/files",
                 FacadeConfigUtil.PATH, SOME_PROJECT, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)), "/json/saas-files.json");
 
@@ -110,7 +123,7 @@ public class SaasFacadeTest extends HttpConnectorEnv {
     }
 
     @Test
-    public void shouldSendBuildIdIfProvided() throws Exception {
+    void shouldSendBuildIdIfProvided() throws Exception {
         SaasFacade saasFacade = buildFacade(ImmutableMap.of(
                 "cli.pullRequestId", SOME_PULL_REQUEST_ID.toString(),
                 "cli.buildId", "11223344",
@@ -119,7 +132,7 @@ public class SaasFacadeTest extends HttpConnectorEnv {
                 "connector.project", SOME_PROJECT
         ));
 
-        stubGet(urlEqualTo(String.format(
+        httpConnectorEnv.stubGet(urlEqualTo(String.format(
                 "%s/api/github/%s/%s/pulls/%s/files?build_id=%s",
                 FacadeConfigUtil.PATH, SOME_PROJECT, SOME_REPOSITORY, SOME_PULL_REQUEST_ID, "11223344")), "/json/saas-files.json");
 

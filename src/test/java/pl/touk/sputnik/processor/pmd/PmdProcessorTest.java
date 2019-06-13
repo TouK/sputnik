@@ -1,28 +1,26 @@
 package pl.touk.sputnik.processor.pmd;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
 import pl.touk.sputnik.review.ReviewResult;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
-public class PmdProcessorTest extends TestEnvironment {
+class PmdProcessorTest extends TestEnvironment {
 
     private PmdProcessor fixture;
 
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
+    @BeforeEach
+    void setUp() {
         fixture = new PmdProcessor(config);
     }
 
     @Test
-    public void shouldReturnPmdViolations() {
+    void shouldReturnPmdViolations() {
         // when
         ReviewResult reviewResult = fixture.process(review());
 
@@ -36,19 +34,18 @@ public class PmdProcessorTest extends TestEnvironment {
     }
 
     @Test
-
-    public void shouldThrowReviewExceptionOnNotFoundFile() {
+    void shouldThrowReviewExceptionOnNotFoundFile() {
         // when
-        catchException(fixture).process(nonexistantReview("NotExistingFile.java"));
+        Throwable thrown = catchThrowable(() -> fixture.process(nonExistentReview("NotExistingFile.java")));
 
         // then
-        assertThat(caughtException()).isInstanceOf(ReviewException.class);
+        assertThat(thrown).isInstanceOf(ReviewException.class);
     }
 
     @Test
-    public void shouldReturnEmptyResultWhenNoFilesToReview() {
+    void shouldReturnEmptyResultWhenNoFilesToReview() {
         // given
-        Review review = nonexistantReview("FileWithoutJavaExtension.txt");
+        Review review = nonExistentReview("FileWithoutJavaExtension.txt");
 
         // when
         ReviewResult reviewResult = fixture.process(review);

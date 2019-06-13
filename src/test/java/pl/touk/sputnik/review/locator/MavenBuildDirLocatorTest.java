@@ -1,30 +1,29 @@
 package pl.touk.sputnik.review.locator;
 
 import com.google.common.collect.ImmutableList;
-
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationBuilder;
 import pl.touk.sputnik.review.Paths;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewFormatterFactory;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MavenBuildDirLocatorTest {
+class MavenBuildDirLocatorTest {
 
     private MavenBuildDirLocator locator = new MavenBuildDirLocator(Paths.SRC_MAIN,Paths.SRC_TEST);
     private Configuration config;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         config = ConfigurationBuilder.initFromResource("test.properties");
     }
 
     @Test
-    public void shouldReturnTestJavaBuildDirectory() {
+    void shouldReturnTestJavaBuildDirectory() {
         //given
         Review review = review("gerrit-server/src/test/java/com/google/gerrit/server/project/RefControlTest.java");
 
@@ -33,7 +32,7 @@ public class MavenBuildDirLocatorTest {
     }
 
     @Test
-    public void shouldReturnMainJavaBuildDirectory() {
+    void shouldReturnMainJavaBuildDirectory() {
         //given
         Review review = review("gerrit-server/src/main/java/com/google/gerrit/server/project/RefControl.java");
 

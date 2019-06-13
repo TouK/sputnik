@@ -1,6 +1,6 @@
 package pl.touk.sputnik.engine.visitor;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.review.Review;
@@ -14,9 +14,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class RegexFilterFilesVisitorTest {
+class RegexFilterFilesVisitorTest {
+
     @Test
-    public void shouldFilterOutTestFiles() {
+    void shouldFilterOutTestFiles() {
         Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
         Review review = new Review(Arrays.asList(
             createReviewFile("pom.xml"),

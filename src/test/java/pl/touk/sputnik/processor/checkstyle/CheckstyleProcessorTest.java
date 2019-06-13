@@ -1,29 +1,23 @@
 package pl.touk.sputnik.processor.checkstyle;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.TestEnvironment;
-import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CheckstyleProcessorTest extends TestEnvironment {
+class CheckstyleProcessorTest extends TestEnvironment {
 
     private CheckstyleProcessor fixture;
 
-    @Mock
-    private Review review;
-
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
+    @BeforeEach
+    void setUp() throws Exception {
         fixture = new CheckstyleProcessor(config);
     }
 
     @Test
-    public void shouldReturnBasicSunViolationsOnSimpleClass() {
+    void shouldReturnBasicSunViolationsOnSimpleClass() {
         //when
         ReviewResult reviewResult = fixture.process(review());
 

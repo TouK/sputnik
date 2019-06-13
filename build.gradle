@@ -20,7 +20,7 @@ apply plugin: 'coveralls'
 apply plugin: 'maven'
 apply plugin: 'signing'
 apply plugin: 'pl.allegro.tech.build.axion-release'
-apply plugin: 'com.github.johnrengelman.shadow'
+//apply plugin: 'com.github.johnrengelman.shadow'
 
 scmVersion {
     tag {
@@ -28,10 +28,16 @@ scmVersion {
     }
 }
 
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
 project.version = scmVersion.version
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 group = 'pl.touk'
 mainClassName = 'pl.touk.sputnik.Main'
 
@@ -62,13 +68,12 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.3.1'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.3.0'
     compile 'com.intellij:annotations:12.0'
-    compile 'org.slf4j:slf4j-api:1.7.5'
-    compile 'org.slf4j:log4j-over-slf4j:1.7.7'
-    compile 'ch.qos.logback:logback-classic:1.0.13'
-    compile 'org.projectlombok:lombok:1.12.6'
+    compile 'org.slf4j:slf4j-api:1.7.26'
+    compile 'org.slf4j:log4j-over-slf4j:1.7.26'
+    compile 'ch.qos.logback:logback-classic:1.2.3'
     compile 'commons-cli:commons-cli:1.2'
     compile 'org.sonarsource.scanner.api:sonar-scanner-api:2.10.0.1189'
-    compile 'com.jayway.jsonpath:json-path:0.9.1'
+    compile 'com.jayway.jsonpath:json-path:2.4.0'
     compile 'commons-io:commons-io:2.4'
 
     compile 'com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:0.8.8'
@@ -97,7 +102,9 @@ dependencies {
     }
 
     // SpotBugs dependencies
-    compile 'com.github.spotbugs:spotbugs:3.1.11'
+    compile('com.github.spotbugs:spotbugs:3.1.11') {
+        exclude group: 'org.slf4j'
+    }
 
     // Scalastyle http://www.scalastyle.org/
     compile 'org.scalastyle:scalastyle_2.10:0.4.0'
@@ -117,7 +124,8 @@ dependencies {
     compile 'pl.touk:jshint4j:2.9.5'
 
     // github connector
-    compile 'com.jcabi:jcabi-github:0.24'
+    compile('com.jcabi:jcabi-github:1.0')
+    compile 'org.glassfish:javax.json:1.0.4'
     compile 'com.github.spullara.mustache.java:compiler:0.8.17'
 
     // external processes
@@ -133,15 +141,26 @@ dependencies {
     // dependency only for obtaining default configuration
     compile 'io.gitlab.arturbosch.detekt:detekt-cli:1.0.0.RC3'
 
+    compileOnly 'org.projectlombok:lombok:1.18.4'
+    annotationProcessor 'org.projectlombok:lombok:1.18.4'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
+    testCompileOnly 'org.projectlombok:lombok:1.18.4'
+
     // Test dependencies
-    testCompile 'junit:junit:4.11'
-    testCompile 'pl.pragmatists:JUnitParams:1.0.5'
-    testCompile 'org.mockito:mockito-core:1.9.5'
-    testCompile 'org.assertj:assertj-core:1.5.0'
-    testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
-    testCompile('com.github.tomakehurst:wiremock:1.57') {
-        exclude group: 'log4j'
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.4.0"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:5.4.0"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:5.4.0"
+    testImplementation 'org.junit.platform:junit-platform-launcher:1.1.0'
+    testImplementation 'org.assertj:assertj-core:3.9.0'
+    testImplementation 'org.mockito:mockito-core:2.23.4'
+    testImplementation 'org.mockito:mockito-junit-jupiter:2.28.2'
+    testImplementation('com.github.tomakehurst:wiremock:2.18.0') {
+        exclude group: 'junit'
     }
+}
+
+test {
+    useJUnitPlatform()
 }
 
 // Jacoco + coveralls
@@ -171,7 +190,7 @@ task copyToLib(type: Copy) {
 
 artifacts {
     archives jar
-    archives shadowJar
+//    archives shadowJar
 
     archives javadocJar
     archives sourcesJar
