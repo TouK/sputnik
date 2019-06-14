@@ -1,7 +1,6 @@
 package pl.touk.sputnik.engine.visitor;
 
 import org.junit.jupiter.api.Test;
-
 import pl.touk.sputnik.ReviewBuilder;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;

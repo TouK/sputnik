@@ -6,7 +6,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.configuration.ConfigurationBuilder;
-import pl.touk.sputnik.review.*;
+import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewFormatterFactory;
+import pl.touk.sputnik.review.ReviewResult;
+import pl.touk.sputnik.review.Severity;
 
 import static pl.touk.sputnik.SputnikAssertions.assertThat;
 

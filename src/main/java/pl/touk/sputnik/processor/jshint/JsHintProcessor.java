@@ -9,7 +9,12 @@ import pl.touk.jshint4j.Error;
 import pl.touk.jshint4j.JsHint;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
-import pl.touk.sputnik.review.*;
+import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewException;
+import pl.touk.sputnik.review.ReviewProcessor;
+import pl.touk.sputnik.review.ReviewResult;
+import pl.touk.sputnik.review.Severity;
+import pl.touk.sputnik.review.Violation;
 import pl.touk.sputnik.review.filter.JavaScriptFilter;
 import pl.touk.sputnik.review.transformer.IOFileTransformer;
 

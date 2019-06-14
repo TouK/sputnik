@@ -2,12 +2,9 @@ package pl.touk.sputnik.engine.visitor;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
-
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.jetbrains.annotations.NotNull;
-
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 

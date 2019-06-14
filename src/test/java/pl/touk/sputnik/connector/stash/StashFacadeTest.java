@@ -10,7 +10,11 @@ import pl.touk.sputnik.HttpConnectorEnv;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.connector.FacadeConfigUtil;
-import pl.touk.sputnik.review.*;
+import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewFormatterFactory;
+import pl.touk.sputnik.review.Severity;
+import pl.touk.sputnik.review.Violation;
 
 import java.util.List;
 import java.util.Map;

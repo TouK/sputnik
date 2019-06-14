@@ -7,7 +7,10 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
 
 @AllArgsConstructor
 public class HttpConnectorEnv {

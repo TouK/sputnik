@@ -5,9 +5,9 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pl.touk.sputnik.exec.ExternalProcess;
 
-import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 @Slf4j

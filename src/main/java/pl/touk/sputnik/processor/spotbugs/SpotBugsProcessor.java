@@ -1,6 +1,11 @@
 package pl.touk.sputnik.processor.spotbugs;
 
-import edu.umd.cs.findbugs.*;
+import edu.umd.cs.findbugs.ClassScreener;
+import edu.umd.cs.findbugs.DetectorFactoryCollection;
+import edu.umd.cs.findbugs.FindBugs2;
+import edu.umd.cs.findbugs.IClassScreener;
+import edu.umd.cs.findbugs.Priorities;
+import edu.umd.cs.findbugs.Project;
 import edu.umd.cs.findbugs.config.UserPreferences;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

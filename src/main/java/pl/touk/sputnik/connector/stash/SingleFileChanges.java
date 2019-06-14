@@ -2,9 +2,9 @@ package pl.touk.sputnik.connector.stash;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
-import lombok.Builder;
 
 import java.util.ArrayList;
 import java.util.HashMap;

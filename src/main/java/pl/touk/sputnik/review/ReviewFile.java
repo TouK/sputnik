@@ -2,7 +2,6 @@ package pl.touk.sputnik.review;
 
 import lombok.Getter;
 import lombok.ToString;
-
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,7 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static pl.touk.sputnik.review.Paths.*;
+import static pl.touk.sputnik.review.Paths.DOT;
+import static pl.touk.sputnik.review.Paths.ENTRY_REGEX;
+import static pl.touk.sputnik.review.Paths.JAVA;
 
 @Getter
 @ToString

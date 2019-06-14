@@ -5,9 +5,7 @@ import com.puppycrawl.tools.checkstyle.api.AuditListener;
 import com.puppycrawl.tools.checkstyle.api.SeverityLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-
 import org.jetbrains.annotations.NotNull;
-
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;

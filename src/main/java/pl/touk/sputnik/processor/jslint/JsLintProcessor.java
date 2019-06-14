@@ -1,5 +1,11 @@
 package pl.touk.sputnik.processor.jslint;
 
+import com.google.common.base.Strings;
+import com.googlecode.jslint4java.Issue;
+import com.googlecode.jslint4java.JSLint;
+import com.googlecode.jslint4java.JSLintBuilder;
+import com.googlecode.jslint4java.JSLintResult;
+import com.googlecode.jslint4java.Option;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -20,13 +26,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
-import com.google.common.base.Strings;
-import com.googlecode.jslint4java.Issue;
-import com.googlecode.jslint4java.JSLint;
-import com.googlecode.jslint4java.JSLintBuilder;
-import com.googlecode.jslint4java.JSLintResult;
-import com.googlecode.jslint4java.Option;
 
 @Slf4j
 @AllArgsConstructor

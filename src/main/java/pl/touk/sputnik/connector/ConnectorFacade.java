@@ -1,7 +1,6 @@
 package pl.touk.sputnik.connector;
 
 import org.jetbrains.annotations.NotNull;
-
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
 import pl.touk.sputnik.review.Review;
@@ -17,7 +16,7 @@ public interface ConnectorFacade extends ReviewPublisher {
 
     /**
      * Validates if given options are supported by selected connector.
-     * 
+     *
      * @throws GeneralOptionNotSupportedException
      *             if passed configuration is not valid or not fully supported
      */

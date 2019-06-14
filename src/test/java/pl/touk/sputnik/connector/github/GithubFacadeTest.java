@@ -2,7 +2,11 @@ package pl.touk.sputnik.connector.github;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.jcabi.github.*;
+import com.jcabi.github.Commit;
+import com.jcabi.github.Commits;
+import com.jcabi.github.Pull;
+import com.jcabi.github.Repo;
+import com.jcabi.github.Statuses;
 import com.jcabi.immutable.Array;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +19,11 @@ import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.configuration.Provider;
 import pl.touk.sputnik.connector.FacadeConfigUtil;
 import pl.touk.sputnik.connector.Patchset;
-import pl.touk.sputnik.review.*;
+import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewFormatterFactory;
+import pl.touk.sputnik.review.Severity;
+import pl.touk.sputnik.review.Violation;
 
 import javax.json.Json;
 import javax.json.JsonObject;

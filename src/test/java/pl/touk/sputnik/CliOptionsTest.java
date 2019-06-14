@@ -9,10 +9,10 @@ import static pl.touk.sputnik.SputnikAssertions.assertThat;
 
 class CliOptionsTest {
 
-    private final static String SAMPLE_CONFIG = "/home/spoonman/sputnik/conf.properties";
-    private final static String SAMPLE_CHANGE_ID = "I0a2afb7ae4a94ab1ab473ba00e2ec7de381799a0";
-    private final static String SAMPLE_REVISION_ID = "3f37692af2290e8e3fd16d2f43701c24346197f0";
-    private final static String SAMPLE_PULL_REQUEST_ID = "123";
+    private static final String SAMPLE_CONFIG = "/home/spoonman/sputnik/conf.properties";
+    private static final String SAMPLE_CHANGE_ID = "I0a2afb7ae4a94ab1ab473ba00e2ec7de381799a0";
+    private static final String SAMPLE_REVISION_ID = "3f37692af2290e8e3fd16d2f43701c24346197f0";
+    private static final String SAMPLE_PULL_REQUEST_ID = "123";
 
     private CliWrapper fixture = new CliWrapper();
 

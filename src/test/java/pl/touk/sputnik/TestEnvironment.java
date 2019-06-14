@@ -20,7 +20,7 @@ public abstract class TestEnvironment {
     protected ReviewFormatter formatter;
 
     @BeforeEach
-    public void setUpTestEnvironment() throws Exception {
+    public void setUpTestEnvironment() {
         config = ConfigurationBuilder.initFromResource("test.properties");
         formatter = ReviewFormatterFactory.get(config);
     }
@@ -37,7 +37,7 @@ public abstract class TestEnvironment {
         return new Review(ImmutableList.of(new ReviewFile("test")), formatter);
     }
 
-    protected Review nonExistentReview(String filename){
+    protected Review nonExistentReview(String filename) {
         return new Review(ImmutableList.of(new ReviewFile(filename)), formatter);
     }
 

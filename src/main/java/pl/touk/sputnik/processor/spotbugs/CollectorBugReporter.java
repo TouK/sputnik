@@ -1,12 +1,15 @@
 package pl.touk.sputnik.processor.spotbugs;
 
-import edu.umd.cs.findbugs.*;
+import edu.umd.cs.findbugs.AbstractBugReporter;
+import edu.umd.cs.findbugs.AnalysisError;
+import edu.umd.cs.findbugs.BugCollection;
+import edu.umd.cs.findbugs.BugInstance;
+import edu.umd.cs.findbugs.Priorities;
+import edu.umd.cs.findbugs.SourceLineAnnotation;
 import edu.umd.cs.findbugs.classfile.ClassDescriptor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-
 import org.jetbrains.annotations.NotNull;
-
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;

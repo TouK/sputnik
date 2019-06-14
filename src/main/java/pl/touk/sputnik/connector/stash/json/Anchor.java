@@ -15,9 +15,9 @@ import lombok.Data;
 @Data
 @Builder
 public class Anchor {
-    public int line;
-    public String lineType;
-    public String fileType;
-    public String path;
-    public String srcPath;
+    private int line;
+    private String lineType;
+    private String fileType;
+    private String path;
+    private String srcPath;
 }

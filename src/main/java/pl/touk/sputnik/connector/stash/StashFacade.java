@@ -11,7 +11,13 @@ import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
 import pl.touk.sputnik.connector.ConnectorFacade;
 import pl.touk.sputnik.connector.Connectors;
-import pl.touk.sputnik.connector.stash.json.*;
+import pl.touk.sputnik.connector.stash.json.Anchor;
+import pl.touk.sputnik.connector.stash.json.Comment;
+import pl.touk.sputnik.connector.stash.json.DiffSegment;
+import pl.touk.sputnik.connector.stash.json.FileComment;
+import pl.touk.sputnik.connector.stash.json.LineComment;
+import pl.touk.sputnik.connector.stash.json.LineSegment;
+import pl.touk.sputnik.connector.stash.json.ReviewElement;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 
@@ -127,13 +133,11 @@ public class StashFacade implements ConnectorFacade {
     }
 
     private <T> List<T> transform(JSONArray jsonList, Class<T> someClass) {
-        List<T> result;
         try {
-            result = objectMapper.readValue(jsonList.toJSONString(), objectMapper.getTypeFactory().constructCollectionType(List.class, someClass));
+            return objectMapper.readValue(jsonList.toJSONString(), objectMapper.getTypeFactory().constructCollectionType(List.class, someClass));
         } catch (IOException e) {
             throw new StashException("Error parsing json strings to objects", e);
         }
-        return result;
     }
 
     SingleFileChanges changesForSingleFile(String filename) {
