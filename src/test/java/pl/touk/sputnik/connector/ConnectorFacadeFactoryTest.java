@@ -15,17 +15,14 @@ class ConnectorFacadeFactoryTest {
 
     @Test
     void shouldBuildConnector() {
-        // given
         GerritFacadeBuilder gerritFacadeBuilderMock = mock(GerritFacadeBuilder.class);
         GerritFacade gerritFacadeMock = mock(GerritFacade.class);
         Configuration config = mock(Configuration.class);
         when(gerritFacadeBuilderMock.build(config)).thenReturn(gerritFacadeMock);
         connectorFacadeFactory.gerritFacadeBuilder = gerritFacadeBuilderMock;
 
-        // when
         ConnectorFacade facade = connectorFacadeFactory.build(ConnectorType.GERRIT, config);
 
-        // then
         assertThat(facade).isEqualTo(gerritFacadeMock);
     }
 }

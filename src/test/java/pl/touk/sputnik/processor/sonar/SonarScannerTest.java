@@ -53,15 +53,12 @@ class SonarScannerTest {
 
     @Test
     void shouldRun() throws IOException {
-        //given
         writeValidConfigFiles();
         List<String> files = ImmutableList.of("file");
         SonarScanner runner = new SonarScanner(files, sonarEmbeddedScanner, config);
 
-        //when
         runner.run();
 
-        //then
         verify(sonarEmbeddedScanner, times(1)).addGlobalProperties(anyMapOf(String.class, String.class));
         verify(sonarEmbeddedScanner).start();
         verify(sonarEmbeddedScanner).execute(anyMapOf(String.class, String.class));
@@ -69,31 +66,25 @@ class SonarScannerTest {
 
     @Test
     void shouldLoadBaseProperties() throws IOException {
-        //given
         writeValidConfigFiles();
         List<String> files = ImmutableList.of("file");
         SonarScanner runner = new SonarScanner(files, sonarEmbeddedScanner, config);
 
-        //when
         Map<String, String> properties = runner.loadBaseProperties();
 
-        //then
         assertThat(properties.get("sonar.foo")).isEqualTo("bar");
         assertThat(properties.get("sonar.bar")).isEqualTo("bazz");
     }
 
     @Test
     void shouldSetBaseSonarConfig() throws IOException {
-        //given
         writeValidConfigFiles();
         List<String> files = ImmutableList.of("first", "second");
         SonarScanner runner = new SonarScanner(files, sonarEmbeddedScanner, config);
         Map<String, String> props = new HashMap<>();
 
-        //when
         runner.setAdditionalProperties(props);
 
-        //then
         assertThat(props.get(SonarProperties.INCLUDE_FILES)).contains("first");
         assertThat(props.get(SonarProperties.INCLUDE_FILES)).contains("second");
         assertThat(StringUtils.split(props.get(SonarProperties.INCLUDE_FILES), ',')).hasSize(2);
@@ -108,14 +99,11 @@ class SonarScannerTest {
 
     @Test
     void shouldThrowWhenNoSonarFiles() {
-        //given
         List<String> files = ImmutableList.of("first", "second");
         SonarScanner runner = new SonarScanner(files, sonarEmbeddedScanner, config);
 
-        //when
         Throwable thrown = catchThrowable(runner::loadBaseProperties);
 
-        //then
         assertThat(thrown).isInstanceOf(IOException.class);
     }
 }

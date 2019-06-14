@@ -16,7 +16,6 @@ class ReviewFileTest {
 
     @Test
     void shouldReturnMainJavaClassName() {
-        //given
         ReviewFile reviewFile = createReviewFile(MAIN_FILENAME);
 
         //expect
@@ -25,7 +24,6 @@ class ReviewFileTest {
 
     @Test
     void shouldReturnMainJavaSourceDirectory() {
-        //given
         ReviewFile reviewFile = createReviewFile(MAIN_FILENAME);
 
         //expect
@@ -34,7 +32,6 @@ class ReviewFileTest {
 
     @Test
     void shouldReturnTestJavaClassName() {
-        //given
         ReviewFile reviewFile = createReviewFile(TEST_FILENAME);
 
         //expect
@@ -43,7 +40,6 @@ class ReviewFileTest {
 
     @Test
     void shouldReturnTestJavaSourceDirectory() {
-        //given
         ReviewFile reviewFile = createReviewFile(TEST_FILENAME);
 
         //expect

@@ -25,10 +25,8 @@ class TSLintProcessorTest extends TestEnvironment {
 
     @Test
     void shouldReturnEmptyResultWhenNoFilesToReview() {
-        // when
         ReviewResult reviewResult = fixture.process(nonExistentReview());
 
-        // then
         assertThat(reviewResult).isNotNull();
         assertThat(reviewResult.getViolations()).isEmpty();
     }

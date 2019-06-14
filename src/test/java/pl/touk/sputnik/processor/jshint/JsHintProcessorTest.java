@@ -17,30 +17,24 @@ class JsHintProcessorTest {
 
     @Test
     void shouldReturnEmptyResultWhenNoFilesToReview() {
-        // given
         Configuration config = ConfigurationBuilder.initFromResource("jshint/sputnik/noConfigurationFile.properties");
         JsHintProcessor fixture = new JsHintProcessor(config);
         Review review = new Review(ImmutableList.of(new ReviewFile("test")), ReviewFormatterFactory.get(config));
 
-        // when
         ReviewResult reviewResult = fixture.process(review);
 
-        // then
         assertThat(reviewResult).isNotNull();
         assertThat(reviewResult.getViolations()).isEmpty();
     }
 
     @Test
     void shouldReturnOneViolationWithConfigurationOnSimpleFunction() {
-        // given
         Configuration config = ConfigurationBuilder.initFromResource("jshint/sputnik/withConfigurationFile.properties");
         JsHintProcessor fixture = new JsHintProcessor(config);
         Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("js/test.js").getFile())), ReviewFormatterFactory.get(config));
 
-        // when
         ReviewResult reviewResult = fixture.process(review);
 
-        // then
         assertThat(reviewResult).isNotNull();
         assertThat(reviewResult.getViolations()).hasSize(2);
         assertThat(reviewResult.getViolations().get(0)).hasLine(2)
@@ -53,15 +47,12 @@ class JsHintProcessorTest {
 
     @Test
     void shouldReturnViolationsWithConfigurationOnReducerExample() {
-        // given
         Configuration config = ConfigurationBuilder.initFromResource("jshint/sputnik/withConfigurationFile.properties");
         JsHintProcessor fixture = new JsHintProcessor(config);
         Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("js/reducers.js").getFile())), ReviewFormatterFactory.get(config));
 
-        // when
         ReviewResult reviewResult = fixture.process(review);
 
-        // then
         assertThat(reviewResult).isNotNull();
         assertThat(reviewResult.getViolations()).hasSize(9);
         assertThat(reviewResult.getViolations().get(0)).hasLine(4)

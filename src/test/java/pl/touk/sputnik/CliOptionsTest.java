@@ -18,14 +18,11 @@ class CliOptionsTest {
 
     @Test
     void shouldExecuteGerritReview() throws Exception {
-        // given
         String[] args = toArgs("-conf %s -changeId %s -revisionId %s",
                 SAMPLE_CONFIG, SAMPLE_CHANGE_ID, SAMPLE_REVISION_ID);
 
-        // when
         CommandLine commandLine = fixture.parse(args);
 
-        // then
         cliAssert(commandLine).hasOption(CliOption.CONF.getCommandLineParam()).withValue(SAMPLE_CONFIG);
         cliAssert(commandLine).hasOption(CliOption.CHANGE_ID.getCommandLineParam()).withValue(SAMPLE_CHANGE_ID);
         cliAssert(commandLine).hasOption(CliOption.REVISION_ID.getCommandLineParam()).withValue(SAMPLE_REVISION_ID);
@@ -33,13 +30,10 @@ class CliOptionsTest {
 
     @Test
     void shouldExecuteStashReview() throws Exception {
-        // given
         String[] args = toArgs("-conf %s -pullRequestId %s", SAMPLE_CONFIG, SAMPLE_PULL_REQUEST_ID);
 
-        // when
         CommandLine commandLine = fixture.parse(args);
 
-        // then
         cliAssert(commandLine).hasOption(CliOption.PULL_REQUEST_ID.getCommandLineParam()).withValue(SAMPLE_PULL_REQUEST_ID);
     }
 

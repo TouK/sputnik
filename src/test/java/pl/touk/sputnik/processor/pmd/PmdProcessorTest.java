@@ -21,10 +21,8 @@ class PmdProcessorTest extends TestEnvironment {
 
     @Test
     void shouldReturnPmdViolations() {
-        // when
         ReviewResult reviewResult = fixture.process(review());
 
-        // then
         assertThat(reviewResult.getViolations())
                 .isNotEmpty()
                 .hasSize(4)
@@ -35,22 +33,17 @@ class PmdProcessorTest extends TestEnvironment {
 
     @Test
     void shouldThrowReviewExceptionOnNotFoundFile() {
-        // when
         Throwable thrown = catchThrowable(() -> fixture.process(nonExistentReview("NotExistingFile.java")));
 
-        // then
         assertThat(thrown).isInstanceOf(ReviewException.class);
     }
 
     @Test
     void shouldReturnEmptyResultWhenNoFilesToReview() {
-        // given
         Review review = nonExistentReview("FileWithoutJavaExtension.txt");
 
-        // when
         ReviewResult reviewResult = fixture.process(review);
 
-        // then
         assertThat(reviewResult).isNull();
     }
 }

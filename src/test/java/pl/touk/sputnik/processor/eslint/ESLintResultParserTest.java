@@ -15,13 +15,10 @@ public class ESLintResultParserTest {
 
     @Test
     public void shouldParseJsonResult() throws Exception {
-        // given
         String response = IOUtils.toString(Resources.getResource("eslint/out.json").toURI());
 
-        // when
         List<Violation> violations = esLintResultParser.parse(response);
 
-        //then
         assertThat(violations.size()).isEqualTo(8);
         assertThat(violations).extracting("filenameOrJavaClassName").contains("examples/horrible.js");
         assertThat(violations).extracting("message")

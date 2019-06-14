@@ -18,10 +18,8 @@ class ScalastyleProcessorTest extends TestEnvironment {
 
     @Test
     void shouldReturnScalastyleViolations() {
-        // when
         ReviewResult reviewResult = fixture.process(review("scala/Point.scala"));
 
-        // then
         assertThat(reviewResult.getViolations())
                 .isNotEmpty()
                 .hasSize(1)

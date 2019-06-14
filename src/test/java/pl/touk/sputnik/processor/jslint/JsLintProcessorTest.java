@@ -26,26 +26,20 @@ class JsLintProcessorTest extends TestEnvironment {
 
     @Test
     void shouldReturnEmptyResultWhenNoFilesToReview() {
-        // given
         Review review = new Review(ImmutableList.of(new ReviewFile("test")), ReviewFormatterFactory.get(config));
 
-        // when
         ReviewResult reviewResult = fixture.process(review);
 
-        // then
         assertThat(reviewResult).isNotNull();
         assertThat(reviewResult.getViolations()).isEmpty();
     }
 
     @Test
     void shouldReturnNoViolationsOnSimpleFunction() {
-        // given
         Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("js/test.js").getFile())), ReviewFormatterFactory.get(config));
 
-        // when
         ReviewResult reviewResult = fixture.process(review);
 
-        // then
         assertThat(reviewResult).isNotNull();
         assertThat(reviewResult.getViolations()).hasSize(2);
         assertThat(reviewResult.getViolations().get(0)).hasLine(2)
@@ -58,14 +52,11 @@ class JsLintProcessorTest extends TestEnvironment {
 
     @Test
     void shouldReturnOneViolationWithConfigurationOnSimpleFunction() {
-        // given
         config = ConfigurationBuilder.initFromResource("jslint/sputnik/withConfigurationFile.properties");
         Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("js/test.js").getFile())), ReviewFormatterFactory.get(config));
 
-        // when
         ReviewResult reviewResult = fixture.process(review);
 
-        // then
         assertThat(reviewResult).isNotNull();
         assertThat(reviewResult.getViolations()).hasSize(2);
         assertThat(reviewResult.getViolations().get(0)).hasLine(2)

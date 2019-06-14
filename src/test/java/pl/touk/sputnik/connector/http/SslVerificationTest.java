@@ -53,93 +53,75 @@ class SslVerificationTest {
 
     @Test
     void doNotVerifySslTrustWhenVerificationIsOff() throws Exception {
-        // given
         ConnectorDetails connectorDetails = buildConnectorDetails(LOCALHOST, untrustedServer.httpsPort(), "false");
         HttpHelper httpHelper = new HttpHelper();
         HttpHost httpHost = httpHelper.buildHttpHost(connectorDetails);
         CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, connectorDetails);
 
-        // when
         CloseableHttpResponse response = closeableHttpClient.execute(httpHost, new HttpGet("/hello"));
 
-        // then
         assertThat(response.getStatusLine().getStatusCode()).isEqualTo(200);
     }
 
     @Test
     void doNotVerifyHostnameWhenVerificationIsOff() throws Exception {
-        // given
         ConnectorDetails connectorDetails = buildConnectorDetails(LOCALHOST_IP, trustedServer.httpsPort(), "false");
         HttpHelper httpHelper = new HttpHelper();
         HttpHost httpHost = httpHelper.buildHttpHost(connectorDetails);
         CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, connectorDetails);
 
-        // when
         CloseableHttpResponse response = closeableHttpClient.execute(httpHost, new HttpGet("/hello"));
 
-        // then
         assertThat(response.getStatusLine().getStatusCode()).isEqualTo(200);
     }
 
     @Test
     void verifySslTrust() throws Exception {
-        // given
         setSystemTrustStore();
         ConnectorDetails connectorDetails = buildConnectorDetails(LOCALHOST, trustedServer.httpsPort(), "true");
         HttpHelper httpHelper = new HttpHelper();
         HttpHost httpHost = httpHelper.buildHttpHost(connectorDetails);
         CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, connectorDetails);
 
-        // when
         CloseableHttpResponse response = closeableHttpClient.execute(httpHost, new HttpGet("/hello"));
 
-        // then
         assertThat(response.getStatusLine().getStatusCode()).isEqualTo(200);
     }
 
     @Test
     void verifySslTrustThrowsSSLHandshakeException() throws Exception {
-        // given
         ConnectorDetails connectorDetails = buildConnectorDetails(LOCALHOST, untrustedServer.httpsPort(), "true");
         HttpHelper httpHelper = new HttpHelper();
         HttpHost httpHost = httpHelper.buildHttpHost(connectorDetails);
         CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, connectorDetails);
 
-        // when
         Throwable thrown = catchThrowable(() -> closeableHttpClient.execute(httpHost, new HttpGet("/hello")));
 
-        // then
         assertThat(thrown).isInstanceOf(SSLHandshakeException.class);
     }
 
     @Test
     void useDefaultTrustStoreToVerifySslTrust() throws Exception {
-        // given
         ConnectorDetails connectorDetails = buildConnectorDetails(LOCALHOST, untrustedServer.httpsPort(), "true");
         HttpHelper httpHelper = new HttpHelper();
         HttpHost httpHost = httpHelper.buildHttpHost(connectorDetails);
         CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, connectorDetails);
 
-        // when
         Throwable thrown = catchThrowable(() -> closeableHttpClient.execute(httpHost, new HttpGet("/hello")));
 
-        // then
         assertThat(thrown).isInstanceOf(SSLHandshakeException.class);
     }
 
     @Test
     void verifyHostnameThrowsSSLPeerUnverifiedExceptionWhenHostDoesNotMatch() throws Exception {
-        // given
         setSystemTrustStore();
         ConnectorDetails connectorDetails = buildConnectorDetails(LOCALHOST_IP, trustedServer.httpsPort(), "true");
         HttpHelper httpHelper = new HttpHelper();
         HttpHost httpHost = httpHelper.buildHttpHost(connectorDetails);
         CloseableHttpClient closeableHttpClient = httpHelper.buildClient(httpHost, connectorDetails);
 
-        // when
         Throwable thrown = catchThrowable(() -> closeableHttpClient.execute(httpHost, new HttpGet("/hello")));
 
-        // then
         assertThat(thrown).isInstanceOf(SSLPeerUnverifiedException.class);
     }
 

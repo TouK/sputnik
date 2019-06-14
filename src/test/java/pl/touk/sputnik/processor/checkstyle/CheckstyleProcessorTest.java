@@ -18,10 +18,8 @@ class CheckstyleProcessorTest extends TestEnvironment {
 
     @Test
     void shouldReturnBasicSunViolationsOnSimpleClass() {
-        //when
         ReviewResult reviewResult = fixture.process(review());
 
-        //then
         assertThat(reviewResult).isNotNull();
         assertThat(reviewResult.getViolations())
                 .isNotEmpty()

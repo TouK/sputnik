@@ -22,15 +22,12 @@ class GerritFacadeExceptionTest {
 
     @Test
     void shouldWrapConnectorException() throws Exception {
-        //given
         when(gerritApi.changes()).thenReturn(changes);
         when(changes.id("foo")).thenThrow(new RuntimeException("Connection refused"));
         GerritFacade gerritFacade = new GerritFacade(gerritApi, new GerritPatchset("foo", "bar"));
 
-        //when
         Throwable thrown = catchThrowable(gerritFacade::listFiles);
 
-        //then
         assertThat(thrown)
                 .isInstanceOf(GerritException.class)
                 .hasMessageContaining("Error when listing files");

@@ -24,7 +24,6 @@ class MavenBuildDirLocatorTest {
 
     @Test
     void shouldReturnTestJavaBuildDirectory() {
-        //given
         Review review = review("gerrit-server/src/test/java/com/google/gerrit/server/project/RefControlTest.java");
 
         //expect
@@ -33,7 +32,6 @@ class MavenBuildDirLocatorTest {
 
     @Test
     void shouldReturnMainJavaBuildDirectory() {
-        //given
         Review review = review("gerrit-server/src/main/java/com/google/gerrit/server/project/RefControl.java");
 
         //expect

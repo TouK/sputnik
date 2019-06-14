@@ -31,13 +31,10 @@ class PylintResultParserTest {
             "pylint/sample-output-no-header.txt"
     })
     void shouldParseSampleViolations(String filePath) throws IOException, URISyntaxException {
-        // given
         String response = IOUtils.toString(Resources.getResource(filePath).toURI());
 
-        // when
         List<Violation> violations = pylintResultParser.parse(response);
 
-        // then
         assertThat(violations).hasSize(8);
         assertThat(violations).extracting("filenameOrJavaClassName").contains("PythonTest.py");
         assertThat(violations)
@@ -49,13 +46,10 @@ class PylintResultParserTest {
 
     @Test
     void shouldParseMessageTypes() throws IOException, URISyntaxException {
-        // given
         String response = IOUtils.toString(Resources.getResource("pylint/output-with-many-message-types.txt").toURI());
 
-        // when
         List<Violation> violations = pylintResultParser.parse(response);
 
-        // then
         assertThat(violations).hasSize(4);
         assertThat(violations)
                 .extracting("severity")
@@ -64,13 +58,10 @@ class PylintResultParserTest {
 
     @Test
     void shouldNotFailOnMessageId() throws IOException, URISyntaxException {
-        // given
         String response = IOUtils.toString(Resources.getResource("pylint/output-with-message-id.txt").toURI());
 
-        // when
         List<Violation> violations = pylintResultParser.parse(response);
 
-        // then
         assertThat(violations).hasSize(1);
         assertThat(violations)
                 .extracting("severity")
@@ -82,13 +73,10 @@ class PylintResultParserTest {
 
     @Test
     void shouldThrowExceptionWhenFatalPylintErrorOccurs() throws IOException, URISyntaxException {
-        // given
         String response = IOUtils.toString(Resources.getResource("pylint/output-with-fatal.txt").toURI());
 
-        //when
         Throwable thrown = catchThrowable(() -> pylintResultParser.parse(response));
 
-        //then
         assertThat(thrown).isInstanceOf(PylintException.class)
                 .hasMessageStartingWith("Fatal error from pylint");
     }

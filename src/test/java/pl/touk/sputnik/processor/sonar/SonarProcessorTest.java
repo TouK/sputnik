@@ -20,7 +20,6 @@ class SonarProcessorTest extends TestEnvironment {
 
     @Test
     void shouldFilterResultFiles() {
-        //given
         ReviewResult results = new ReviewResult();
         results.add(new Violation("src/t/f.cs", 0, "", Severity.ERROR));
         results.add(new Violation("src/t/f2.cs", 0, "", Severity.ERROR));
@@ -31,10 +30,8 @@ class SonarProcessorTest extends TestEnvironment {
         ReviewFile r2 = new ReviewFile("src/t/f2.cs");
         Review review = new Review(ImmutableList.of(r1, r2), ReviewFormatterFactory.get(config));
 
-        //when
         ReviewResult filteredResults = new SonarProcessor(config).filterResults(results, review);
 
-        //then
         assertThat(filteredResults.getViolations())
             .extracting("filenameOrJavaClassName")
             .containsExactly("src/t/f.cs", "src/t/f2.cs");
@@ -42,7 +39,6 @@ class SonarProcessorTest extends TestEnvironment {
 
     @Test
     void shouldReportViolationsForMultiModulesProject() {
-        //given
         SonarProcessor processor = new SonarProcessor(new SonarScannerBuilder() {
             public SonarScanner prepareRunner(Review review, Configuration configuration) {
                 return new SonarScanner(null, null, null) {
@@ -53,16 +49,13 @@ class SonarProcessorTest extends TestEnvironment {
             }
         }, config);
 
-        //when
         ReviewResult result = processor.process(nonExistentReview("src/module2/dir/file2.cs"));
 
-        //then
         assertThat(result.getViolations()).hasSize(3);
     }
 
     @Test
     void shouldReportViolationsForSingleModulesProject() {
-        //given
         SonarProcessor processor = new SonarProcessor(new SonarScannerBuilder() {
             public SonarScanner prepareRunner(Review review, Configuration configuration) {
                 return new SonarScanner(null, null, null) {
@@ -73,10 +66,8 @@ class SonarProcessorTest extends TestEnvironment {
             }
         }, config);
 
-        //when
         ReviewResult result = processor.process(nonExistentReview("src/dir/file2.cs"));
 
-        //then
         assertThat(result.getViolations()).hasSize(3);
     }
 }

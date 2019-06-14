@@ -14,13 +14,10 @@ class FileExtensionFilterTest {
 
     @Test
     void shouldFilterOutNotAllowedExtensions() {
-        // given
         List<ReviewFile> files = ImmutableList.of(createFile("one.java"), createFile("two.scala"), createFile("three.groovy"));
 
-        // when
         List<ReviewFile> filtered = new FileExtensionFilter(ImmutableList.of("java", "groovy")).filter(files);
 
-        // then
         assertThat(filtered).extracting("reviewFilename").containsExactly("one.java", "three.groovy");
     }
 

@@ -50,7 +50,6 @@ class GerritFacadeTest {
 
     @Test
     void shouldNotAllowCommentOnlyChangedLines() {
-        // given
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 "cli.changeId", "abc",
                 "cli.revisionId", "def",
@@ -58,11 +57,9 @@ class GerritFacadeTest {
 
         ConnectorFacadeFactory connectionFacade = new ConnectorFacadeFactory();
 
-        // when
         ConnectorFacade gerritFacade = connectionFacade.build(ConnectorType.GERRIT, config);
         Throwable thrown = catchThrowable(() -> gerritFacade.validate(config));
 
-        // then
         assertThat(thrown).isInstanceOf(GeneralOptionNotSupportedException.class).hasMessage(
                 "This connector does not support global.commentOnlyChangedLines");
     }

@@ -20,10 +20,8 @@ class PylintProcessorTest extends TestEnvironment {
 
     @Test
     void shouldReturnNoViolationsWhenThereIsNoFileToReview() {
-        // when
         ReviewResult reviewResult = fixture.process(nonExistentReview());
 
-        // then
         assertThat(reviewResult).isNotNull();
         assertThat(reviewResult.getViolations()).isEmpty();
     }
