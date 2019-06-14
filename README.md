@@ -1,6 +1,6 @@
 ![sputnik](http://touk.github.io/sputnik/images/logo-color-bgtransparent-small.png)
 
-> Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD, SpotBugs (formerly known as FindBugs), Scalastyle, CodeNarc, JSLint, JSHint, TSLint and Sonar for you!
+> Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD, SpotBugs (formerly known as FindBugs), Scalastyle, CodeNarc, JSLint, JSHint, TSLint and Detekt for you!
 
 [![Build Status](https://img.shields.io/travis/TouK/sputnik/master.svg?style=flat-square)](https://travis-ci.org/TouK/sputnik)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/pl.touk/sputnik/badge.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/pl.touk/sputnik)
@@ -10,7 +10,7 @@
 
 ## Usage
 
-Sputnik runs Checkstyle, PMD, SpotBugs, CodeNarc, JSHint (or JSLint), TSLint, Ktlint, Detekt and Sonar only on files affected by Gerrit's patchset. It collects all violations and report them back to Gerrit or Stash.
+Sputnik runs Checkstyle, PMD, SpotBugs, CodeNarc, JSHint (or JSLint), TSLint, Ktlint and Detekt only on files affected by Gerrit's patchset. It collects all violations and report them back to Gerrit or Stash.
 
 Typical configuration file looks like this:
 
@@ -39,9 +39,6 @@ jshint.configurationFile=jshint.json
 tslint.enabled=true
 tslint.script=/usr/bin/tslint
 tslint.configurationFile=tslint.json
-sonar.enabled=true
-sonar.configurationFiles=sonar-project.properties, sonar-runner.properties
-sonar.verbose=false
 ktlint.enabled=true
 ktlint.exclude=no-semi,indent
 detekt.enabled=true

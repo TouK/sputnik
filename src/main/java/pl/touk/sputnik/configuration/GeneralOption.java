@@ -77,9 +77,6 @@ public enum GeneralOption implements ConfigurationOption {
     KTLINT_ENABLED("ktlint.enabled", "KtLint enabled", "false"),
     KTLINT_EXCLUDE("ktlint.exclude", "KtLint exclude rules", null),
 
-    SONAR_ENABLED("sonar.enabled", "Sonar enabled", "false"),
-    SONAR_PROPERTIES("sonar.configurationFiles", "Sonar base configuration", "sonar-project.properties"),
-    SONAR_VERBOSE("sonar.verbose", "Run sonar in verbose mode", "false"),
     GITHUB_API_KEY("github.api.key", "Personal access tokens for Github", ""),
 
     JAVA_SRC_DIR("java.src.dir", "Java root source directory", Paths.SRC_MAIN),
