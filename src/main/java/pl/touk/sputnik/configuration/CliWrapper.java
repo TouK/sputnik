@@ -5,7 +5,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.jetbrains.annotations.NotNull;
@@ -48,11 +47,11 @@ public class CliWrapper {
     @NotNull
     @SuppressWarnings("all")
     private Option buildOption(@NotNull CliOption name, boolean hasArgs, boolean isRequired) {
-        return OptionBuilder.withArgName(name.getCommandLineParam())
-            .withLongOpt(name.getCommandLineParam())
+        return Option.builder().argName(name.getCommandLineParam())
+            .longOpt(name.getCommandLineParam())
             .hasArg(hasArgs)
-            .isRequired(isRequired)
-            .withDescription(name.getDescription())
-            .create();
+            .required(isRequired)
+            .desc(name.getDescription())
+            .build();
     }
 }
