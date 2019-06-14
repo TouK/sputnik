@@ -6,7 +6,6 @@ buildscript {
 
     dependencies {
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.3.0'
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
         classpath group: 'pl.allegro.tech.build', name: 'axion-release-plugin', version: '1.10.1'
     }
 }
@@ -20,7 +19,6 @@ apply plugin: 'coveralls'
 apply plugin: 'maven'
 apply plugin: 'signing'
 apply plugin: 'pl.allegro.tech.build.axion-release'
-//apply plugin: 'com.github.johnrengelman.shadow'
 
 scmVersion {
     tag {
@@ -189,7 +187,6 @@ task copyToLib(type: Copy) {
 
 artifacts {
     archives jar
-//    archives shadowJar
 
     archives javadocJar
     archives sourcesJar
