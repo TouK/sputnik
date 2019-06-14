@@ -7,7 +7,7 @@ buildscript {
     dependencies {
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.3.0'
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
-        classpath group: 'pl.allegro.tech.build', name: 'axion-release-plugin', version: '1.7.2'
+        classpath group: 'pl.allegro.tech.build', name: 'axion-release-plugin', version: '1.10.1'
     }
 }
 
@@ -172,12 +172,12 @@ jacocoTestReport {
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
-    from 'build/docs/javadoc'
+    from 'javadoc'
 }
 
 task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
     classifier = 'sources'
+    from sourceSets.main.allSource
 }
 
 // quick way to copy all project dependencies (jar files) into one directory
