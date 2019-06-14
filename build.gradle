@@ -6,7 +6,7 @@ buildscript {
 
     dependencies {
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.3.0'
-        classpath group: 'pl.allegro.tech.build', name: 'axion-release-plugin', version: '1.10.1'
+        classpath 'pl.allegro.tech.build:axion-release-plugin:1.10.1'
     }
 }
 
@@ -186,7 +186,10 @@ task copyToLib(type: Copy) {
 }
 
 artifacts {
-    archives jar
+    //Comment this archives jar due to duplicated jar task with Gradle 5
+    //https://github.com/gradle/gradle/issues/8213
+    //https://discuss.gradle.org/t/apply-plugin-signing-broke-in-gradle-5-1-1-and-prints-out-non-existent-task/31418
+    //archives jar
 
     archives javadocJar
     archives sourcesJar
