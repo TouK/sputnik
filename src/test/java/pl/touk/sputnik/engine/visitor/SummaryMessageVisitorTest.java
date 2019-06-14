@@ -1,12 +1,12 @@
 package pl.touk.sputnik.engine.visitor;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.review.Review;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SummaryMessageVisitorTest extends TestEnvironment {
+class SummaryMessageVisitorTest extends TestEnvironment {
 
     private static final String TOTAL_8_VIOLATIONS_FOUND = "Total 8 violations found";
     private static final String PROBLEM_SOURCE = "PMD";
@@ -14,7 +14,7 @@ public class SummaryMessageVisitorTest extends TestEnvironment {
     private static final String PROBLEM_FORMATTED_MESSAGE = "There is a problem with PMD: configuration error";
 
     @Test
-    public void shouldAddSummaryMessage() {
+    void shouldAddSummaryMessage() {
         Review review = review();
         review.setTotalViolationCount(8);
 
@@ -24,7 +24,7 @@ public class SummaryMessageVisitorTest extends TestEnvironment {
     }
 
     @Test
-    public void shouldAddSummaryMessageWithOneViolation() {
+    void shouldAddSummaryMessageWithOneViolation() {
         Review review = review();
         review.setTotalViolationCount(1);
 
@@ -34,7 +34,7 @@ public class SummaryMessageVisitorTest extends TestEnvironment {
     }
 
     @Test
-    public void shouldAddPerfectMessageIfThereAreNoViolationsFound() {
+    void shouldAddPerfectMessageIfThereAreNoViolationsFound() {
         Review review = review();
         review.setTotalViolationCount(0);
 
@@ -44,7 +44,7 @@ public class SummaryMessageVisitorTest extends TestEnvironment {
     }
 
     @Test
-    public void shouldAddProblemMessagesPerfectMessageIfThereAreNoViolationsFound() {
+    void shouldAddProblemMessagesPerfectMessageIfThereAreNoViolationsFound() {
         Review review = review();
         review.setTotalViolationCount(8);
         review.addProblem(PROBLEM_SOURCE, PROBLEM_MESSAGE);

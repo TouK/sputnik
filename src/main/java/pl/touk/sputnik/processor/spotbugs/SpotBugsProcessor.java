@@ -8,11 +8,9 @@ import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.Project;
 import edu.umd.cs.findbugs.config.UserPreferences;
 import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
@@ -26,6 +24,7 @@ import pl.touk.sputnik.review.transformer.ClassNameTransformer;
 @Slf4j
 public class SpotBugsProcessor implements ReviewProcessor {
     private static final String SOURCE_NAME = "SpotBugs";
+
     private final CollectorBugReporter collectorBugReporter;
     private final Configuration config;
 

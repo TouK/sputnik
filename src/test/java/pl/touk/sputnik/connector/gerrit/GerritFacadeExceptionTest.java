@@ -2,36 +2,36 @@ package pl.touk.sputnik.connector.gerrit;
 
 import com.google.gerrit.extensions.api.GerritApi;
 import com.google.gerrit.extensions.api.changes.Changes;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class GerritFacadeExceptionTest {
+@ExtendWith(MockitoExtension.class)
+class GerritFacadeExceptionTest {
 
     @Mock
-    GerritApi gerritApi;
+    private GerritApi gerritApi;
+
+    @Mock
+    private Changes changes;
 
     @Test
-    public void shouldWrapConnectorException() throws Exception {
+    void shouldWrapConnectorException() throws Exception {
         //given
-        Changes changes = mock(Changes.class);
         when(gerritApi.changes()).thenReturn(changes);
         when(changes.id("foo")).thenThrow(new RuntimeException("Connection refused"));
         GerritFacade gerritFacade = new GerritFacade(gerritApi, new GerritPatchset("foo", "bar"));
 
         //when
-        catchException(gerritFacade).listFiles();
+        Throwable thrown = catchThrowable(gerritFacade::listFiles);
 
         //then
-        assertThat(caughtException())
+        assertThat(thrown)
                 .isInstanceOf(GerritException.class)
                 .hasMessageContaining("Error when listing files");
     }

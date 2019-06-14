@@ -1,24 +1,31 @@
 package pl.touk.sputnik.connector.stash;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.HttpConnectorEnv;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.connector.FacadeConfigUtil;
-import pl.touk.sputnik.review.*;
+import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewFormatterFactory;
+import pl.touk.sputnik.review.Severity;
+import pl.touk.sputnik.review.Violation;
 
 import java.util.List;
 import java.util.Map;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class StashFacadeTest extends HttpConnectorEnv {
+class StashFacadeTest {
 
     private static String SOME_PULL_REQUEST_ID = "12314";
     private static String SOME_REPOSITORY = "repo";
@@ -32,19 +39,28 @@ public class StashFacadeTest extends HttpConnectorEnv {
 
     private StashFacade stashFacade;
     private Configuration config;
+    private WireMockServer wireMockServer;
+    private HttpConnectorEnv httpConnectorEnv;
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(FacadeConfigUtil.HTTP_PORT);
+    @BeforeEach
+    void setUp() {
+        wireMockServer = new WireMockServer(wireMockConfig().port(FacadeConfigUtil.HTTP_PORT).httpsPort(FacadeConfigUtil.HTTPS_PORT));
+        wireMockServer.start();
 
-    @Before
-    public void setUp() {
+        httpConnectorEnv = new HttpConnectorEnv(wireMockServer);
+
         config = new ConfigurationSetup().setUp(FacadeConfigUtil.getHttpConfig("stash"), STASH_PATCHSET_MAP);
         stashFacade = new StashFacadeBuilder().build(config);
     }
 
+    @AfterEach
+    void tearDown() {
+        wireMockServer.stop();
+    }
+
     @Test
-    public void shouldGetChangeInfo() throws Exception {
-        stubGet(urlEqualTo(String.format(
+    void shouldGetChangeInfo() throws Exception {
+        httpConnectorEnv.stubGet(urlEqualTo(String.format(
                 "%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/changes",
                 FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)), "/json/stash-changes.json");
 
@@ -56,8 +72,8 @@ public class StashFacadeTest extends HttpConnectorEnv {
     }
 
     @Test
-    public void shouldReturnDiffAsMapOfLines() throws Exception {
-        stubGet(urlMatching(String.format(
+    void shouldReturnDiffAsMapOfLines() throws Exception {
+        httpConnectorEnv.stubGet(urlMatching(String.format(
                 "%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/diff.*",
                 FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)), "/json/stash-diff.json");
 
@@ -68,14 +84,14 @@ public class StashFacadeTest extends HttpConnectorEnv {
     }
 
     @Test
-    public void shouldNotAddTheSameCommentMoreThanOnce() throws Exception {
+    void shouldNotAddTheSameCommentMoreThanOnce() throws Exception {
         String filename = "src/main/java/Main.java";
 
-        stubGet(urlMatching(String.format(
+        httpConnectorEnv.stubGet(urlMatching(String.format(
                 "%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/diff.*",
                 FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)), "/json/stash-diff-empty.json");
 
-        stubPost(urlMatching(String.format(
+        httpConnectorEnv.stubPost(urlMatching(String.format(
                 "%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/comments",
                 FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)), "/json/stash-diff-empty.json");
 
@@ -85,7 +101,7 @@ public class StashFacadeTest extends HttpConnectorEnv {
 
         stashFacade.setReview(review);
 
-        stubGet(urlMatching(String.format(
+        httpConnectorEnv.stubGet(urlMatching(String.format(
                 "%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/diff.*",
                 FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)), "/json/stash-diff.json");
 
@@ -93,13 +109,13 @@ public class StashFacadeTest extends HttpConnectorEnv {
 
         // First review : 1 comment on file and 1 comment on summary message
         // Second review: 1 comment on summary message
-        verify(3, postRequestedFor(urlEqualTo(String.format("%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/comments",
+        wireMockServer.verify(3, postRequestedFor(urlEqualTo(String.format("%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/comments",
                 FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID))));
     }
 
     @Test
-    public void shouldSkipDeletedFiles() throws Exception {
-        stubGet(urlEqualTo(String.format(
+    void shouldSkipDeletedFiles() throws Exception {
+        httpConnectorEnv.stubGet(urlEqualTo(String.format(
                 "%s/rest/api/1.0/projects/%s/repos/%s/pull-requests/%s/changes",
                 FacadeConfigUtil.PATH, SOME_PROJECT_KEY, SOME_REPOSITORY, SOME_PULL_REQUEST_ID)), "/json/stash-changes-deleted-file.json");
 

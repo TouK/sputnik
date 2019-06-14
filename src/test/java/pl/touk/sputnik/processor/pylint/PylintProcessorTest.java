@@ -1,28 +1,27 @@
 package pl.touk.sputnik.processor.pylint;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.configuration.ConfigurationBuilder;
 import pl.touk.sputnik.review.ReviewResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PylintProcessorTest extends TestEnvironment {
+class PylintProcessorTest extends TestEnvironment {
 
     private PylintProcessor fixture;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         config = ConfigurationBuilder.initFromResource("pylint/sputnik/noConfigurationFile.properties");
         fixture = new PylintProcessor(config);
     }
 
-
     @Test
-    public void shouldReturnNoViolationsWhenThereIsNoFileToReview() {
+    void shouldReturnNoViolationsWhenThereIsNoFileToReview() {
         // when
-        ReviewResult reviewResult = fixture.process(nonexistantReview());
+        ReviewResult reviewResult = fixture.process(nonExistentReview());
 
         // then
         assertThat(reviewResult).isNotNull();

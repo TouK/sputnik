@@ -2,7 +2,7 @@ package pl.touk.sputnik.processor.eslint;
 
 import com.google.common.io.Resources;
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.review.Violation;
 
 import java.util.List;

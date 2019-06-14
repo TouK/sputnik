@@ -1,19 +1,20 @@
 package pl.touk.sputnik.processor.sonar;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.io.File;
-import java.io.IOException;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.Severity;
 
-public class SonarResultParserTest extends TestEnvironment {
+import java.io.File;
+import java.io.IOException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+
+class SonarResultParserTest extends TestEnvironment {
 
     @Test
-    public void shouldParseSonarJsonMultiModuleFile() throws IOException {
+    void shouldParseSonarJsonMultiModuleFile() throws IOException {
         File resultFile = getResourceAsFile("json/sonar-result-mutli-module.json");
 
         SonarResultParser parser = new SonarResultParser(resultFile);
@@ -40,7 +41,7 @@ public class SonarResultParserTest extends TestEnvironment {
     }
 
     @Test
-    public void shouldParseSonarJsonSingleModuleFile() throws IOException {
+    void shouldParseSonarJsonSingleModuleFile() throws IOException {
         File resultFile = getResourceAsFile("json/sonar-result-single-module.json");
 
         SonarResultParser parser = new SonarResultParser(resultFile);
@@ -66,18 +67,22 @@ public class SonarResultParserTest extends TestEnvironment {
                 );
     }
 
-    @Test(expected=IOException.class)
-    public void shouldThrowAnExceptionWhenReportFileDoNotExists() throws IOException {
-        new SonarResultParser(new File("foo")).parseResults();
-    }
+    @Test
+    void shouldThrowAnExceptionWhenReportFileDoNotExists(){
+        Throwable thrown = catchThrowable(() -> new SonarResultParser(new File("foo")).parseResults());
 
-    @Test(expected=IOException.class)
-    public void shouldThrowWhenInvalidJsonReport() throws IOException {
-        new SonarResultParser(getResourceAsFile("json/invalid.json")).parseResults();
+        assertThat(thrown).isInstanceOf(IOException.class);
     }
 
     @Test
-    public void testConvertSeverity() {
+    void shouldThrowWhenInvalidJsonReport() {
+        Throwable thrown = catchThrowable(() -> new SonarResultParser(getResourceAsFile("json/invalid.json")).parseResults());
+
+        assertThat(thrown).isInstanceOf(IOException.class);
+    }
+
+    @Test
+    void testConvertSeverity() {
         assertThat(SonarResultParser.getSeverity("BLOCKER")).isEqualTo(Severity.ERROR);
         assertThat(SonarResultParser.getSeverity("CRITICAL")).isEqualTo(Severity.ERROR);
         assertThat(SonarResultParser.getSeverity("MAJOR")).isEqualTo(Severity.ERROR);

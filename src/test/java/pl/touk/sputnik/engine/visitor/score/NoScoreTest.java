@@ -1,15 +1,15 @@
 package pl.touk.sputnik.engine.visitor.score;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.review.Review;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NoScoreTest extends TestEnvironment {
+class NoScoreTest extends TestEnvironment {
 
     @Test
-    public void shouldAddNoScoreToReview() {
+    void shouldAddNoScoreToReview() {
         Review review = review();
 
         new NoScore().afterReview(review);

@@ -1,14 +1,11 @@
 package pl.touk.sputnik.processor.pylint;
 
 import com.google.common.io.Resources;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 import org.apache.commons.io.IOUtils;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;
 
@@ -17,27 +14,23 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.core.StringStartsWith.startsWith;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
-@RunWith(JUnitParamsRunner.class)
-public class PylintResultParserTest {
+class PylintResultParserTest {
 
     private PylintResultParser pylintResultParser;
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         pylintResultParser = new PylintResultParser();
     }
 
-    @Test
-    @Parameters({
+    @ParameterizedTest
+    @ValueSource(strings = {
             "pylint/sample-output.txt",
             "pylint/sample-output-no-header.txt"
     })
-    public void shouldParseSampleViolations(String filePath) throws IOException, URISyntaxException {
+    void shouldParseSampleViolations(String filePath) throws IOException, URISyntaxException {
         // given
         String response = IOUtils.toString(Resources.getResource(filePath).toURI());
 
@@ -55,7 +48,7 @@ public class PylintResultParserTest {
     }
 
     @Test
-    public void shouldParseMessageTypes() throws IOException, URISyntaxException {
+    void shouldParseMessageTypes() throws IOException, URISyntaxException {
         // given
         String response = IOUtils.toString(Resources.getResource("pylint/output-with-many-message-types.txt").toURI());
 
@@ -70,7 +63,7 @@ public class PylintResultParserTest {
     }
 
     @Test
-    public void shouldNotFailOnMessageId() throws IOException, URISyntaxException {
+    void shouldNotFailOnMessageId() throws IOException, URISyntaxException {
         // given
         String response = IOUtils.toString(Resources.getResource("pylint/output-with-message-id.txt").toURI());
 
@@ -88,12 +81,15 @@ public class PylintResultParserTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenFatalPylintErrorOccurs() throws IOException, URISyntaxException {
+    void shouldThrowExceptionWhenFatalPylintErrorOccurs() throws IOException, URISyntaxException {
         // given
         String response = IOUtils.toString(Resources.getResource("pylint/output-with-fatal.txt").toURI());
 
-        thrown.expect(PylintException.class);
-        thrown.expectMessage(startsWith("Fatal error from pylint"));
-        pylintResultParser.parse(response);
+        //when
+        Throwable thrown = catchThrowable(() -> pylintResultParser.parse(response));
+
+        //then
+        assertThat(thrown).isInstanceOf(PylintException.class)
+                .hasMessageStartingWith("Fatal error from pylint");
     }
 }

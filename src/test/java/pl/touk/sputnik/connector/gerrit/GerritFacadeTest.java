@@ -1,12 +1,8 @@
 package pl.touk.sputnik.connector.gerrit;
 
 import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
 import com.google.common.collect.ImmutableMap;
-
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
-
+import com.google.common.io.Resources;
 import com.google.gerrit.extensions.api.GerritApi;
 import com.google.gerrit.extensions.api.changes.ChangeApi;
 import com.google.gerrit.extensions.api.changes.Changes;
@@ -17,14 +13,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.urswolfer.gerrit.client.rest.http.changes.FileInfoParser;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
+import org.mockito.junit.jupiter.MockitoExtension;
 import pl.touk.sputnik.configuration.Configuration;
-import pl.touk.sputnik.configuration.ConfigurationBuilder;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
 import pl.touk.sputnik.connector.ConnectorFacade;
@@ -33,25 +27,29 @@ import pl.touk.sputnik.connector.ConnectorType;
 import pl.touk.sputnik.review.ReviewFile;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class GerritFacadeTest {
+@ExtendWith(MockitoExtension.class)
+class GerritFacadeTest {
 
     @Mock
     private GerritApi gerritApi;
 
-    @InjectMocks
     private GerritFacade gerritFacade;
 
+    @BeforeEach
+    void setUp() {
+        gerritFacade = new GerritFacade(gerritApi, null);
+    }
+
     @Test
-    public void shouldNotAllowCommentOnlyChangedLines() {
+    void shouldNotAllowCommentOnlyChangedLines() {
         // given
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
                 "cli.changeId", "abc",
@@ -62,21 +60,21 @@ public class GerritFacadeTest {
 
         // when
         ConnectorFacade gerritFacade = connectionFacade.build(ConnectorType.GERRIT, config);
-        catchException(gerritFacade).validate(config);
+        Throwable thrown = catchThrowable(() -> gerritFacade.validate(config));
 
         // then
-        assertThat(caughtException()).isInstanceOf(GeneralOptionNotSupportedException.class).hasMessage(
+        assertThat(thrown).isInstanceOf(GeneralOptionNotSupportedException.class).hasMessage(
                 "This connector does not support global.commentOnlyChangedLines");
     }
 
     @Test
-    public void shouldParseListFilesResponse() throws IOException, URISyntaxException, RestApiException {
+    void shouldParseListFilesResponse() throws IOException, RestApiException {
         List<ReviewFile> reviewFiles = createGerritFacade().listFiles();
         assertThat(reviewFiles).isNotEmpty();
     }
 
     @Test
-    public void shouldNotListDeletedFiles() throws IOException, URISyntaxException, RestApiException {
+    void shouldNotListDeletedFiles() throws IOException, RestApiException {
         List<ReviewFile> reviewFiles = createGerritFacade().listFiles();
         assertThat(reviewFiles).hasSize(1);
     }

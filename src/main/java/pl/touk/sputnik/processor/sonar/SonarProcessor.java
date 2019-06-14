@@ -1,17 +1,9 @@
 package pl.touk.sputnik.processor.sonar;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
+import com.google.common.annotations.VisibleForTesting;
 import lombok.extern.slf4j.Slf4j;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import com.google.common.annotations.VisibleForTesting;
-
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
@@ -19,6 +11,11 @@ import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewProcessor;
 import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.Violation;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 @Slf4j
 public class SonarProcessor implements ReviewProcessor {

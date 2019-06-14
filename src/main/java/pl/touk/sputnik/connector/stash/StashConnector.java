@@ -2,14 +2,12 @@ package pl.touk.sputnik.connector.stash;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpRequest;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.xerces.impl.dv.util.Base64;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.connector.Connector;
 import pl.touk.sputnik.connector.http.HttpConnector;
@@ -60,7 +58,7 @@ public class StashConnector implements Connector {
         CloseableHttpResponse httpResponse = httpConnector.logAndExecute(httpGet);
         return httpConnector.consumeAndLogEntity(httpResponse);
     }
-    
+
     private String createUrl(StashPatchset stashPatchset, String formatUrl) {
         return String.format(formatUrl,
                 stashPatchset.getProjectKey(), stashPatchset.getRepositorySlug(), stashPatchset.getPullRequestId());

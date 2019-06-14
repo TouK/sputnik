@@ -1,7 +1,10 @@
 package pl.touk.sputnik.connector.github;
 
 import com.google.common.base.Optional;
-import com.jcabi.github.*;
+import com.jcabi.github.Commit;
+import com.jcabi.github.Pull;
+import com.jcabi.github.Repo;
+import com.jcabi.github.Statuses;
 import lombok.extern.slf4j.Slf4j;
 import pl.touk.sputnik.review.Review;
 

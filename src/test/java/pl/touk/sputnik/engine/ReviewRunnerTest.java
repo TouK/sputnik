@@ -1,11 +1,10 @@
 package pl.touk.sputnik.engine;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewException;
@@ -14,12 +13,15 @@ import pl.touk.sputnik.review.ReviewResult;
 
 import java.io.IOException;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ReviewRunnerTest {
+@ExtendWith(MockitoExtension.class)
+class ReviewRunnerTest {
+
     private static final String PROCESSOR_SOURCE_NAME = "Test";
 
     @Mock
@@ -34,16 +36,16 @@ public class ReviewRunnerTest {
     @Mock
     private Configuration config;
 
-    @InjectMocks
     private ReviewRunner reviewRunner;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         when(reviewProcessorMock.getName()).thenReturn(PROCESSOR_SOURCE_NAME);
+        reviewRunner = new ReviewRunner(reviewMock);
     }
 
     @Test
-    public void shouldAddReviewResult() {
+    void shouldAddReviewResult() {
         when(reviewProcessorMock.process(reviewMock)).thenReturn(reviewResultMock);
 
         reviewRunner.review(reviewProcessorMock);
@@ -52,7 +54,7 @@ public class ReviewRunnerTest {
     }
 
     @Test
-    public void shouldNotAddNullReview() {
+    void shouldNotAddNullReview() {
         when(reviewProcessorMock.process(reviewMock)).thenReturn(null);
 
         reviewRunner.review(reviewProcessorMock);
@@ -61,7 +63,7 @@ public class ReviewRunnerTest {
     }
 
     @Test
-    public void shouldAddReviewExceptionMessageAsAProblem() {
+    void shouldAddReviewExceptionMessageAsAProblem() {
         when(reviewProcessorMock.process(reviewMock)).thenThrow(new ReviewException("Exception message"));
 
         reviewRunner.review(reviewProcessorMock);
@@ -70,7 +72,7 @@ public class ReviewRunnerTest {
     }
 
     @Test
-    public void shouldReviewExceptionCauseMessageAsAProblem() {
+    void shouldReviewExceptionCauseMessageAsAProblem() {
         IOException cause = new IOException("File not found exception");
         when(reviewProcessorMock.process(reviewMock)).thenThrow(new ReviewException("Exception message", cause));
 

@@ -1,7 +1,7 @@
 package pl.touk.sputnik.processor.detekt;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationBuilder;
 import pl.touk.sputnik.review.Review;
@@ -16,7 +16,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DetektProcessorTest {
+class DetektProcessorTest {
     private static final String CONFIGURATION_WITH_KTLINT_ENABLED_AND_WITH_DETEKT_CONFIG_FILE = "detekt/configuration/configurationWithEnabledDetektAndDetektConfigFile.properties";
     private static final String CONFIGURATION_WITH_KTLINT_ENABLED_AND_WITHOUT_DETEKT_CONFIG_FILE = "detekt/configuration/configurationWithEnabledDetektAndWithoutDetektConfigFile.properties";
 
@@ -28,14 +28,14 @@ public class DetektProcessorTest {
     private DetektProcessor sut;
     private Configuration config;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         config = ConfigurationBuilder.initFromResource(CONFIGURATION_WITH_KTLINT_ENABLED_AND_WITH_DETEKT_CONFIG_FILE);
         sut = new DetektProcessor(config);
     }
 
     @Test
-    public void shouldReturnViolationsOnlyForOneRequestedFile() {
+    void shouldReturnViolationsOnlyForOneRequestedFile() {
         Review review = getReview(VIOLATIONS_1);
 
         ReviewResult result = sut.process(review);
@@ -51,7 +51,7 @@ public class DetektProcessorTest {
     }
 
     @Test
-    public void shouldReturnViolationsOnlyForRequestedFiles() {
+    void shouldReturnViolationsOnlyForRequestedFiles() {
         Review review = getReview(VIOLATIONS_2, VIOLATIONS_3);
 
         ReviewResult result = sut.process(review);
@@ -69,7 +69,7 @@ public class DetektProcessorTest {
     }
 
     @Test
-    public void shouldReturnNoViolationsForNotKotlinFiles() {
+    void shouldReturnNoViolationsForNotKotlinFiles() {
         Review review = getReview(REVIEW_GROOVY_FILE);
 
         ReviewResult result = sut.process(review);
@@ -79,7 +79,7 @@ public class DetektProcessorTest {
     }
 
     @Test
-    public void shouldReturnNoViolationsForEmptyReview() {
+    void shouldReturnNoViolationsForEmptyReview() {
         Review review = getReview();
 
         ReviewResult result = sut.process(review);
@@ -89,7 +89,7 @@ public class DetektProcessorTest {
     }
 
     @Test
-    public void shouldProcessReviewsOnDefaultConfig() {
+    void shouldProcessReviewsOnDefaultConfig() {
         Configuration configWithoutDetektConfigFile =
                 ConfigurationBuilder.initFromResource(CONFIGURATION_WITH_KTLINT_ENABLED_AND_WITHOUT_DETEKT_CONFIG_FILE);
         Review review = getReview(VIOLATIONS_1, VIOLATIONS_2, VIOLATIONS_3, REVIEW_GROOVY_FILE);

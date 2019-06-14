@@ -1,18 +1,17 @@
 package pl.touk.sputnik.processor.tslint;
 
 import com.google.common.collect.ImmutableMap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.configuration.GeneralOption;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
-public class TSLintScriptTest {
+class TSLintScriptTest {
 
     @Test
-    public void shouldFailWhenConfigFileIsMissing() {
+    void shouldFailWhenConfigFileIsMissing() {
         final String configFile = "tslint.xml.not.json";
 
         // given
@@ -21,15 +20,15 @@ public class TSLintScriptTest {
         TSLintScript tsLint = new TSLintScript(null, configFile);
 
         // when
-        catchException(tsLint).validateConfiguration();
+        Throwable thrown = catchThrowable(tsLint::validateConfiguration);
 
         // then
-        assertThat(caughtException()).isInstanceOf(TSLintException.class).hasMessageContaining(
-                "Could not find tslint configuration file: " + configFile);
+        assertThat(thrown).isInstanceOf(TSLintException.class)
+                .hasMessageContaining("Could not find tslint configuration file: " + configFile);
     }
 
     @Test
-    public void shouldPassWhenConfigFileIsValid() {
+    void shouldPassWhenConfigFileIsValid() {
         final String configFile = "src/main/resources/tslint.json";
 
         // given
@@ -37,10 +36,10 @@ public class TSLintScriptTest {
         TSLintScript tsLint = new TSLintScript(null, configFile);
 
         // when
-        catchException(tsLint).validateConfiguration();
+        Throwable thrown = catchThrowable(tsLint::validateConfiguration);
 
         // then
-        assertThat(caughtException()).isNull();
+        assertThat(thrown).isNull();
     }
 
 }

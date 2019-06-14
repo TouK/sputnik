@@ -1,7 +1,6 @@
 package pl.touk.sputnik.connector;
 
 import org.jetbrains.annotations.NotNull;
-
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
 import pl.touk.sputnik.connector.gerrit.GerritFacadeBuilder;

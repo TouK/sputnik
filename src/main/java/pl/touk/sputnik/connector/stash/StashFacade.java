@@ -2,10 +2,9 @@ package pl.touk.sputnik.connector.stash;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONObject;
+import net.minidev.json.JSONArray;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
@@ -48,7 +47,7 @@ public class StashFacade implements ConnectorFacade {
     public List<ReviewFile> listFiles() {
         try {
             String response = stashConnector.listFiles();
-            List<JSONObject> jsonList = JsonPath.read(response, "$.values[?(@.type != 'DELETE')].path");
+            JSONArray jsonList = JsonPath.read(response, "$.values[?(@.type != 'DELETE')].path");
             List<ReviewElement> containers = transform(jsonList, ReviewElement.class);
 
             List<ReviewFile> files = new ArrayList<>();
@@ -133,23 +132,19 @@ public class StashFacade implements ConnectorFacade {
         return fileComment;
     }
 
-    private <T> List<T> transform(List<JSONObject> jsonList, Class<T> someClass) {
-        List<T> result = Lists.newArrayList();
+    private <T> List<T> transform(JSONArray jsonList, Class<T> someClass) {
         try {
-            for (JSONObject jsonObject : jsonList) {
-                result.add(objectMapper.readValue(jsonObject.toJSONString(), someClass));
-            }
+            return objectMapper.readValue(jsonList.toJSONString(), objectMapper.getTypeFactory().constructCollectionType(List.class, someClass));
         } catch (IOException e) {
             throw new StashException("Error parsing json strings to objects", e);
         }
-        return result;
     }
 
     SingleFileChanges changesForSingleFile(String filename) {
         try {
             String response = stashConnector.getDiffByLine(filename);
-            List<JSONObject> diffJsonList = JsonPath.read(response, "$.diffs[*].hunks[*].segments[*]");
-            List<JSONObject> lineCommentJsonList = JsonPath.read(response, "$.diffs[*].lineComments[*]['text', 'id']");
+            JSONArray diffJsonList = JsonPath.read(response, "$.diffs[*].hunks[*].segments[*]");
+            JSONArray lineCommentJsonList = JsonPath.read(response, "$.diffs[*].lineComments[*]['text', 'id']");
             List<DiffSegment> segments = transform(diffJsonList, DiffSegment.class);
             List<LineComment> lineComments = transform(lineCommentJsonList, LineComment.class);
             SingleFileChanges changes = SingleFileChanges.builder().filename(filename).build();

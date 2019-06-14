@@ -2,26 +2,30 @@ package pl.touk.sputnik.processor.jslint;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Resources;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.configuration.ConfigurationBuilder;
-import pl.touk.sputnik.review.*;
+import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewFormatterFactory;
+import pl.touk.sputnik.review.ReviewResult;
+import pl.touk.sputnik.review.Severity;
 
 import static pl.touk.sputnik.SputnikAssertions.assertThat;
 
-public class JsLintProcessorTest extends TestEnvironment {
+class JsLintProcessorTest extends TestEnvironment {
 
     private JsLintProcessor fixture;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         config = ConfigurationBuilder.initFromResource("jslint/sputnik/noConfigurationFile.properties");
         fixture = new JsLintProcessor(config);
     }
 
     @Test
-    public void shouldReturnEmptyResultWhenNoFilesToReview() {
+    void shouldReturnEmptyResultWhenNoFilesToReview() {
         // given
         Review review = new Review(ImmutableList.of(new ReviewFile("test")), ReviewFormatterFactory.get(config));
 
@@ -34,7 +38,7 @@ public class JsLintProcessorTest extends TestEnvironment {
     }
 
     @Test
-    public void shouldReturnNoViolationsOnSimpleFunction() {
+    void shouldReturnNoViolationsOnSimpleFunction() {
         // given
         Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("js/test.js").getFile())), ReviewFormatterFactory.get(config));
 
@@ -53,7 +57,7 @@ public class JsLintProcessorTest extends TestEnvironment {
     }
 
     @Test
-    public void shouldReturnOneViolationWithConfigurationOnSimpleFunction() {
+    void shouldReturnOneViolationWithConfigurationOnSimpleFunction() {
         // given
         config = ConfigurationBuilder.initFromResource("jslint/sputnik/withConfigurationFile.properties");
         Review review = new Review(ImmutableList.of(new ReviewFile(Resources.getResource("js/test.js").getFile())), ReviewFormatterFactory.get(config));

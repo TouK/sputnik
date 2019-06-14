@@ -1,7 +1,7 @@
 package pl.touk.sputnik.review.filter;
 
 import com.google.common.collect.ImmutableList;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.review.ReviewFile;
 
 import java.util.List;
@@ -10,10 +10,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class FileExtensionFilterTest {
+class FileExtensionFilterTest {
 
     @Test
-    public void shouldFilterOutNotAllowedExtensions() {
+    void shouldFilterOutNotAllowedExtensions() {
         // given
         List<ReviewFile> files = ImmutableList.of(createFile("one.java"), createFile("two.scala"), createFile("three.groovy"));
 

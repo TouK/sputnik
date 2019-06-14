@@ -2,17 +2,21 @@ package pl.touk.sputnik.processor.jshint;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Resources;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationBuilder;
-import pl.touk.sputnik.review.*;
+import pl.touk.sputnik.review.Review;
+import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.ReviewFormatterFactory;
+import pl.touk.sputnik.review.ReviewResult;
+import pl.touk.sputnik.review.Severity;
 
 import static pl.touk.sputnik.SputnikAssertions.assertThat;
 
-public class JsHintProcessorTest {
+class JsHintProcessorTest {
 
     @Test
-    public void shouldReturnEmptyResultWhenNoFilesToReview() {
+    void shouldReturnEmptyResultWhenNoFilesToReview() {
         // given
         Configuration config = ConfigurationBuilder.initFromResource("jshint/sputnik/noConfigurationFile.properties");
         JsHintProcessor fixture = new JsHintProcessor(config);
@@ -27,7 +31,7 @@ public class JsHintProcessorTest {
     }
 
     @Test
-    public void shouldReturnOneViolationWithConfigurationOnSimpleFunction() {
+    void shouldReturnOneViolationWithConfigurationOnSimpleFunction() {
         // given
         Configuration config = ConfigurationBuilder.initFromResource("jshint/sputnik/withConfigurationFile.properties");
         JsHintProcessor fixture = new JsHintProcessor(config);
@@ -48,7 +52,7 @@ public class JsHintProcessorTest {
     }
 
     @Test
-    public void shouldReturnViolationsWithConfigurationOnReducerExample() {
+    void shouldReturnViolationsWithConfigurationOnReducerExample() {
         // given
         Configuration config = ConfigurationBuilder.initFromResource("jshint/sputnik/withConfigurationFile.properties");
         JsHintProcessor fixture = new JsHintProcessor(config);

@@ -2,7 +2,6 @@ package pl.touk.sputnik.connector;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

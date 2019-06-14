@@ -1,11 +1,11 @@
 package pl.touk.sputnik;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.review.ReviewFile;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ReviewFileTest {
+class ReviewFileTest {
     private static final String MAIN_FILENAME = "gerrit-server/src/main/java/com/google/gerrit/server/project/RefControl.java";
     private static final String MAIN_JAVA_CLASS_NAME = "com.google.gerrit.server.project.RefControl";
     private static final String MAIN_JAVA_SOURCE_DIR = "gerrit-server/src/main/java/";
@@ -15,7 +15,7 @@ public class ReviewFileTest {
     private static final String TEST_JAVA_SOURCE_DIR = "gerrit-server/src/test/java/";
 
     @Test
-    public void shouldReturnMainJavaClassName() {
+    void shouldReturnMainJavaClassName() {
         //given
         ReviewFile reviewFile = createReviewFile(MAIN_FILENAME);
 
@@ -24,7 +24,7 @@ public class ReviewFileTest {
     }
 
     @Test
-    public void shouldReturnMainJavaSourceDirectory() {
+    void shouldReturnMainJavaSourceDirectory() {
         //given
         ReviewFile reviewFile = createReviewFile(MAIN_FILENAME);
 
@@ -33,7 +33,7 @@ public class ReviewFileTest {
     }
 
     @Test
-    public void shouldReturnTestJavaClassName() {
+    void shouldReturnTestJavaClassName() {
         //given
         ReviewFile reviewFile = createReviewFile(TEST_FILENAME);
 
@@ -42,7 +42,7 @@ public class ReviewFileTest {
     }
 
     @Test
-    public void shouldReturnTestJavaSourceDirectory() {
+    void shouldReturnTestJavaSourceDirectory() {
         //given
         ReviewFile reviewFile = createReviewFile(TEST_FILENAME);
 

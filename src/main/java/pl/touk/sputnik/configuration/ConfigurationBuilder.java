@@ -1,18 +1,17 @@
 package pl.touk.sputnik.configuration;
 
-import static com.google.common.io.Resources.getResource;
-import static org.apache.commons.lang3.Validate.notBlank;
+import com.google.common.base.Charsets;
+import com.google.common.io.CharSource;
+import com.google.common.io.Resources;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Properties;
 
-import lombok.extern.slf4j.Slf4j;
-
-import com.google.common.base.Charsets;
-import com.google.common.io.CharSource;
-import com.google.common.io.Resources;
+import static com.google.common.io.Resources.getResource;
+import static org.apache.commons.lang3.Validate.notBlank;
 
 @Slf4j
 public class ConfigurationBuilder {

@@ -1,7 +1,7 @@
 package pl.touk.sputnik.processor.sonar;
 
 import com.google.common.collect.ImmutableList;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.review.Review;
@@ -16,10 +16,11 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SonarProcessorTest extends TestEnvironment {
+class SonarProcessorTest extends TestEnvironment {
 
     @Test
-    public void shouldFilterResultFiles() {
+    void shouldFilterResultFiles() {
+        //given
         ReviewResult results = new ReviewResult();
         results.add(new Violation("src/t/f.cs", 0, "", Severity.ERROR));
         results.add(new Violation("src/t/f2.cs", 0, "", Severity.ERROR));
@@ -30,14 +31,18 @@ public class SonarProcessorTest extends TestEnvironment {
         ReviewFile r2 = new ReviewFile("src/t/f2.cs");
         Review review = new Review(ImmutableList.of(r1, r2), ReviewFormatterFactory.get(config));
 
+        //when
         ReviewResult filteredResults = new SonarProcessor(config).filterResults(results, review);
+
+        //then
         assertThat(filteredResults.getViolations())
             .extracting("filenameOrJavaClassName")
             .containsExactly("src/t/f.cs", "src/t/f2.cs");
     }
 
     @Test
-    public void shouldReportViolationsForMultiModulesProject() {
+    void shouldReportViolationsForMultiModulesProject() {
+        //given
         SonarProcessor processor = new SonarProcessor(new SonarScannerBuilder() {
             public SonarScanner prepareRunner(Review review, Configuration configuration) {
                 return new SonarScanner(null, null, null) {
@@ -47,12 +52,17 @@ public class SonarProcessorTest extends TestEnvironment {
                 };
             }
         }, config);
-        ReviewResult result = processor.process(nonexistantReview("src/module2/dir/file2.cs"));
+
+        //when
+        ReviewResult result = processor.process(nonExistentReview("src/module2/dir/file2.cs"));
+
+        //then
         assertThat(result.getViolations()).hasSize(3);
     }
 
     @Test
-    public void shouldReportViolationsForSingleModulesProject() {
+    void shouldReportViolationsForSingleModulesProject() {
+        //given
         SonarProcessor processor = new SonarProcessor(new SonarScannerBuilder() {
             public SonarScanner prepareRunner(Review review, Configuration configuration) {
                 return new SonarScanner(null, null, null) {
@@ -62,7 +72,11 @@ public class SonarProcessorTest extends TestEnvironment {
                 };
             }
         }, config);
-        ReviewResult result = processor.process(nonexistantReview("src/dir/file2.cs"));
+
+        //when
+        ReviewResult result = processor.process(nonExistentReview("src/dir/file2.cs"));
+
+        //then
         assertThat(result.getViolations()).hasSize(3);
     }
 }
