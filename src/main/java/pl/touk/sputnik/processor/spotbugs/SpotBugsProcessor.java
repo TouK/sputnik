@@ -89,9 +89,7 @@ public class SpotBugsProcessor implements ReviewProcessor {
         for (String buildDir : BuildDirLocatorFactory.create(config).getBuildDirs(review)) {
             project.addFile(buildDir);
         }
-        for (String sourceDir : review.getSourceDirs()) {
-            project.addSourceDir(sourceDir);
-        }
+        project.addSourceDirs(review.getSourceDirs());
         return project;
     }
 

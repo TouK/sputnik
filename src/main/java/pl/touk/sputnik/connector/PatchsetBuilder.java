@@ -23,7 +23,7 @@ public final class PatchsetBuilder {
         Provider provider = Provider.from(configuration.getProperty(CliOption.PROVIDER));
 
         notBlank(pullRequestId, "You must provide non blank pull request id");
-        isTrue(NumberUtils.isNumber(pullRequestId), "Integer value as pull request id required");
+        isTrue(NumberUtils.isCreatable(pullRequestId), "Integer value as pull request id required");
         notBlank(project, "You must provide non blank project key");
         notBlank(repository, "You must provide non blank repository slug");
         notNull(provider, "You must provide non blank SCM provider");
