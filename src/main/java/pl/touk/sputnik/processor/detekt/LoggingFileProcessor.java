@@ -8,8 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.psi.KtFile;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 class LoggingFileProcessor implements FileProcessListener {
@@ -24,17 +24,21 @@ class LoggingFileProcessor implements FileProcessListener {
     }
 
     @Override
+    public void onProcessComplete(KtFile ktFile, Map<String, ? extends List<? extends Finding>> map) {
+        log.debug("Processed {} and found {} problems", ktFile.getName(), countProblems(map));
+    }
+
+    @Override
     public void onFinish(List<? extends KtFile> list, Detektion detektion) {
         log.debug("Processed {} files and found {} problems", list.size(), countProblems(detektion));
     }
 
     private int countProblems(Detektion detektion) {
-        int problems = 0;
-        Collection<List<Finding>> findings = detektion.getFindings().values();
-        for (List<Finding> finding : findings) {
-            problems += finding.size();
-        }
-        return problems;
+        return countProblems(detektion.getFindings());
+    }
+
+    private int countProblems(Map<String, ? extends List<? extends Finding>> findings) {
+        return findings.values().stream().mapToInt(List::size).sum();
     }
 
     @NotNull
