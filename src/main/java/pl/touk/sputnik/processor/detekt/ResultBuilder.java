@@ -16,10 +16,10 @@ class ResultBuilder {
     private final Detektion detektion;
 
     @NotNull
-    ReviewResult build(String commonPath, List<String> filesForReview) {
+    ReviewResult build(List<String> filesForReview) {
         ReviewResult reviewResult = new ReviewResult();
         detektion.getFindings().forEach((ruleSet, value) -> value.forEach(finding -> {
-            String filePath = commonPath + finding.getLocation().getFile();
+            String filePath = finding.getLocation().getFile();
             Optional<String> file = filesForReview.stream().filter(filePath::endsWith).findFirst();
             file.ifPresent(f ->
                     {

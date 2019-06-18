@@ -5,7 +5,6 @@ import io.gitlab.arturbosch.detekt.api.Detektion;
 import io.gitlab.arturbosch.detekt.api.YamlConfig;
 import io.gitlab.arturbosch.detekt.cli.ClasspathResourceConverter;
 import io.gitlab.arturbosch.detekt.core.DetektFacade;
-import io.gitlab.arturbosch.detekt.core.PathFilter;
 import io.gitlab.arturbosch.detekt.core.ProcessingSettings;
 import io.gitlab.arturbosch.detekt.core.RuleSetLocator;
 import lombok.AllArgsConstructor;
@@ -20,6 +19,10 @@ import pl.touk.sputnik.review.ReviewResult;
 import pl.touk.sputnik.review.filter.FileExtensionFilter;
 import pl.touk.sputnik.review.transformer.FileNameTransformer;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -27,6 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Slf4j
@@ -38,6 +42,18 @@ public class DetektProcessor implements ReviewProcessor {
 
     private final ExecutorService executor = ForkJoinPool.commonPool();
 
+    private static PrintStream printStream;
+
+    static {
+        try {
+            File tempFile = File.createTempFile("detekt", "out");
+            printStream = new PrintStream(tempFile);
+        } catch (IOException e) {
+            log.warn("Cannot create output stream for detekt", e);
+            printStream = System.out;
+        }
+    }
+
     @Nullable
     @Override
     public ReviewResult process(@NotNull Review review) {
@@ -45,15 +61,11 @@ public class DetektProcessor implements ReviewProcessor {
         if (files.isEmpty()) {
             return new ReviewResult();
         }
-        String commonPath = new CommonPath(files).find();
-
-        DetektFacade detektFacade = buildDetectFacade(commonPath);
+        DetektFacade detektFacade = buildDetectFacade(files);
 
         Detektion detektion = detektFacade.run();
 
-        String commonPathAsFilePrefix = buildCommonPathAsFilePrefix(commonPath);
-
-        return new ResultBuilder(detektion).build(commonPathAsFilePrefix, files);
+        return new ResultBuilder(detektion).build(files);
     }
 
     @NotNull
@@ -62,36 +74,26 @@ public class DetektProcessor implements ReviewProcessor {
     }
 
     @NotNull
-    private String buildCommonPathAsFilePrefix(String commonPath) {
-        if (commonPath.isEmpty()) {
-            return "";
-        }
-        if (FileSystems.getDefault().getPath(commonPath).toAbsolutePath().toFile().isFile()) {
-            return "";
-        }
-        return commonPath + "/";
-    }
-
-    @NotNull
-    private DetektFacade buildDetectFacade(String commonPath) {
+    private DetektFacade buildDetectFacade(List<String> files) {
         String configFilename = configuration.getProperty(GeneralOption.DETEKT_CONFIG_FILE);
         Config config;
+        FileSystem fileSystem = FileSystems.getDefault();
         if (configFilename != null) {
-            Path configPath = FileSystems.getDefault().getPath(configFilename);
+            Path configPath = fileSystem.getPath(configFilename);
             config = YamlConfig.Companion.load(configPath);
         } else {
             config = loadDefaultConfig();
         }
         ProcessingSettings processingSettings = new ProcessingSettings(
-                FileSystems.getDefault().getPath(commonPath),
+                files.stream().map(f -> fileSystem.getPath(f)).collect(Collectors.toList()),
                 config,
-                new ArrayList<PathFilter>(),
+                new ArrayList<>(),
                 false,
                 false,
-                new ArrayList<Path>(),
+                new ArrayList<>(),
                 executor,
-                System.out,
-                System.err
+                printStream,
+                printStream
         );
 
         return DetektFacade.Companion.create(processingSettings, new RuleSetLocator(processingSettings).load(), Arrays.asList(new LoggingFileProcessor()));
