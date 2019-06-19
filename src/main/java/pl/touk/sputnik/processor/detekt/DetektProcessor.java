@@ -42,17 +42,7 @@ public class DetektProcessor implements ReviewProcessor {
 
     private final ExecutorService executor = ForkJoinPool.commonPool();
 
-    private static PrintStream printStream;
-
-    static {
-        try {
-            File tempFile = File.createTempFile("detekt", "out");
-            printStream = new PrintStream(tempFile);
-        } catch (IOException e) {
-            log.warn("Cannot create output stream for detekt", e);
-            printStream = System.out;
-        }
-    }
+    private final PrintStream printStream = buildPrintStream();
 
     @Nullable
     @Override
@@ -108,5 +98,15 @@ public class DetektProcessor implements ReviewProcessor {
     @Override
     public String getName() {
         return SOURCE_NAME;
+    }
+
+    private PrintStream buildPrintStream() {
+        try {
+            File tempFile = File.createTempFile("detekt", "out");
+            return new PrintStream(tempFile);
+        } catch (IOException e) {
+            log.warn("Cannot create output stream for detekt", e);
+            return System.out;
+        }
     }
 }
