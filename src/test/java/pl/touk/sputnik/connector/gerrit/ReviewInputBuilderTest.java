@@ -19,6 +19,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ReviewInputBuilderTest {
 
+    private static final String TAG = "ci";
+
     @Mock
     private CommentFilter commentFilter;
 
@@ -29,16 +31,18 @@ class ReviewInputBuilderTest {
         reviewInputBuilder = new ReviewInputBuilder(commentFilter);
     }
 
+
     @Test
     void shouldBuildReviewInput() {
         Configuration config = ConfigurationBuilder.initFromResource("test.properties");
         Review review = ReviewBuilder.buildReview(config);
         when(commentFilter.include(eq("filename1"), anyInt())).thenReturn(true);
 
-        ReviewInput reviewInput = reviewInputBuilder.toReviewInput(review);
+        ReviewInput reviewInput = reviewInputBuilder.toReviewInput(review, TAG);
 
         assertThat(reviewInput.message).isEqualTo("Total 8 violations found");
         assertThat(reviewInput.comments).hasSize(4);
+        assertThat(reviewInput.tag).isEqualTo(TAG);
         assertThat(reviewInput.comments.get("filename1")).hasSize(2);
         assertThat(reviewInput.comments.get("filename1").get(0).message).isEqualTo("test1");
         assertThat(reviewInput.labels.get("Code-Review")).isEqualTo((short) 1);
@@ -51,7 +55,7 @@ class ReviewInputBuilderTest {
         when(commentFilter.include("filename1", 0)).thenReturn(false);
         when(commentFilter.include("filename1", 1)).thenReturn(true);
 
-        ReviewInput reviewInput = reviewInputBuilder.toReviewInput(review);
+        ReviewInput reviewInput = reviewInputBuilder.toReviewInput(review, TAG);
 
         assertThat(reviewInput.message).isEqualTo("Total 8 violations found");
         assertThat(reviewInput.comments).hasSize(4);

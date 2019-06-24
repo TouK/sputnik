@@ -62,7 +62,7 @@ public class GerritFacade implements ConnectorFacade, ConnectorValidator, Review
     public void publish(@NotNull Review review) {
         try {
             log.debug("Set review in Gerrit: {}", review);
-            ReviewInput reviewInput = new ReviewInputBuilder(commentFilter).toReviewInput(review);
+            ReviewInput reviewInput = new ReviewInputBuilder(commentFilter).toReviewInput(review, gerritPatchset.getTag());
             gerritApi.changes()
                     .id(gerritPatchset.getChangeId())
                     .revision(gerritPatchset.getRevisionId())

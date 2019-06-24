@@ -8,4 +8,5 @@ import lombok.Data;
 public class GerritPatchset {
     private final String changeId;
     private final String revisionId;
+    private final String tag;
 }

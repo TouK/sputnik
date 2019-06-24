@@ -30,6 +30,10 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class GerritFacadeTest {
 
+    private static final String CHANGE_ID = "changeId";
+    private static final String REVISION_ID = "revisionId";
+    private static final String TAG = "ci";
+
     @Mock
     private GerritApi gerritApi;
 
@@ -63,11 +67,11 @@ class GerritFacadeTest {
         Changes changes = mock(Changes.class);
         when(gerritApi.changes()).thenReturn(changes);
         ChangeApi changeApi = mock(ChangeApi.class);
-        when(changes.id("changeId")).thenReturn(changeApi);
+        when(changes.id(CHANGE_ID)).thenReturn(changeApi);
         RevisionApi revisionApi = mock(RevisionApi.class);
-        when(changeApi.revision("revisionId")).thenReturn(revisionApi);
+        when(changeApi.revision(REVISION_ID)).thenReturn(revisionApi);
         when(revisionApi.files()).thenReturn(fileInfoMap);
-        return new GerritFacade(gerritApi, new GerritPatchset("changeId", "revisionId"), commentFilter);
+        return new GerritFacade(gerritApi, new GerritPatchset(CHANGE_ID, REVISION_ID, TAG), commentFilter);
     }
 
 }
