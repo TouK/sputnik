@@ -65,4 +65,24 @@ class ReviewInputBuilderTest {
         assertThat(reviewInput.labels.get("Code-Review")).isEqualTo((short) 1);
     }
 
+    @Test
+    void shouldNotSetEmptyTag() {
+        Configuration config = ConfigurationBuilder.initFromResource("test.properties");
+        Review review = ReviewBuilder.buildReview(config);
+
+        ReviewInput reviewInput = new ReviewInputBuilder().toReviewInput(review, "");
+
+        assertThat(reviewInput.tag).isNull();
+    }
+
+    @Test
+    void shouldNotSetNullTag() {
+        Configuration config = ConfigurationBuilder.initFromResource("test.properties");
+        Review review = ReviewBuilder.buildReview(config);
+
+        ReviewInput reviewInput = new ReviewInputBuilder().toReviewInput(review, null);
+
+        assertThat(reviewInput.tag).isNull();
+    }
+
 }
