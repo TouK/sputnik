@@ -6,10 +6,12 @@ import com.urswolfer.gerrit.client.rest.GerritAuthData;
 import com.urswolfer.gerrit.client.rest.GerritRestApiFactory;
 import com.urswolfer.gerrit.client.rest.http.HttpClientBuilderExtension;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.CliOption;
 import pl.touk.sputnik.configuration.Configuration;
+import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.connector.ConnectorDetails;
 import pl.touk.sputnik.connector.http.HttpHelper;
 
@@ -30,6 +32,7 @@ public class GerritFacadeBuilder {
         if (!Strings.isNullOrEmpty(connectorDetails.getPath())) {
             hostUri += connectorDetails.getPath();
         }
+
         log.info("Using Gerrit URL: {}", hostUri);
         GerritAuthData.Basic authData = new GerritAuthData.Basic(hostUri,
                 connectorDetails.getUsername(), connectorDetails.getPassword());
@@ -42,7 +45,9 @@ public class GerritFacadeBuilder {
             }
         });
 
-        return new GerritFacade(gerritApi, gerritPatchset);
+        CommentFilter commentFilter = buildCommentFilter(configuration, gerritPatchset, gerritApi);
+
+        return new GerritFacade(gerritApi, gerritPatchset, commentFilter);
     }
 
     @NotNull
@@ -54,5 +59,13 @@ public class GerritFacadeBuilder {
         notBlank(revisionId, "You must provide non blank Gerrit revision Id");
 
         return new GerritPatchset(changeId, revisionId);
+    }
+
+    @NotNull
+    private CommentFilter buildCommentFilter(Configuration configuration, GerritPatchset gerritPatchset, GerritApi gerritApi) {
+        boolean commentOnlyChangedLines = BooleanUtils.toBoolean(configuration.getProperty(GeneralOption.COMMENT_ONLY_CHANGED_LINES));
+        CommentFilter commentFilter = commentOnlyChangedLines ? new GerritCommentFilter(gerritApi, gerritPatchset) : CommentFilter.EMPTY_COMMENT_FILTER;
+        commentFilter.init();
+        return commentFilter;
     }
 }
