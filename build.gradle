@@ -72,6 +72,7 @@ dependencies {
     compile 'commons-cli:commons-cli:1.2'
     compile 'com.jayway.jsonpath:json-path:2.4.0'
     compile 'commons-io:commons-io:2.4'
+    compile 'org.eclipse.jgit:org.eclipse.jgit:5.5.1.201910021850-r'
 
     compile 'com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:0.8.8'
 

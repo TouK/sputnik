@@ -39,5 +39,4 @@ public class ReviewFile {
     private String createJavaClassName() {
         return StringUtils.substringBeforeLast(ENTRY_PATTERN.matcher(reviewFilename).replaceFirst(""), DOT).replace('/', '.');
     }
-
 }

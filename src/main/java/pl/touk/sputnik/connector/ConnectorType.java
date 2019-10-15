@@ -13,7 +13,8 @@ public enum ConnectorType {
     GERRIT("gerrit"),
     STASH("stash"),
     GITHUB("github"),
-    SAAS("saas");
+    SAAS("saas"),
+    LOCAL("local");
 
     /** Name used in configuration file. */
     @Getter
