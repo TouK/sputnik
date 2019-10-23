@@ -4,6 +4,8 @@ import com.google.gerrit.extensions.api.changes.ReviewInput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.touk.sputnik.ReviewBuilder;
@@ -30,7 +32,6 @@ class ReviewInputBuilderTest {
     void setUp() {
         reviewInputBuilder = new ReviewInputBuilder(commentFilter);
     }
-
 
     @Test
     void shouldBuildReviewInput() {
@@ -65,24 +66,14 @@ class ReviewInputBuilderTest {
         assertThat(reviewInput.labels.get("Code-Review")).isEqualTo((short) 1);
     }
 
-    @Test
-    void shouldNotSetEmptyTag() {
+    @ParameterizedTest
+    @NullAndEmptySource
+    void shouldNotSetEmptyOrNullTag(String tag) {
         Configuration config = ConfigurationBuilder.initFromResource("test.properties");
         Review review = ReviewBuilder.buildReview(config);
 
-        ReviewInput reviewInput = new ReviewInputBuilder().toReviewInput(review, "");
+        ReviewInput reviewInput = reviewInputBuilder.toReviewInput(review, tag);
 
         assertThat(reviewInput.tag).isNull();
     }
-
-    @Test
-    void shouldNotSetNullTag() {
-        Configuration config = ConfigurationBuilder.initFromResource("test.properties");
-        Review review = ReviewBuilder.buildReview(config);
-
-        ReviewInput reviewInput = new ReviewInputBuilder().toReviewInput(review, null);
-
-        assertThat(reviewInput.tag).isNull();
-    }
-
 }
