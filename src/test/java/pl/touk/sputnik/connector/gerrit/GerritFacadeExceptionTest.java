@@ -14,6 +14,10 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class GerritFacadeExceptionTest {
 
+    private static final String CHANGE_ID = "changeId";
+    private static final String REVISION_ID = "revisionId";
+    private static final String TAG = "tag";
+
     @Mock
     private GerritApi gerritApi;
 
@@ -26,8 +30,8 @@ class GerritFacadeExceptionTest {
     @Test
     void shouldWrapConnectorException() throws Exception {
         when(gerritApi.changes()).thenReturn(changes);
-        when(changes.id("foo")).thenThrow(new RuntimeException("Connection refused"));
-        GerritFacade gerritFacade = new GerritFacade(gerritApi, new GerritPatchset("foo", "bar"), commentFilter);
+        when(changes.id(CHANGE_ID)).thenThrow(new RuntimeException("Connection refused"));
+        GerritFacade gerritFacade = new GerritFacade(gerritApi, new GerritPatchset(CHANGE_ID, REVISION_ID, TAG), commentFilter);
 
         Throwable thrown = catchThrowable(gerritFacade::listFiles);
 

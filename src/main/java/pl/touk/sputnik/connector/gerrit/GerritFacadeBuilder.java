@@ -54,11 +54,12 @@ public class GerritFacadeBuilder {
     private GerritPatchset buildGerritPatchset(Configuration configuration) {
         String changeId = configuration.getProperty(CliOption.CHANGE_ID);
         String revisionId = configuration.getProperty(CliOption.REVISION_ID);
+        String tag = configuration.getProperty(GeneralOption.TAG);
 
         notBlank(changeId, "You must provide non blank Gerrit change Id");
         notBlank(revisionId, "You must provide non blank Gerrit revision Id");
 
-        return new GerritPatchset(changeId, revisionId);
+        return new GerritPatchset(changeId, revisionId, tag);
     }
 
     @NotNull
