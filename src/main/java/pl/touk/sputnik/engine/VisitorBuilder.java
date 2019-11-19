@@ -17,6 +17,8 @@ import pl.touk.sputnik.engine.visitor.LimitCommentVisitor;
 import pl.touk.sputnik.engine.visitor.RegexFilterFilesVisitor;
 import pl.touk.sputnik.engine.visitor.SummaryMessageVisitor;
 import pl.touk.sputnik.engine.visitor.comment.GerritCommentVisitor;
+import pl.touk.sputnik.engine.visitor.comment.GerritFileDiffBuilder;
+import pl.touk.sputnik.engine.visitor.comment.GerritFileDiffBuilderWrapper;
 import pl.touk.sputnik.engine.visitor.score.NoScore;
 import pl.touk.sputnik.engine.visitor.score.ScoreAlwaysPass;
 import pl.touk.sputnik.engine.visitor.score.ScorePassIfEmpty;
@@ -84,7 +86,8 @@ public class VisitorBuilder {
 
         //It's only supported for Gerrit this way
         if (connectorFacade instanceof GerritFacade) {
-            afterReviewVisitors.add(new GerritCommentVisitor((GerritFacade) connectorFacade));
+            afterReviewVisitors.add(new GerritCommentVisitor(
+                    new GerritFileDiffBuilderWrapper((GerritFacade) connectorFacade, new GerritFileDiffBuilder())));
         }
     }
 
