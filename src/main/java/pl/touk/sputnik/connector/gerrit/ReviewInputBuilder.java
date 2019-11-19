@@ -21,8 +21,6 @@ public class ReviewInputBuilder {
 
     private static final String MESSAGE_SEPARATOR = ". ";
 
-    private final CommentFilter commentFilter;
-
     @NotNull
     public ReviewInput toReviewInput(@NotNull Review review, @Nullable String tag) {
         ReviewInput reviewInput = new ReviewInput();
@@ -39,17 +37,8 @@ public class ReviewInputBuilder {
     @NotNull
     private List<ReviewInput.CommentInput> buildFileComments(@NotNull ReviewFile reviewFile) {
         return reviewFile.getComments().stream()
-                .filter(comment -> this.includes(reviewFile, comment))
                 .map(this::buildCommentInput)
                 .collect(Collectors.toList());
-    }
-
-    private boolean includes(@NotNull ReviewFile reviewFile, @NotNull Comment comment) {
-        boolean include = commentFilter.include(reviewFile.getReviewFilename(), comment.getLine());
-        if (!include) {
-            log.info("Comment excluded in file {}: line {}, message {}", reviewFile.getReviewFilename(), comment.getLine(), comment.getMessage());
-        }
-        return include;
     }
 
     @NotNull

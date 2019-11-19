@@ -37,14 +37,11 @@ class GerritFacadeTest {
     @Mock
     private GerritApi gerritApi;
 
-    @Mock
-    private CommentFilter commentFilter;
-
     private GerritFacade gerritFacade;
 
     @BeforeEach
     void setUp() {
-        gerritFacade = new GerritFacade(gerritApi, null, commentFilter);
+        gerritFacade = new GerritFacade(gerritApi, null);
     }
 
     @Test
@@ -71,7 +68,7 @@ class GerritFacadeTest {
         RevisionApi revisionApi = mock(RevisionApi.class);
         when(changeApi.revision(REVISION_ID)).thenReturn(revisionApi);
         when(revisionApi.files()).thenReturn(fileInfoMap);
-        return new GerritFacade(gerritApi, new GerritPatchset(CHANGE_ID, REVISION_ID, TAG), commentFilter);
+        return new GerritFacade(gerritApi, new GerritPatchset(CHANGE_ID, REVISION_ID, TAG));
     }
 
 }

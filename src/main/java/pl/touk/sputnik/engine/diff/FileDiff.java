@@ -1,4 +1,4 @@
-package pl.touk.sputnik.connector.gerrit;
+package pl.touk.sputnik.engine.diff;
 
 import java.util.Collections;
 import java.util.HashSet;

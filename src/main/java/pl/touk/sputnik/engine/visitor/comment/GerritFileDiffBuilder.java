@@ -1,13 +1,14 @@
-package pl.touk.sputnik.connector.gerrit;
+package pl.touk.sputnik.engine.visitor.comment;
 
 import com.google.gerrit.extensions.common.DiffInfo.ContentEntry;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import pl.touk.sputnik.engine.diff.FileDiff;
 
 import java.util.List;
 
 @Slf4j
-public class FileDiffBuilder {
+public class GerritFileDiffBuilder {
 
     @NotNull
     public FileDiff build(@NotNull String fileKey, @NotNull List<ContentEntry> content) {

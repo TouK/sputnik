@@ -2,7 +2,9 @@ package pl.touk.sputnik.connector.gerrit;
 
 import com.google.gerrit.extensions.api.GerritApi;
 import com.google.gerrit.extensions.api.changes.ReviewInput;
+import com.google.gerrit.extensions.api.changes.RevisionApi;
 import com.google.gerrit.extensions.common.FileInfo;
+import com.google.gerrit.extensions.restapi.RestApiException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +27,6 @@ public class GerritFacade implements ConnectorFacade, ReviewPublisher {
 
     private final GerritApi gerritApi;
     private final GerritPatchset gerritPatchset;
-    private final CommentFilter commentFilter;
 
     @NotNull
     @Override
@@ -61,13 +62,26 @@ public class GerritFacade implements ConnectorFacade, ReviewPublisher {
     public void publish(@NotNull Review review) {
         try {
             log.debug("Set review in Gerrit: {}", review);
-            ReviewInput reviewInput = new ReviewInputBuilder(commentFilter).toReviewInput(review, gerritPatchset.getTag());
+            ReviewInput reviewInput = new ReviewInputBuilder().toReviewInput(review, gerritPatchset.getTag());
             gerritApi.changes()
                     .id(gerritPatchset.getChangeId())
                     .revision(gerritPatchset.getRevisionId())
                     .review(reviewInput);
         } catch (Throwable e) {
             throw new GerritException("Error when setting review", e);
+        }
+    }
+
+    /**
+     * This is specific for Gerrit and GerritCommentVisitor
+     */
+    public RevisionApi getRevision() {
+        try {
+            return gerritApi.changes()
+                        .id(gerritPatchset.getChangeId())
+                        .revision(gerritPatchset.getRevisionId());
+        } catch (RestApiException e) {
+            throw new GerritException("Error when retrieve modified lines", e);
         }
     }
 

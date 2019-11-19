@@ -13,7 +13,6 @@ import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.configuration.GeneralOptionNotSupportedException;
 import pl.touk.sputnik.connector.ConnectorFacade;
-import pl.touk.sputnik.connector.ConnectorValidator;
 import pl.touk.sputnik.connector.Connectors;
 import pl.touk.sputnik.connector.ReviewPublisher;
 import pl.touk.sputnik.review.Comment;
@@ -27,7 +26,7 @@ import static java.util.stream.Collectors.toList;
 
 @AllArgsConstructor
 @Slf4j
-public class LocalFacade implements ConnectorFacade, ConnectorValidator, ReviewPublisher {
+public class LocalFacade implements ConnectorFacade, ReviewPublisher {
     private final Repository repository;
     private final DiffFormatter diffFormatter;
     private final LocalFacadeOutput output;
