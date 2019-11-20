@@ -36,7 +36,7 @@ public class GerritFileDiffBuilderWrapper {
         }
     }
 
-    private FileDiff buildFileDiff (@Nonnull GerritFileDiffBuilder gerritFileDiffBuilder, @Nonnull RevisionApi revisionApi, @Nonnull String fileName) {
+    private FileDiff buildFileDiff(@Nonnull GerritFileDiffBuilder gerritFileDiffBuilder, @Nonnull RevisionApi revisionApi, @Nonnull String fileName) {
         try {
             log.info("Query file diff for {}", fileName);
             FileApi fileApi = revisionApi.file(fileName);

@@ -66,13 +66,13 @@ class VisitorBuilderTest {
     @Test
     void shouldAddRegexFilterToBeforeVisitorsWhenConfigured() {
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
-            CliOption.FILE_REGEX.getKey(), "^myModule/.+"
+                CliOption.FILE_REGEX.getKey(), "^myModule/.+"
         ));
 
         assertThat(new VisitorBuilder().buildBeforeReviewVisitors(config))
-            .hasSize(1)
-            .extracting("class")
-            .containsExactly(RegexFilterFilesVisitor.class);
+                .hasSize(1)
+                .extracting("class")
+                .containsExactly(RegexFilterFilesVisitor.class);
     }
 
     @Test
@@ -197,7 +197,7 @@ class VisitorBuilderTest {
                 GeneralOption.SCORE_STRATEGY.getKey(), "mySimpleStrategy"
         ));
 
-        List<AfterReviewVisitor> afterReviewVisitors = new VisitorBuilder().buildAfterReviewVisitors(config, connectorFacade );
+        List<AfterReviewVisitor> afterReviewVisitors = new VisitorBuilder().buildAfterReviewVisitors(config, connectorFacade);
 
         assertThat(afterReviewVisitors)
                 .hasSize(2)
