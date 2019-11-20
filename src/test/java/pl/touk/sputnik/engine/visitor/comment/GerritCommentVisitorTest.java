@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import pl.touk.sputnik.connector.gerrit.GerritException;
 import pl.touk.sputnik.engine.diff.FileDiff;
 import pl.touk.sputnik.review.Comment;
 import pl.touk.sputnik.review.Review;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static pl.touk.sputnik.SputnikAssertions.assertThat;
@@ -61,6 +63,15 @@ class GerritCommentVisitorTest {
         gerritCommentVisitor.afterReview(review);
 
         assertThat(comments).containsExactly(commentOnModifiedLine);
+    }
+
+    @Test
+    void shouldReturnIfGerritThrowsException() {
+        when(gerritFileDiffBuilderWrapper.buildFileDiffs()).thenThrow(GerritException.class);
+
+        Throwable thrown = catchThrowable(() -> gerritCommentVisitor.afterReview(review));
+
+        assertThat(thrown).doesNotThrowAnyException();
     }
 
     private FileDiff mockFileDiff(String fileName, Integer... lines) {

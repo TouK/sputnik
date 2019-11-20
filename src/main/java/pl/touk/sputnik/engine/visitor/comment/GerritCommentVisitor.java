@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import pl.touk.sputnik.connector.gerrit.GerritException;
 import pl.touk.sputnik.engine.diff.FileDiff;
 import pl.touk.sputnik.engine.visitor.AfterReviewVisitor;
 import pl.touk.sputnik.review.Comment;
@@ -22,7 +23,13 @@ public class GerritCommentVisitor implements AfterReviewVisitor {
 
     @Override
     public void afterReview(@NotNull Review review) {
-        List<FileDiff> fileDiffs = gerritFileDiffBuilderWrapper.buildFileDiffs();
+        List<FileDiff> fileDiffs;
+        try {
+            fileDiffs = gerritFileDiffBuilderWrapper.buildFileDiffs();
+        } catch (GerritException e) {
+            log.error("Couldn't fetch file diffs from gerrit. All comments will be included", e);
+            return;
+        }
 
         for (ReviewFile reviewFile : review.getFiles()) {
             Iterator<Comment> iterator = reviewFile.getComments().iterator();
