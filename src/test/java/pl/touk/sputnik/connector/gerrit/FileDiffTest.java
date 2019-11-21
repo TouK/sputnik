@@ -1,6 +1,7 @@
 package pl.touk.sputnik.connector.gerrit;
 
 import org.junit.jupiter.api.Test;
+import pl.touk.sputnik.engine.diff.FileDiff;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

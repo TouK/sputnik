@@ -8,17 +8,23 @@ import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.configuration.CliOption;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
+import pl.touk.sputnik.connector.ConnectorFacade;
+import pl.touk.sputnik.connector.gerrit.GerritFacade;
 import pl.touk.sputnik.engine.visitor.AfterReviewVisitor;
 import pl.touk.sputnik.engine.visitor.BeforeReviewVisitor;
 import pl.touk.sputnik.engine.visitor.FilterOutTestFilesVisitor;
 import pl.touk.sputnik.engine.visitor.LimitCommentVisitor;
 import pl.touk.sputnik.engine.visitor.RegexFilterFilesVisitor;
 import pl.touk.sputnik.engine.visitor.SummaryMessageVisitor;
+import pl.touk.sputnik.engine.visitor.comment.GerritCommentVisitor;
+import pl.touk.sputnik.engine.visitor.comment.GerritFileDiffBuilder;
+import pl.touk.sputnik.engine.visitor.comment.GerritFileDiffBuilderWrapper;
 import pl.touk.sputnik.engine.visitor.score.NoScore;
 import pl.touk.sputnik.engine.visitor.score.ScoreAlwaysPass;
 import pl.touk.sputnik.engine.visitor.score.ScorePassIfEmpty;
 import pl.touk.sputnik.engine.visitor.score.ScorePassIfNoErrors;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,8 +60,10 @@ public class VisitorBuilder {
     }
 
     @NotNull
-    public List<AfterReviewVisitor> buildAfterReviewVisitors(Configuration configuration) {
+    public List<AfterReviewVisitor> buildAfterReviewVisitors(@Nonnull Configuration configuration, @Nonnull ConnectorFacade connectorFacade) {
         List<AfterReviewVisitor> afterReviewVisitors = new ArrayList<>();
+
+        addCommentVisitor(afterReviewVisitors, configuration, connectorFacade);
 
         String passingComment = configuration.getProperty(GeneralOption.MESSAGE_SCORE_PASSING_COMMENT);
         afterReviewVisitors.add(new SummaryMessageVisitor(passingComment));
@@ -70,6 +78,19 @@ public class VisitorBuilder {
         return afterReviewVisitors;
     }
 
+    private void addCommentVisitor(List<AfterReviewVisitor> afterReviewVisitors, @Nonnull Configuration configuration, @Nonnull ConnectorFacade connectorFacade) {
+        boolean commentOnlyChangedLines = BooleanUtils.toBoolean(configuration.getProperty(GeneralOption.COMMENT_ONLY_CHANGED_LINES));
+        if (!commentOnlyChangedLines) {
+            return;
+        }
+
+        //It's only supported for Gerrit this way
+        if (connectorFacade instanceof GerritFacade) {
+            afterReviewVisitors.add(new GerritCommentVisitor(
+                    new GerritFileDiffBuilderWrapper((GerritFacade) connectorFacade, new GerritFileDiffBuilder())));
+        }
+    }
+
     @NotNull
     private AfterReviewVisitor buildScoreAfterReviewVisitor(Configuration configuration) {
         Map<String, Short> passingScore = ImmutableMap.<String, Short>of(
@@ -82,6 +103,8 @@ public class VisitorBuilder {
         );
         String scoreStrategy = configuration.getProperty(GeneralOption.SCORE_STRATEGY);
         notBlank(scoreStrategy);
+
+        log.info("Using score strategy {}", scoreStrategy);
 
         switch(scoreStrategy.toUpperCase()) {
             case NOSCORE:

@@ -1,13 +1,14 @@
-package pl.touk.sputnik.connector.gerrit;
+package pl.touk.sputnik.engine.diff;
 
-import java.util.Collections;
+import lombok.Getter;
+
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
 public class FileDiff {
 
     private final String fileName;
-
     private final Set<Integer> modifiedLines = new HashSet<>();
 
     public FileDiff(String fileName) {
@@ -18,13 +19,5 @@ public class FileDiff {
         for (int i = firstLine; i < firstLine + count; i++) {
             modifiedLines.add(i);
         }
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public Set<Integer> getModifiedLines() {
-        return Collections.unmodifiableSet(modifiedLines);
     }
 }

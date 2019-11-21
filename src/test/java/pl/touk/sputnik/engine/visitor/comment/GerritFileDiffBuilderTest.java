@@ -1,7 +1,8 @@
-package pl.touk.sputnik.connector.gerrit;
+package pl.touk.sputnik.engine.visitor.comment;
 
 import com.google.gerrit.extensions.common.DiffInfo;
 import org.junit.jupiter.api.Test;
+import pl.touk.sputnik.engine.diff.FileDiff;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class FileDiffBuilderTest {
+class GerritFileDiffBuilderTest {
 
     private static final String FILE_KEY = "test.java";
 
@@ -20,7 +21,7 @@ class FileDiffBuilderTest {
         content.add(buildContentEntry(0, 0, 0, 10));
         content.add(buildContentEntry(0, 0, 2, 0));
 
-        FileDiff fileDiff = new FileDiffBuilder().build(FILE_KEY, content);
+        FileDiff fileDiff = new GerritFileDiffBuilder().build(FILE_KEY, content);
 
         assertThat(fileDiff.getFileName()).isEqualTo(FILE_KEY);
         assertThat(fileDiff.getModifiedLines()).containsExactlyInAnyOrder(11, 12);
@@ -32,7 +33,7 @@ class FileDiffBuilderTest {
         content.add(buildContentEntry(10, 0, 0, 0));
         content.add(buildContentEntry(0, 0, 2, 0));
 
-        FileDiff fileDiff = new FileDiffBuilder().build(FILE_KEY, content);
+        FileDiff fileDiff = new GerritFileDiffBuilder().build(FILE_KEY, content);
 
         assertThat(fileDiff.getFileName()).isEqualTo(FILE_KEY);
         assertThat(fileDiff.getModifiedLines()).containsExactlyInAnyOrder(1, 2);
@@ -44,7 +45,7 @@ class FileDiffBuilderTest {
         content.add(buildContentEntry(0, 10, 0, 0));
         content.add(buildContentEntry(0, 0, 2, 0));
 
-        FileDiff fileDiff = new FileDiffBuilder().build(FILE_KEY, content);
+        FileDiff fileDiff = new GerritFileDiffBuilder().build(FILE_KEY, content);
 
         assertThat(fileDiff.getFileName()).isEqualTo(FILE_KEY);
         assertThat(fileDiff.getModifiedLines()).containsExactlyInAnyOrder(11, 12);
@@ -56,7 +57,7 @@ class FileDiffBuilderTest {
         content.add(buildContentEntry(10, 0, 5, 1));
         content.add(buildContentEntry(3, 9, 2, 20));
 
-        FileDiff fileDiff = new FileDiffBuilder().build(FILE_KEY, content);
+        FileDiff fileDiff = new GerritFileDiffBuilder().build(FILE_KEY, content);
 
         assertThat(fileDiff.getFileName()).isEqualTo(FILE_KEY);
         assertThat(fileDiff.getModifiedLines()).containsExactlyInAnyOrder(2, 3, 4, 5, 6, 36, 37);

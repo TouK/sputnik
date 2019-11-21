@@ -2,15 +2,21 @@ package pl.touk.sputnik.engine;
 
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pl.touk.sputnik.configuration.CliOption;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.configuration.GeneralOption;
+import pl.touk.sputnik.connector.ConnectorFacade;
+import pl.touk.sputnik.connector.gerrit.GerritFacade;
 import pl.touk.sputnik.engine.visitor.AfterReviewVisitor;
 import pl.touk.sputnik.engine.visitor.FilterOutTestFilesVisitor;
 import pl.touk.sputnik.engine.visitor.LimitCommentVisitor;
 import pl.touk.sputnik.engine.visitor.RegexFilterFilesVisitor;
 import pl.touk.sputnik.engine.visitor.SummaryMessageVisitor;
+import pl.touk.sputnik.engine.visitor.comment.GerritCommentVisitor;
 import pl.touk.sputnik.engine.visitor.score.NoScore;
 import pl.touk.sputnik.engine.visitor.score.ScoreAlwaysPass;
 import pl.touk.sputnik.engine.visitor.score.ScorePassIfEmpty;
@@ -21,8 +27,13 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.MapEntry.entry;
+import static org.mockito.Mockito.mock;
 
+@ExtendWith(MockitoExtension.class)
 class VisitorBuilderTest {
+
+    @Mock
+    private ConnectorFacade connectorFacade;
 
     @Test
     void shouldNotBuildBeforeVisitors() {
@@ -55,20 +66,20 @@ class VisitorBuilderTest {
     @Test
     void shouldAddRegexFilterToBeforeVisitorsWhenConfigured() {
         Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
-            CliOption.FILE_REGEX.getKey(), "^myModule/.+"
+                CliOption.FILE_REGEX.getKey(), "^myModule/.+"
         ));
 
         assertThat(new VisitorBuilder().buildBeforeReviewVisitors(config))
-            .hasSize(1)
-            .extracting("class")
-            .containsExactly(RegexFilterFilesVisitor.class);
+                .hasSize(1)
+                .extracting("class")
+                .containsExactly(RegexFilterFilesVisitor.class);
     }
 
     @Test
     void shouldBuildAfterVisitors() {
         Configuration config = new ConfigurationSetup().setUp(Collections.<String, String>emptyMap());
 
-        assertThat(new VisitorBuilder().buildAfterReviewVisitors(config))
+        assertThat(new VisitorBuilder().buildAfterReviewVisitors(config, connectorFacade))
                 .hasSize(2)
                 .extracting("class")
                 .containsExactly(SummaryMessageVisitor.class, ScoreAlwaysPass.class);
@@ -80,7 +91,7 @@ class VisitorBuilderTest {
                 GeneralOption.MAX_NUMBER_OF_COMMENTS.getKey(), "0"
         ));
 
-        assertThat(new VisitorBuilder().buildAfterReviewVisitors(config))
+        assertThat(new VisitorBuilder().buildAfterReviewVisitors(config, connectorFacade))
                 .hasSize(2)
                 .extracting("class")
                 .containsExactly(SummaryMessageVisitor.class, ScoreAlwaysPass.class);
@@ -92,10 +103,23 @@ class VisitorBuilderTest {
                 GeneralOption.MAX_NUMBER_OF_COMMENTS.getKey(), "50"
         ));
 
-        assertThat(new VisitorBuilder().buildAfterReviewVisitors(config))
+        assertThat(new VisitorBuilder().buildAfterReviewVisitors(config, connectorFacade))
                 .hasSize(3)
                 .extracting("class")
                 .containsExactly(SummaryMessageVisitor.class, LimitCommentVisitor.class, ScoreAlwaysPass.class);
+    }
+
+    @Test
+    void shouldBuildCommentVisitorForGerrit() {
+        connectorFacade = mock(GerritFacade.class);
+        Configuration config = new ConfigurationSetup().setUp(ImmutableMap.of(
+                GeneralOption.COMMENT_ONLY_CHANGED_LINES.getKey(), "true"
+        ));
+
+        assertThat(new VisitorBuilder().buildAfterReviewVisitors(config, connectorFacade))
+                .hasSize(3)
+                .extracting("class")
+                .containsExactly(GerritCommentVisitor.class, SummaryMessageVisitor.class, ScoreAlwaysPass.class);
     }
 
     @Test
@@ -104,7 +128,7 @@ class VisitorBuilderTest {
                 GeneralOption.SCORE_STRATEGY.getKey(), "NOscore"
         ));
 
-        assertThat(new VisitorBuilder().buildAfterReviewVisitors(config))
+        assertThat(new VisitorBuilder().buildAfterReviewVisitors(config, connectorFacade))
                 .hasSize(2)
                 .extracting("class")
                 .containsExactly(SummaryMessageVisitor.class, NoScore.class);
@@ -118,7 +142,7 @@ class VisitorBuilderTest {
                 GeneralOption.SCORE_PASSING_VALUE.getKey(), "2"
         ));
 
-        List<AfterReviewVisitor> afterReviewVisitors = new VisitorBuilder().buildAfterReviewVisitors(config);
+        List<AfterReviewVisitor> afterReviewVisitors = new VisitorBuilder().buildAfterReviewVisitors(config, connectorFacade);
 
         assertThat(afterReviewVisitors)
                 .hasSize(2)
@@ -137,7 +161,7 @@ class VisitorBuilderTest {
                 GeneralOption.SCORE_FAILING_VALUE.getKey(), "-3"
         ));
 
-        List<AfterReviewVisitor> afterReviewVisitors = new VisitorBuilder().buildAfterReviewVisitors(config);
+        List<AfterReviewVisitor> afterReviewVisitors = new VisitorBuilder().buildAfterReviewVisitors(config, connectorFacade);
 
         assertThat(afterReviewVisitors)
                 .hasSize(2)
@@ -157,7 +181,7 @@ class VisitorBuilderTest {
                 GeneralOption.SCORE_FAILING_VALUE.getKey(), "-2"
         ));
 
-        List<AfterReviewVisitor> afterReviewVisitors = new VisitorBuilder().buildAfterReviewVisitors(config);
+        List<AfterReviewVisitor> afterReviewVisitors = new VisitorBuilder().buildAfterReviewVisitors(config, connectorFacade);
 
         assertThat(afterReviewVisitors)
                 .hasSize(2)
@@ -173,7 +197,7 @@ class VisitorBuilderTest {
                 GeneralOption.SCORE_STRATEGY.getKey(), "mySimpleStrategy"
         ));
 
-        List<AfterReviewVisitor> afterReviewVisitors = new VisitorBuilder().buildAfterReviewVisitors(config);
+        List<AfterReviewVisitor> afterReviewVisitors = new VisitorBuilder().buildAfterReviewVisitors(config, connectorFacade);
 
         assertThat(afterReviewVisitors)
                 .hasSize(2)

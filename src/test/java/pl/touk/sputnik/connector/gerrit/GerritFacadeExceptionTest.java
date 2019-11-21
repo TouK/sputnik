@@ -24,14 +24,11 @@ class GerritFacadeExceptionTest {
     @Mock
     private Changes changes;
 
-    @Mock
-    private CommentFilter commentFilter;
-
     @Test
     void shouldWrapConnectorException() throws Exception {
         when(gerritApi.changes()).thenReturn(changes);
         when(changes.id(CHANGE_ID)).thenThrow(new RuntimeException("Connection refused"));
-        GerritFacade gerritFacade = new GerritFacade(gerritApi, new GerritPatchset(CHANGE_ID, REVISION_ID, TAG), commentFilter);
+        GerritFacade gerritFacade = new GerritFacade(gerritApi, new GerritPatchset(CHANGE_ID, REVISION_ID, TAG));
 
         Throwable thrown = catchThrowable(gerritFacade::listFiles);
 
