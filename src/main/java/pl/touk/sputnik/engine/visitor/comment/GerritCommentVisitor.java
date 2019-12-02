@@ -38,6 +38,7 @@ public class GerritCommentVisitor implements AfterReviewVisitor {
                 if (!include(fileDiffs, reviewFile.getReviewFilename(), comment.getLine())) {
                     log.info("Comment excluded in file {}: line {}, message {}", reviewFile.getReviewFilename(), comment.getLine(), comment.getMessage());
                     iterator.remove();
+                    review.decrementCounter();
                 }
             }
         }

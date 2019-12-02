@@ -84,6 +84,12 @@ public class Review {
         incrementCounters(severity);
     }
 
+    public void decrementCounter() {
+        if (totalViolationCount > 0) {
+            totalViolationCount--;
+        }
+    }
+
     private void incrementCounters(Severity severity) {
         totalViolationCount += 1;
         Integer currentCount = violationCount.get(severity);
