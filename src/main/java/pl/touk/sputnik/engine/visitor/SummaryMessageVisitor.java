@@ -27,7 +27,7 @@ public class SummaryMessageVisitor implements AfterReviewVisitor {
     }
 
     private String getSummaryMessage(@NotNull Review review) {
-        if (review.getTotalViolationCount() == 0) {
+        if (review.getTotalViolationCount() == 0L) {
             return perfectMessage;
         }
         String violationNoun = review.getTotalViolationCount() == 1 ? "violation" : "violations";

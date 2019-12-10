@@ -1,55 +1,71 @@
 package pl.touk.sputnik.engine.visitor;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pl.touk.sputnik.TestEnvironment;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pl.touk.sputnik.review.Review;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.ArrayList;
+import java.util.List;
 
-class SummaryMessageVisitorTest extends TestEnvironment {
+import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class SummaryMessageVisitorTest {
 
     private static final String TOTAL_8_VIOLATIONS_FOUND = "Total 8 violations found";
     private static final String PROBLEM_SOURCE = "PMD";
     private static final String PROBLEM_MESSAGE = "configuration error";
     private static final String PROBLEM_FORMATTED_MESSAGE = "There is a problem with PMD: configuration error";
 
+    private final SummaryMessageVisitor summaryMessageVisitor = new SummaryMessageVisitor("Perfect");
+
+    @Mock
+    private Review review;
+    private List<String> messages = new ArrayList<>();
+
+    @BeforeEach
+    void setUp() {
+        when(review.getMessages()).thenReturn(messages);
+    }
+
     @Test
     void shouldAddSummaryMessage() {
-        Review review = review();
-        review.setTotalViolationCount(8);
+        when(review.getTotalViolationCount()).thenReturn(8L);
 
-        new SummaryMessageVisitor("Perfect").afterReview(review);
+        summaryMessageVisitor.afterReview(review);
 
         assertThat(review.getMessages()).containsOnly(TOTAL_8_VIOLATIONS_FOUND);
     }
 
     @Test
     void shouldAddSummaryMessageWithOneViolation() {
-        Review review = review();
-        review.setTotalViolationCount(1);
+        when(review.getTotalViolationCount()).thenReturn(1L);
 
-        new SummaryMessageVisitor("Perfect").afterReview(review);
+        summaryMessageVisitor.afterReview(review);
 
         assertThat(review.getMessages()).containsOnly("Total 1 violation found");
     }
 
     @Test
     void shouldAddPerfectMessageIfThereAreNoViolationsFound() {
-        Review review = review();
-        review.setTotalViolationCount(0);
+        when(review.getTotalViolationCount()).thenReturn(0L);
 
-        new SummaryMessageVisitor("Perfect").afterReview(review);
+        summaryMessageVisitor.afterReview(review);
 
         assertThat(review.getMessages()).containsOnly("Perfect");
     }
 
     @Test
     void shouldAddProblemMessagesPerfectMessageIfThereAreNoViolationsFound() {
-        Review review = review();
-        review.setTotalViolationCount(8);
-        review.addProblem(PROBLEM_SOURCE, PROBLEM_MESSAGE);
+        when(review.getTotalViolationCount()).thenReturn(8L);
+        when(review.getProblems()).thenReturn(singletonList("There is a problem with PMD: configuration error"));
 
-        new SummaryMessageVisitor("Perfect").afterReview(review);
+        summaryMessageVisitor.afterReview(review);
 
         assertThat(review.getMessages()).containsSequence(TOTAL_8_VIOLATIONS_FOUND, PROBLEM_FORMATTED_MESSAGE);
     }

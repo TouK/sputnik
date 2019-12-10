@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import pl.touk.sputnik.review.Comment;
 import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
+import pl.touk.sputnik.review.Severity;
 
 import java.io.IOException;
 import java.util.List;
@@ -106,8 +107,8 @@ class LocalFacadeTest {
         ReviewFile review2 = mock(ReviewFile.class);
         ReviewFile review3 = mock(ReviewFile.class);
         when(review3.getReviewFilename()).thenReturn("/path/to/file3");
-        when(review1.getComments()).thenReturn(ImmutableList.of(new Comment(11, "Comment 1"), new Comment(14, "Comment 2")));
-        when(review3.getComments()).thenReturn(ImmutableList.of(new Comment(15, "Comment 3")));
+        when(review1.getComments()).thenReturn(ImmutableList.of(new Comment(11, "Comment 1", Severity.INFO), new Comment(14, "Comment 2", Severity.INFO)));
+        when(review3.getComments()).thenReturn(ImmutableList.of(new Comment(15, "Comment 3", Severity.INFO)));
         when(review.getMessages()).thenReturn(ImmutableList.of("message 1", "message 2"));
         when(review.getFiles()).thenReturn(ImmutableList.of(review1, review2, review3));
 

@@ -13,7 +13,7 @@ import pl.touk.sputnik.review.filter.FileFilter;
 import pl.touk.sputnik.review.transformer.FileTransformer;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +24,6 @@ import java.util.Map;
 @ToString
 public class Review {
     private List<ReviewFile> files;
-    private Map<Severity, Integer> violationCount = new EnumMap<>(Severity.class);
-    private int totalViolationCount = 0;
 
     /**
      * Report problems with configuration, processors and other.
@@ -80,14 +78,20 @@ public class Review {
     }
 
     private void addError(@NotNull ReviewFile reviewFile, @NotNull String source, int line, @Nullable String message, Severity severity) {
-        reviewFile.getComments().add(new Comment(line, formatter.formatComment(source, severity, message)));
-        incrementCounters(severity);
+        reviewFile.getComments().add(new Comment(line, formatter.formatComment(source, severity, message), severity));
     }
 
-    private void incrementCounters(Severity severity) {
-        totalViolationCount += 1;
-        Integer currentCount = violationCount.get(severity);
-        violationCount.put(severity, currentCount == null ? 1 : currentCount + 1);
+    public long getTotalViolationCount() {
+        return files.stream().map(ReviewFile::getComments)
+                .mapToLong(Collection::size)
+                .sum();
+    }
+
+    public long getViolationCount(Severity severity) {
+        return files.stream().map(ReviewFile::getComments)
+                .flatMap(Collection::stream)
+                .filter(comment -> comment.getSeverity() == severity)
+                .count();
     }
 
     @NoArgsConstructor

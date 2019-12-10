@@ -22,8 +22,8 @@ public class LimitCommentVisitor implements AfterReviewVisitor {
             return;
         }
         log.info("There are {} total violations for this review, which is higher than maximum comment count {}. {} comments will be filtered out.", review.getTotalViolationCount(), maximumCount, review.getTotalViolationCount() - maximumCount);
-        filterOutComments(review);
         addMessage(review);
+        filterOutComments(review);
     }
 
     private void filterOutComments(Review review) {
