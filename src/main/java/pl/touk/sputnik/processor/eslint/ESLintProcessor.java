@@ -6,8 +6,8 @@ import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.processor.tools.externalprocess.ExternalProcessResultParser;
 import pl.touk.sputnik.processor.tools.externalprocess.ProcessorRunningExternalProcess;
+import pl.touk.sputnik.review.filter.ESLintFilter;
 import pl.touk.sputnik.review.filter.FileFilter;
-import pl.touk.sputnik.review.filter.JavaScriptFilter;
 
 import java.io.File;
 
@@ -22,7 +22,7 @@ class ESLintProcessor extends ProcessorRunningExternalProcess {
 
     @Override
     public FileFilter getReviewFileFilter() {
-        return new JavaScriptFilter();
+        return new ESLintFilter();
     }
 
     @Override
