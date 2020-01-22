@@ -2,6 +2,7 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
+        maven { url "https://repo.maven.apache.org/maven2" }
     }
 
     dependencies {
@@ -140,6 +141,10 @@ dependencies {
     compile 'io.gitlab.arturbosch.detekt:detekt-rules:1.0.0-RC14'
     // dependency only for obtaining default configuration
     compile 'io.gitlab.arturbosch.detekt:detekt-cli:1.0.0-RC14'
+
+    // transitive dependency that used non-SSL version of Maven Central
+    // and version 1.74 that was not found
+    compile 'com.beust:jcommander:1.78'
 
     compileOnly 'org.projectlombok:lombok:1.18.4'
     annotationProcessor 'org.projectlombok:lombok:1.18.4'
