@@ -17,7 +17,9 @@ class ESLintProcessor extends ProcessorRunningExternalProcess {
     private final ESLintExecutor executor;
 
     ESLintProcessor(Configuration configuration) {
-        executor = new ESLintExecutor(configuration.getProperty(GeneralOption.ESLINT_RCFILE));
+        executor = new ESLintExecutor(configuration.getProperty(GeneralOption.ESLINT_RCFILE),
+                configuration.getProperty(GeneralOption.ESLINT_EXECUTABLE),
+                configuration.getProperty(GeneralOption.ESLINT_PLUGINS_FOLDER));
     }
 
     @Override

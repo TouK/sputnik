@@ -1,6 +1,7 @@
 package pl.touk.sputnik.processor.eslint;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import pl.touk.sputnik.processor.eslint.json.FileViolations;
 import pl.touk.sputnik.processor.eslint.json.Message;
@@ -14,7 +15,7 @@ import java.util.List;
 
 class ESLintResultParser implements ExternalProcessResultParser {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     @Override
     public List<Violation> parse(String output) {
