@@ -71,6 +71,8 @@ public enum GeneralOption implements ConfigurationOption {
 
     ESLINT_ENABLED("eslint.enabled", "ESLint enabled", "false"),
     ESLINT_RCFILE("eslint.rcfile", "ESLint rcfile", null),
+    ESLINT_EXECUTABLE("eslint.executable", "ESLint executable", "eslint"),
+    ESLINT_PLUGINS_FOLDER("eslint.pluginsFolder", "ESLint plugin folder", null),
 
     PYLINT_ENABLED("pylint.enabled", "Pylint enabled", "false"),
     PYLINT_RCFILE("pylint.rcfile", "Pylint rcfile", null),
