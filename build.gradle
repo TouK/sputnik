@@ -137,10 +137,10 @@ dependencies {
     compile 'com.github.shyiko.ktlint:ktlint-ruleset-standard:0.31.0'
 
     // detekt
-    compile 'io.gitlab.arturbosch.detekt:detekt-core:1.0.0-RC14'
-    compile 'io.gitlab.arturbosch.detekt:detekt-rules:1.0.0-RC14'
+    compile 'io.gitlab.arturbosch.detekt:detekt-core:1.8.0'
+    compile 'io.gitlab.arturbosch.detekt:detekt-rules:1.8.0'
     // dependency only for obtaining default configuration
-    compile 'io.gitlab.arturbosch.detekt:detekt-cli:1.0.0-RC14'
+    compile 'io.gitlab.arturbosch.detekt:detekt-cli:1.8.0'
 
     // transitive dependency that used non-SSL version of Maven Central
     // and version 1.74 that was not found

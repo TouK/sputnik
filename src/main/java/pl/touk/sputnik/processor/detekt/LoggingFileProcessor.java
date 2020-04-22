@@ -4,6 +4,7 @@ import io.gitlab.arturbosch.detekt.api.Config;
 import io.gitlab.arturbosch.detekt.api.Detektion;
 import io.gitlab.arturbosch.detekt.api.FileProcessListener;
 import io.gitlab.arturbosch.detekt.api.Finding;
+import io.gitlab.arturbosch.detekt.api.SetupContext;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.psi.KtFile;
@@ -54,6 +55,11 @@ class LoggingFileProcessor implements FileProcessListener {
 
     @Override
     public void init(Config config) {
+
+    }
+
+    @Override
+    public void init(SetupContext setupContext) {
 
     }
 }

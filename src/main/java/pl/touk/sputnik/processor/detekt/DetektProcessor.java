@@ -2,7 +2,7 @@ package pl.touk.sputnik.processor.detekt;
 
 import io.gitlab.arturbosch.detekt.api.Config;
 import io.gitlab.arturbosch.detekt.api.Detektion;
-import io.gitlab.arturbosch.detekt.api.YamlConfig;
+import io.gitlab.arturbosch.detekt.api.internal.YamlConfig;
 import io.gitlab.arturbosch.detekt.cli.ClasspathResourceConverter;
 import io.gitlab.arturbosch.detekt.core.DetektFacade;
 import io.gitlab.arturbosch.detekt.core.ProcessingSettings;
@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.kotlin.config.JvmTarget;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.GeneralOption;
 import pl.touk.sputnik.review.Review;
@@ -77,13 +78,19 @@ public class DetektProcessor implements ReviewProcessor {
         ProcessingSettings processingSettings = new ProcessingSettings(
                 files.stream().map(f -> fileSystem.getPath(f)).collect(Collectors.toList()),
                 config,
-                new ArrayList<>(),
+                null,
                 false,
                 false,
                 new ArrayList<>(),
+                new ArrayList<>(),
+                null,
+                JvmTarget.DEFAULT,
                 executor,
                 printStream,
-                printStream
+                printStream,
+                false,
+                false,
+                new ArrayList<>()
         );
 
         return DetektFacade.Companion.create(processingSettings, new RuleSetLocator(processingSettings).load(), Arrays.asList(new LoggingFileProcessor()));

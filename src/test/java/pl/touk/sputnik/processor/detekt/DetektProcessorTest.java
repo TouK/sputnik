@@ -23,6 +23,7 @@ class DetektProcessorTest {
     private static final String VIOLATIONS_1 = "src/test/resources/detekt/testFiles/Violations1.kt";
     private static final String VIOLATIONS_2 = "src/test/resources/detekt/testFiles/sub/Violations2.kt";
     private static final String VIOLATIONS_3 = "src/test/resources/detekt/testFiles/Violations3.kt";
+    private static final String VIOLATIONS_4 = "src/test/resources/detekt/testFiles/Violations4.kt";
     private static final String REVIEW_GROOVY_FILE = "src/test/resources/codeNarc/testFiles/FileWithOneViolationLevel2.groovy";
 
     private DetektProcessor sut;
@@ -60,6 +61,18 @@ class DetektProcessorTest {
                 .contains(new Violation(VIOLATIONS_3, 3, "[empty-blocks/EmptyClassBlock] Empty block of code detected. As they serve no purpose they should be removed.", Severity.INFO))
                 .contains(new Violation(VIOLATIONS_2, 3, "[style/NewLineAtEndOfFile] Checks whether files end with a line separator.", Severity.INFO))
                 .contains(new Violation(VIOLATIONS_3, 4, "[style/NewLineAtEndOfFile] Checks whether files end with a line separator.", Severity.INFO));
+    }
+
+    @Test
+    void shouldReturnGlobalScopeViolation() {
+        Review review = getReview(VIOLATIONS_4);
+
+        ReviewResult result = sut.process(review);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getViolations())
+                .hasSize(1)
+                .contains(new Violation(VIOLATIONS_4, 7, "[coroutines/GlobalCoroutineUsage] Usage of GlobalScope instance is highly discouraged", Severity.ERROR));
     }
 
     @Test

@@ -140,6 +140,11 @@ complexity:
     excludeStringsWithLessThan5Characters: true
     ignoreStringsRegex: '$^'
 
+coroutines:
+  active: true
+  GlobalCoroutineUsage:
+    active: true
+
 code-smell:
   active: true
   FeatureEnvy:
@@ -225,6 +230,8 @@ style:
     ignoreAnnotation: false
   WildcardImport:
     active: true
+    excludes: []
+    excludeImports: []
   SafeCast:
     active: true
   MaxLineLength:
