@@ -105,6 +105,8 @@ dependencies {
         exclude group: 'org.slf4j'
     }
 
+	compile 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.9.0'
+
     // Scalastyle http://www.scalastyle.org/
     compile 'org.scalastyle:scalastyle_2.10:0.4.0'
 
@@ -123,7 +125,7 @@ dependencies {
     compile 'pl.touk:jshint4j:2.9.5'
 
     // github connector
-    compile('com.jcabi:jcabi-github:1.0')
+    compile 'com.jcabi:jcabi-github:1.0'
     compile 'org.glassfish:javax.json:1.0.4'
     compile 'com.github.spullara.mustache.java:compiler:0.8.17'
 
