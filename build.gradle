@@ -20,6 +20,7 @@ apply plugin: 'coveralls'
 apply plugin: 'maven'
 apply plugin: 'signing'
 apply plugin: 'pl.allegro.tech.build.axion-release'
+apply plugin: 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.9.0'
 
 scmVersion {
     tag {
