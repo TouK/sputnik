@@ -19,7 +19,7 @@ public class ScorePassIfNoErrors implements AfterReviewVisitor {
 
     @Override
     public void afterReview(@NotNull Review review) {
-        long errorCount = review.getViolationCount(Severity.ERROR);
+        long errorCount = review.getTotalViolationCount();
         if (errorCount == 0) {
             log.info("Adding passing score {} for no errors found", passingScore);
             review.setScores(passingScore);
