@@ -192,6 +192,20 @@ task copyToLib(type: Copy) {
     from configurations.runtime
 }
 
+distZip {
+	into(project.name + "-" +project.version){
+		from '.'
+		include 'SpotBugsPlugins/*'
+	}
+}
+
+distTar {
+	into(project.name + "-" +project.version){
+		from '.'
+		include 'SpotBugsPlugins/*'
+	}
+}
+
 artifacts {
     //Comment this archives jar due to duplicated jar task with Gradle 5
     //https://github.com/gradle/gradle/issues/8213
@@ -277,18 +291,4 @@ uploadArchives {
             }
         }
     }
-}
-
-distZip {
-	into(project.name + "-" +project.version){
-		from '.'
-		include 'SpotBugsPlugins/*'
-	}
-}
-
-distTar {
-	into(project.name + "-" +project.version){
-		from '.'
-		include 'SpotBugsPlugins/*'
-	}
 }
