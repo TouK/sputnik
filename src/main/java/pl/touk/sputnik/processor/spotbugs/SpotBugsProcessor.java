@@ -140,7 +140,7 @@ public class SpotBugsProcessor implements ReviewProcessor {
 		if (pluginsLocation != null) {
 			File[] pluginsList = new File(pluginsLocation).listFiles();
 			for (File plugin : Objects.requireNonNull(pluginsList)) {
-				log.info("SpotBugs additional plugin loaded: file://{}", pluginsLocation + "/" + plugin);
+				log.info("SpotBugs additional plugin loaded: file://{}", plugin);
 				Plugin.getAllPlugins().add(Plugin.addCustomPlugin(new URI("file://" + pluginsLocation + "/" + plugin.getName())));
 			}
 		}
