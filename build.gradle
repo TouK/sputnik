@@ -60,7 +60,6 @@ repositories {
     mavenCentral()
     maven { url "http://central.maven.org/maven2" }
     jcenter()
-	mavenLocal()
 }
 
 //noinspection GroovyAssignabilityCheck
