@@ -20,7 +20,6 @@ apply plugin: 'coveralls'
 apply plugin: 'maven'
 apply plugin: 'signing'
 apply plugin: 'pl.allegro.tech.build.axion-release'
-apply plugin: 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.9.0'
 
 scmVersion {
     tag {
@@ -61,6 +60,7 @@ repositories {
     mavenCentral()
     maven { url "http://central.maven.org/maven2" }
     jcenter()
+	mavenLocal()
 }
 
 //noinspection GroovyAssignabilityCheck
@@ -75,7 +75,6 @@ dependencies {
     compile 'com.jayway.jsonpath:json-path:2.4.0'
     compile 'commons-io:commons-io:2.4'
     compile 'org.eclipse.jgit:org.eclipse.jgit:5.5.1.201910021850-r'
-
     compile 'com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:0.8.8'
 
     // Checkstyle dependencies
@@ -105,8 +104,6 @@ dependencies {
     compile('com.github.spotbugs:spotbugs:3.1.11') {
         exclude group: 'org.slf4j'
     }
-
-	compile 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.9.0'
 
     // Scalastyle http://www.scalastyle.org/
     compile 'org.scalastyle:scalastyle_2.10:0.4.0'
@@ -281,4 +278,18 @@ uploadArchives {
             }
         }
     }
+}
+
+distZip {
+	into(project.name + "-" +project.version){
+		from '.'
+		include 'SpotBugsPlugins/*'
+	}
+}
+
+distTar {
+	into(project.name + "-" +project.version){
+		from '.'
+		include 'SpotBugsPlugins/*'
+	}
 }
