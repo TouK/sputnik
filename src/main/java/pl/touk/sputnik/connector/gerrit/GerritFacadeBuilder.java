@@ -19,7 +19,7 @@ import static org.apache.commons.lang3.Validate.notBlank;
 @Slf4j
 public class GerritFacadeBuilder {
 
-    private HttpHelper httpHelper = new HttpHelper();
+    private final HttpHelper httpHelper = new HttpHelper();
 
     @NotNull
     public GerritFacade build(Configuration configuration) {
@@ -34,7 +34,8 @@ public class GerritFacadeBuilder {
 
         log.info("Using Gerrit URL: {}", hostUri);
         GerritAuthData.Basic authData = new GerritAuthData.Basic(hostUri,
-                connectorDetails.getUsername(), connectorDetails.getPassword());
+                connectorDetails.getUsername(), connectorDetails.getPassword(),
+                Boolean.parseBoolean(configuration.getProperty(GeneralOption.GERRIT_USE_HTTP_PASSWORD)));
         GerritApi gerritApi = gerritRestApiFactory.create(authData, new HttpClientBuilderExtension() {
             @Override
             public HttpClientBuilder extend(HttpClientBuilder httpClientBuilder, GerritAuthData authData) {
