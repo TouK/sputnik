@@ -1,5 +1,6 @@
 package pl.touk.sputnik.connector.gerrit;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.gerrit.extensions.api.GerritApi;
 import com.google.gerrit.extensions.api.changes.ReviewInput;
 import com.google.gerrit.extensions.api.changes.RevisionApi;
@@ -26,8 +27,10 @@ public class GerritFacade implements ConnectorFacade, ReviewPublisher {
     private static final String COMMIT_MSG = "/COMMIT_MSG";
 
     private final GerritApi gerritApi;
-    private final GerritPatchset gerritPatchset;
-    private final GerritOptions options;
+    @VisibleForTesting
+    final GerritPatchset gerritPatchset;
+    @VisibleForTesting
+    final GerritOptions options;
 
     @NotNull
     @Override
