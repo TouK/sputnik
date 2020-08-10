@@ -27,6 +27,7 @@ public class GerritFacade implements ConnectorFacade, ReviewPublisher {
 
     private final GerritApi gerritApi;
     private final GerritPatchset gerritPatchset;
+    private final GerritOptions options;
 
     @NotNull
     @Override
@@ -63,6 +64,8 @@ public class GerritFacade implements ConnectorFacade, ReviewPublisher {
         try {
             log.debug("Set review in Gerrit: {}", review);
             ReviewInput reviewInput = new ReviewInputBuilder().toReviewInput(review, gerritPatchset.getTag());
+            reviewInput.omitDuplicateComments = options.isOmitDuplicateComments();
+
             gerritApi.changes()
                     .id(gerritPatchset.getChangeId())
                     .revision(gerritPatchset.getRevisionId())
