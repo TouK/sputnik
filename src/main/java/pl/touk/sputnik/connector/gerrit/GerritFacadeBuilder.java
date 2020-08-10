@@ -39,10 +39,12 @@ public class GerritFacadeBuilder {
             hostUri += connectorDetails.getPath();
         }
 
+        GerritOptions gerritOptions = GerritOptions.from(configuration);
+
         log.info("Using Gerrit URL: {}", hostUri);
         GerritAuthData.Basic authData = new GerritAuthData.Basic(hostUri,
                 connectorDetails.getUsername(), connectorDetails.getPassword(),
-                Boolean.parseBoolean(configuration.getProperty(GeneralOption.GERRIT_USE_HTTP_PASSWORD)));
+                gerritOptions.isUseHttpPassword());
         GerritApi gerritApi = gerritRestApiFactory.create(authData, new HttpClientBuilderExtension() {
             @Override
             public HttpClientBuilder extend(HttpClientBuilder httpClientBuilder, GerritAuthData authData) {
@@ -52,7 +54,7 @@ public class GerritFacadeBuilder {
             }
         });
 
-        return new GerritFacade(gerritApi, gerritPatchset);
+        return new GerritFacade(gerritApi, gerritPatchset, gerritOptions);
     }
 
     @NotNull

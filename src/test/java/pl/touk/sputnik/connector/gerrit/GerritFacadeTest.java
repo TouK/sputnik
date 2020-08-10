@@ -12,13 +12,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.urswolfer.gerrit.client.rest.http.changes.FileInfoParser;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.touk.sputnik.review.ReviewFile;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -37,13 +35,6 @@ class GerritFacadeTest {
     @Mock
     private GerritApi gerritApi;
 
-    private GerritFacade gerritFacade;
-
-    @BeforeEach
-    void setUp() {
-        gerritFacade = new GerritFacade(gerritApi, null);
-    }
-
     @Test
     void shouldParseListFilesResponse() throws IOException, RestApiException {
         List<ReviewFile> reviewFiles = createGerritFacade().listFiles();
@@ -57,6 +48,7 @@ class GerritFacadeTest {
     }
 
     private GerritFacade createGerritFacade() throws IOException, RestApiException {
+        @SuppressWarnings("UnstableApiUsage")
         String listFilesJson = Resources.toString(Resources.getResource("json/gerrit-listfiles.json"), Charsets.UTF_8);
         JsonElement jsonElement = new JsonParser().parse(listFilesJson);
         Map<String, FileInfo> fileInfoMap = new FileInfoParser(new Gson()).parseFileInfos(jsonElement);
@@ -68,7 +60,7 @@ class GerritFacadeTest {
         RevisionApi revisionApi = mock(RevisionApi.class);
         when(changeApi.revision(REVISION_ID)).thenReturn(revisionApi);
         when(revisionApi.files()).thenReturn(fileInfoMap);
-        return new GerritFacade(gerritApi, new GerritPatchset(CHANGE_ID, REVISION_ID, TAG));
+        return new GerritFacade(gerritApi, new GerritPatchset(CHANGE_ID, REVISION_ID, TAG), GerritOptions.empty());
     }
 
 }

@@ -28,7 +28,7 @@ class GerritFacadeExceptionTest {
     void shouldWrapConnectorException() throws Exception {
         when(gerritApi.changes()).thenReturn(changes);
         when(changes.id(CHANGE_ID)).thenThrow(new RuntimeException("Connection refused"));
-        GerritFacade gerritFacade = new GerritFacade(gerritApi, new GerritPatchset(CHANGE_ID, REVISION_ID, TAG));
+        GerritFacade gerritFacade = new GerritFacade(gerritApi, new GerritPatchset(CHANGE_ID, REVISION_ID, TAG), GerritOptions.empty());
 
         Throwable thrown = catchThrowable(gerritFacade::listFiles);
 
