@@ -53,8 +53,8 @@ To ease migration from FindBugs to SpotBugs these three configuration properties
 
 ## Installation
 
-- clone this repository and build it: `gradle distZip` or download [distribution](https://github.com/TouK/sputnik/releases/download/sputnik-1.5.1/sputnik-1.5.1.zip)
-- copy distribution file `build/distributions/sputnik-1.5.1.zip` to your installation dir, e.g. `/opt/sputnik` and unzip it
+- clone this repository and build it: `gradle distZip` or download [distribution](https://repo1.maven.org/maven2/pl/touk/sputnik/2.2.3/sputnik-2.2.3.zip)
+- copy distribution file `build/distributions/sputnik-2.2.3.zip` to your installation dir, e.g. `/opt/sputnik` and unzip it
 - to avoid problems with deployment keep the structure unchanged, so sputnik file is in `bin/` directory, jars in `lib/`
 - create configuration file (you can just paste and edit an example above), e.g. `/opt/sputnik/myconf.properties`
 - you can now run sputnik like this:
