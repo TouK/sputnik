@@ -130,17 +130,16 @@ dependencies {
     // external processes
     compile 'org.zeroturnaround:zt-exec:1.8'
 
-    compile 'org.jetbrains.kotlin:kotlin-stdlib:1.3.31'
+    compile 'org.jetbrains.kotlin:kotlin-stdlib:1.4.10'
 
     // ktlint https://github.com/shyiko/ktlint
-    compile 'com.github.shyiko.ktlint:ktlint-core:0.31.0'
-    compile 'com.github.shyiko.ktlint:ktlint-ruleset-standard:0.31.0'
+    compile 'com.pinterest.ktlint:ktlint-core:0.39.0'
+    compile 'com.pinterest.ktlint:ktlint-ruleset-standard:0.39.0'
 
     // detekt
-    compile 'io.gitlab.arturbosch.detekt:detekt-core:1.0.0-RC14'
-    compile 'io.gitlab.arturbosch.detekt:detekt-rules:1.0.0-RC14'
-    // dependency only for obtaining default configuration
-    compile 'io.gitlab.arturbosch.detekt:detekt-cli:1.0.0-RC14'
+    compile 'io.gitlab.arturbosch.detekt:detekt-tooling:1.14.0'
+    runtimeOnly 'io.gitlab.arturbosch.detekt:detekt-core:1.14.0'
+    runtimeOnly 'io.gitlab.arturbosch.detekt:detekt-rules:1.14.0'
 
     // transitive dependency that used non-SSL version of Maven Central
     // and version 1.74 that was not found

@@ -74,13 +74,16 @@ class KtlintProcessorTest {
 
         assertThat(result).isNotNull();
         assertThat(result.getViolations())
-                .hasSize(8)
+                .hasSize(11)
                 .contains(new Violation(REVIEW_FILE_WITH_MANY_VIOLATIONS, 3, "[no-wildcard-imports] Wildcard import in column 1", Severity.WARNING))
-                .contains(new Violation(REVIEW_FILE_WITH_MANY_VIOLATIONS, 6, "[indent] Unexpected indentation (2) (it should be 4) in column 1", Severity.WARNING))
+                .contains(new Violation(REVIEW_FILE_WITH_MANY_VIOLATIONS, 6, "[indent] Unexpected indentation (2) (should be 4) in column 1", Severity.WARNING))
                 .contains(new Violation(REVIEW_FILE_WITH_MANY_VIOLATIONS, 6, "[curly-spacing] Missing spacing before \"{\" in column 21", Severity.WARNING))
+                .contains(new Violation(REVIEW_FILE_WITH_MANY_VIOLATIONS, 7, "[indent] Unexpected indentation (6) (should be 8) in column 1", Severity.WARNING))
                 .contains(new Violation(REVIEW_FILE_WITH_MANY_VIOLATIONS, 7, "[no-semi] Unnecessary semicolon in column 17", Severity.WARNING))
+                .contains(new Violation(REVIEW_FILE_WITH_MANY_VIOLATIONS, 8, "[indent] Unexpected indentation (6) (should be 8) in column 1", Severity.WARNING))
                 .contains(new Violation(REVIEW_FILE_WITH_MANY_VIOLATIONS, 8, "[string-template] Redundant curly braces in column 16", Severity.WARNING))
                 .contains(new Violation(REVIEW_FILE_WITH_MANY_VIOLATIONS, 8, "[string-template] Redundant \"toString()\" call in string template in column 23", Severity.WARNING))
+                .contains(new Violation(REVIEW_FILE_WITH_MANY_VIOLATIONS, 9, "[indent] Unexpected indentation (2) (should be 4) in column 1", Severity.WARNING))
                 .contains(new Violation(REVIEW_FILE_WITH_MANY_VIOLATIONS, 11, "[curly-spacing] Missing spacing before \"{\" in column 14", Severity.WARNING))
                 .contains(new Violation(REVIEW_FILE_WITH_ONE_VIOLATION, 3, "[no-empty-class-body] Unnecessary block (\"{}\") in column 20", Severity.WARNING));
     }

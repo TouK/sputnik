@@ -1,8 +1,8 @@
 package pl.touk.sputnik.processor.ktlint;
 
-import com.github.shyiko.ktlint.core.KtLint;
-import com.github.shyiko.ktlint.core.RuleSet;
-import com.github.shyiko.ktlint.core.RuleSetProvider;
+import com.pinterest.ktlint.core.KtLint;
+import com.pinterest.ktlint.core.RuleSet;
+import com.pinterest.ktlint.core.RuleSetProvider;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.ServiceLoader;
 
@@ -61,7 +62,15 @@ class KtlintProcessor implements ReviewProcessor {
         ReviewResult result = new ReviewResult();
         for (String filePath : filePaths) {
             String text = readFile(filePath);
-            KtLint.INSTANCE.lint(text, ruleSets, new LintErrorConverter(result, filePath, excludedRules));
+            KtLint.INSTANCE.lint(new KtLint.Params(
+                    null,
+                    text,
+                    ruleSets,
+                    Collections.emptyMap(),
+                    new LintErrorConverter(result, filePath, excludedRules),
+                    false,
+                    null,
+                    false));
         }
         return result;
     }

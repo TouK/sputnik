@@ -1,12 +1,11 @@
 package pl.touk.sputnik.processor.detekt;
 
-import io.gitlab.arturbosch.detekt.api.Config;
-import io.gitlab.arturbosch.detekt.api.Detektion;
-import io.gitlab.arturbosch.detekt.api.YamlConfig;
-import io.gitlab.arturbosch.detekt.cli.ClasspathResourceConverter;
-import io.gitlab.arturbosch.detekt.core.DetektFacade;
-import io.gitlab.arturbosch.detekt.core.ProcessingSettings;
-import io.gitlab.arturbosch.detekt.core.RuleSetLocator;
+import io.github.detekt.tooling.api.AnalysisResult;
+import io.github.detekt.tooling.api.Detekt;
+import io.github.detekt.tooling.api.DetektProvider;
+import io.github.detekt.tooling.api.MaxIssuesReached;
+import io.github.detekt.tooling.api.spec.ProcessingSpec;
+import kotlin.Unit;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -22,11 +21,9 @@ import pl.touk.sputnik.review.transformer.FileNameTransformer;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.util.ArrayList;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
@@ -51,11 +48,17 @@ public class DetektProcessor implements ReviewProcessor {
         if (files.isEmpty()) {
             return new ReviewResult();
         }
-        DetektFacade detektFacade = buildDetectFacade(files);
+        Detekt detekt = buildDetectFacade(files);
 
-        Detektion detektion = detektFacade.run();
-
-        return new ResultBuilder(detektion).build(files);
+        AnalysisResult result = detekt.run();
+        if (result.getError() != null) {
+            if (result.getError() instanceof MaxIssuesReached) {
+                log.info("Detekt reached issues threshold: {}", result.getError().getMessage());
+            } else {
+                log.error("Detekt run resulted in an error", result.getError());
+            }
+        }
+        return new ResultBuilder(result).build(files);
     }
 
     @NotNull
@@ -64,34 +67,32 @@ public class DetektProcessor implements ReviewProcessor {
     }
 
     @NotNull
-    private DetektFacade buildDetectFacade(List<String> files) {
-        String configFilename = configuration.getProperty(GeneralOption.DETEKT_CONFIG_FILE);
-        Config config;
-        FileSystem fileSystem = FileSystems.getDefault();
-        if (configFilename != null) {
-            Path configPath = fileSystem.getPath(configFilename);
-            config = YamlConfig.Companion.load(configPath);
-        } else {
-            config = loadDefaultConfig();
-        }
-        ProcessingSettings processingSettings = new ProcessingSettings(
-                files.stream().map(f -> fileSystem.getPath(f)).collect(Collectors.toList()),
-                config,
-                new ArrayList<>(),
-                false,
-                false,
-                new ArrayList<>(),
-                executor,
-                printStream,
-                printStream
-        );
-
-        return DetektFacade.Companion.create(processingSettings, new RuleSetLocator(processingSettings).load(), Arrays.asList(new LoggingFileProcessor()));
-    }
-
-    @NotNull
-    private Config loadDefaultConfig() {
-        return YamlConfig.Companion.loadResource(new ClasspathResourceConverter().convert("default-detekt-config.yml"));
+    private Detekt buildDetectFacade(List<String> files) {
+        return DetektProvider.Companion.load(DetektProvider.class.getClassLoader()).get(
+                ProcessingSpec.Companion.invoke(processingSpecBuilder -> {
+                    processingSpecBuilder.logging(loggingSpecBuilder -> {
+                        loggingSpecBuilder.setOutputChannel(printStream);
+                        loggingSpecBuilder.setErrorChannel(printStream);
+                        return Unit.INSTANCE;
+                    });
+                    processingSpecBuilder.project(projectSpecBuilder -> {
+                        projectSpecBuilder.setInputPaths(files.stream().map(Paths::get).collect(Collectors.toList()));
+                        return Unit.INSTANCE;
+                    });
+                    processingSpecBuilder.config(configSpecBuilder -> {
+                        configSpecBuilder.setUseDefaultConfig(true);
+                        String configFilename = configuration.getProperty(GeneralOption.DETEKT_CONFIG_FILE);
+                        configSpecBuilder.setConfigPaths(configFilename == null
+                                ? Collections.emptyList()
+                                : Collections.singleton(Paths.get(configFilename)));
+                        return Unit.INSTANCE;
+                    });
+                    processingSpecBuilder.execution(executionSpecBuilder -> {
+                        executionSpecBuilder.setExecutorService(executor);
+                        return Unit.INSTANCE;
+                    });
+                    return Unit.INSTANCE;
+                }));
     }
 
     @NotNull
