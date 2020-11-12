@@ -224,8 +224,8 @@ uploadArchives {
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
                 authentication(userName: sonatypeUsername, password: sonatypePassword)
             }
-            snapshotRepository(url: "https://philanthropist.touk.pl/nexus/content/repositories/snapshots//") {
-                authentication(userName: snapshotUsername, password: snapshotPassword)
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
             }
 
             pom.project {
