@@ -91,7 +91,7 @@ dependencies {
         exclude group: 'org.ow2.asm'
     }
 
-    compile('jaxen:jaxen:1.1.6') { //1.1.6 in SpotBugs
+    compile('jaxen:jaxen:1.2.0') { // 1.2.0 in SpotBugs
         exclude group: 'xerces'
         exclude group: 'xalan'
         exclude group: 'com.ibm.icu'
@@ -101,7 +101,7 @@ dependencies {
     }
 
     // SpotBugs dependencies
-    compile('com.github.spotbugs:spotbugs:3.1.11') {
+    compile('com.github.spotbugs:spotbugs:4.2.0') {
         exclude group: 'org.slf4j'
     }
 
