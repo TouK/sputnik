@@ -75,7 +75,7 @@ dependencies {
     compile 'commons-io:commons-io:2.4'
     compile 'org.eclipse.jgit:org.eclipse.jgit:5.5.1.201910021850-r'
 
-    compile 'com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:0.8.8'
+    compile 'com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:0.9.3'
 
     // Checkstyle dependencies
     compile('com.puppycrawl.tools:checkstyle:8.1') {
