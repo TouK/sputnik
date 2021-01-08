@@ -234,6 +234,12 @@ publishing {
 }
 
 signing {
+    println ("KATARAKTA")
+    println (System.getenv("SONATYPE_USERNAME"))
+    println (System.getenv("SIGNING_PRIVATE_KEY"))
+    println (findProperty('ORG_GRADLE_PROJECT_SIGNINGKEY'))
+    println (findProperty('ORG_GRADLE_PROJECT_signingKey'))
+    println (findProperty('signingKey'))
     useInMemoryPgpKeys(findProperty('ORG_GRADLE_PROJECT_SIGNINGKEY'), findProperty('ORG_GRADLE_PROJECT_SIGNINGPASSWORD'))
     sign publishing.publications.mavenJava
 }
