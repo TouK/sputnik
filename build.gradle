@@ -34,7 +34,7 @@ configurations {
     }
 }
 
-project.version = '2.3.1.1' //scmVersion.version
+project.version = findProperty("version") ?: scmVersion.version
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -218,6 +218,32 @@ publishing {
                         distribution = 'repo'
                     }
                 }
+                developers {
+                    developer {
+                        id = 'tomasz_kalkosinski'
+                        name = 'Tomasz Kalkosinski'
+                    }
+                    developer {
+                        id = 'marcin_cylke'
+                        name = 'Marcin Cylke'
+                    }
+                    developer {
+                        id = 'piotr_jagielski'
+                        name = 'Piotr Jagielski'
+                    }
+                    developer {
+                        id = 'karol_lassak'
+                        name = 'Karol Lassak'
+                    }
+                    developer {
+                        id = 'dominik_przybysz'
+                        name = 'Dominik Przybysz'
+                    }
+                    developer {
+                        id = 'henning_hoefer'
+                        name = 'Henning Hoefer'
+                    }
+                }
             }
         }
     }
@@ -234,8 +260,6 @@ publishing {
 }
 
 signing {
-    def signingKey = System.getenv('SIGNING_KEY')
-    def signingPassword = System.getenv('SIGNING_PASSWORD')
-    useInMemoryPgpKeys(signingKey, signingPassword)
+    useInMemoryPgpKeys(System.getenv('SIGNING_PRIVATE_KEY'), System.getenv('SIGNING_PASSWORD'))
     sign publishing.publications.mavenJava
 }
