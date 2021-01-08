@@ -234,6 +234,6 @@ publishing {
 }
 
 signing {
-    useInMemoryPgpKeys(findProperty('signingKey'), findProperty('signingPassword'))
+    useInMemoryPgpKeys(findProperty('ORG_GRADLE_PROJECT_SIGNINGKEY'), findProperty('ORG_GRADLE_PROJECT_SIGNINGPASSWORD'))
     sign publishing.publications.mavenJava
 }
