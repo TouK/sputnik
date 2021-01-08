@@ -75,6 +75,7 @@ class GerritFileDiffBuilderTest {
         return diffHunk;
     }
 
+    @SuppressWarnings("unchecked")
     private List<String> buildListMock(int size) {
         List<String> list = mock(List.class);
         when(list.size()).thenReturn(size);

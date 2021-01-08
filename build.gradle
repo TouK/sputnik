@@ -6,20 +6,21 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.3.0'
         classpath 'pl.allegro.tech.build:axion-release-plugin:1.10.1'
     }
 }
-
-apply plugin: 'java'
-apply plugin: 'application'
-apply plugin: 'idea'
-apply plugin: 'eclipse'
-apply plugin: 'jacoco'
-apply plugin: 'coveralls'
-apply plugin: 'maven'
-apply plugin: 'signing'
-apply plugin: 'pl.allegro.tech.build.axion-release'
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'application'
+    id 'maven-publish'
+    id 'signing'
+    id 'idea'
+    id 'eclipse'
+    id 'jacoco'
+    id 'com.github.kt3k.coveralls' version '2.10.2'
+    id 'pl.allegro.tech.build.axion-release' version '1.12.1'
+}
 
 scmVersion {
     tag {
@@ -33,7 +34,7 @@ configurations {
     }
 }
 
-project.version = scmVersion.version
+project.version = '2.3.1.1' //scmVersion.version
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -58,32 +59,32 @@ run {
 
 repositories {
     mavenCentral()
-    maven { url "http://central.maven.org/maven2" }
+    maven { url "https://central.maven.org/maven2" }
     jcenter()
 }
 
 //noinspection GroovyAssignabilityCheck
 dependencies {
-    compile 'org.apache.httpcomponents:httpclient:4.3.1'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.3.0'
-    compile 'com.intellij:annotations:12.0'
-    compile 'org.slf4j:slf4j-api:1.7.26'
-    compile 'org.slf4j:log4j-over-slf4j:1.7.26'
-    compile 'ch.qos.logback:logback-classic:1.2.3'
-    compile 'commons-cli:commons-cli:1.2'
-    compile 'com.jayway.jsonpath:json-path:2.4.0'
-    compile 'commons-io:commons-io:2.4'
-    compile 'org.eclipse.jgit:org.eclipse.jgit:5.5.1.201910021850-r'
+    implementation 'org.apache.httpcomponents:httpclient:4.3.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.3.0'
+    implementation 'com.intellij:annotations:12.0'
+    implementation 'org.slf4j:slf4j-api:1.7.26'
+    implementation 'org.slf4j:log4j-over-slf4j:1.7.26'
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
+    implementation 'commons-cli:commons-cli:1.2'
+    implementation 'com.jayway.jsonpath:json-path:2.4.0'
+    implementation 'commons-io:commons-io:2.4'
+    implementation 'org.eclipse.jgit:org.eclipse.jgit:5.5.1.201910021850-r'
 
-    compile 'com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:0.9.3'
+    implementation 'com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:0.9.3'
 
     // Checkstyle dependencies
-    compile('com.puppycrawl.tools:checkstyle:8.1') {
+    implementation('com.puppycrawl.tools:checkstyle:8.1') {
         exclude group: 'com.google.guava'
     }
 
     // PMD dependencies
-    compile('net.sourceforge.pmd:pmd-java:6.0.0') {
+    implementation('net.sourceforge.pmd:pmd-java:6.0.0') {
         exclude group: 'jaxen'
         exclude group: 'xerces'
         exclude group: 'junit'
@@ -91,59 +92,59 @@ dependencies {
         exclude group: 'org.ow2.asm'
     }
 
-    compile('jaxen:jaxen:1.1.6') { //1.1.6 in SpotBugs
+    implementation('jaxen:jaxen:1.1.6') { //1.1.6 in SpotBugs
         exclude group: 'xerces'
         exclude group: 'xalan'
         exclude group: 'com.ibm.icu'
     }
-    compile('xerces:xercesImpl:2.9.1') {
+    implementation('xerces:xercesImpl:2.9.1') {
         exclude group: 'xml-apis'
     }
 
     // SpotBugs dependencies
-    compile('com.github.spotbugs:spotbugs:3.1.11') {
+    implementation('com.github.spotbugs:spotbugs:3.1.11') {
         exclude group: 'org.slf4j'
     }
 
     // Scalastyle http://www.scalastyle.org/
-    compile 'org.scalastyle:scalastyle_2.10:0.4.0'
+    implementation 'org.scalastyle:scalastyle_2.10:0.4.0'
 
     // CodeNarc http://codenarc.sourceforge.net/
-    compile('org.codenarc:CodeNarc:1.4') {
+    implementation('org.codenarc:CodeNarc:1.4') {
         exclude module: 'groovy'
         exclude group: 'junit'
     }
 
-    compile 'org.codehaus.groovy:groovy:2.3.4'
+    implementation 'org.codehaus.groovy:groovy:2.3.4'
 
     // JSLint
-    compile 'com.googlecode.jslint4java:jslint4java:2.0.5'
+    implementation 'com.googlecode.jslint4java:jslint4java:2.0.5'
 
     // JSHint
-    compile 'pl.touk:jshint4j:2.9.5'
+    implementation 'pl.touk:jshint4j:2.9.5'
 
     // github connector
-    compile('com.jcabi:jcabi-github:1.0')
-    compile 'org.glassfish:javax.json:1.0.4'
-    compile 'com.github.spullara.mustache.java:compiler:0.8.17'
+    implementation 'com.jcabi:jcabi-github:1.0'
+    implementation 'org.glassfish:javax.json:1.0.4'
+    implementation 'com.github.spullara.mustache.java:compiler:0.8.17'
 
     // external processes
-    compile 'org.zeroturnaround:zt-exec:1.8'
+    implementation 'org.zeroturnaround:zt-exec:1.8'
 
-    compile 'org.jetbrains.kotlin:kotlin-stdlib:1.4.10'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.10'
 
     // ktlint https://github.com/shyiko/ktlint
-    compile 'com.pinterest.ktlint:ktlint-core:0.39.0'
-    compile 'com.pinterest.ktlint:ktlint-ruleset-standard:0.39.0'
+    implementation 'com.pinterest.ktlint:ktlint-core:0.39.0'
+    implementation 'com.pinterest.ktlint:ktlint-ruleset-standard:0.39.0'
 
     // detekt
-    compile 'io.gitlab.arturbosch.detekt:detekt-tooling:1.14.0'
+    implementation 'io.gitlab.arturbosch.detekt:detekt-tooling:1.14.0'
     runtimeOnly 'io.gitlab.arturbosch.detekt:detekt-core:1.14.0'
     runtimeOnly 'io.gitlab.arturbosch.detekt:detekt-rules:1.14.0'
 
     // transitive dependency that used non-SSL version of Maven Central
     // and version 1.74 that was not found
-    compile 'com.beust:jcommander:1.78'
+    implementation 'com.beust:jcommander:1.78'
 
     compileOnly 'org.projectlombok:lombok:1.18.4'
     annotationProcessor 'org.projectlombok:lombok:1.18.4'
@@ -155,7 +156,7 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-engine:5.4.0"
     testImplementation "org.junit.jupiter:junit-jupiter-params:5.4.0"
     testImplementation 'org.junit.platform:junit-platform-launcher:1.1.0'
-    testImplementation 'org.assertj:assertj-core:3.9.0'
+    testImplementation 'org.assertj:assertj-core:3.18.1'
     testImplementation 'org.mockito:mockito-core:2.23.4'
     testImplementation 'org.mockito:mockito-junit-jupiter:2.28.2'
     testImplementation('com.github.tomakehurst:wiremock:2.18.0') {
@@ -175,31 +176,9 @@ jacocoTestReport {
     }
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from 'javadoc'
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-// quick way to copy all project dependencies (jar files) into one directory
-// similar to dependency:copy-dependencies
-task copyToLib(type: Copy) {
-    into "$buildDir/lib"
-    from configurations.runtime
-}
-
-artifacts {
-    //Comment this archives jar due to duplicated jar task with Gradle 5
-    //https://github.com/gradle/gradle/issues/8213
-    //https://discuss.gradle.org/t/apply-plugin-signing-broke-in-gradle-5-1-1-and-prints-out-non-existent-task/31418
-    //archives jar
-
-    archives javadocJar
-    archives sourcesJar
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 jar {
@@ -211,70 +190,52 @@ jar {
     }
 }
 
-signing {
-    required { gradle.taskGraph.hasTask("uploadArchives") }
-    sign configurations.archives
+ext.isReleaseVersion = !version.endsWith('SNAPSHOT')
+
+tasks.withType(Sign) {
+    onlyIf { isReleaseVersion }
 }
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: sonatypeUsername, password: sonatypePassword)
-            }
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: sonatypeUsername, password: sonatypePassword)
-            }
-
-            pom.project {
-                name 'Sputnik'
-                packaging 'jar'
-                description 'Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD and SpotBugs for you!'
-                url 'https://github.com/TouK/sputnik/'
-
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'sputnik'
+            from components.java
+            pom {
+                groupId = 'pl.touk'
+                name = 'Sputnik'
+                description  = 'Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD and SpotBugs for you!'
+                url = 'https://github.com/TouK/sputnik/'
                 scm {
-                    url 'scm:git@github.com:TouK/sputnik.git'
-                    connection 'scm:git@github.com:TouK/sputnik.git'
-                    developerConnection 'scm:git@github.com:Touk/sputnik.git'
+                    url = 'scm:git@github.com:TouK/sputnik.git'
+                    connection = 'scm:git@github.com:TouK/sputnik.git'
+                    developerConnection = 'scm:git@github.com:Touk/sputnik.git'
                 }
-
                 licenses {
                     license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        distribution 'repo'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id 'tomasz_kalkosinski'
-                        name 'Tomasz Kalkosinski'
-                    }
-                    developer {
-                        id 'marcin_cylke'
-                        name 'Marcin Cylke'
-                    }
-                    developer {
-                        id 'piotr_jagielski'
-                        name 'Piotr Jagielski'
-                    }
-                    developer {
-                        id 'karol_lassak'
-                        name 'Karol Lassak'
-                    }
-                    developer {
-                        id 'dominik_przybysz'
-                        name 'Dominik Przybysz'
-                    }
-                    developer {
-                        id 'henning_hoefer'
-                        name 'Henning Hoefer'
+                        name = 'The Apache Software License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution = 'repo'
                     }
                 }
             }
         }
     }
+    repositories {
+        maven {
+            name = "OSSRH"
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = System.getenv("SONATYPE_USERNAME")
+                password = System.getenv("SONATYPE_PASSWORD")
+            }
+        }
+    }
+}
+
+signing {
+    def signingKey = System.getenv('SIGNING_KEY')
+    def signingPassword = System.getenv('SIGNING_PASSWORD')
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign publishing.publications.mavenJava
 }

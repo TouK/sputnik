@@ -17,6 +17,7 @@ public interface ConnectorFacade extends ReviewPublisher {
     /**
      * Validates if given options are supported by selected connector.
      *
+     * @param configuration a configuration instance
      * @throws GeneralOptionNotSupportedException
      *             if passed configuration is not valid or not fully supported
      */
