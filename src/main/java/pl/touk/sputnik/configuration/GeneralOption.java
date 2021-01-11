@@ -51,6 +51,7 @@ public enum GeneralOption implements ConfigurationOption {
     SPOTBUGS_ENABLED("spotbugs.enabled", "SpotBugs enabled", "false"),
     SPOTBUGS_INCLUDE_FILTER("spotbugs.includeFilter", "SpotBugs include filter file", ""),
     SPOTBUGS_EXCLUDE_FILTER("spotbugs.excludeFilter", "SpotBugs exclude filter file", ""),
+    SPOTBUGS_PLUGINS_LOCATION("spotbugs.plugins.location", "SpotBugs plugins path to jar files", ""),
 
     SCALASTYLE_ENABLED("scalastyle.enabled", "ScalaStyle enabled", "false"),
     SCALASTYLE_CONFIGURATION_FILE("scalastyle.configurationFile", "ScalaStyle configuration file", ""),
@@ -89,6 +90,8 @@ public enum GeneralOption implements ConfigurationOption {
     DETEKT_CONFIG_FILE("detekt.config.file", "Detekt configuration file location", null);
 
     private final String key;
+
     private final String description;
+
     private final String defaultValue;
 }

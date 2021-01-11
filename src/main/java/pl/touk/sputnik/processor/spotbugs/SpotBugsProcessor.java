@@ -4,9 +4,15 @@ import edu.umd.cs.findbugs.ClassScreener;
 import edu.umd.cs.findbugs.DetectorFactoryCollection;
 import edu.umd.cs.findbugs.FindBugs2;
 import edu.umd.cs.findbugs.IClassScreener;
+import edu.umd.cs.findbugs.Plugin;
+import edu.umd.cs.findbugs.PluginException;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.Project;
 import edu.umd.cs.findbugs.config.UserPreferences;
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -23,9 +29,11 @@ import pl.touk.sputnik.review.transformer.ClassNameTransformer;
 
 @Slf4j
 public class SpotBugsProcessor implements ReviewProcessor {
+
     private static final String SOURCE_NAME = "SpotBugs";
 
     private final CollectorBugReporter collectorBugReporter;
+
     private final Configuration config;
 
     public SpotBugsProcessor(@NotNull Configuration configuration) {
@@ -53,6 +61,11 @@ public class SpotBugsProcessor implements ReviewProcessor {
     }
 
     public FindBugs2 createFindBugs2(Review review) {
+        try {
+            loadAllSpotbugsPlugins();
+        } catch (Exception e) {
+            log.info("Spotbugs additional plugins not loaded {} ", e.getMessage());
+        }
         FindBugs2 findBugs = new FindBugs2();
         findBugs.setProject(createProject(review));
         findBugs.setBugReporter(collectorBugReporter);
@@ -120,5 +133,16 @@ public class SpotBugsProcessor implements ReviewProcessor {
         }
         log.info("Using SpotBugs exclude filter file {}", excludeFilterFilename);
         return excludeFilterFilename;
+    }
+
+    private void loadAllSpotbugsPlugins() throws URISyntaxException, PluginException {
+        String pluginsLocation = config.getProperty(GeneralOption.SPOTBUGS_PLUGINS_LOCATION);
+        if (pluginsLocation != null) {
+            File[] pluginsList = new File(pluginsLocation).listFiles();
+            for (File plugin : Objects.requireNonNull(pluginsList)) {
+                log.info("SpotBugs additional plugin loaded: file://{}", plugin);
+                Plugin.getAllPlugins().add(Plugin.addCustomPlugin(new URI("file://" + pluginsLocation + "/" + plugin.getName())));
+            }
+        }
     }
 }
