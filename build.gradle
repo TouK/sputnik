@@ -34,7 +34,7 @@ configurations {
     }
 }
 
-project.version = '2.3.1.1' //scmVersion.version
+project.version = scmVersion.version
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -234,13 +234,6 @@ publishing {
 }
 
 signing {
-    println ("KATARAKTA")
-    println (System.getenv("SONATYPE_USERNAME"))
-    println (System.getenv("SIGNING_PASSWORD"))
-    println (System.getenv("SIGNING_PRIVATE_KEY"))
-    println (findProperty('ORG_GRADLE_PROJECT_SIGNINGKEY'))
-    println (findProperty('ORG_GRADLE_PROJECT_signingKey'))
-    println (findProperty('signingKey'))
-    useInMemoryPgpKeys(System.getenv('ORG_GRADLE_PROJECT_SIGNINGKEY'), System.getenv('ORG_GRADLE_PROJECT_SIGNINGPASSWORD'))
+    useInMemoryPgpKeys(System.getenv('SIGNING_KEY'), System.getenv('SIGNING_PASSWORD'))
     sign publishing.publications.mavenJava
 }

@@ -15,13 +15,18 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - name: Current version
+        run: ./gradlew currentVersion
+      - name: Mark next version
+        run: ./gradlew markNextVersion -Prelease.version=${{ github.event.inputs.nextVersion }
+      - name: Release
+        run: ./gradlew release
+      - name: Release version
+        run: ./graldew currentVersion
       - name: Publish package
-        run: gradle publish
+        run: ./gradlew publish
         env:
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-          ORG_GRADLE_PROJECT_SIGNINGKEY: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGKEY }}
-          ORG_GRADLE_PROJECT_SIGNINGPASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGPASSWORD }}
-          signingKey: ${{ secrets.signingKey }}
