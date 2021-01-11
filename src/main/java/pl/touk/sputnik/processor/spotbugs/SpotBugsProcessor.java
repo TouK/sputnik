@@ -29,11 +29,9 @@ import pl.touk.sputnik.review.transformer.ClassNameTransformer;
 
 @Slf4j
 public class SpotBugsProcessor implements ReviewProcessor {
-
     private static final String SOURCE_NAME = "SpotBugs";
 
     private final CollectorBugReporter collectorBugReporter;
-
     private final Configuration config;
 
     public SpotBugsProcessor(@NotNull Configuration configuration) {
@@ -140,7 +138,7 @@ public class SpotBugsProcessor implements ReviewProcessor {
         if (pluginsLocation != null) {
             File[] pluginsList = new File(pluginsLocation).listFiles();
             for (File plugin : Objects.requireNonNull(pluginsList)) {
-                log.info("SpotBugs additional plugin loaded: file://{}", plugin);
+                log.info("SpotBugs additional plugin loading: file://{}", plugin);
                 Plugin.getAllPlugins().add(Plugin.addCustomPlugin(new URI("file://" + pluginsLocation + "/" + plugin.getName())));
             }
         }

@@ -2,6 +2,10 @@ package pl.touk.sputnik.processor.spotbugs;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import edu.umd.cs.findbugs.FindBugs2;
+import edu.umd.cs.findbugs.Plugin;
+import edu.umd.cs.findbugs.PluginException;
+import java.net.URISyntaxException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.TestEnvironment;
@@ -52,6 +56,12 @@ class SpotBugsProcessorTest extends TestEnvironment {
 
         assertThat(reviewResult).isNotNull();
         assertThat(reviewResult.getViolations()).isEmpty();
+    }
+
+    @Test
+    void shouldLoadSpotbugsPlugins(){
+        spotBugsProcessor.createFindBugs2(nonExistentReview());
+        assertThat(Plugin.getAllPlugins()).isNotEmpty();
     }
 
 }
