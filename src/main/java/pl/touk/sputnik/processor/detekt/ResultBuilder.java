@@ -1,5 +1,6 @@
 package pl.touk.sputnik.processor.detekt;
 
+import io.github.detekt.tooling.api.AnalysisResult;
 import io.gitlab.arturbosch.detekt.api.Detektion;
 import io.gitlab.arturbosch.detekt.api.Severity;
 import lombok.AllArgsConstructor;
@@ -13,23 +14,26 @@ import java.util.Optional;
 @AllArgsConstructor
 class ResultBuilder {
 
-    private final Detektion detektion;
+    private final AnalysisResult result;
 
     @NotNull
     ReviewResult build(List<String> filesForReview) {
         ReviewResult reviewResult = new ReviewResult();
-        detektion.getFindings().forEach((ruleSet, value) -> value.forEach(finding -> {
-            String filePath = finding.getLocation().getFile();
-            Optional<String> file = filesForReview.stream().filter(filePath::endsWith).findFirst();
-            file.ifPresent(f ->
-                    {
-                        reviewResult.add(new Violation(f,
-                                finding.getLocation().getSource().getLine(),
-                                buildMessage(ruleSet, finding.getIssue().getId(), finding.getIssue().getDescription()),
-                                mapSeverity(finding.getIssue().getSeverity())));
-                    }
-            );
-        }));
+        Detektion detektion = result.getContainer();
+        if (detektion != null) {
+            detektion.getFindings().forEach((ruleSet, value) -> value.forEach(finding -> {
+                String filePath = finding.getLocation().getFile();
+                Optional<String> file = filesForReview.stream().filter(filePath::endsWith).findFirst();
+                file.ifPresent(f ->
+                        {
+                            reviewResult.add(new Violation(f,
+                                    finding.getLocation().getSource().getLine(),
+                                    buildMessage(ruleSet, finding.getIssue().getId(), finding.getIssue().getDescription()),
+                                    mapSeverity(finding.getIssue().getSeverity())));
+                        }
+                );
+            }));
+        }
 
         return reviewResult;
     }
