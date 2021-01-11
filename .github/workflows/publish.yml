@@ -18,7 +18,7 @@ jobs:
       - name: Current version
         run: ./gradlew currentVersion
       - name: Mark next version
-        run: ./gradlew markNextVersion -Prelease.version=${{ github.event.inputs.nextVersion }
+        run: ./gradlew markNextVersion -Prelease.version=${{ github.event.inputs.nextVersion }}
       - name: Release
         run: ./gradlew release
       - name: Release version
