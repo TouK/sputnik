@@ -29,9 +29,11 @@ import pl.touk.sputnik.review.transformer.ClassNameTransformer;
 
 @Slf4j
 public class SpotBugsProcessor implements ReviewProcessor {
+
     private static final String SOURCE_NAME = "SpotBugs";
 
     private final CollectorBugReporter collectorBugReporter;
+
     private final Configuration config;
 
     public SpotBugsProcessor(@NotNull Configuration configuration) {
@@ -59,11 +61,7 @@ public class SpotBugsProcessor implements ReviewProcessor {
     }
 
     public FindBugs2 createFindBugs2(Review review) {
-        try {
-            loadAllSpotbugsPlugins();
-        } catch (Exception e) {
-            log.info("Spotbugs additional plugins not loaded {} ", e.getMessage());
-        }
+        loadAllSpotbugsPlugins();
         FindBugs2 findBugs = new FindBugs2();
         findBugs.setProject(createProject(review));
         findBugs.setBugReporter(collectorBugReporter);
@@ -133,14 +131,20 @@ public class SpotBugsProcessor implements ReviewProcessor {
         return excludeFilterFilename;
     }
 
-    private void loadAllSpotbugsPlugins() throws URISyntaxException, PluginException {
+    private void loadAllSpotbugsPlugins() {
         String pluginsLocation = config.getProperty(GeneralOption.SPOTBUGS_PLUGINS_LOCATION);
         if (pluginsLocation != null) {
             File[] pluginsList = new File(pluginsLocation).listFiles();
             for (File plugin : Objects.requireNonNull(pluginsList)) {
                 if (plugin.getName().contains(".jar")) {
                     log.info("SpotBugs additional plugin loading: file://{}", plugin);
-                    Plugin.getAllPlugins().add(Plugin.addCustomPlugin(new URI("file://" + plugin.getAbsoluteFile())));
+                    try {
+                        Plugin.getAllPlugins().add(Plugin.addCustomPlugin(new URI("file://" + plugin.getAbsoluteFile())));
+                    } catch (PluginException e) {
+                        log.info("Spotbugs additional plugins not loaded {} plugin not supported", e.getMessage());
+                    } catch (URISyntaxException e) {
+                        log.info("Spotbugs additional plugins not loaded {} check path", e.getMessage());
+                    }
                 }
             }
         }

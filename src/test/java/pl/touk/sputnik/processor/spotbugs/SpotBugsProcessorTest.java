@@ -1,5 +1,4 @@
 package pl.touk.sputnik.processor.spotbugs;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import edu.umd.cs.findbugs.Plugin;
@@ -54,7 +53,7 @@ class SpotBugsProcessorTest extends TestEnvironment {
     }
 
     @Test
-    void shouldLoadSpotbugsPlugins(){
+    void shouldLoadSpotbugsPlugins() {
         spotBugsProcessor.createFindBugs2(nonExistentReview());
         assertThat(Plugin.getAllPlugins()).isNotEmpty();
     }
