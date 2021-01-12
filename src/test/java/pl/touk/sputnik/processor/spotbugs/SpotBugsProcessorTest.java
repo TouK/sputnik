@@ -2,10 +2,8 @@ package pl.touk.sputnik.processor.spotbugs;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import edu.umd.cs.findbugs.FindBugs2;
 import edu.umd.cs.findbugs.Plugin;
-import edu.umd.cs.findbugs.PluginException;
-import java.net.URISyntaxException;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.TestEnvironment;
@@ -15,9 +13,6 @@ import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewFormatterFactory;
 import pl.touk.sputnik.review.ReviewResult;
-
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SpotBugsProcessorTest extends TestEnvironment {
