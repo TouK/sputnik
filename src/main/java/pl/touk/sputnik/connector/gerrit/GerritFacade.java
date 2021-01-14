@@ -79,7 +79,8 @@ public class GerritFacade implements ConnectorFacade, ReviewPublisher {
     }
 
     /**
-     * This is specific for Gerrit and GerritCommentVisitor
+     *
+     * @return RevisionApi revisionApi instance
      */
     public RevisionApi getRevision() {
         try {
