@@ -183,7 +183,7 @@ java {
 }
 
 shadowJar {
-    minimize()
+    zip64 true
 }
 
 jar {
