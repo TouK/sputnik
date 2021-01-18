@@ -75,7 +75,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./build/libs/sputnik-${{ steps.extract_version.outputs.version }}-all.jar
-          asset_name: sputnik-${{ steps.extract_version.outputs.version }}.jar
+          asset_name: sputnik-${{ steps.extract_version.outputs.version }}-all.jar
           asset_content_type: application/java-archive
       - name: Upload zip
         id: upload-release-asset-zip
