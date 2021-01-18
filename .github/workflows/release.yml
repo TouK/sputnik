@@ -67,6 +67,16 @@ jobs:
           asset_path: ./build/libs/sputnik-${{ steps.extract_version.outputs.version }}-sources.jar
           asset_name: sputnik-${{ steps.extract_version.outputs.version }}-sources.jar
           asset_content_type: application/java-archive
+      - name: Upload shadowJar
+        id: upload-release-asset-shadow-jar
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/libs/sputnik-${{ steps.extract_version.outputs.version }}-all.jar
+          asset_name: sputnik-${{ steps.extract_version.outputs.version }}.jar
+          asset_content_type: application/java-archive
       - name: Upload zip
         id: upload-release-asset-zip
         uses: actions/upload-release-asset@v1
