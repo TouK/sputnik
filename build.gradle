@@ -20,6 +20,7 @@ plugins {
     id 'jacoco'
     id 'com.github.kt3k.coveralls' version '2.10.2'
     id 'pl.allegro.tech.build.axion-release' version '1.12.1'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
 scmVersion {
@@ -181,6 +182,10 @@ java {
     withSourcesJar()
 }
 
+shadowJar {
+    minimize()
+}
+
 jar {
     manifest {
         attributes("Specification-Title": "Sputnik",
@@ -245,6 +250,9 @@ publishing {
                     }
                 }
             }
+        }
+        shadow(MavenPublication) { publication ->
+            project.shadow.component(publication)
         }
     }
     repositories {
