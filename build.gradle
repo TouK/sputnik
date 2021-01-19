@@ -66,13 +66,13 @@ repositories {
 
 //noinspection GroovyAssignabilityCheck
 dependencies {
-    implementation 'org.apache.httpcomponents:httpclient:4.3.1'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.8'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.3.0'
     implementation 'com.intellij:annotations:12.0'
     implementation 'org.slf4j:slf4j-api:1.7.26'
     implementation 'org.slf4j:log4j-over-slf4j:1.7.26'
     implementation 'ch.qos.logback:logback-classic:1.2.3'
-    implementation 'commons-cli:commons-cli:1.2'
+    implementation 'commons-cli:commons-cli:1.4'
     implementation 'com.jayway.jsonpath:json-path:2.4.0'
     implementation 'commons-io:commons-io:2.4'
     implementation 'org.eclipse.jgit:org.eclipse.jgit:5.5.1.201910021850-r'
