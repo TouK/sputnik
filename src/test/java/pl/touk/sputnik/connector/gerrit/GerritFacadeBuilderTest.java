@@ -1,8 +1,6 @@
 package pl.touk.sputnik.connector.gerrit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -38,25 +36,27 @@ class GerritFacadeBuilderTest {
     }
 
     @Test
-    void build_shouldEscapeChangeIdWithSlash() {
+    void shouldEscapeChangeIdWithSlash() {
         GerritFacade connector = gerritFacadeBuilder.build(configuration);
 
-        assertEquals("project%2Fsubproject~branch%2Fsubbranch~changeId", connector.gerritPatchset.getChangeId());
-        assertEquals(REVISION_ID, connector.gerritPatchset.getRevisionId());
+        assertThat(connector.gerritPatchset.getChangeId())
+                .isEqualTo("project%2Fsubproject~branch%2Fsubbranch~changeId");
+        assertThat(connector.gerritPatchset.getRevisionId())
+                .isEqualTo(REVISION_ID);
     }
 
     @Test
-    void build_optionsPassed() {
+    void shouldBuildWithCorrectOptions() {
         configure(GeneralOption.GERRIT_USE_HTTP_PASSWORD, "true");
         configure(GeneralOption.GERRIT_OMIT_DUPLICATE_COMMENTS, "false");
 
         GerritFacade connector = gerritFacadeBuilder.build(configuration);
 
-        assertTrue(connector.options.isUseHttpPassword());
-        assertFalse(connector.options.isOmitDuplicateComments());
+        assertThat(connector.options.isUseHttpPassword()).isTrue();
+        assertThat(connector.options.isOmitDuplicateComments()).isFalse();
     }
 
-    public void configure(ConfigurationOption option, String value) {
+    private void configure(ConfigurationOption option, String value) {
         when(configuration.getProperty(option)).thenReturn(value);
     }
 }

@@ -1,10 +1,10 @@
 package pl.touk.sputnik.connector.gerrit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import java.util.Properties;
+import static pl.touk.sputnik.configuration.GeneralOption.GERRIT_OMIT_DUPLICATE_COMMENTS;
+import static pl.touk.sputnik.configuration.GeneralOption.GERRIT_USE_HTTP_PASSWORD;
 
 import org.junit.jupiter.api.Test;
 
@@ -14,15 +14,27 @@ import pl.touk.sputnik.configuration.GeneralOption;
 class GerritOptionsTest {
 
     @Test
-    void useHttpPassword() {
-        assertFalse(optionsFrom(GeneralOption.GERRIT_USE_HTTP_PASSWORD, "false").isUseHttpPassword());
-        assertTrue(optionsFrom(GeneralOption.GERRIT_USE_HTTP_PASSWORD, "true").isUseHttpPassword());
+    void shouldHttpPasswordOptionBeConsidered() {
+        assertThat(optionsFrom(GERRIT_USE_HTTP_PASSWORD, "false").isUseHttpPassword())
+                .isFalse();
+        assertThat(optionsFrom(GERRIT_USE_HTTP_PASSWORD, "true").isUseHttpPassword())
+                .isTrue();
     }
 
     @Test
-    void omitDuplicateComments() {
-        assertFalse(optionsFrom(GeneralOption.GERRIT_OMIT_DUPLICATE_COMMENTS, "false").isOmitDuplicateComments());
-        assertTrue(optionsFrom(GeneralOption.GERRIT_OMIT_DUPLICATE_COMMENTS, "true").isOmitDuplicateComments());
+    void shouldOmitDumplicateCommentsOptionBeConsidered() {
+        assertThat(optionsFrom(GERRIT_OMIT_DUPLICATE_COMMENTS, "false").isOmitDuplicateComments())
+                .isFalse();
+        assertThat(optionsFrom(GERRIT_OMIT_DUPLICATE_COMMENTS, "true").isOmitDuplicateComments())
+                .isTrue();
+    }
+
+    @Test
+    void shouldDisableOptionalFeaturesByDefault() {
+        GerritOptions defaultOptions = GerritOptions.from(mock(Configuration.class));
+
+        assertThat(defaultOptions.isOmitDuplicateComments()).isFalse();
+        assertThat(defaultOptions.isUseHttpPassword()).isFalse();
     }
 
     private GerritOptions optionsFrom(GeneralOption option, String value) {

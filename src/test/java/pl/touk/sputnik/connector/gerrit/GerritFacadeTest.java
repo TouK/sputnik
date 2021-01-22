@@ -30,12 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -68,7 +63,7 @@ class GerritFacadeTest {
     }
 
     @Test
-    void publish() throws IOException, RestApiException {
+    void shouldCallGerritApiOnPublish() throws IOException, RestApiException {
         when(gerritOptions.isOmitDuplicateComments()).thenReturn(true);
         Review review = new Review(new ArrayList<>(), new ReviewFormatter(configuration));
         ArgumentCaptor<ReviewInput> reviewInputCaptor = ArgumentCaptor.forClass(ReviewInput.class);
@@ -76,20 +71,20 @@ class GerritFacadeTest {
         createGerritFacade().publish(review);
 
         verify(gerritApi.changes().id(CHANGE_ID).revision(REVISION_ID)).review(reviewInputCaptor.capture());
-        ReviewInput reviewInput = reviewInputCaptor.getValue();
-        assertTrue(reviewInput.omitDuplicateComments);
-        assertEquals(TAG, reviewInput.tag);
+        assertThat(reviewInputCaptor.getValue().omitDuplicateComments).isTrue();
+        assertThat(reviewInputCaptor.getValue().tag).isEqualTo(TAG);
     }
 
     @Test
-    void getRevision() throws IOException, RestApiException {
+    void shouldRevisionApiBeConfigured() throws IOException, RestApiException {
         GerritFacade gerritFacade = createGerritFacade();
 
-        assertSame(gerritApi.changes().id(CHANGE_ID).revision(REVISION_ID), gerritFacade.getRevision());
+        assertThat(gerritFacade.getRevision())
+                .isEqualTo(gerritApi.changes().id(CHANGE_ID).revision(REVISION_ID));
     }
 
     @Test
-    void setReview_doesPublish() throws IOException, RestApiException {
+    void shouldReviewDelegateToPublish() throws IOException, RestApiException {
         Review review = new Review(new ArrayList<>(), new ReviewFormatter(configuration));
 
         createGerritFacade().setReview(review);
