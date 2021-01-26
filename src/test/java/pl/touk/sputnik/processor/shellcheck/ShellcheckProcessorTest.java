@@ -1,8 +1,8 @@
 package pl.touk.sputnik.processor.shellcheck;
 
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.configuration.ConfigurationBuilder;
 import pl.touk.sputnik.exec.ExternalProcess;
@@ -26,7 +26,7 @@ public class ShellcheckProcessorTest extends TestEnvironment {
     private static final String REVIEW_FILE_WITH_MULTIPLE_VIOLATIONS = "src/test/resources/shellcheck/testFiles/multipleViolations.sh";
     private ShellcheckProcessor sut;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         config = ConfigurationBuilder.initFromResource(CONFIGURATION_WITH_SHELLCHECK_ENABLED);
         sut = new ShellcheckProcessor(config);
@@ -34,7 +34,7 @@ public class ShellcheckProcessorTest extends TestEnvironment {
 
     @Test
     public void shouldReturnNoViolationsWhenThereIsNoFileToReview() {
-        ReviewResult reviewResult = sut.process(nonexistantReview());
+        ReviewResult reviewResult = sut.process(nonExistentReview());
 
         assertThat(reviewResult).isNotNull();
         assertThat(reviewResult.getViolations()).isEmpty();
@@ -42,7 +42,7 @@ public class ShellcheckProcessorTest extends TestEnvironment {
 
     @Test
     public void shouldReturnOneViolationsForFile() {
-        Assume.assumeTrue(isShellcheckInstalled());
+        Assumptions.assumeTrue(isShellcheckInstalled());
         Review review = getReview(REVIEW_FILE_WITH_ONE_VIOLATION);
 
         ReviewResult result = sut.process(review);
@@ -59,7 +59,7 @@ public class ShellcheckProcessorTest extends TestEnvironment {
 
     @Test
     public void shouldReturnMultipleViolationsForFile() {
-        Assume.assumeTrue(isShellcheckInstalled());
+        Assumptions.assumeTrue(isShellcheckInstalled());
         Review review = getReview(REVIEW_FILE_WITH_MULTIPLE_VIOLATIONS);
 
         ReviewResult result = sut.process(review);
@@ -88,7 +88,7 @@ public class ShellcheckProcessorTest extends TestEnvironment {
 
     @Test
     public void shouldReturnNoViolationWhenRuleExcludedInConfig() {
-        Assume.assumeTrue(isShellcheckInstalled());
+        Assumptions.assumeTrue(isShellcheckInstalled());
         Review review = getReview(REVIEW_FILE_WITH_EXCLUDED_VIOLATION);
 
         ReviewResult result = sut.process(review);

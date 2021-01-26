@@ -1,14 +1,11 @@
 package pl.touk.sputnik.processor.shellcheck;
 
 import com.google.common.io.Resources;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 import org.apache.commons.io.IOUtils;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import pl.touk.sputnik.review.Violation;
 
 import java.io.IOException;
@@ -16,27 +13,23 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.core.StringStartsWith.startsWith;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
-@RunWith(JUnitParamsRunner.class)
 public class ShellcheckResultParserTest {
 
     private ShellcheckResultParser shellcheckResultParser;
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
-    @Before
+    @BeforeEach
     public void setUp() {
         shellcheckResultParser = new ShellcheckResultParser();
     }
 
-    @Test
-    @Parameters({
+    @ParameterizedTest
+    @ValueSource(strings = {
             "shellcheck/empty-file.txt",
             "shellcheck/no-violations.txt"
     })
-    public void shouldParseNoViolations(String filePath) throws IOException, URISyntaxException {
+    void shouldParseNoViolations(String filePath) throws IOException, URISyntaxException {
         // given
         String response = IOUtils.toString(Resources.getResource(filePath).toURI());
 
@@ -47,11 +40,11 @@ public class ShellcheckResultParserTest {
         assertThat(violations).hasSize(0);
     }
 
-    @Test
-    @Parameters({
+    @ParameterizedTest
+    @ValueSource(strings = {
             "shellcheck/sample-output.txt"
     })
-    public void shouldParseSampleViolations(String filePath) throws IOException, URISyntaxException {
+    void shouldParseSampleViolations(String filePath) throws IOException, URISyntaxException {
         // given
         String response = IOUtils.toString(Resources.getResource(filePath).toURI());
 
@@ -72,8 +65,9 @@ public class ShellcheckResultParserTest {
     public void shouldThrowExceptionWhenViolationWithUnknownMessageType() throws IOException, URISyntaxException {
         String response = IOUtils.toString(Resources.getResource("shellcheck/unknown-message-output.txt").toURI());
 
-        thrown.expect(ShellcheckException.class);
-        thrown.expectMessage(startsWith("Unknown message type returned by shellcheck (type = fatal)"));
-        shellcheckResultParser.parse(response);
+        Throwable thrown = catchThrowable(() -> shellcheckResultParser.parse(response));
+
+        assertThat(thrown).isInstanceOf(ShellcheckException.class)
+                .hasMessageStartingWith("Unknown message type returned by shellcheck (type = fatal)");
     }
 }

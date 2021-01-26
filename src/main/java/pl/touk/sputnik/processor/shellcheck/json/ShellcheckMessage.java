@@ -14,4 +14,5 @@ public class ShellcheckMessage {
     private String level;
     private String code;
     private String message;
+    private String fix;
 }
