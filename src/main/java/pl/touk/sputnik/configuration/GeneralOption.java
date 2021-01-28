@@ -82,6 +82,9 @@ public enum GeneralOption implements ConfigurationOption {
 
     GITHUB_API_KEY("github.api.key", "Personal access tokens for Github", ""),
 
+    GERRIT_USE_HTTP_PASSWORD("gerrit.useHttpPassword", "Use Gerrit's internal password token.", "false"),
+    GERRIT_OMIT_DUPLICATE_COMMENTS("gerrit.omitDuplicateComments", "Avoid publishing same comments for the same patchset.", "true"),
+
     JAVA_SRC_DIR("java.src.dir", "Java root source directory", Paths.SRC_MAIN),
     JAVA_TEST_DIR("java.test.dir", "Java root test directory", Paths.SRC_TEST),
 
