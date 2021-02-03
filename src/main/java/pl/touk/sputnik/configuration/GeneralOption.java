@@ -45,10 +45,12 @@ public enum GeneralOption implements ConfigurationOption {
     PMD_SHOW_VIOLATION_DETAILS("pmd.showViolationDetails", "Show violation details and URL", "false"),
 
     FINDBUGS_ENABLED("findbugs.enabled", "FindBugs enabled", "false"),
+    FINDBUGS_LOAD_PROPERTIES_FROM("findbugs.loadPropertiesFrom", "FindBugs properties file", ""),
     FINDBUGS_INCLUDE_FILTER("findbugs.includeFilter", "FindBugs include filter file", ""),
     FINDBUGS_EXCLUDE_FILTER("findbugs.excludeFilter", "FindBugs exclude filter file", ""),
 
     SPOTBUGS_ENABLED("spotbugs.enabled", "SpotBugs enabled", "false"),
+    SPOTBUGS_LOAD_PROPERTIES_FROM("spotbugs.loadPropertiesFrom", "SpotBugs properties file", ""),
     SPOTBUGS_INCLUDE_FILTER("spotbugs.includeFilter", "SpotBugs include filter file", ""),
     SPOTBUGS_EXCLUDE_FILTER("spotbugs.excludeFilter", "SpotBugs exclude filter file", ""),
 
