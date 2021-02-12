@@ -23,7 +23,7 @@ class ShellcheckExecutor {
     }
 
     String runOnFile(String filePath) {
-        log.info("Review on file: " + filePath);
+        log.info("Review on file: {}", filePath);
         return new ExternalProcess().executeCommand(buildParams(filePath));
     }
 

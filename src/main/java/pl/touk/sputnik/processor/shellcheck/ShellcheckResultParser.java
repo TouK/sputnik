@@ -9,9 +9,10 @@ import pl.touk.sputnik.review.Severity;
 import pl.touk.sputnik.review.Violation;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 class ShellcheckResultParser implements ExternalProcessResultParser {
 
@@ -27,23 +28,24 @@ class ShellcheckResultParser implements ExternalProcessResultParser {
             return Collections.emptyList();
         }
         try {
-            List<Violation> violations = new ArrayList<>();
             List<ShellcheckMessage> violationMessages = objectMapper.readValue(shellcheckOutput,
                     new TypeReference<List<ShellcheckMessage>>() {
                     });
 
-            for (ShellcheckMessage violationMessage : violationMessages) {
-                Violation violation
-                        = new Violation(violationMessage.getFile(),
-                        violationMessage.getLine(),
-                        formatViolationMessage(violationMessage),
-                        shellcheckMessageTypeToSeverity(violationMessage.getLevel()));
-                violations.add(violation);
-            }
-            return violations;
+            return violationMessages
+                    .stream()
+                    .map(violationMessage -> mapToViolation(violationMessage))
+                    .collect(toList());
         } catch (IOException e) {
             throw new ShellcheckException("Error when converting from json format", e);
         }
+    }
+
+    private Violation mapToViolation(ShellcheckMessage violationMessage) {
+        return new Violation(violationMessage.getFile(),
+                violationMessage.getLine(),
+                formatViolationMessage(violationMessage),
+                shellcheckMessageTypeToSeverity(violationMessage.getLevel()));
     }
 
     private String formatViolationMessage(ShellcheckMessage violationMessage) {

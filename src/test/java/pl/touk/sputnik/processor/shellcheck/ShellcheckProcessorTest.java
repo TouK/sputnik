@@ -3,6 +3,7 @@ package pl.touk.sputnik.processor.shellcheck;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.StringUtils;
 import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.configuration.ConfigurationBuilder;
 import pl.touk.sputnik.exec.ExternalProcess;
@@ -100,7 +101,7 @@ public class ShellcheckProcessorTest extends TestEnvironment {
     private boolean isShellcheckInstalled() {
         try {
             String result = new ExternalProcess().executeCommand("shellcheck");
-            return "".equals(result);
+            return StringUtils.isBlank(result);
         } catch (Exception e) {
             return false;
         }
