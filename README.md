@@ -47,6 +47,8 @@ detekt.enabled=true
 detekt.config.file=src/test/resources/detekt/config/config.yml
 ```
 
+See [this](src/main/resources/example.properties) for a downloadable sample file, and [this](src/main/java/pl/touk/sputnik/configuration/GeneralOption.java) for a full list of options.
+
 If you want sputnik to use your SonarQube rules just download them from your SonarQube profile and use these with `checkstyle.configurationFile`, `pmd.ruleSets` and `spotbugs.includeFilter` variables.
 
 To ease migration from FindBugs to SpotBugs these three configuration properties still work and affect SpotBugs now: `findbugs.enabled`, `findbugs.includeFilter` and `findbugs.excludeFilter`.
