@@ -47,14 +47,16 @@ detekt.enabled=true
 detekt.config.file=src/test/resources/detekt/config/config.yml
 ```
 
+See [this](src/main/resources/example.properties) for a downloadable sample file, and [this](src/main/java/pl/touk/sputnik/configuration/GeneralOption.java) for a full list of options.
+
 If you want sputnik to use your SonarQube rules just download them from your SonarQube profile and use these with `checkstyle.configurationFile`, `pmd.ruleSets` and `spotbugs.includeFilter` variables.
 
 To ease migration from FindBugs to SpotBugs these three configuration properties still work and affect SpotBugs now: `findbugs.enabled`, `findbugs.includeFilter` and `findbugs.excludeFilter`.
 
 ## Installation
 
-- clone this repository and build it: `gradle distZip` or download [distribution](https://github.com/TouK/sputnik/releases/download/sputnik-1.5.1/sputnik-1.5.1.zip)
-- copy distribution file `build/distributions/sputnik-1.5.1.zip` to your installation dir, e.g. `/opt/sputnik` and unzip it
+- clone this repository and build it: `gradle distZip` or download [distribution](https://github.com/TouK/sputnik/releases/download/sputnik-2.6.0/sputnik-2.6.0.zip)
+- copy distribution file `build/distributions/sputnik-2.6.0.zip` to your installation dir, e.g. `/opt/sputnik` and unzip it
 - to avoid problems with deployment keep the structure unchanged, so sputnik file is in `bin/` directory, jars in `lib/`
 - create configuration file (you can just paste and edit an example above), e.g. `/opt/sputnik/myconf.properties`
 - you can now run sputnik like this:
@@ -71,11 +73,13 @@ the build tool property correctly. To change it to Gradle just set `project.buil
 
 ### Gerrit support
 
-Three parameters are required: your configuration file (details below), Gerrit's changeId and revisionId:
+Three parameters are required: your configuration file (details below), Gerrit's changeId and revisionId. ie:
 
 ```
 sputnik --conf /path/to/conf.properties --changeId I0a2afb7ae4a94ab1ab473ba00e2ec7de381799a0 --revisionId 3f37692af2290e8e3fd16d2f43701c24346197f0
 ```
+
+Other parameters are available. See them with `sputnik --help`.
 
 There's a bug/feature in Gerrit when you push same change set identified by particular changeId into two branches, for example your working branch and review branch.
 You can recognize it by the following error message
