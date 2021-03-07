@@ -20,7 +20,8 @@ public final class ExternalProcess {
             return executor().command(args)
                     .timeout(60, TimeUnit.SECONDS)
                     .redirectError(Slf4jStream.of(getClass()).asInfo())
-                    .readOutput(true).execute()
+                    .readOutput(true)
+                    .execute()
                     .outputUTF8();
         } catch (Exception e) {
             log.warn("Exception while calling command " + Arrays.asList(args) + ": " + e);
