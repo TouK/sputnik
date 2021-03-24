@@ -1,4 +1,5 @@
 package pl.touk.sputnik.processor.spotbugs;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import edu.umd.cs.findbugs.Plugin;
@@ -53,9 +54,17 @@ class SpotBugsProcessorTest extends TestEnvironment {
     }
 
     @Test
-    void shouldLoadSpotbugsPlugins() {
-        spotBugsProcessor.createFindBugs2(nonExistentReview());
-        assertThat(Plugin.getAllPlugins()).isNotEmpty();
+    void shouldInstantiateIfPluginsCatalogIsPresentButEmpty() {
+        ReviewResult reviewResult = spotBugsProcessor.process(nonExistentReview());
+        spotBugsProcessor.loadAllSpotbugsPlugins("src/test/resources/java/empty");
+        assertThat(reviewResult).isNotNull();
+        assertThat(reviewResult.getViolations()).isEmpty();
+    }
+
+    @Test
+    void pluginShouldBeLoaded() {
+        spotBugsProcessor.loadAllSpotbugsPlugins("src/test/resources/java");
+        assertThat(Plugin.getByPluginId("com.h3xstream.findsecbugs")).isNotNull();
     }
 
 }

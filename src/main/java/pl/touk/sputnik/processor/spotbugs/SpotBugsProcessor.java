@@ -12,7 +12,6 @@ import edu.umd.cs.findbugs.config.UserPreferences;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -61,7 +60,7 @@ public class SpotBugsProcessor implements ReviewProcessor {
     }
 
     public FindBugs2 createFindBugs2(Review review) {
-        loadAllSpotbugsPlugins();
+        loadAllSpotbugsPlugins(config.getProperty(GeneralOption.SPOTBUGS_PLUGINS_LOCATION));
         FindBugs2 findBugs = new FindBugs2();
         findBugs.setProject(createProject(review));
         findBugs.setBugReporter(collectorBugReporter);
@@ -131,22 +130,33 @@ public class SpotBugsProcessor implements ReviewProcessor {
         return excludeFilterFilename;
     }
 
-    private void loadAllSpotbugsPlugins() {
-        String pluginsLocation = config.getProperty(GeneralOption.SPOTBUGS_PLUGINS_LOCATION);
-        if (pluginsLocation != null) {
-            File[] pluginsList = new File(pluginsLocation).listFiles();
-            for (File plugin : Objects.requireNonNull(pluginsList)) {
-                if (plugin.getName().contains(".jar")) {
-                    log.info("SpotBugs additional plugin loading: file://{}", plugin);
-                    try {
-                        Plugin.getAllPlugins().add(Plugin.addCustomPlugin(new URI("file://" + plugin.getAbsoluteFile())));
-                    } catch (PluginException e) {
-                        log.info("Spotbugs additional plugins not loaded {} plugin not supported", e.getMessage());
-                    } catch (URISyntaxException e) {
-                        log.info("Spotbugs additional plugins not loaded {} check path", e.getMessage());
-                    }
-                }
+    public void loadAllSpotbugsPlugins(String pluginsLocation) {
+        File[] fileList = getSpotBugsPluginFiles(pluginsLocation);
+        for (File file : fileList) {
+            if (file.getName().contains(".jar")) {
+                loadSpotBugsPlugin(file);
             }
+        }
+    }
+
+    public File[] getSpotBugsPluginFiles(String pluginsLocation) {
+        if (!StringUtils.isBlank(pluginsLocation)) {
+            File[] fileList = new File(pluginsLocation).listFiles();
+            if (fileList != null) {
+                return fileList;
+            }
+        }
+        return new File[0];
+    }
+
+    private void loadSpotBugsPlugin(File pluginFile) {
+        log.info("SpotBugs additional plugin loading: file://{}", pluginFile.getAbsoluteFile());
+        try {
+            Plugin.addCustomPlugin(new URI("file://" + pluginFile.getAbsoluteFile()));
+        } catch (PluginException e) {
+            log.info("Spotbugs additional plugins not loaded {} plugin not supported", e.getMessage());
+        } catch (URISyntaxException e) {
+            log.info("Spotbugs additional plugins not loaded {} check path", e.getMessage());
         }
     }
 }

@@ -181,20 +181,6 @@ java {
     withSourcesJar()
 }
 
-distZip {
-    into(project.name + "-" + project.version) {
-        from '.'
-        include 'SpotBugsPlugins/*'
-    }
-}
-
-distTar {
-    into(project.name + "-" + project.version) {
-        from '.'
-        include 'SpotBugsPlugins/*'
-    }
-}
-
 jar {
     manifest {
         attributes("Specification-Title": "Sputnik",
