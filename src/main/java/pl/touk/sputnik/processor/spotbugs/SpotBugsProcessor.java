@@ -12,6 +12,7 @@ import edu.umd.cs.findbugs.config.UserPreferences;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -133,9 +134,7 @@ public class SpotBugsProcessor implements ReviewProcessor {
     public void loadAllSpotbugsPlugins(String pluginsLocation) {
         File[] fileList = getSpotBugsPluginFiles(pluginsLocation);
         for (File file : fileList) {
-            if (file.getName().contains(".jar")) {
-                loadSpotBugsPlugin(file);
-            }
+            loadSpotBugsPlugin(file);
         }
     }
 
@@ -143,7 +142,7 @@ public class SpotBugsProcessor implements ReviewProcessor {
         if (!StringUtils.isBlank(pluginsLocation)) {
             File[] fileList = new File(pluginsLocation).listFiles();
             if (fileList != null) {
-                return fileList;
+                return Arrays.stream(fileList).filter(file -> file.getName().contains(".jar")).toArray(File[]::new);
             }
         }
         return new File[0];
