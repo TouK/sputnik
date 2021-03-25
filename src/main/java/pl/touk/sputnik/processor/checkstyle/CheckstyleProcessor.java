@@ -7,6 +7,7 @@ import com.puppycrawl.tools.checkstyle.api.AuditListener;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.touk.sputnik.configuration.Configuration;
@@ -19,6 +20,8 @@ import pl.touk.sputnik.review.filter.JavaFilter;
 import pl.touk.sputnik.review.transformer.IOFileTransformer;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 
@@ -56,10 +59,20 @@ public class CheckstyleProcessor implements ReviewProcessor {
     @NotNull
     private Checker createChecker(@NotNull AuditListener auditListener) {
         try {
+            String configurationFile = getConfigurationFilename();
+            if (StringUtils.isBlank(configurationFile)) {
+                throw new ReviewException("Checkstyle configuration file is not specified.");
+            }
+            if (!Files.exists(Paths.get(configurationFile))) {
+                throw new ReviewException("Checkstyle configuration file does not exist.");
+            }
+
             Checker checker = new Checker();
             ClassLoader moduleClassLoader = Checker.class.getClassLoader();
-            String configurationFile = getConfigurationFilename();
-            Properties properties = System.getProperties();// loadProperties(new File(System.getProperty(CHECKSTYLE_PROPERTIES_FILE)));
+
+            Properties properties = new Properties(System.getProperties());
+            properties.setProperty("config_loc", new File(configurationFile).getParent());
+
             checker.setModuleClassLoader(moduleClassLoader);
             checker.configure(ConfigurationLoader.loadConfiguration(configurationFile, new PropertiesExpander(properties)));
             checker.addListener(auditListener);
@@ -75,7 +88,4 @@ public class CheckstyleProcessor implements ReviewProcessor {
         log.info("Using Checkstyle configuration file {}", configurationFile);
         return configurationFile;
     }
-
-
-
 }

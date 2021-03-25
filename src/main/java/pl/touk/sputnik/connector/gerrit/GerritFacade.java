@@ -1,5 +1,6 @@
 package pl.touk.sputnik.connector.gerrit;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.gerrit.extensions.api.GerritApi;
 import com.google.gerrit.extensions.api.changes.ReviewInput;
 import com.google.gerrit.extensions.api.changes.RevisionApi;
@@ -26,7 +27,10 @@ public class GerritFacade implements ConnectorFacade, ReviewPublisher {
     private static final String COMMIT_MSG = "/COMMIT_MSG";
 
     private final GerritApi gerritApi;
-    private final GerritPatchset gerritPatchset;
+    @VisibleForTesting
+    final GerritPatchset gerritPatchset;
+    @VisibleForTesting
+    final GerritOptions options;
 
     @NotNull
     @Override
@@ -63,6 +67,8 @@ public class GerritFacade implements ConnectorFacade, ReviewPublisher {
         try {
             log.debug("Set review in Gerrit: {}", review);
             ReviewInput reviewInput = new ReviewInputBuilder().toReviewInput(review, gerritPatchset.getTag());
+            reviewInput.omitDuplicateComments = options.isOmitDuplicateComments();
+
             gerritApi.changes()
                     .id(gerritPatchset.getChangeId())
                     .revision(gerritPatchset.getRevisionId())

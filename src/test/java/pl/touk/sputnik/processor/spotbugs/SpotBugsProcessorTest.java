@@ -6,6 +6,8 @@ import edu.umd.cs.findbugs.Plugin;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import edu.umd.cs.findbugs.SystemProperties;
 import pl.touk.sputnik.TestEnvironment;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
 import pl.touk.sputnik.configuration.GeneralOption;
@@ -23,7 +25,10 @@ class SpotBugsProcessorTest extends TestEnvironment {
 
     @BeforeEach
     void setUp() {
-        config = new ConfigurationSetup().setUp(ImmutableMap.of(GeneralOption.BUILD_TOOL.getKey(), GRADLE));
+        config = new ConfigurationSetup().setUp(ImmutableMap.of(
+                GeneralOption.BUILD_TOOL.getKey(), GRADLE,
+                GeneralOption.SPOTBUGS_LOAD_PROPERTIES_FROM.getKey(), "src/test/resources/spotbugs/spotbugs-config.properties"
+        ));
         spotBugsProcessor = new SpotBugsProcessor(config);
     }
 
@@ -67,4 +72,9 @@ class SpotBugsProcessorTest extends TestEnvironment {
         assertThat(Plugin.getByPluginId("com.h3xstream.findsecbugs")).isNotNull();
     }
 
+    void shouldLoadPropertiesFromExternalLocation() {
+        ReviewResult reviewResult = spotBugsProcessor.process(nonExistentReview());
+
+        assertThat(SystemProperties.getBoolean("findbugs.de.comment")).isTrue();
+    }
 }

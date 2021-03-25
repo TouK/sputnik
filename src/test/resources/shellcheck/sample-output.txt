@@ -1,0 +1,26 @@
+[
+  {
+    "file": "myotherscript",
+    "line": 2,
+    "column": 2,
+    "level": "error",
+    "code": 1035,
+    "message": "You need a space after the [ and before the ]."
+  },
+  {
+    "file": "myscript",
+    "line": 2,
+    "column": 6,
+    "level": "warning",
+    "code": 2039,
+    "message": "In POSIX sh, echo flags are undefined."
+  },
+  {
+    "file": "myscript",
+    "line": 2,
+    "column": 9,
+    "level": "info",
+    "code": 2086,
+    "message": "Double quote to prevent globbing and word splitting."
+  }
+]

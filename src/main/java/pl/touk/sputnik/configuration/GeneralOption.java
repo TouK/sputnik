@@ -45,10 +45,12 @@ public enum GeneralOption implements ConfigurationOption {
     PMD_SHOW_VIOLATION_DETAILS("pmd.showViolationDetails", "Show violation details and URL", "false"),
 
     FINDBUGS_ENABLED("findbugs.enabled", "FindBugs enabled", "false"),
+    FINDBUGS_LOAD_PROPERTIES_FROM("findbugs.loadPropertiesFrom", "FindBugs properties file", ""),
     FINDBUGS_INCLUDE_FILTER("findbugs.includeFilter", "FindBugs include filter file", ""),
     FINDBUGS_EXCLUDE_FILTER("findbugs.excludeFilter", "FindBugs exclude filter file", ""),
 
     SPOTBUGS_ENABLED("spotbugs.enabled", "SpotBugs enabled", "false"),
+    SPOTBUGS_LOAD_PROPERTIES_FROM("spotbugs.loadPropertiesFrom", "SpotBugs properties file", ""),
     SPOTBUGS_INCLUDE_FILTER("spotbugs.includeFilter", "SpotBugs include filter file", ""),
     SPOTBUGS_EXCLUDE_FILTER("spotbugs.excludeFilter", "SpotBugs exclude filter file", ""),
     SPOTBUGS_PLUGINS_LOCATION("spotbugs.plugins.location", "Path to catalog where SpotBugs plugins jar files are located", ""),
@@ -83,11 +85,17 @@ public enum GeneralOption implements ConfigurationOption {
 
     GITHUB_API_KEY("github.api.key", "Personal access tokens for Github", ""),
 
+    GERRIT_USE_HTTP_PASSWORD("gerrit.useHttpPassword", "Use Gerrit's internal password token.", "false"),
+    GERRIT_OMIT_DUPLICATE_COMMENTS("gerrit.omitDuplicateComments", "Avoid publishing same comments for the same patchset.", "true"),
+
     JAVA_SRC_DIR("java.src.dir", "Java root source directory", Paths.SRC_MAIN),
     JAVA_TEST_DIR("java.test.dir", "Java root test directory", Paths.SRC_TEST),
 
     DETEKT_ENABLED("detekt.enabled", "Detekt enabled", "false"),
-    DETEKT_CONFIG_FILE("detekt.config.file", "Detekt configuration file location", null);
+    DETEKT_CONFIG_FILE("detekt.config.file", "Detekt configuration file location", null),
+
+    SHELLCHECK_ENABLED("shellcheck.enabled", "Shellcheck enabled", "false"),
+    SHELLCHECK_EXCLUDE("shellcheck.exclude", "Shellcheck exclude rules", null);
 
     private final String key;
     private final String description;

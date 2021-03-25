@@ -1,5 +1,10 @@
 package pl.touk.sputnik.processor.spotbugs;
 
+import java.net.MalformedURLException;
+import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.stream.Stream;
+
 import edu.umd.cs.findbugs.ClassScreener;
 import edu.umd.cs.findbugs.DetectorFactoryCollection;
 import edu.umd.cs.findbugs.FindBugs2;
@@ -8,6 +13,7 @@ import edu.umd.cs.findbugs.Plugin;
 import edu.umd.cs.findbugs.PluginException;
 import edu.umd.cs.findbugs.Priorities;
 import edu.umd.cs.findbugs.Project;
+import edu.umd.cs.findbugs.SystemProperties;
 import edu.umd.cs.findbugs.config.UserPreferences;
 import java.io.File;
 import java.net.URI;
@@ -44,14 +50,25 @@ public class SpotBugsProcessor implements ReviewProcessor {
     @Nullable
     @Override
     public ReviewResult process(@NotNull Review review) {
-        FindBugs2 spotBugs = createFindBugs2(review);
-        try {
+        loadSystemProperties();
+        try (FindBugs2 spotBugs = createFindBugs2(review)) {
             spotBugs.execute();
         } catch (Exception e) {
             log.error("SpotBugs processing error", e);
             throw new ReviewException("SpotBugs processing error", e);
         }
         return collectorBugReporter.getReviewResult();
+    }
+
+    private void loadSystemProperties() {
+        getPropertiesFileLocation().ifPresent(propertiesFileLocation -> {
+            try {
+                SystemProperties.loadPropertiesFromURL(Paths.get(propertiesFileLocation).toUri().toURL());
+                log.info("Using SpotBugs properties file {}", propertiesFileLocation);
+            } catch (MalformedURLException e) {
+                log.error("Invalid location for properties file: {}", propertiesFileLocation);
+            }
+        });
     }
 
     @NotNull
@@ -109,6 +126,13 @@ public class SpotBugsProcessor implements ReviewProcessor {
             classScreener.addAllowedClass(javaClassName);
         }
         return classScreener;
+    }
+
+    private Optional<String> getPropertiesFileLocation() {
+        return Stream.of(GeneralOption.SPOTBUGS_LOAD_PROPERTIES_FROM, GeneralOption.FINDBUGS_LOAD_PROPERTIES_FROM)
+                .map(config::getProperty)
+                .filter(StringUtils::isNotBlank)
+                .findFirst();
     }
 
     @Nullable

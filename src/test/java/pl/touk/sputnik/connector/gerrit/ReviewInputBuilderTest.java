@@ -18,7 +18,7 @@ class ReviewInputBuilderTest {
 
     private static final String TAG = "ci";
 
-    private ReviewInputBuilder reviewInputBuilder = new ReviewInputBuilder();
+    private final ReviewInputBuilder reviewInputBuilder = new ReviewInputBuilder();
 
     @Test
     void shouldBuildReviewInput() {
