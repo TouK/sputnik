@@ -1,0 +1,99 @@
+name: Release
+on:
+  push:
+    tags:
+      - 'sputnik*'
+
+jobs:
+  build:
+    name: Upload Release Asset
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Extract version
+        run: echo "##[set-output name=version;]$(echo ${GITHUB_REF#refs/tags/sputnik-})"
+        id: extract_version
+      - name: Build project
+        run: ./gradlew -Pversion=${{ steps.extract_version.outputs.version }} build
+      - name: Publish package
+        run: ./gradlew -Pversion=${{ steps.extract_version.outputs.version }} publish
+        env:
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          SIGNING_PRIVATE_KEY: ${{ secrets.SIGNING_PRIVATE_KEY }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Sputnik ${{ steps.extract_version.outputs.version }}
+          draft: true
+          prerelease: false
+      - name: Upload jar
+        id: upload-release-asset-jar
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/libs/sputnik-${{ steps.extract_version.outputs.version }}.jar
+          asset_name: sputnik-${{ steps.extract_version.outputs.version }}.jar
+          asset_content_type: application/java-archive
+      - name: Upload javadoc
+        id: upload-release-asset-javadoc
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/libs/sputnik-${{ steps.extract_version.outputs.version }}-javadoc.jar
+          asset_name: sputnik-${{ steps.extract_version.outputs.version }}-javadoc.jar
+          asset_content_type: application/java-archive
+      - name: Upload sources
+        id: upload-release-asset-sources
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/libs/sputnik-${{ steps.extract_version.outputs.version }}-sources.jar
+          asset_name: sputnik-${{ steps.extract_version.outputs.version }}-sources.jar
+          asset_content_type: application/java-archive
+      - name: Upload shadowJar
+        id: upload-release-asset-shadow-jar
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/libs/sputnik-${{ steps.extract_version.outputs.version }}-all.jar
+          asset_name: sputnik-${{ steps.extract_version.outputs.version }}-all.jar
+          asset_content_type: application/java-archive
+      - name: Upload zip
+        id: upload-release-asset-zip
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/distributions/sputnik-${{ steps.extract_version.outputs.version }}.zip
+          asset_name: sputnik-${{ steps.extract_version.outputs.version }}.zip
+          asset_content_type: application/zip
+      - name: Upload tar
+        id: upload-release-asset-tar
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/distributions/sputnik-${{ steps.extract_version.outputs.version }}.tar
+          asset_name: sputnik-${{ steps.extract_version.outputs.version }}.tar
+          asset_content_type: application/tar
