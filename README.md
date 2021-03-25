@@ -81,19 +81,14 @@ sputnik --conf /path/to/conf.properties --changeId I0a2afb7ae4a94ab1ab473ba00e2e
 
 Other parameters are available. See them with `sputnik --help`.
 
-There's a bug/feature in Gerrit when you push same change set identified by particular changeId into two branches, for example your working branch and review branch.
-You can recognize it by the following error message
+Depending on your workflow it can happen that the changeId matches changes on multiple branches, for example when you push a change set identified by particular changeId into your working branch and review branch.\
+You can recognize it by the following error message:
 
 ```
 Request not successful. Message: Not Found. Status-Code: 404. Content: Not found: yours_change_id
 ```
 
-Then it's necessary to add repository and target branch name to distinguish which change set you're addressing. Target branch would be typically master but actually it's the one
- you're using making
-```
-git push origin HEAD:refs/for/BRANCH_NAME
-```
-So add REPO_NAME~BRANCH_NAME~ to changeId Sputnik's param, for example:
+In this case the extended changeId format (`REPO_NAME~BRANCH_NAME~CHANGE_ID`) should be used which includes the repository and the branch name, for example:
 
 ```
 sputnik --conf /path/to/conf.properties --changeId myProject~master~I0a2afb7ae4a94ab1ab473ba00e2ec7de381799a0 --revisionId 3f37692af2290e8e3fd16d2f43701c24346197f0
