@@ -39,8 +39,8 @@ getStashBaseUrl() {
     echo "$scheme://$host:$port$path"
 }
 
-project_key=$(getProperty "$configFile" "connector.projectKey")
-repository_slug=$(getProperty "$configFile" "connector.repositorySlug")
+project_key=$(getProperty "$configFile" "connector.project")
+repository_slug=$(getProperty "$configFile" "connector.repository")
 stash_base_url=$(getStashBaseUrl)
 pull_requests_url="$stash_base_url/rest/api/1.0/projects/$project_key/repos/$repository_slug/pull-requests"
 
