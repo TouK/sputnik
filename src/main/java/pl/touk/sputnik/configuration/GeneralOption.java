@@ -53,6 +53,7 @@ public enum GeneralOption implements ConfigurationOption {
     SPOTBUGS_LOAD_PROPERTIES_FROM("spotbugs.loadPropertiesFrom", "SpotBugs properties file", ""),
     SPOTBUGS_INCLUDE_FILTER("spotbugs.includeFilter", "SpotBugs include filter file", ""),
     SPOTBUGS_EXCLUDE_FILTER("spotbugs.excludeFilter", "SpotBugs exclude filter file", ""),
+    SPOTBUGS_PLUGINS_LOCATION("spotbugs.plugins.location", "Path to catalog where SpotBugs plugins jar files are located", ""),
 
     SCALASTYLE_ENABLED("scalastyle.enabled", "ScalaStyle enabled", "false"),
     SCALASTYLE_CONFIGURATION_FILE("scalastyle.configurationFile", "ScalaStyle configuration file", ""),

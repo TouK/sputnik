@@ -32,6 +32,7 @@ pmd.ruleSets=rulesets/java/android.xml,rulesets/java/basic.xml
 spotbugs.enabled=true
 spotbugs.includeFilter=
 spotbugs.excludeFilter=
+spotbugs.plugins.location=/opt/sputnik/SpotBugsPlugins
 codenarc.enabled=true
 codenarc.ruleSets=
 codenarc.excludes=**/*.java

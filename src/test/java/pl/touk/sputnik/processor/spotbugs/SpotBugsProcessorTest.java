@@ -2,6 +2,8 @@ package pl.touk.sputnik.processor.spotbugs;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import edu.umd.cs.findbugs.Plugin;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,9 +15,6 @@ import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 import pl.touk.sputnik.review.ReviewFormatterFactory;
 import pl.touk.sputnik.review.ReviewResult;
-
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SpotBugsProcessorTest extends TestEnvironment {
@@ -60,6 +59,19 @@ class SpotBugsProcessorTest extends TestEnvironment {
     }
 
     @Test
+    void shouldInstantiateIfPluginsCatalogIsPresentButEmpty() {
+        ReviewResult reviewResult = spotBugsProcessor.process(nonExistentReview());
+        spotBugsProcessor.loadAllSpotbugsPlugins("src/test/resources/java/empty");
+        assertThat(reviewResult).isNotNull();
+        assertThat(reviewResult.getViolations()).isEmpty();
+    }
+
+    @Test
+    void pluginShouldBeLoaded() {
+        spotBugsProcessor.loadAllSpotbugsPlugins("src/test/resources/java");
+        assertThat(Plugin.getByPluginId("com.h3xstream.findsecbugs")).isNotNull();
+    }
+
     void shouldLoadPropertiesFromExternalLocation() {
         ReviewResult reviewResult = spotBugsProcessor.process(nonExistentReview());
 
