@@ -3,6 +3,7 @@ package pl.touk.sputnik.processor.ktlint;
 import com.pinterest.ktlint.core.KtLint;
 import com.pinterest.ktlint.core.RuleSet;
 import com.pinterest.ktlint.core.RuleSetProvider;
+import com.pinterest.ktlint.core.api.EditorConfigOverride;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +18,8 @@ import pl.touk.sputnik.review.transformer.FileNameTransformer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -62,7 +65,7 @@ class KtlintProcessor implements ReviewProcessor {
         ReviewResult result = new ReviewResult();
         for (String filePath : filePaths) {
             String text = readFile(filePath);
-            KtLint.INSTANCE.lint(new KtLint.Params(
+            KtLint.INSTANCE.lint(new KtLint.ExperimentalParams(
                     null,
                     text,
                     ruleSets,
@@ -70,14 +73,18 @@ class KtlintProcessor implements ReviewProcessor {
                     new LintErrorConverter(result, filePath, excludedRules),
                     false,
                     null,
-                    false));
+                    false,
+                    EditorConfigOverride.Companion.getEmptyEditorConfigOverride(),
+                    false
+                    )
+            );
         }
         return result;
     }
 
     private String readFile(String filePath) {
         try {
-            return IOUtils.toString(new FileInputStream(new File(filePath)));
+            return IOUtils.toString(Files.newInputStream(Paths.get(filePath)));
         } catch (IOException e) {
             throw new RuntimeException("Cannot read file " + filePath, e);
         }
