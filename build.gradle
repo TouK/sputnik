@@ -20,7 +20,7 @@ plugins {
     id 'com.github.kt3k.coveralls' version '2.10.2'
     id 'pl.allegro.tech.build.axion-release' version '1.12.1'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
-    id 'org.jetbrains.kotlin.jvm' version '1.6.21'
+    id 'org.jetbrains.kotlin.jvm' version '1.7.0'
 }
 
 scmVersion {
