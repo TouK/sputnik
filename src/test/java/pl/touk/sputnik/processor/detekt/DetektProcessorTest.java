@@ -30,7 +30,7 @@ class DetektProcessorTest {
     private Configuration config;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         config = ConfigurationBuilder.initFromResource(CONFIGURATION_WITH_KTLINT_ENABLED_AND_WITH_DETEKT_CONFIG_FILE);
         sut = new DetektProcessor(config);
     }
@@ -44,7 +44,7 @@ class DetektProcessorTest {
         assertThat(result).isNotNull();
         assertThat(result.getViolations())
                 .hasSize(3)
-                .contains(new Violation(VIOLATIONS_1, 1, "[style/NewLineAtEndOfFile] Checks whether files end with a line separator.", Severity.INFO))
+                .contains(new Violation(VIOLATIONS_1, 14, "[style/NewLineAtEndOfFile] Checks whether files end with a line separator.", Severity.INFO))
                 .contains(new Violation(VIOLATIONS_1, 3, "[style/WildcardImport] Wildcard imports should be replaced with imports using fully qualified class names. Wildcard imports can lead to naming conflicts. A library update can introduce naming clashes with your classes which results in compilation errors.", Severity.INFO))
                 .contains(new Violation(VIOLATIONS_1, 7, "[style/MagicNumber] Report magic numbers. Magic number is a numeric literal that is not defined as a constant and hence it's unclear what the purpose of this number is. It's better to declare such numbers as constants and give them a proper name. By default, -1, 0, 1, and 2 are not considered to be magic numbers.", Severity.INFO));
     }
@@ -59,8 +59,8 @@ class DetektProcessorTest {
         assertThat(result.getViolations())
                 .hasSize(3)
                 .contains(new Violation(VIOLATIONS_3, 3, "[empty-blocks/EmptyClassBlock] Empty block of code detected. As they serve no purpose they should be removed.", Severity.INFO))
-                .contains(new Violation(VIOLATIONS_2, 1, "[style/NewLineAtEndOfFile] Checks whether files end with a line separator.", Severity.INFO))
-                .contains(new Violation(VIOLATIONS_3, 1, "[style/NewLineAtEndOfFile] Checks whether files end with a line separator.", Severity.INFO));
+                .contains(new Violation(VIOLATIONS_2, 3, "[style/NewLineAtEndOfFile] Checks whether files end with a line separator.", Severity.INFO))
+                .contains(new Violation(VIOLATIONS_3, 4, "[style/NewLineAtEndOfFile] Checks whether files end with a line separator.", Severity.INFO));
     }
 
     @Test
@@ -72,7 +72,7 @@ class DetektProcessorTest {
         assertThat(result).isNotNull();
         assertThat(result.getViolations())
                 .hasSize(1)
-                .contains(new Violation(VIOLATIONS_4, 7, "[coroutines/GlobalCoroutineUsage] Usage of GlobalScope instance is highly discouraged", Severity.ERROR));
+                .contains(new Violation(VIOLATIONS_4, 7, "[coroutines/GlobalCoroutineUsage] The usage of the `GlobalScope` instance is highly discouraged.", Severity.ERROR));
     }
 
     @Test

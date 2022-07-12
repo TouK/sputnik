@@ -7,7 +7,7 @@ import pl.touk.sputnik.processor.ReviewProcessorFactory;
 public class KtLintProcessorFactory implements ReviewProcessorFactory<KtlintProcessor> {
     @Override
     public boolean isEnabled(Configuration configuration) {
-        return Boolean.valueOf(configuration.getProperty(GeneralOption.KTLINT_ENABLED));
+        return Boolean.parseBoolean(configuration.getProperty(GeneralOption.KTLINT_ENABLED));
     }
 
     @Override
