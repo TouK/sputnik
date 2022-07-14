@@ -183,6 +183,10 @@ shadowJar {
     zip64 true
 }
 
+shadowJar {
+    zip64 true
+}
+
 jar {
     manifest {
         attributes("Specification-Title": "Sputnik",
@@ -206,7 +210,7 @@ publishing {
             pom {
                 groupId = 'pl.touk'
                 name = 'Sputnik'
-                description  = 'Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD and SpotBugs for you!'
+                description = 'Static code review for your Gerrit and Stash patchsets. Runs Checkstyle, PMD and SpotBugs for you!'
                 url = 'https://github.com/TouK/sputnik/'
                 scm {
                     url = 'scm:git@github.com:TouK/sputnik.git'
