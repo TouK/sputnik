@@ -12,7 +12,7 @@ import pl.touk.sputnik.review.Review;
 import pl.touk.sputnik.review.ReviewFile;
 
 import java.util.HashMap;
-import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -29,21 +29,24 @@ public class ReviewInputBuilder {
         if (StringUtils.isNotBlank(tag)) {
             reviewInput.tag = tag;
         }
-        reviewInput.comments = review.getFiles().stream()
+        reviewInput.robotComments = review.getFiles().stream()
                 .collect(Collectors.toMap(ReviewFile::getReviewFilename, this::buildFileComments));
         return reviewInput;
     }
 
     @NotNull
-    private List<ReviewInput.CommentInput> buildFileComments(@NotNull ReviewFile reviewFile) {
+    private List<ReviewInput.RobotCommentInput> buildFileComments(@NotNull ReviewFile reviewFile) {
         return reviewFile.getComments().stream()
                 .map(this::buildCommentInput)
                 .collect(Collectors.toList());
     }
 
     @NotNull
-    private ReviewInput.CommentInput buildCommentInput(Comment comment) {
-        ReviewInput.CommentInput commentInput = new ReviewInput.CommentInput();
+    private ReviewInput.RobotCommentInput buildCommentInput(Comment comment) {
+        ReviewInput.RobotCommentInput commentInput = new ReviewInput.RobotCommentInput();
+
+        commentInput.robotId = "sputnik";
+        commentInput.robotRunId = UUID.randomUUID().toString();
         commentInput.line = comment.getLine();
         commentInput.message = comment.getMessage();
         return commentInput;
