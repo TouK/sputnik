@@ -61,6 +61,15 @@ class SummaryMessageVisitorTest {
     }
 
     @Test
+    void shouldNotAddPerfectMessageIfThereAreNoViolationsFound() {
+        when(review.getTotalViolationCount()).thenReturn(0L);
+
+        noPerfectSummaryMessageVisitor.afterReview(review);
+
+        assertThat(review.getMessages()).isEmpty();
+    }
+
+    @Test
     void shouldAddProblemMessagesPerfectMessageIfThereAreNoViolationsFound() {
         when(review.getTotalViolationCount()).thenReturn(8L);
         when(review.getProblems()).thenReturn(singletonList("There is a problem with PMD: configuration error"));
