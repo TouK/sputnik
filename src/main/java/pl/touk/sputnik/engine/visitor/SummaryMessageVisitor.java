@@ -22,6 +22,8 @@ public class SummaryMessageVisitor implements AfterReviewVisitor {
 
     private void addSummaryMessage(Review review) {
         String summaryMessage = getSummaryMessage(review);
+        if (summaryMessage == null) return;
+        
         log.info("Adding summary message to review: {}", summaryMessage);
         review.getMessages().add(summaryMessage);
     }
