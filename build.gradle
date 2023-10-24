@@ -20,7 +20,7 @@ plugins {
     id 'com.github.kt3k.coveralls' version '2.10.2'
     id 'pl.allegro.tech.build.axion-release' version '1.12.1'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
-    id 'org.jetbrains.kotlin.jvm' version '1.7.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.10'
 }
 
 scmVersion {
@@ -131,14 +131,14 @@ dependencies {
     // external processes
     implementation 'org.zeroturnaround:zt-exec:1.8'
 
-    // ktlint https://github.com/shyiko/ktlint
-    implementation 'com.pinterest.ktlint:ktlint-core:0.45.2'
-    implementation 'com.pinterest.ktlint:ktlint-ruleset-standard:0.45.2'
+    // ktlint https://github.com/pinterest/ktlint
+    implementation 'com.pinterest.ktlint:ktlint-core:0.48.2'
+    implementation 'com.pinterest.ktlint:ktlint-ruleset-standard:0.48.2'
 
     // detekt
-    implementation 'io.gitlab.arturbosch.detekt:detekt-tooling:1.20.0'
-    runtimeOnly 'io.gitlab.arturbosch.detekt:detekt-core:1.20.0'
-    runtimeOnly 'io.gitlab.arturbosch.detekt:detekt-rules:1.20.0'
+    implementation 'io.gitlab.arturbosch.detekt:detekt-tooling:1.23.1'
+    runtimeOnly 'io.gitlab.arturbosch.detekt:detekt-core:1.23.1'
+    runtimeOnly 'io.gitlab.arturbosch.detekt:detekt-rules:1.23.1'
 
     // transitive dependency that used non-SSL version of Maven Central
     // and version 1.74 that was not found
