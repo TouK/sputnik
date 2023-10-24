@@ -2,7 +2,7 @@ package pl.touk.sputnik.processor.ktlint;
 
 import com.pinterest.ktlint.core.LintError;
 import kotlin.Unit;
-import kotlin.jvm.functions.Function2;
+import kotlin.jvm.functions.Function1;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import pl.touk.sputnik.review.ReviewResult;
@@ -12,14 +12,14 @@ import pl.touk.sputnik.review.Violation;
 import java.util.List;
 
 @RequiredArgsConstructor
-class LintErrorConverter implements Function2<LintError, Boolean, Unit> {
+class LintErrorConverter implements Function1<LintError, Unit> {
 
     private final ReviewResult result;
     private final String filePath;
     private final List<String> excludedRules;
 
     @Override
-    public Unit invoke(LintError e, Boolean corrected) {
+    public Unit invoke(LintError e) {
         if (!excludedRules.contains(e.getRuleId())) {
             result.add(fromLintError(e, filePath));
         }
