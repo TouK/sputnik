@@ -25,7 +25,7 @@ jobs:
           ./gradlew build jacocoTestReport
           
       - name: TEST
-        run: ls ${{ github.workspace }}/build
+        run: ls ${{ github.workspace }}/build/reports
           
       - name: Upload Report
         uses: 'actions/upload-artifact@v2'
