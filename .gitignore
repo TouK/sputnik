@@ -10,3 +10,4 @@ bin/
 build/
 classes
 out
+.DS_STORE
