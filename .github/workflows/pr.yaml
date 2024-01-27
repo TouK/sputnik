@@ -24,9 +24,6 @@ jobs:
         run: >
           ./gradlew build jacocoTestReport
           
-      - name: TEST
-        run: ls ${{ github.workspace }}/build/reports/jacoco/test/html
-
       - name: Upload JaCoCo coverage report as a workflow artifact
         uses: actions/upload-artifact@v3
         with:
