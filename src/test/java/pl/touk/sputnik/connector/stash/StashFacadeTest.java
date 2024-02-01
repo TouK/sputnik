@@ -6,6 +6,8 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import pl.touk.sputnik.HttpConnectorEnv;
 import pl.touk.sputnik.configuration.Configuration;
 import pl.touk.sputnik.configuration.ConfigurationSetup;
@@ -24,6 +26,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 class StashFacadeTest {
 
@@ -42,13 +46,17 @@ class StashFacadeTest {
     private WireMockServer wireMockServer;
     private HttpConnectorEnv httpConnectorEnv;
 
+    @Mock
+    private StashFacade stashFacadeMock;
+
+
     @BeforeEach
     void setUp() {
         wireMockServer = new WireMockServer(wireMockConfig().port(FacadeConfigUtil.HTTP_PORT).httpsPort(FacadeConfigUtil.HTTPS_PORT));
         wireMockServer.start();
 
         httpConnectorEnv = new HttpConnectorEnv(wireMockServer);
-
+        MockitoAnnotations.initMocks(this);
         config = new ConfigurationSetup().setUp(FacadeConfigUtil.getHttpConfig("stash"), STASH_PATCHSET_MAP);
         stashFacade = new StashFacadeBuilder().build(config);
     }
@@ -56,6 +64,17 @@ class StashFacadeTest {
     @AfterEach
     void tearDown() {
         wireMockServer.stop();
+    }
+
+    @Test
+    public void testListFilesErrorHandling(){
+        when(stashFacadeMock.listFiles()).thenThrow(new StashException("Error when listing files"));
+        StashException thrown = assertThrows(
+                StashException.class,
+                () -> stashFacadeMock.listFiles(),
+                "Expected listFiles() to throw, but it didn't"
+        );
+        assertThat(thrown.getMessage()).isEqualTo("Error when listing files");
     }
 
     @Test
