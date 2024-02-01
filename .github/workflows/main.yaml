@@ -1,4 +1,4 @@
-name: Build pull request
+name: Test on Pull Request
 on:
   pull_request:
     branches:
@@ -7,10 +7,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Cancel previous runs
-        uses: styfle/cancel-workflow-action@0.8.0
-        with:
-          access_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up Git repository
         uses: actions/checkout@v3
       - name: Setup java
