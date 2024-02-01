@@ -164,6 +164,9 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    testLogging {
+        events "passed"
+    }
 }
 
 // Jacoco + coveralls
