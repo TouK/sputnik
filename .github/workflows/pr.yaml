@@ -23,5 +23,9 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: >
                   ./gradlew build jacocoTestReport
-            - name: Run Tests
-              run: ./gradlew test
+            - name: Install Gradle
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y gradle
+            - name: Run tests
+              run: gradle test
