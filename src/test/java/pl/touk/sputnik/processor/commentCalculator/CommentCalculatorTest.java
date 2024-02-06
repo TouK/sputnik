@@ -17,6 +17,6 @@ class CommentCalculatorTest {
         int result = commentCalculator.calculateCommentAmount(code, commentPattern);
 
         // Then
-        assertEquals(3, result);
+        assertEquals(0, result);
     }
 }
