@@ -23,10 +23,3 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: >
                   ./gradlew build jacocoTestReport
-            - name: Install Gradle
-              run: |
-                  wget https://services.gradle.org/distributions/gradle-6.7.1-bin.zip
-                  unzip -d /opt/gradle gradle-6.7.1-bin.zip
-                  export PATH=$PATH:/opt/gradle/gradle-6.7.1/bin
-            - name: Run tests
-              run: gradle test
