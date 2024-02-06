@@ -45,7 +45,7 @@ public class CommentCalculator implements ReviewProcessor {
     }
 
     @NotNull
-    private int calculateCommentAmount(String code, String commentPattern) {
+    public int calculateCommentAmount(String code, String commentPattern) {
         int commentCount = 0;
         int index = 0;
         while (index < code.length()) {
