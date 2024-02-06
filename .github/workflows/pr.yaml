@@ -1,30 +1,46 @@
+# Le nom du workflow, visible sur l'interface GitHub Actions.
 name: Build pull request
+
+# Déclencher le workflow lorsqu'une pull request est ouverte ou modifiée sur la branche "master".
 on:
-    pull_request:
-        branches:
-            - master
+  pull_request:
+    branches:
+      - master
+
+# Définit le travail qui s'exécute sur la version récente d'Ubuntu.
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Cancel previous runs
-              uses: styfle/cancel-workflow-action@0.8.0
-              with:
-                  access_token: ${{ secrets.GITHUB_TOKEN }}
-            - name: Set up Git repository
-              uses: actions/checkout@v3
-            - name: Setup java
-              uses: actions/setup-java@v3
-              with:
-                  distribution: "zulu"
-                  java-version: 8
-            - name: Build project
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              run: >
-                  ./gradlew build jacocoTestReport
-            - name: Upload coverage
-              uses: actions/upload-artifact@v3
-              with:
-                  name: jacoco-report
-                  path: build/reports
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Annuler les exécutions de workflows précédentes.
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Récupérer le code source du référentiel GitHub.
+      - name: Set up Git repository
+        uses: actions/checkout@v3
+
+      # Configurer l'environnement Java 8.
+      - name: Setup java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "zulu"
+          java-version: 8
+
+      # Construire le projet et exécuter les tests en utilisant Gradle.
+      # Génèrer des rapports de couverture de code avec Jacoco.
+      - name: Build project
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >
+          ./gradlew build jacocoTestReport
+
+      # Télécharger les rapports générés en tant qu'artefact sur GitHub.
+      - name: Upload coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: jacoco-report
+          path: build/reports
