@@ -23,3 +23,8 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: >
                   ./gradlew build jacocoTestReport
+            - name: Upload coverage
+              uses: felixnoel2001@gmail.com
+              with:
+                  name: coverage
+                  path: build/reports/jacoco/test/html
