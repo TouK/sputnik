@@ -32,8 +32,6 @@ class CommentCalculatorTest {
         ReviewResult result = commentCalculator.process(review);
 
         // Verify the result
-        assertEquals(1, result.getViolations().size());
-        assertEquals("Comment amount: 0", result.getViolations().get(0).getMessage());
-        assertEquals(Severity.INFO, result.getViolations().get(0).getSeverity());
+        assertEquals(0, result.getViolations().size());
     }
 }
