@@ -10,6 +10,8 @@
 
 ## Usage
 
+Modif
+
 Sputnik runs Checkstyle, PMD, SpotBugs, CodeNarc, JSHint (or JSLint), TSLint, Ktlint and Detekt only on files affected by Gerrit's patchset. It collects all violations and report them back to Gerrit or Stash.
 
 Typical configuration file looks like this:
