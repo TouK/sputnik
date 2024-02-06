@@ -26,7 +26,6 @@ public class CommentCalculator implements ReviewProcessor {
         if (noFilesToReview(reviewFiles)) {
             return new ReviewResult();
         }
-        // for every file, run the calculateComment Amount
         ReviewResult results = new ReviewResult();
         for(String file : reviewFiles){
             int commentAmount = calculateCommentAmount(file, "//");
