@@ -4,6 +4,7 @@ import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Optional;
 import com.jcabi.github.Pull;
 import com.jcabi.github.Repo;
+import com.jcabi.github.Commit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -64,6 +65,27 @@ public class GithubFacade implements ConnectorFacade {
         Optional<Integer> issueId = new Notification(repo.issues(), new ContentRenderer())
                 .upsertComment(reviewStatus);
         new Status(getPull(), review, issueId).update();
+    }
+
+    @NotNull
+    public String getCommitMessagesSummary() {
+        Pull pull = getPull();
+        StringBuilder commitMessagesBuilder = new StringBuilder();
+
+        try {
+            // Fetching commits associated with the pull request
+            for (Commit commit : pull.commits()) {
+                JsonObject commitJson = commit.json();
+                String commitMessage = commitJson.getJsonObject("commit").getString("message");
+
+                // Append each commit message to the StringBuilder
+                commitMessagesBuilder.append(commitMessage);
+            }
+        } catch (IOException ex) {
+            log.error("Error fetching commits for pull request", ex);
+        }
+        
+        return commitMessagesBuilder.toString();
     }
 
     private Pull getPull() {
