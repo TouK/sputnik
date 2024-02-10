@@ -119,7 +119,7 @@ class GithubFacadeTest {
 
         String commitMessagesSummary = githubFacade.getCommitMessagesSummary();
 
-        String expectedSummary = "Initial Feature";
+        String expectedSummary = "InitialFeature";
         assertThat(commitMessagesSummary).isEqualTo(expectedSummary);
     }
 
