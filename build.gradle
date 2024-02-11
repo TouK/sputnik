@@ -270,7 +270,7 @@ signing {
 spotbugsMain {
   ignoreFailures = true
   dependencies {
-    spotbugs 'com.github.spotbugs:spotbugs:4.7.3'
+    spotbugs 'com.github.spotbugs:spotbugs:4.0.0'
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.12.0'
   }
   reports {
