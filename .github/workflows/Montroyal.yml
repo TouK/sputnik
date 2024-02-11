@@ -25,7 +25,7 @@ jobs:
           ./gradlew build jacocoTestReport
 
       - name: Test
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          run: >
-            ./gradlew test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >
+          ./gradlew test
