@@ -24,8 +24,22 @@ jobs:
         run: >
           ./gradlew build jacocoTestReport
 
+      - name: Create artefact for coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: build/reports/jacoco/test
+
       - name: Test
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: >
           ./gradlew test
+
+      - name: Create artefact for tests
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: build/reports/tests/test
+
+      
