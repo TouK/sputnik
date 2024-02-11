@@ -42,13 +42,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           check_name: "JUnit Test Results"
 
-      - name: Publish Sonarlint Results
-        uses: jwgmeligmeyling/spotbugs-github-action@v1.2
-        with:
-          name: Sonarlint
-          title: Sonarlint report
-          path: build/reports/sonarlint/*.xml
-
       - name: Publish Spotbugs Results
         uses: jwgmeligmeyling/spotbugs-github-action@v1.2
         with:
