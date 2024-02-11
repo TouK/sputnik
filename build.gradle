@@ -164,10 +164,6 @@ dependencies {
 
 test {
     useJUnitPlatform()
-    testLogging {
-        showStandardStreams = false
-        events 'failed'
-    }
 }
 
 // Jacoco + coveralls
