@@ -21,6 +21,8 @@ plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.12.1'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'org.jetbrains.kotlin.jvm' version '1.7.0'
+    id 'com.github.spotbugs' version '5.0.14'
+    id 'se.solrike.sonarlint' version '1.0.0-beta.9'
 }
 
 scmVersion {
@@ -264,4 +266,24 @@ publishing {
 signing {
     useInMemoryPgpKeys(System.getenv('SIGNING_PRIVATE_KEY'), System.getenv('SIGNING_PASSWORD'))
     sign publishing.publications.mavenJava
+}
+
+sonarlintMain {
+  ignoreFailures = true
+  dependencies {
+    sonarlintPlugins 'org.sonarsource.java:sonar-java-plugin:7.17.0.31219'
+  }
+  reports {
+    xml.enabled = true
+  }
+}
+spotbugsMain {
+  ignoreFailures = true
+  dependencies {
+    spotbugs 'com.github.spotbugs:spotbugs:4.7.3'
+    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.12.0'
+  }
+  reports {
+    xml.enabled = true
+  }
 }
