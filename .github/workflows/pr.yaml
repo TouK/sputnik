@@ -22,7 +22,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: >
-          ./gradlew build jacocoTestReport
+          ./gradlew build --info jacocoTestReport
 
       - name: Add coverage to PR comment
         id: jacoco
