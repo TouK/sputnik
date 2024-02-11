@@ -21,7 +21,7 @@ plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.12.1'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'org.jetbrains.kotlin.jvm' version '1.7.0'
-    id 'com.github.spotbugs' version '4.8.2'
+    id 'com.github.spotbugs' version '4.0.0'
 }
 
 scmVersion {
@@ -270,7 +270,7 @@ signing {
 spotbugsMain {
   ignoreFailures = true
   dependencies {
-    spotbugs 'com.github.spotbugs:spotbugs:4.8.2'
+    spotbugs 'com.github.spotbugs:spotbugs:4.0.0'
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.12.0'
   }
   reports {
