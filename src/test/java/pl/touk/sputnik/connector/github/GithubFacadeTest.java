@@ -101,6 +101,37 @@ class GithubFacadeTest {
         verify(statuses).create(any(Statuses.StatusCreate.class));
     }
 
+    @Test
+    void shouldGetCommitMessagesSummaryCorrectly() throws Exception {
+        JsonObject commitObject = Json.createObjectBuilder()
+            .add("commit", Json.createObjectBuilder()
+            .add("message", "Initial").build())
+            .build();
+    
+        JsonObject commitObject2 = Json.createObjectBuilder()
+            .add("commit", Json.createObjectBuilder()
+            .add("message", "Feature").build())
+            .build();
+
+        // Mock commit.json() to return your JsonObject
+        when(pull.commits()).thenReturn(new Array<>(commit, commit));
+        when(commit.json()).thenReturn(commitObject, commitObject2);
+
+        String commitMessagesSummary = githubFacade.getCommitMessagesSummary();
+
+        String expectedSummary = "InitialFeature";
+        assertThat(commitMessagesSummary).isEqualTo(expectedSummary);
+    }
+
+    @Test
+    void shouldHandleIOExceptionWhenFetchingCommitJson() throws Exception {
+        when(pull.commits()).thenReturn(pullCommits());
+        when(commit.json()).thenThrow(new IOException("Test IOException"));
+
+        String commitMessagesSummary = githubFacade.getCommitMessagesSummary();
+        assertThat(commitMessagesSummary).isEmpty(); // 
+    }
+
     private Iterable<Commit> pullCommits() {
         return new Array<>(commit);
     }
