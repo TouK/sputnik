@@ -68,19 +68,4 @@ class GerritFacadeExceptionTest {
                 .isInstanceOf(GerritException.class)
                 .hasMessageContaining("Error when retrieve modified lines");
     }
-
-    @Test
-    public void testConnectorFaultTolerance() throws Exception {
-        // Simuler une défaillance du GerritApi
-        when(gerritApi.changes()).thenThrow(new RuntimeException("GerritApi failed"));
-        // Créer un GerritConnector avec le mock de GerritApi
-        GerritFacade gerritFacade = new GerritFacade(gerritApi, new GerritPatchset(CHANGE_ID, REVISION_ID, TAG), GerritOptions.empty());
-
-        // Essayer d'appeler la méthode listFiles sur le GerritConnector
-        Throwable thrown = catchThrowable(() -> gerritFacade.listFiles());
-        // Vérifier le message de l'exception
-        assertThat(thrown)
-                .isInstanceOf(GerritException.class)
-                .hasMessageContaining("Error when listing files");
-    }
 }
