@@ -56,6 +56,9 @@ class GithubFacadeTest {
     private Commit commit;
 
     @Mock
+    private Commit commit2;
+
+    @Mock
     private Commits commits;
 
     @Mock
@@ -100,12 +103,19 @@ class GithubFacadeTest {
 
     @Test
     void shouldGetAllCommitShas() throws IOException {
-        Commit mockedCommit = new Commit.Smart(commit);
-        when(mockedCommit.sha()).thenReturn("test");
-        when(pull.commits()).thenReturn(new Array<>(mockedCommit));
+        Commit mockedCommit1 = new Commit.Smart(commit);
+        when(mockedCommit1.sha()).thenReturn("test1");
+
+        Commit mockedCommit2 = new Commit.Smart(commit2);
+        when(mockedCommit2.sha()).thenReturn("test2");
+
+        when(pull.commits()).thenReturn(new Array<>(mockedCommit1, mockedCommit2));
+
         List<String> commitShas = githubFacade.getAllCommitShas();
-        assertThat(commitShas).containsExactly("test");
+
+        assertThat(commitShas).containsExactly("test1", "test2");
     }
+
 
     @Test
     void shouldHandleIOExceptionInGetAllCommitShas() throws IOException {
