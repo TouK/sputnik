@@ -2,8 +2,7 @@ package pl.touk.sputnik.connector.github;
 
 import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Optional;
-import com.jcabi.github.Pull;
-import com.jcabi.github.Repo;
+import com.jcabi.github.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +16,8 @@ import pl.touk.sputnik.review.ReviewFile;
 
 import javax.json.JsonObject;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -65,6 +66,20 @@ public class GithubFacade implements ConnectorFacade {
                 .upsertComment(reviewStatus);
         new Status(getPull(), review, issueId).update();
     }
+
+    public List<String> getAllCommitShas() {
+        List<String> commitShas = new ArrayList<>();
+        try {
+            for (Commit commit : repo.pulls().get(patchset.getPullRequestId()).commits()) {
+                commitShas.add(commit.sha());
+            }
+        } catch (IOException e) {
+            log.error("Error fetching commit shas", e);
+        }
+        return commitShas;
+    }
+
+
 
     private Pull getPull() {
         return repo.pulls().get(patchset.getPullRequestId());

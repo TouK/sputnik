@@ -2,11 +2,9 @@ package pl.touk.sputnik.connector.github;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.jcabi.github.Commit;
-import com.jcabi.github.Commits;
-import com.jcabi.github.Pull;
-import com.jcabi.github.Repo;
-import com.jcabi.github.Statuses;
+import com.jcabi.github.*;
+import com.jcabi.github.mock.MkCommit;
+import com.jcabi.github.mock.MkStorage;
 import com.jcabi.immutable.Array;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,8 +31,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class GithubFacadeTest {
@@ -100,6 +97,25 @@ class GithubFacadeTest {
 
         verify(statuses).create(any(Statuses.StatusCreate.class));
     }
+
+    @Test
+    void shouldGetAllCommitShas() throws IOException {
+        Commit mockedCommit = new Commit.Smart(commit);
+        when(mockedCommit.sha()).thenReturn("test");
+        when(pull.commits()).thenReturn(new Array<>(mockedCommit));
+        List<String> commitShas = githubFacade.getAllCommitShas();
+        assertThat(commitShas).containsExactly("test");
+    }
+
+    @Test
+    void shouldHandleIOExceptionInGetAllCommitShas() throws IOException {
+        doThrow(new IOException("Simulated IOException")).when(pull).commits();
+
+        List<String> commitShas = githubFacade.getAllCommitShas();
+
+        assertThat(commitShas).isEmpty();
+    }
+
 
     private Iterable<Commit> pullCommits() {
         return new Array<>(commit);
