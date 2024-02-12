@@ -34,6 +34,7 @@ public final class Main {
             System.exit(1);
         }
 
+        
         Configuration configuration = ConfigurationBuilder.initFromFile(commandLine.getOptionValue(CliOption.CONF.getCommandLineParam()));
         configuration.updateWithCliOptions(commandLine);
 
