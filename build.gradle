@@ -21,6 +21,7 @@ plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.12.1'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'org.jetbrains.kotlin.jvm' version '1.7.0'
+    id 'com.github.spotbugs' version '4.0.0'
 }
 
 scmVersion {
@@ -264,4 +265,15 @@ publishing {
 signing {
     useInMemoryPgpKeys(System.getenv('SIGNING_PRIVATE_KEY'), System.getenv('SIGNING_PASSWORD'))
     sign publishing.publications.mavenJava
+}
+
+spotbugsMain {
+  ignoreFailures = true
+  dependencies {
+    spotbugs 'com.github.spotbugs:spotbugs:4.0.0'
+    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.12.0'
+  }
+  reports {
+    xml.enabled = true
+  }
 }
