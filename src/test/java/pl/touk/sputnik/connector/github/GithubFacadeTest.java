@@ -3,8 +3,6 @@ package pl.touk.sputnik.connector.github;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.jcabi.github.*;
-import com.jcabi.github.mock.MkCommit;
-import com.jcabi.github.mock.MkStorage;
 import com.jcabi.immutable.Array;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
