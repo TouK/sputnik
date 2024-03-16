@@ -32,6 +32,8 @@ public class CheckstyleProcessor implements ReviewProcessor {
     private final CollectorListener collectorListener = new CollectorListener();
     private final Configuration configuration;
 
+    //new commit
+
     @Nullable
     @Override
     public ReviewResult process(@NotNull Review review) {
